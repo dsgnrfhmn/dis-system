@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tables</title>
+<!-- Tables card, Figma D_SYSTEM node 103:4781: three data-load tabs
+     (header-tab, as on the Popups card), a bulk-actions row (header-block
+     layout='bulk': Archive / Analyze, enabled once rows are selected) and one table (table-preview: real
+     table-row / table-cell / table-header-cell composition). Each tab shows
+     the same four records with more or fewer columns: High data load is
+     Figma's full-featured table; Middle and Minimal are column subsets
+     chosen here (Figma draws only the full one). -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/dropdown-menu/style.css">
+<link rel="stylesheet" href="../components/text-button/style.css">
+<link rel="stylesheet" href="../components/input-dropdown/style.css">
+<link rel="stylesheet" href="../components/input/style.css">
+<link rel="stylesheet" href="../components/table-cell/style.css">
+<link rel="stylesheet" href="../components/table-header-cell/style.css">
+<link rel="stylesheet" href="../components/table-row/style.css">
+<link rel="stylesheet" href="../components/table-preview/style.css">
+<link rel="stylesheet" href="../components/header-tab/style.css">
+<link rel="stylesheet" href="../components/table-header-actions/style.css">
+<link rel="stylesheet" href="../components/header-block/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>
+  .showcase { display: block; padding: 0 0 var(--ds-spacing-9); }
+  .showcase__tabs { display: flex; margin-bottom: var(--ds-spacing-6); }
+  .showcase__tabs > .ds-header-tab { flex: 1 1 0; }
+  [data-density][hidden] { display: none; }
+</style>
+</head>
+<body>
+{% set status_options = [
+  {'value': 'for_review', 'label': 'For review'},
+  {'value': 'analysed', 'label': 'Analysed'},
+  {'value': 'submitted', 'label': 'Submitted'},
+  {'value': 'approved', 'label': 'Approved'},
+  {'value': 'archived', 'label': 'Archived'},
+  {'value': 'declined', 'label': 'Declined'}
+] %}
+{% set record_types = [
+  {'id': 'for-review', 'label': 'For review', 'in_all': true,
+   'columns': ['check', 'save', 'name', 'category', 'type', 'link', 'actions'],
+   'actions': {'type': '2-actions', 'secondary_label': 'Archive', 'content': 'Analyze'}},
+  {'id': 'queue', 'label': 'Queue', 'in_all': true,
+   'columns': ['check', 'save', 'name', 'type', 'summary', 'dates', 'status_sort', 'notes', 'updates'],
+   'actions': {'type': '1-action', 'content': 'Open'}},
+  {'id': 'archived', 'label': 'Archived', 'in_all': true,
+   'columns': ['check', 'save', 'name', 'category', 'summary', 'type', 'link', 'notes', 'actions'],
+   'actions': {'type': '1-action', 'content': 'Unarchive'}}
+] %}
+{% set densities = [
+  {'id': 'minimal', 'label': 'Minimal preview', 'columns': ['drag', 'name', 'status', 'actions']},
+  {'id': 'middle', 'label': 'Middle data load', 'columns': ['check', 'name', 'category', 'status', 'link', 'actions']},
+  {'id': 'high', 'label': 'High data load', 'columns': ['check', 'save', 'name', 'category', 'summary', 'status', 'link', 'notes', 'actions']}
+] %}
+{% set records = [
+  {'type': 'for-review', 'status': 'declined', 'name': 'Login fails on Safari 17', 'category': 'Bug', 'summary': 'Session cookie is dropped after redirect.'},
+  {'type': 'queue', 'status': 'approved', 'name': 'Single sign-on for admins', 'category': 'Feature', 'summary': 'SAML login for the admin console.'},
+  {'type': 'queue', 'status': 'for_review', 'name': 'API latency spike on /search', 'category': 'Incident', 'summary': 'p95 latency up after the index rebuild.'},
+  {'type': 'archived', 'status': 'archived', 'name': 'Keep the SOAP endpoint', 'category': 'Request', 'summary': 'One more quarter for legacy clients.'}
+] %}
+<div class="showcase">
+  <div class="showcase__tabs" role="tablist" aria-label="Data load" data-density-tabs>
+    {% for d in densities %}
+    {% with label=d.label, active=(d.id == 'high') %}{% include "components/header-tab/template.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+  {% with layout='bulk', actions=[{'label': 'Archive', 'priority': 'secondary', 'status': 'disabled', 'extra_attrs': 'data-bulk'}, {'label': 'Analyze', 'priority': 'primary', 'status': 'disabled', 'extra_attrs': 'data-bulk'}] %}{% include "components/header-block/template.html" %}{% endwith %}
+  {% for d in densities %}
+  <div data-density="{{ d.id }}"{% if d.id != 'high' %} hidden{% endif %}>
+    {% with types=[{'id': 'all', 'label': 'All', 'in_all': false, 'columns': d.columns}] + record_types %}{% include "components/table-preview/template.html" %}{% endwith %}
+  </div>
+  {% endfor %}
+</div>
+<script src="../components/dropdown-menu/component.js"></script>
+<script src="../components/text-button/component.js"></script>
+<script src="../components/input-dropdown/component.js"></script>
+<script src="../components/input/component.js"></script>
+<script src="../components/table-cell/component.js"></script>
+<script src="../components/table-header-cell/component.js"></script>
+<script src="../components/table-row/component.js"></script>
+<script src="../components/table-preview/component.js"></script>
+<script src="../components/header-tab/component.js"></script>
+<script>
+  // Bulk actions act on the selected rows of the visible table: disabled
+  // (text-button status + native disabled) until at least one is selected,
+  // as on the consuming app's For You. Rechecked on selection and on tab switch.
+  function syncBulk() {
+    const any = !!document.querySelector('[data-density]:not([hidden]) .ds-table-row[data-selected="true"]');
+    document.querySelectorAll('[data-bulk]').forEach((b) => {
+      b.disabled = !any;
+      b.dataset.status = any ? 'active' : 'disabled';
+    });
+  }
+  document.addEventListener('ds-table-row-select', () => setTimeout(syncBulk));
+  document.querySelector('[data-density-tabs]').addEventListener('ds-header-tab-change', () => setTimeout(syncBulk));
+</script>
+<script>
+  // Tab -> the table with that column set (header-tab only switches
+  // aria-selected); same wiring as the Popups card's size tabs.
+  const DENSITIES = { 'Minimal preview': 'minimal', 'Middle data load': 'middle', 'High data load': 'high' };
+  document.querySelector('[data-density-tabs]').addEventListener('ds-header-tab-change', (e) => {
+    const id = DENSITIES[e.detail.selected.textContent.trim()];
+    document.querySelectorAll('[data-density]').forEach((el) => { el.hidden = el.dataset.density !== id; });
+  });
+</script>
+</body>
+</html>

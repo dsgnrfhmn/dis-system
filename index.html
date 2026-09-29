@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dis-system</title>
+  <link rel="stylesheet" href="tokens/output.css">
+  <link rel="stylesheet" href="components/text-button/style.css">
+  <link rel="stylesheet" href="components/nav-bar/style.css">
+  <link rel="stylesheet" href="components/input/style.css">
+  <link rel="stylesheet" href="components/popup/style.css">
+  <link rel="stylesheet" href="components/sidebar-item/style.css">
+  <link rel="stylesheet" href="components/sidebar-list/style.css">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body class="site-longread">
+  <!--
+    dis-system's single long-read page, laid out after the Figma D_SYSTEM
+    web-view page (node 103:4593): the Overview hero, then one card per
+    Primitives / Components family in Figma order; the sidebar lists the
+    three groups (Overview, Primitives, Components). Chrome: nav-bar on top (site title left, Comments and
+    theme toggle right, no page links -- navigation is the sidebar's job
+    now), components/sidebar-list on the left as the section index (type="set"
+    rows with href and no save button, see sidebar-item's meta.json; no
+    head/collapse toggle, matching the Figma web-view sidebar, D_SYSTEM
+    node 103:4596), and a
+    scrolling <main> on the grey page background. The category galleries are
+    generated between their own markers by scripts/build_manifest.py; the
+    rest of the page is hand-authored.
+  -->
+  <nav class="ds-nav-bar" aria-label="Primary">
+    <div class="ds-nav-bar__left">
+      <span class="ds-nav-bar__brand">DIS-SYSTEM</span>
+    </div>
+
+    <div class="ds-nav-bar__center"></div>
+
+    <div class="ds-nav-bar__right">
+      <button type="button" id="comments-trigger" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted">Comments</button>
+      <button type="button" class="ds-text-button ds-nav-bar__theme-toggle" data-priority="secondary" data-status="active" data-underline="dotted">
+        <span class="ds-text-button__icon ds-nav-bar__theme-icon" data-icon="theme-dark" aria-hidden="true"></span>
+        <span class="ds-text-button__label ds-nav-bar__theme-label">Light theme</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="ds-popup-overlay" id="comments-overlay" hidden>
+    <div class="ds-popup" role="dialog" aria-labelledby="comments-title" aria-modal="true">
+      <div class="ds-popup__title" id="comments-title">Comments</div>
+      <div class="ds-popup__body" data-type="comments">
+        <textarea class="ds-input ds-comments-input" data-type="textarea" data-fill="filled" rows="14" aria-labelledby="comments-title" placeholder="Write a note…"></textarea>
+      </div>
+      <div class="ds-popup__bottom">
+        <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-comments-cancel>Cancel</button>
+        <button type="button" class="ds-text-button" data-priority="primary" data-status="active" data-underline="dotted" data-comments-save>Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-shell">
+    <aside class="ds-sidebar-list site-sidebar" aria-label="Sections" data-collapsed="false">
+      <div class="ds-sidebar-list__items">
+      <div class="ds-sidebar-item" data-type="set" data-active="true">
+        <a href="#overview" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" aria-current="true"><span class="ds-text-button__text">Overview</span></a>
+      </div>
+      <div class="ds-sidebar-item" data-type="set">
+        <a href="#primitives" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted"><span class="ds-text-button__text">Primitives</span></a>
+      </div>
+      <div class="ds-sidebar-item" data-type="set">
+        <a href="#components" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted"><span class="ds-text-button__text">Components</span></a>
+      </div>
+      </div>
+    </aside>
+
+    <main>
+      <!--
+        Hero, laid out after the Figma Make "Design-System-Webpage" layout
+        (CDiOPwi9RHVTgWTo3R9Gjj, 2026-09-24): a 12-column row, title block
+        on 8 columns and the lead on the remaining 4, bottom-aligned and
+        ruled off from the sections below. Layout only -- type and color are
+        this system's own tokens. The old styleguide poster that followed
+        it was dropped (explicit request): everything it sampled is shown
+        in full by the Primitives section and the component galleries.
+      -->
+      <section id="overview" class="site-hero">
+        <div class="site-hero__title">
+          <p class="site-hero__eyebrow">Design system — documentation</p>
+          <h1 class="hero-title">dis-system</h1>
+          <p class="hero-tagline">Rational-brutalist components for technical products.</p>
+        </div>
+        <p class="lead site-hero__lead">Vanilla HTML/CSS/JS, designed in Figma, every value traced to a design token. Built for developers and agents first; nothing here is decorative without a functional reason.</p>
+      </section>
+
+      <!--
+        Primitives and Components, after the Figma D_SYSTEM web-view page
+        (node 103:4593): one card per family, in Figma order. Each card has
+        an id the sidebar links to. Component cards hold their generated
+        gallery (scripts/build_manifest.py markers) in a hidden
+        "Show all components" region (site-showcase.js toggles it).
+      -->
+      <section id="primitives" class="site-cards">
+        <h2>Primitives</h2>
+        <p class="note">Live token reference: every sample is drawn from the same --ds-* custom properties in tokens/output.css that the components consume, resolved for the current theme.</p>
+        <article class="site-card" id="colors" aria-labelledby="colors-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="colors-title">Colors</h3></header>
+          <div class="site-card__content">
+            <div class="color-columns" id="color-swatches"></div>
+          </div>
+          <p class="site-card__help">Raw palette, the same in both themes. Accent carries meaning only: primary marks what can be clicked, secondary and tertiary tell categories apart, and each light tint is a background for its accent. Neutral is the structure (text, surfaces, rules), warm at the pale end so a filled area reads as paper rather than a screen. System colors say status (success, warning, error) and nothing else: strong for text and icons, medium for fills, light for row and panel backgrounds.</p>
+        </article>
+
+        <article class="site-card" id="typography" aria-labelledby="typography-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="typography-title">Typography</h3></header>
+          <div class="site-card__content">
+            <div class="type-rows" id="type-scale" role="table" aria-label="Type scale"></div>
+          </div>
+          <p class="site-card__help">One family, Inter, so hierarchy is carried by size and weight alone. The large headings are set in regular weight because their size already makes them stand out; medium weight marks the smaller headings and emphasis. The two link styles say what a click does: a solid underline leaves the page, a dotted one stays on it. Captions are small uppercase labels for data.</p>
+        </article>
+
+        <div class="site-card-pair">
+            <article class="site-card" id="spacing" aria-labelledby="spacing-title">
+              <header class="site-card__header"><h3 class="site-card__title" id="spacing-title">Spacing</h3></header>
+              <div class="site-card__content">
+                <div class="spacing-row" id="spacing-swatches"></div>
+              </div>
+              <p class="site-card__help">A small fixed scale, so gaps between elements repeat and alignment can be checked by eye. cell (10px) and row (44px) are the table and list rhythm; row is also the minimum touch-target height.</p>
+            </article>
+
+            <article class="site-card" id="shadow" aria-labelledby="shadow-title">
+              <header class="site-card__header"><h3 class="site-card__title" id="shadow-title">Shadow</h3></header>
+              <div class="site-card__content" data-surface="pressed">
+                <div class="shadow-row" id="shadow-swatches"></div>
+              </div>
+              <p class="site-card__help">Three depth steps, each a hard, unblurred edge rather than an atmospheric effect: flat for surfaces that sit in the page, tief-1 (a one-pixel bevel, light top-left, dark bottom-right) for anything lifted off it such as cards and buttons, tief-2 (the dark edge doubled) for what floats over other content, like toasts and tooltips.</p>
+            </article>
+        </div>
+
+        <article class="site-card" id="icons" aria-labelledby="icons-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="icons-title">Icons</h3></header>
+          <div class="site-card__content">
+            <div class="icon-set" id="icon-set"></div>
+          </div>
+          <p class="site-card__help">One 24px grid, drawn from squares, triangles and circles only, so every icon reads at a glance and none carries decoration. Grey marks controls that act on the view (drag, sort, close, add, filter), blue marks state (selection, loading, the active theme), and the ochre dot is the one alert color. Every file in icons/ is drawn in currentColor, so hover, selection and dark mode recolor it from the theme's tokens.</p>
+        </article>
+      </section>
+
+      <section id="components" class="site-cards">
+        <h2>Components</h2>
+        <p class="note">One card per component family, in the order of the Figma D_SYSTEM web-view page. Each card shows a representative set; Show all components opens the generated previews of every component in that family (scripts/build_manifest.py, from each meta.json's category).</p>
+        <article class="site-card" id="buttons" aria-labelledby="buttons-card-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="buttons-card-title">Buttons</h3></header>
+          <div class="site-card__content">
+            <div class="button-set" data-showcase="buttons"></div>
+          </div>
+          <p class="site-card__help">A button is text in the accent color, and its underline says what a click does: solid leaves the page, dotted stays on it. An icon is added only when it names the action faster than the word; on its own it needs a spoken name. The outline marks a button as a separate control when it sits among other text rather than in a toolbar or table row.</p>
+          <div class="site-card__footer">
+            <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-showcase-toggle aria-expanded="false" aria-controls="buttons-all">Show all components</button>
+          </div>
+          <div class="site-card__all" id="buttons-all" hidden>
+            <div class="button-set" data-showcase-all="buttons"></div>
+            <!-- BEGIN GENERATED COMPONENT GALLERY: buttons (scripts/build_manifest.py -- do not edit by hand, edit a component's meta.json and rerun the script instead) -->
+    <div class="component-grid">
+        <article class="component-card" data-component="text-button">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/text-button/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/text-button/index.html" title="text-button component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+    </div>
+    <!-- END GENERATED COMPONENT GALLERY: buttons -->
+          </div>
+        </article>
+
+        <article class="site-card" id="tags" aria-labelledby="tags-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="tags-title">Tags</h3></header>
+          <div class="site-card__content" data-frame="true">
+            <iframe class="site-card__frame" src="showcase/tags.html" title="Tags presentation" scrolling="no"></iframe>
+          </div>
+          <p class="site-card__help">A tag names a category or a status in one word, and its color says which family it belongs to: the three accents for categories, green, yellow and red for how something went, neutral for a plain mark. Active is the solid form for a single tag that has to stand out; Passive keeps the same hue at a lighter weight for rows of many tags.</p>
+          <div class="site-card__footer">
+            <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-showcase-toggle aria-expanded="false" aria-controls="tags-all">Show all components</button>
+          </div>
+          <div class="site-card__all" id="tags-all" hidden>
+            <!-- BEGIN GENERATED COMPONENT GALLERY: tags (scripts/build_manifest.py -- do not edit by hand, edit a component's meta.json and rerun the script instead) -->
+    <div class="component-grid">
+        <article class="component-card" data-component="tag">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/tag/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/tag/index.html" title="tag component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+    </div>
+    <!-- END GENERATED COMPONENT GALLERY: tags -->
+          </div>
+        </article>
+
+        <article class="site-card" id="inputs" aria-labelledby="inputs-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="inputs-title">Inputs</h3></header>
+          <div class="site-card__content" data-frame="true">
+            <iframe class="site-card__frame" src="showcase/inputs.html" title="Inputs presentation" scrolling="no"></iframe>
+          </div>
+          <p class="site-card__help">A field is either transparent, when it sits inside a row or a toolbar that already frames it, or filled, when it stands alone on a surface and has to show where you can type. A dropdown is the same field with an arrow: the arrow is the only thing that says the value is picked, not typed.</p>
+          <div class="site-card__footer">
+            <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-showcase-toggle aria-expanded="false" aria-controls="inputs-all">Show all components</button>
+          </div>
+          <div class="site-card__all" id="inputs-all" hidden>
+            <!-- BEGIN GENERATED COMPONENT GALLERY: inputs (scripts/build_manifest.py -- do not edit by hand, edit a component's meta.json and rerun the script instead) -->
+    <div class="component-grid">
+        <article class="component-card" data-component="input">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/input/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/input/index.html" title="input component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+
+        <article class="component-card" data-component="input-dropdown">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/input-dropdown/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/input-dropdown/index.html" title="input-dropdown component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+    </div>
+    <!-- END GENERATED COMPONENT GALLERY: inputs -->
+          </div>
+        </article>
+
+        <article class="site-card" id="toasters" aria-labelledby="toasters-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="toasters-title">Toasters and tooltips</h3></header>
+          <div class="site-card__content" data-frame="true">
+            <iframe class="site-card__frame" src="showcase/toasters.html" title="Toasters and tooltips presentation" scrolling="no"></iframe>
+          </div>
+          <p class="site-card__help">A toast reports the result of something you just did: its fill says how it went (green for done, yellow for a warning, red for a failure), it goes away by itself, and the square cross closes it sooner. A tooltip explains the control you are pointing at, dark so it reads as a layer above the page in either theme, and only while you point at it or focus it.</p>
+          <div class="site-card__footer">
+            <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-showcase-toggle aria-expanded="false" aria-controls="toasters-all">Show all components</button>
+          </div>
+          <div class="site-card__all" id="toasters-all" hidden>
+            <!-- BEGIN GENERATED COMPONENT GALLERY: toasters (scripts/build_manifest.py -- do not edit by hand, edit a component's meta.json and rerun the script instead) -->
+    <div class="component-grid">
+        <article class="component-card" data-component="toast">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/toast/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/toast/index.html" title="toast component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+
+        <article class="component-card" data-component="tooltip">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/tooltip/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/tooltip/index.html" title="tooltip component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+    </div>
+    <!-- END GENERATED COMPONENT GALLERY: toasters -->
+          </div>
+        </article>
+
+        <article class="site-card" id="tables" aria-labelledby="tables-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="tables-title">Tables</h3></header>
+          <div class="site-card__content" data-frame="true">
+            <iframe class="site-card__frame" src="showcase/tables.html" title="Tables presentation" scrolling="no"></iframe>
+          </div>
+          <p class="site-card__help">The tabs show the same records at three data loads: a minimal preview with only name, status and actions, a middle load, and the full table. Pick the lightest one that still answers the question the page is for. Rows are one line tall and ruled only below, so the eye runs along a record rather than down a grid of boxes. Color is kept for status alone; links, actions and editable notes keep the accent and underline conventions of the buttons, so a cell that can be clicked looks like everything else that can be clicked.</p>
+          <div class="site-card__footer">
+            <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-showcase-toggle aria-expanded="false" aria-controls="tables-all">Show all components</button>
+          </div>
+          <div class="site-card__all" id="tables-all" hidden>
+            <!-- BEGIN GENERATED COMPONENT GALLERY: tables (scripts/build_manifest.py -- do not edit by hand, edit a component's meta.json and rerun the script instead) -->
+    <div class="component-grid">
+        <article class="component-card" data-component="header-tab" data-layout="wide">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/header-tab/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/header-tab/index.html" title="header-tab component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+
+        <article class="component-card" data-component="table-cell" data-layout="wide">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/table-cell/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/table-cell/index.html" title="table-cell component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+
+        <article class="component-card" data-component="table-header">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/table-header/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/table-header/index.html" title="table-header component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+
+        <article class="component-card" data-component="table-header-cell" data-layout="wide">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/table-header-cell/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/table-header-cell/index.html" title="table-header-cell component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+
+        <article class="component-card" data-component="table-preview" data-layout="wide">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/table-preview/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/table-preview/index.html" title="table-preview component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+
+        <article class="component-card" data-component="table-row" data-layout="wide">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/table-row/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/table-row/index.html" title="table-row component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+    </div>
+    <!-- END GENERATED COMPONENT GALLERY: tables -->
+          </div>
+        </article>
+
+        <article class="site-card" id="navigation" aria-labelledby="navigation-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="navigation-title">Navigation</h3></header>
+          <div class="site-card__content" data-frame="true">
+            <iframe class="site-card__frame" src="showcase/navigation.html" title="Navigation presentation" scrolling="no"></iframe>
+          </div>
+          <p class="site-card__help">One bar across the top of every page: where you are on the left, the pages in the middle with the current one in bold, and view settings such as the theme on the right. It stays in place while the page scrolls, so the way out is always visible.</p>
+          <div class="site-card__footer">
+            <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-showcase-toggle aria-expanded="false" aria-controls="navigation-all">Show all components</button>
+          </div>
+          <div class="site-card__all" id="navigation-all" hidden>
+            <!-- BEGIN GENERATED COMPONENT GALLERY: navigation (scripts/build_manifest.py -- do not edit by hand, edit a component's meta.json and rerun the script instead) -->
+    <div class="component-grid">
+        <article class="component-card" data-component="nav-bar" data-layout="wide">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/nav-bar/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/nav-bar/index.html" title="nav-bar component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+    </div>
+    <!-- END GENERATED COMPONENT GALLERY: navigation -->
+          </div>
+        </article>
+
+        <article class="site-card" id="sidebar" aria-labelledby="sidebar-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="sidebar-title">Sidebar</h3></header>
+          <div class="site-card__content" data-frame="true">
+            <iframe class="site-card__frame" src="showcase/sidebar.html" title="Sidebar presentation" scrolling="no"></iframe>
+          </div>
+          <p class="site-card__help">A list of sets beside the content it filters. The selected set is filled rather than colored, so the accent stays free for what can be clicked; the bookmark marks a saved set; the arrow folds the list to a narrow strip when the content needs the width.</p>
+          <div class="site-card__footer">
+            <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-showcase-toggle aria-expanded="false" aria-controls="sidebar-all">Show all components</button>
+          </div>
+          <div class="site-card__all" id="sidebar-all" hidden>
+            <!-- BEGIN GENERATED COMPONENT GALLERY: sidebar (scripts/build_manifest.py -- do not edit by hand, edit a component's meta.json and rerun the script instead) -->
+    <div class="component-grid">
+        <article class="component-card" data-component="sidebar-item">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/sidebar-item/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/sidebar-item/index.html" title="sidebar-item component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+
+        <article class="component-card" data-component="sidebar-list">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/sidebar-list/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/sidebar-list/index.html" title="sidebar-list component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+    </div>
+    <!-- END GENERATED COMPONENT GALLERY: sidebar -->
+          </div>
+        </article>
+
+        <article class="site-card" id="cards-layouts" aria-labelledby="cards-layouts-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="cards-layouts-title">Cards layouts</h3></header>
+          <div class="site-card__content" data-frame="true">
+            <iframe class="site-card__frame" src="showcase/cards-layouts.html" title="Cards layouts presentation" scrolling="no"></iframe>
+          </div>
+          <p class="site-card__help">Images keep the proportion of what they show (landscape, portrait, square) at one fixed height, so a row of mixed work lines up without cropping. Where there is nothing to show yet, the space is held by a quiet placeholder that says what will appear there instead of leaving a hole.</p>
+          <div class="site-card__footer">
+            <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-showcase-toggle aria-expanded="false" aria-controls="cards-layouts-all">Show all components</button>
+          </div>
+          <div class="site-card__all" id="cards-layouts-all" hidden>
+            <!-- BEGIN GENERATED COMPONENT GALLERY: cards-layouts (scripts/build_manifest.py -- do not edit by hand, edit a component's meta.json and rerun the script instead) -->
+    <div class="component-grid">
+        <article class="component-card" data-component="empty-state">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/empty-state/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/empty-state/index.html" title="empty-state component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+
+        <article class="component-card" data-component="gallery-image">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/gallery-image/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/gallery-image/index.html" title="gallery-image component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+    </div>
+    <!-- END GENERATED COMPONENT GALLERY: cards-layouts -->
+          </div>
+        </article>
+
+        <article class="site-card" id="controls" aria-labelledby="controls-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="controls-title">Controls</h3></header>
+          <div class="site-card__content" data-frame="true">
+            <iframe class="site-card__frame" src="showcase/controls.html" title="Controls presentation" scrolling="no"></iframe>
+          </div>
+          <p class="site-card__help">A choice between a few options is a radio group of text buttons, so each option reads as something to click and the ring shows which one is on. Several images to pick from sit in a single scrolling strip with a visible scrollbar, so it is clear there is more beyond the edge.</p>
+          <div class="site-card__footer">
+            <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-showcase-toggle aria-expanded="false" aria-controls="controls-all">Show all components</button>
+          </div>
+          <div class="site-card__all" id="controls-all" hidden>
+            <!-- BEGIN GENERATED COMPONENT GALLERY: controls (scripts/build_manifest.py -- do not edit by hand, edit a component's meta.json and rerun the script instead) -->
+    <div class="component-grid">
+        <article class="component-card" data-component="gallery">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/gallery/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/gallery/index.html" title="gallery component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+
+        <article class="component-card" data-component="radio">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/radio/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/radio/index.html" title="radio component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+    </div>
+    <!-- END GENERATED COMPONENT GALLERY: controls -->
+          </div>
+        </article>
+
+        <article class="site-card" id="popups" aria-labelledby="popups-title">
+          <header class="site-card__header"><h3 class="site-card__title" id="popups-title">Popups</h3></header>
+          <div class="site-card__content" data-frame="true">
+            <iframe class="site-card__frame" src="showcase/popups.html" title="Popups presentation" scrolling="no"></iframe>
+          </div>
+          <p class="site-card__help">A popup takes over the page only for a decision that has to be made before going on; the dimmed backdrop says the rest of the page is out of reach until then. Three widths for three amounts of content: small for a short confirmation, medium for a form or a summary, big for wide content. The main action is the bold button on the right.</p>
+          <div class="site-card__footer">
+            <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-showcase-toggle aria-expanded="false" aria-controls="popups-all">Show all components</button>
+          </div>
+          <div class="site-card__all" id="popups-all" hidden>
+            <!-- BEGIN GENERATED COMPONENT GALLERY: popups (scripts/build_manifest.py -- do not edit by hand, edit a component's meta.json and rerun the script instead) -->
+    <div class="component-grid">
+        <article class="component-card" data-component="popup" data-layout="wide">
+          <div class="card-header">
+            <span class="name"></span>
+            <a href="components/popup/index.html" target="_blank">open standalone ↗</a>
+          </div>
+          <div class="card-body">
+            <iframe src="components/popup/index.html" title="popup component preview" scrolling="no"></iframe>
+          </div>
+          <p class="card-desc"></p>
+        </article>
+    </div>
+    <!-- END GENERATED COMPONENT GALLERY: popups -->
+          </div>
+        </article>
+      </section>
+
+      <!-- Footer, the Make layout's closing rule: three items spread across
+           the row. Both links are the machine-readable entry points to
+           this system (for developers and agents), not decoration. -->
+      <footer class="site-footer">
+        <span class="ds-nav-bar__brand">DIS-SYSTEM</span>
+        <a href="components/manifest.json" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="solid">components/manifest.json</a>
+        <a href="tokens/output.css" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="solid">tokens/output.css</a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="site-showcase.js"></script>
+  <script src="components/text-button/component.js"></script>
+  <script src="components/sidebar-list/component.js"></script>
+  <script src="nav.js"></script>
+  <script src="comments.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>

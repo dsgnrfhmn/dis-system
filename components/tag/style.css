@@ -1,0 +1,47 @@
+/*
+  tag (Figma D_SYSTEM Tag, node 103:4746): 7 types x Active / Passive.
+  Box: 4px padding (spacing-2), 1px radius (radius-md), body text.
+  Active = the type's strong color as fill, white text. Passive = the
+  type's light tint as fill, the strong color as text.
+
+  Colors are the raw palette (--ds-color-accent-* / --ds-color-signal-*),
+  exactly Figma's: these are category/status colors whose meaning must not
+  change with the theme, same as the color strips on the site's Colors
+  card. Neutral is the exception: black-on-white would vanish on the dark
+  surface, so neutral uses the theme's text/surface tokens (identical to
+  Figma's neutral/1000, neutral/0 and neutral/100 in light).
+*/
+.ds-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--ds-spacing-2);
+  border-radius: var(--ds-radius-md);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  white-space: nowrap;
+  color: var(--ds-color-base-0);
+}
+
+.ds-tag[data-type="accent-1"] { background-color: var(--ds-color-accent-primary); }
+.ds-tag[data-type="accent-2"] { background-color: var(--ds-color-accent-secondary); }
+.ds-tag[data-type="accent-3"] { background-color: var(--ds-color-accent-tertiary); }
+.ds-tag[data-type="success"] { background-color: var(--ds-color-signal-success-strong); }
+.ds-tag[data-type="warning"] { background-color: var(--ds-color-signal-warning-strong); }
+.ds-tag[data-type="danger"] { background-color: var(--ds-color-signal-error-strong); }
+.ds-tag[data-type="neutral"] {
+  background-color: var(--ds-color-text-active);
+  color: var(--ds-color-text-inverced);
+}
+
+.ds-tag[data-subtype="passive"][data-type="accent-1"] { background-color: var(--ds-color-accent-primary-light); color: var(--ds-color-accent-primary); }
+.ds-tag[data-subtype="passive"][data-type="accent-2"] { background-color: var(--ds-color-accent-secondary-light); color: var(--ds-color-accent-secondary); }
+.ds-tag[data-subtype="passive"][data-type="accent-3"] { background-color: var(--ds-color-accent-tertiary-light); color: var(--ds-color-accent-tertiary); }
+.ds-tag[data-subtype="passive"][data-type="success"] { background-color: var(--ds-color-signal-success-light); color: var(--ds-color-signal-success-strong); }
+.ds-tag[data-subtype="passive"][data-type="warning"] { background-color: var(--ds-color-signal-warning-light); color: var(--ds-color-signal-warning-strong); }
+.ds-tag[data-subtype="passive"][data-type="danger"] { background-color: var(--ds-color-signal-error-light); color: var(--ds-color-signal-error-strong); }
+.ds-tag[data-subtype="passive"][data-type="neutral"] {
+  background-color: var(--ds-color-bg-surface-pressed);
+  color: var(--ds-color-text-subactive);
+}

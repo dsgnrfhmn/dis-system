@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navigation</title>
+<!-- Navigation card, Figma D_SYSTEM node 103:4801: one full-width nav bar
+     with Figma's page links (For You current, Collection, Template, Queue) and
+     the theme toggle. Rendered with nav-bar as it is: its left slot is the
+     workspace dropdown, where Figma now shows a "Find more Tickets"
+     text link. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/input-dropdown/style.css">
+<link rel="stylesheet" href="../components/text-button/style.css">
+<link rel="stylesheet" href="../components/nav-bar/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>.showcase { display: block; padding: var(--ds-spacing-9) 0; }</style>
+</head>
+<body>
+<div class="showcase">
+<nav class="ds-nav-bar" aria-label="Primary">
+  <div class="ds-nav-bar__left">
+<button type="button" class="ds-input-dropdown" data-size="small" aria-haspopup="listbox">
+  <span data-dropdown-value>Tickets</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+  </div>
+
+  <div class="ds-nav-bar__center">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="solid" aria-current="page">For You</button>
+<button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="solid">Collection</button>
+<button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="solid">Template</button>
+<button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="solid">Queue</button>
+  </div>
+
+  <div class="ds-nav-bar__right">
+<button class="ds-text-button ds-nav-bar__theme-toggle" type="button" data-priority="secondary" data-status="active" data-underline="dotted"><span class="ds-text-button__icon ds-nav-bar__theme-icon" data-icon="theme-dark" aria-hidden="true"></span><span class="ds-text-button__label ds-nav-bar__theme-label">Light theme</span></button>
+  </div>
+</nav>
+</div>
+<script src="../components/input-dropdown/component.js"></script>
+<script src="../components/text-button/component.js"></script>
+<script src="../components/nav-bar/component.js"></script>
+</body>
+</html>

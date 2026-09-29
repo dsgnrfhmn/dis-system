@@ -1,0 +1,43 @@
+[
+  {
+    "id": "style-base",
+    "name": "Base",
+    "group": "Style",
+    "description": "",
+    "isSource": false,
+    "selectedTokenSets": {
+      "Base-Shapes": "enabled",
+      "Base-Primitives": "enabled"
+    }
+  },
+  {
+    "id": "mode-light",
+    "name": "Light",
+    "group": "Mode",
+    "description": "",
+    "isSource": false,
+    "selectedTokenSets": {
+      "Color-Base-Light": "enabled"
+    }
+  },
+  {
+    "id": "mode-dark",
+    "name": "Dark",
+    "group": "Mode",
+    "description": "",
+    "isSource": false,
+    "selectedTokenSets": {
+      "Color-Base-Dark": "enabled"
+    }
+  },
+  {
+    "id": "type-base",
+    "name": "Base",
+    "group": "Type",
+    "description": "",
+    "isSource": false,
+    "selectedTokenSets": {
+      "Base-Type": "enabled"
+    }
+  }
+]

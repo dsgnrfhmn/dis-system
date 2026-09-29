@@ -1,0 +1,1435 @@
+[
+  {
+    "name": "block-row",
+    "description": "One text block in a list of blocks: the text and, on hover, its actions. Kind \"source\" is a block to pick (Add; shaded once already used); kind \"editable\" has a drag handle, Edit / Delete and an in-place edit mode.",
+    "status": "stable",
+    "category": "tables",
+    "listed": false,
+    "layout": "wide",
+    "variants": [
+      "source",
+      "editable"
+    ],
+    "props": [
+      {
+        "name": "type",
+        "type": "string",
+        "required": false,
+        "default": "source",
+        "description": "\"source\" or \"editable\"."
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "required": false,
+        "default": "Block text",
+        "description": "The block's text."
+      },
+      {
+        "name": "included",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Kind \"source\": the block is already in the document (row shaded, Add hidden)."
+      }
+    ],
+    "source": "figma:APPFILEKEY#150:16233,150:16275",
+    "rationale": "Rows have no hairlines and no vertical rules, unlike table-row: Figma draws these panes as flat block lists on white, each row its text with a trailing blank line, so min-height is spacing.9 + spacing.6 (60px) and padding spacing.cell (10px). Hover and focus-within fill bg.surface-pressed. Actions and the drag icon are at opacity 0 until hover or focus (or edit mode), like table-row's hover-only icons, so a long list reads as text first; keyboard focus keeps them reachable. An already-included source block is shaded (Figma base/warm-100 in light, bg.surface-pressed in dark) and its Add button is visibility:hidden, not removed, so the row keeps its width. Edit mode swaps the text for a textarea with an accent border and drops the text padding, so the box sits where the text was. Drag and drop is driven by the host page through data-dragging (dimmed) and data-drop=\"before\"/\"after\" (an accent line on the top or bottom edge), the same attribute API table-row offers. Not sourced from Figma: the hover / focus reveal of the actions. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "text-button"
+    ],
+    "a11y_notes": "Rows are <li> inside a <ul class=\"ds-block-list\">; give the list an aria-label. Actions are real buttons; the drag handle is a plain element with a labelled icon (drag and drop has no keyboard equivalent here, the host page must offer one if it matters)."
+  },
+  {
+    "name": "divider",
+    "description": "A single 1px rule for separating two stacked sections (horizontal, Penpot's own instance) or two items in a row, e.g. grouped buttons in a table-header-actions bar (vertical, not from Penpot).",
+    "status": "stable",
+    "category": "tables",
+    "listed": false,
+    "variants": [
+      "horizontal",
+      "vertical"
+    ],
+    "props": [
+      {
+        "name": "orientation",
+        "type": "string",
+        "required": false,
+        "default": "horizontal",
+        "description": "\"horizontal\" (default, Penpot's instance) renders a full-width, 1px, text-subactive rule for separating stacked sections. \"vertical\" (not sourced from Penpot) renders a small object-dark-passive square dot (spacing-1 x spacing-1), centered on its cross axis, for separating items within a horizontal row -- e.g. grouping buttons in a table-header-actions bar."
+      }
+    ],
+    "source": "penpot:28cec651-3f14-8022-8008-8c9a0bde2f51",
+    "rationale": "Penpot's \"Divider\" is a single main instance with one child rectangle, horizontal only; renamed to lowercase to satisfy the schema's name pattern. Horizontal: a full-width rule whose height is --ds-border-width-thin (1px) -- the border-width scale, because a hairline is a stroke, and spacing's smallest step (2px) would double its weight. Its fill is text.subactive, the token this system reserves for de-emphasized but visible content (table-cell's Source cell uses it for the same reason): enough contrast to read as a rule against bg.surface without competing with the text around it. No radius, no shadow: it is a flat rule. Vertical (not sourced from Penpot, which models only the horizontal instance): separates items within a horizontal row, e.g. grouped buttons in table-header-actions. It is a small square dot (spacing-1 x spacing-1), a design decision that replaced an earlier short vertical line, in object-dark.passive, the table border color, so it belongs to the same bordered vocabulary as the table around it; it is centered on the cross axis. Square, not round, because every radius token in the Base style resolves to 0 or 1px and a circle would be the one rounded shape in the system. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ]
+  },
+  {
+    "name": "dropdown-menu",
+    "description": "A floating menu of selectable action items, shown/hidden by a trigger element it's paired with (e.g. components/input-dropdown). Not a standalone widget \u2014 wrap a trigger and this menu together in a .ds-dropdown container to get real open/close/select behavior (see index.html). If the trigger uses input-dropdown's size=\"large\" (100% width), mirror data-size=\"large\" onto the .ds-dropdown wrapper too, so it switches to a block-level container the trigger can actually fill \u2014 see style.css.",
+    "status": "stable",
+    "category": "inputs",
+    "listed": false,
+    "variants": [
+      "divider"
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "array",
+        "required": true,
+        "description": "Each item is a real .ds-dropdown-menu__item <button> child, not a JS-templated list \u2014 this component doesn't render from data, the consumer supplies the DOM. data-value on each item is read by component.js and included in the ds-dropdown-select event detail. An item of the form {'divider': true} renders a real divider/template.html <hr> instead of a button, grouping the items around it -- see rationale."
+      }
+    ],
+    "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc60",
+    "rationale": "Styled to Figma's opened dropdown (node 45:6594 of the application file), superseding the earlier Penpot values. The panel is bg.surface with a 1px border in the open trigger's base/750 (--ds-color-input-border-hover) and no shadow: the border is the edge, matching the trigger it belongs to. It sits 10px below the trigger (Figma's column gap, spacing-3 + spacing-1) and is exactly as wide as the trigger (border-box). Items are 44px rows with 10px padding, text on one line, touching edge to edge so the menu reads as one continuous surface; hover and keyboard focus fill bg.surface-pressed; the item matching the current value (aria-selected, kept by component.js) is Medium weight, so the current choice is visible without a checkmark. 10px and 44px have no spacing token and are composed from the scale (8+2, 40+4). A divider item composes the real divider component (declared in `uses`), drawn in object-dark.passive, the table rule color. A wrapper with data-size=\"large\" or \"compact\" is block-level, so a full-width or 200px trigger can fill it. Not sourced from the design: open/close, positioning, outside-click and Escape to close, and aria-expanded toggling -- a static design tool doesn't model a floating layer, and without them this would be a picture of a menu. Items are in plain top-to-bottom DOM order, not the reversed authoring order of the Penpot instance, so the DOM order matches what is seen. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "divider"
+    ],
+    "a11y_notes": "Menu container has role=\"listbox\"; items have role=\"option\". The trigger (paired via [data-dropdown-trigger] inside a .ds-dropdown wrapper) gets aria-expanded toggled automatically by component.js -- it must already carry aria-haspopup=\"listbox\" itself (input-dropdown does). Escape closes the menu and returns focus to the trigger. Clicking outside the .ds-dropdown wrapper closes it. Arrow-key navigation between items is not implemented -- Tab/Shift+Tab and mouse/Enter/Space activation work via native button semantics, but there's no roving-tabindex or arrow-key listbox behavior yet. A divider item renders role=\"separator\" (divider's own template), not role=\"option\" -- it's not a selectable choice and carries no data-value, so component.js's select-click listener has nothing to attach to it in the first place."
+  },
+  {
+    "name": "empty-state",
+    "description": "A standalone empty-state block: optional icon, message, optional action button. For non-table-row empty states (a paper-preview with nothing selected, a set table with no blocks yet) -- a table-row-shaped empty cell should keep using table-cell's own type=\"empty-state\" instead.",
+    "status": "stable",
+    "category": "cards-layouts",
+    "variants": [
+      "message-only",
+      "with-action",
+      "with-icon",
+      "row",
+      "block",
+      "text",
+      "fill"
+    ],
+    "props": [
+      {
+        "name": "message",
+        "type": "string",
+        "required": false,
+        "default": "Nothing here yet.",
+        "description": "The empty-state text. Reuses table-cell's own Penpot-sourced empty-state string/typography as the default."
+      },
+      {
+        "name": "icon",
+        "type": "string",
+        "required": false,
+        "description": "Optional icon name (matches an icons/<name>.svg file), shown above the message."
+      },
+      {
+        "name": "action_label",
+        "type": "string",
+        "required": false,
+        "description": "Optional action button label (e.g. \"Add project\"). Composes a real text-button instance (secondary, dotted underline -- the action stays on the current view, it doesn't navigate). Omit for a message-only empty state."
+      },
+      {
+        "name": "size",
+        "type": "string",
+        "required": false,
+        "description": "\"row\": a 44px row for an empty table or block list (centered caption at half opacity, hairline under it)."
+      }
+    ],
+    "source": "none",
+    "rationale": "The design source has no standalone empty-state component. table-cell's type=\"empty-state\" is sourced, but is shaped as one table-row cell (no icon or action slot), so it can't represent an empty preview, picker or pane. This component reuses table-cell's sourced message styling (bodyTextItalic, text.subactive) and adds only the layout a cell can't offer: a centered column with an optional icon above the message and an optional action (a real text-button, declared in `uses`) below it. The icon size (spacing-8, 32px) is a judgment call, not sourced: larger than inline spacing-7 glyphs because it heads a standalone block. The action is secondary / dotted because adding something from an empty state happens in place rather than navigating away.\n\nSizes, from the application's Figma screens:\n- data-size=\"row\": the empty row under a table head or block list. One table row high (spacing.row plus the hairline), the caption role (Inter Italic 16px) in text.active, the whole row including its hairline at 50% opacity; the hairline is base/150 in light and the pressed surface in dark.\n- data-size=\"block\": the empty area inside a picker. Fills its row, 40px above and below, caption role at half opacity, on the pressed surface (base/50 in light).\n- data-size=\"text\": one plain left-aligned line at half opacity on the surface color, inset spacing.cell, no height or hairline of its own.\n- data-size=\"fill\": the empty box of a preview pane. Absolutely positioned 20px inside its positioned parent, filled with base.175 (a palette token, the same in both themes), a hairline on its left edge, the message centered, the whole box at half opacity.\nRendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "text-button"
+    ],
+    "a11y_notes": "The icon is aria-hidden: the message already carries the full meaning. The action is a real, focusable <button> from text-button's template, with no accessibility gap beyond what that component documents."
+  },
+  {
+    "name": "gallery",
+    "description": "A horizontally-scrolling row (filmstrip/slider) of gallery-image thumbnails that functions as a real multi-select photo picker: click one (or several) to select it, each selected thumbnail shows its own selection-order badge (1st click = \"1\", 2nd = \"2\", ...), click again to deselect.",
+    "status": "stable",
+    "category": "controls",
+    "variants": [],
+    "props": [],
+    "source": "penpot:7cfc6f3b-95fe-808f-8008-8de80dc40c72",
+    "rationale": "Layout from Penpot's \"Gallery\" instance: a flex row, aligned start, column gap spacing-4 (12px), Token-bound. Penpot defines no overflow behavior (a fixed-width demo row with few images), so the row is a scrolling filmstrip (nowrap, overflow-x:auto, children flex-shrink:0), with spacing-3 (8px) padding top and bottom because overflow-x:auto also clips vertically, which would cut a selected image's outline. The demo holds 10 mixed-format images so the scroll is actually visible.\n\nSelection (component.js, not sourced -- a static design tool doesn't model clicks): click to select, and each selected image shows a badge with its selection order; clicking again deselects and renumbers the rest so the order stays contiguous. The ordered selection is persisted to localStorage (key ds-gallery-selection:<gallery id>) and dispatched as ds-gallery-select, so another process or page can read it. The badge is accent-1, matching the selected image's outline, with a text-inverced numeral.\n\nScrollbar: the native one is hidden and replaced by a custom, always-visible bar in .ds-gallery-wrapper (outside the scrolling element, so it doesn't scroll away): a spacing-2 (4px) track in bg-surface-pressed with an accent-1 thumb sized to the visible fraction. It is interactive -- drag the thumb or click the track to scroll -- and grows to spacing-4 (12px) on hover and drag so it's easier to grab. It is absolutely positioned inside padding the wrapper reserves for the grown state, so growing never shifts layout. The row itself can be dragged to scroll with mouse or pen (touch already scrolls natively); a 4px threshold tells a drag from a click, and a drag never also toggles the image it ends on. Pointer capture is taken only once a drag is confirmed, because a captured pointer's click is delivered to the capturing element, which would stop plain clicks from reaching the images.\n\nReset: any element with data-gallery-reset=\"<gallery id>\" clears that gallery's selection through the same path a click uses, via a ds-gallery-reset event, so a host (e.g. popup's gallery body) needs no gallery-specific code. The trigger is a two-step confirm: the first click arms it (label \"Yes, reset selection\", text-button's error status), the second resets and restores the original label and status; a click anywhere else while armed disarms it, the same outside-click mechanism dropdown-menu uses.\n\n.ds-gallery-picker is a separate, plain scrolling row for gallery-image type=\"picker\" cards: 10px gaps, native thin scrollbar, no custom scrollbar or drag-to-scroll. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "No list or grid role is added (Penpot's source has no such structure). Each composed gallery-image is a real control: role=\"button\", tabindex=\"0\", aria-pressed reflecting selection, Enter/Space toggle like a click. Placeholder images have no accessible name beyond the role; a host with real photos should add an aria-label per image. The scrollbar thumb has role=\"scrollbar\", aria-orientation=\"horizontal\", aria-controls pointing at the row, aria-valuenow/min/max as a 0-100 percentage, and tabindex=\"0\" with ArrowLeft/Right (80% of the visible width) and Home/End -- needed because a native scroll container only answers arrow keys when it has focus itself. Drag-to-scroll has no keyboard equivalent of its own; the thumb and each image's Tab order cover the same range. Known gap: the reset trigger's armed state is not announced proactively (no live region); the button's accessible name does update, so re-reading it reveals the state.",
+    "uses": [
+      "gallery-image"
+    ]
+  },
+  {
+    "name": "gallery-image",
+    "description": "One item of a gallery. type=\"image\" (default): a thumbnail standing in for a photo, with an optional badge marking selection order. type=\"picker\": a selectable 160px square card with an optional real image. type=\"text-icon\": a text skeleton placeholder -- a bold label above a stack of gray bars, the last one shorter, in short / middle / full lengths -- selectable as a radio group with its text-icon siblings.",
+    "status": "stable",
+    "category": "cards-layouts",
+    "variants": [
+      "landscape",
+      "portrait",
+      "square",
+      "text-icon-short",
+      "text-icon-middle",
+      "text-icon-full"
+    ],
+    "props": [
+      {
+        "name": "type",
+        "type": "string",
+        "required": false,
+        "default": "image",
+        "description": "Sets data-type. \"image\" (default, attribute omitted in markup) renders the photo-thumbnail look, sized by the format prop below. \"text-icon\" renders the skeleton/placeholder look instead (120px fixed height, flexible width -- see rationale; format is not applicable in that case, Penpot only samples Text-icon at Format=landscape). Kebab-cased from Penpot's own Type axis (Image/Text-icon)."
+      },
+      {
+        "name": "format",
+        "type": "string",
+        "required": false,
+        "default": "landscape",
+        "description": "Only applies when type=\"image\". Sets data-format, controlling width at a fixed 160px height: landscape (260px, wider), portrait (130px, narrower), square (160px, equal). Kebab-cased from Penpot's own Format axis (landscape/Portrait/Square)."
+      },
+      {
+        "name": "selected",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Sets data-selected, which every type renders as the same outline frame (see rationale). For type=\"image\" the host also renders the .ds-gallery-image__badge child with the selection's order number (this component doesn't generate it). For type=\"text-icon\" this only sets the initial state -- component.js wires single-select radio semantics across each group of text-icon siblings, so at most one card per group ends up selected at runtime."
+      },
+      {
+        "name": "subtype",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Only applies when type=\"text-icon\": short / middle / full, matching Penpot's Subtype axis. It determines how many .ds-gallery-image__bar children the template renders (1 full-width + 1 short for short, 2+1 for middle, 4+1 for full) and the label text."
+      },
+      {
+        "name": "src",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Only applies when type=\"picker\": URL of the picture, rendered as an <img> (object-fit: cover, loading=lazy) over the placeholder fill. Omit for the placeholder. A failed load is hidden by component.js so the fill shows."
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "required": false,
+        "default": "",
+        "description": "Only applies with src: the <img>'s alt text. Empty by default because the picker <button> carries the accessible name (aria-label); set it only when the button has none."
+      }
+    ],
+    "source": "penpot:7cfc6f3b-95fe-808f-8008-8de593b3ca67",
+    "rationale": "type=\"image\": sizes from Penpot's \"Image\" instances, all three formats sampled -- height 160px, width 260 / 130 / 160px for landscape / portrait / square (pixel-matched). The fill is a flat object-dark-passive gray standing in for a photo, as Penpot's own instances do (a flat-color rectangle, no image asset); a host sets a real background-image. Penpot's #ADADAD matches several tokens; object-dark-passive was chosen as the neutral, non-state fill. The selection badge (Penpot State=\"Selected\") is a small square flush in the bottom-right corner: a text-inverced numeral in typography.heading5 on accent-1, the same color as the selected frame. Penpot's \"Number-label\" is a filled square with a text character, so it is HTML text, not an icon. The number and which images are selected are host state (gallery supplies them).\n\nSelected frame (all types): a 1px accent-1 outline. Hover (all types): a 1px text-active outline, no fill -- one shared affordance for both types. Outlines, not borders, so the pixel-matched sizes don't grow; hover is declared before selected so a hovered selected item keeps its accent outline.\n\ntype=\"text-icon\" (Penpot Subtype short / middle / full, purpose confirmed from Penpot's variants and exports): a skeleton placeholder -- the subtype's name as a bold label above flat gray bars standing in for lines of text, ending in one shorter 80px bar (short = 1+1 bars, middle = 2+1, full = 4+1). Boards are 120px high with spacing-6 (20px) padding; bar height and gaps are documented in style.css, including Penpot's visible overflow for middle and full. Width is not Penpot's 566px: the cards sit side by side and share their container (flex 1 1 0, min-width 0). Selection works as a radio group (component.js): siblings sharing a parent form one group, one selected at a time, with roving tabindex and arrow keys like native radios.\n\ntype=\"picker\": a selectable 160px square <button> with aria-pressed. Picked, it shows a 2px accent frame, a 4px surface mat around the picture and a small numbered badge (pick order). The placeholder fill is object-dark.passive; with the `src` prop the template renders an <img> (object-fit: cover) over it, and the fill shows while it loads or if it fails (component.js hides a failed image). The host passes only data, never a style value. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "type=\"image\" on its own is a static thumbnail; composed in gallery, gallery's component.js makes it a real toggle (role=\"button\", tabindex, aria-pressed). A host with real photos should add an accessible label per image. type=\"picker\" is a native <button> with aria-pressed. type=\"text-icon\": the shared parent gets role=\"radiogroup\", each card role=\"radio\" with aria-checked, and a roving tabindex, so the group is one Tab stop; arrow keys move focus and selection together, Enter/Space select -- native radio behavior. Note: text-icon's real purpose is a loading skeleton, and a selectable skeleton isn't a real UI pattern; the selection exists to demonstrate the shared selected frame. Used purely as a loading state, wire no selection and mark the surrounding container role=\"status\" / aria-busy instead."
+  },
+  {
+    "name": "header-block",
+    "description": "The full header of a table: a title/tabs region (table-header) and an action-button cluster (table-header-actions), with an optional search, forming one header bar whose border-bottom separates it from the table's rows below.",
+    "status": "stable",
+    "category": "tables",
+    "listed": false,
+    "layout": "wide",
+    "variants": [
+      "big",
+      "small"
+    ],
+    "props": [
+      {
+        "name": "size",
+        "type": "string",
+        "required": true,
+        "default": "big",
+        "description": "big or small. Maps to Penpot's Size variant axis; controls the header's own padding scale (spacing.6/spacing.5 vs spacing.0/spacing.3). Does not affect table-header or table-header-actions content."
+      },
+      {
+        "name": "search",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "When true, renders a center search zone (composing input) between table-header and table-header-actions. Not a Penpot-sourced axis -- see rationale."
+      },
+      {
+        "name": "search_placeholder",
+        "type": "string",
+        "required": false,
+        "default": "Search",
+        "description": "Placeholder text for the search input, only rendered when search=true."
+      },
+      {
+        "name": "layout",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "bulk: the bulk-actions row over a table -- table-header-actions flush left (the actions act on selected rows; give them status 'disabled' until something is selected), plus, with search=true, an always-open search docked right. No table-header."
+      }
+    ],
+    "source": "penpot:28cec651-3f14-8022-8008-8c9a0bd9b372",
+    "rationale": "Only Size is modeled as a variant. Penpot's other axis, Type (Archived / Found / Analysed / Queue / Queue-Small), changes only which title table-header renders and how many actions table-header-actions renders -- those components' own variants -- so modeling it here would duplicate their variant surfaces in a shell with no visual opinion about them.\n\ndata-size=\"big\" (Figma header row): a plain 60px bg.surface row with 20px side padding, no gap between actions, no frame and no top padding, and one hairline under it -- the same hairline every table row has, so the header reads as the table's first row. data-size=\"small\" keeps the earlier shaded bar: bg.surface-pressed with the border-width-thin / object-dark-passive border of table-cell's grid, inner padding spacing.3 (8px, Token-bound in Penpot's Queue/Small instance). Nested table-header's own chip background and border are reset inside the row so the two don't form a doubled box. The row is justify-content: space-between, which docks the title left and the actions right regardless of either's width. The divider Penpot draws under the header is not composed: the row's own border-bottom does that job, and a text.subactive divider against it would render as a doubled, two-tone line.\n\nSearch (not sourced from Penpot): one search box per table, filtering its rows. It composes input's template unchanged (no icon; the icon set has no search glyph). With a search, the row switches from space-between to flex-start + gap, because space-between only works for exactly two children. By default a \"Search\" trigger reveals the input and blurring an empty input collapses it back, so an unused field doesn't take header space; a non-empty input stays open. data-open=\"always\" renders the input with no trigger, and data-align=\"end\" docks the zone to the right edge. layout=\"bulk\" is the bulk-actions row: table-header-actions flush left, an optional always-open search right, no title. The search field keeps a visible border through header-block's own rule, although input's transparent fill is borderless at rest. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "table-header",
+      "table-header-actions",
+      "input",
+      "text-button"
+    ],
+    "a11y_notes": "The search input is input's plain native field; labeling is the host page's responsibility, as input documents. The search trigger and the input both stay in the DOM and component.js only flips which is visible (data-open) -- a show/hide of the same kind as popup and dropdown-menu."
+  },
+  {
+    "name": "header-tab",
+    "description": "One panel in a full-width row of N equal-width section tabs (e.g. a For Review / Analysed / Archived / Filtered strip) -- each tab is its own flex:1 box with a background and border that change with selection, tiling edge to edge across the row. Distinct from table-header's type=\"2-tabs\" (a single content-hugging chip holding both labels); see rationale. The host composes N instances inside a shared role=\"tablist\" wrapper and typically renders a header-block bar below the strip for the active tab's own search and bulk actions.",
+    "status": "stable",
+    "category": "tables",
+    "layout": "wide",
+    "variants": [
+      "active",
+      "inactive"
+    ],
+    "props": [
+      {
+        "name": "active",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Whether this tab is the current section. Sets aria-selected and switches background/text color/underline per rationale."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "default": "Tab",
+        "description": "The tab's title text (e.g. \"For Review\")."
+      },
+      {
+        "name": "count",
+        "type": "string",
+        "required": false,
+        "default": "",
+        "description": "Optional secondary caption rendered beside the label (e.g. \"4 total, 5 submitted\"). Omitted entirely from the DOM when not passed, matching table-header's own optional info caption."
+      },
+      {
+        "name": "size",
+        "type": "string",
+        "required": false,
+        "description": "\"compact\": 56px tabs for a pane head (see rationale); default is the 60px full-width strip."
+      }
+    ],
+    "source": "figma:APPFILEKEY#150:16076,150:16077",
+    "rationale": "Read from the application's Figma file: the repeated \"header\" instance used identically across its section screens (nodes 150:16076 active / 150:16077 inactive), with only the active assignment changing. Height is a fixed 60px, the same as the nav bar it sits flush beneath; padding is Figma's 10px vertical / 20px horizontal. The label and count sit in an inner .ds-header-tab__text wrapper with Figma's bottom alignment and 10px gap, while the outer tab centers that block vertically -- Figma's own two-level structure.\n\nColors read off Figma's two states: active = bg.surface + text.active label; inactive = bg.surface-pressed + text.subactive label, the same active/inactive vocabulary table-header's 2-tabs uses. The count uses text.subactive in both states (Figma's 50% caption). Figma's 0.5px bottom border is drawn with border-width-thin in object-dark-passive, the pairing table-cell and table-header use for their borders, rather than a 0.5px-only token. The inactive label carries Figma's permanent dotted underline: it stays in the view when clicked (CLAUDE.md, Interaction conventions).\n\nWhy not an extension of table-header's 2-tabs: that variant is one content-hugging chip holding both labels, sitting beside table-header-actions; here each tab independently stretches flex:1 across the whole row, carries its own background and border, and the strip sits above a separate header bar. None of 2-tabs' CSS transfers. Figma's \"actions-block\" child holds one invisible, unpopulated placeholder button on every instance and is not modeled.\n\ndata-size=\"compact\" is a pane-head tab (Figma node 150:16299): 56px tall, 20px side padding, a hairline on the left of every tab (the divider between panes), the label in the \"title\" role, the count in the caption role and hidden while the tab is open. .ds-header-tabs holds tabs as a flex row. Not sourced from Figma: click-to-switch in component.js, scoped to the nearest role=\"tablist\" ancestor because each tab is composed independently by the host; a tab row that never switches would be a dead affordance. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "A real role=\"tab\" <button>, per the WAI-ARIA tabs pattern. The host wraps the tabs in a role=\"tablist\" container (this component doesn't own that wrapper) and pairs each tab with its role=\"tabpanel\". aria-selected reflects the active prop and is kept in sync on click by component.js. The focus-visible outline (accent-1, 2px, matching table-header's tabs) has no Figma equivalent: static design tools don't model keyboard focus.",
+    "uses": []
+  },
+  {
+    "name": "input",
+    "description": "A single-line text field for entering short freeform text. Use for names, search terms, notes \u2014 anything that isn't a fixed set of choices (use input-dropdown for that).",
+    "status": "stable",
+    "category": "inputs",
+    "variants": [
+      "text",
+      "textarea"
+    ],
+    "props": [
+      {
+        "name": "type",
+        "type": "string",
+        "required": false,
+        "default": "text",
+        "description": "\"text\" (default, a single-line <input>) or \"textarea\" (a multi-line <textarea>, not from Penpot -- see rationale)."
+      },
+      {
+        "name": "fill",
+        "type": "string",
+        "required": false,
+        "default": "transparent",
+        "description": "\"transparent\" (default) or \"filled\" (base/250 fill). Figma's Input property is literally named Size, but its two values are fills; it is exposed as fill so it cannot be confused with input-dropdown's width `size`. Sets data-fill. Hover fills either one."
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": false,
+        "description": "Current text content. Maps to Penpot's Filled state when non-empty."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": "Placeholder text shown when empty, drawn as body text at 50% opacity (Figma). Typed text is full opacity."
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "default": 8,
+        "description": "Only meaningful when type=\"textarea\". Sets the native rows attribute."
+      }
+    ],
+    "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc59",
+    "rationale": "Styled to Figma's Input (node 33:8199 of the application file): a 40px box with a 1px base/400 border and 10px padding, no shadows. Figma's Size property (transparent | filled) is exposed as `fill`. Hover fills the field (base/250) and darkens the border (base/750); focus is a white fill with an accent border, typed text at full opacity. Figma has exactly three states (default, hover, focused) and no disabled, error or pressed state, so none is styled. State is native CSS (:hover, :focus, ::placeholder), no `state` prop. Colors come from the input tokens (--ds-color-input-fill, -border, -border-hover, -border-focus), defined in both themes. The transparent fill has no visible border at rest (Figma D_SYSTEM Inputs card, node 103:4758): the field sits inside something that already frames it, and shows its border on hover and focus, matching input-dropdown; table-cell's notes cell and header-block's search restore the boxed look in their own CSS. width:100% rather than Figma's 280px: that is the swatch's frame, not a component constraint. Not sourced from Figma: type=\"textarea\", which reuses the same box rules without the fixed height. Replaces an earlier Penpot version; its Penpot `source` is kept for traceability. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Native <input type=\"text\">, so labeling is the host page's responsibility (a <label> or aria-label). Focus is shown by the fill turning white and the border turning the accent color (Figma draws no separate outline). The placeholder is 50% opacity body text and is not a substitute for a label."
+  },
+  {
+    "name": "input-dropdown",
+    "description": "A select-style field: shows the current choice with a dropdown affordance arrow, opens components/dropdown-menu when activated (composed, see index.html \u2014 wrap this trigger and a .ds-dropdown-menu together in a .ds-dropdown container). Renamed from Penpot's literal component name \"Input_with-icon\" \u2014 its content is a 'Dropdown' text label plus a chevron, i.e. a select trigger, not a text input with a decorative leading icon.",
+    "status": "stable",
+    "category": "inputs",
+    "variants": [
+      "small",
+      "middle",
+      "large",
+      "compact"
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "string",
+        "required": true,
+        "default": "Select\u2026",
+        "description": "The currently selected value shown in the field."
+      },
+      {
+        "name": "placeholder",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Set when `value` is only a prompt (\"Select option\"), not a real choice: the label is drawn at 50% opacity like Figma's placeholder text. Sets data-placeholder; component.js removes it when the paired dropdown-menu selects an item."
+      },
+      {
+        "name": "fill",
+        "type": "string",
+        "required": false,
+        "default": "transparent",
+        "description": "\"transparent\" (default) or \"filled\" (base/250 fill). Figma's Input property is named Size but its values are fills; exposed as fill so it stays distinct from the width `size` below. Sets data-fill. Hover fills either one."
+      },
+      {
+        "name": "size",
+        "type": "string",
+        "required": false,
+        "default": "middle",
+        "description": "small (140px), middle (300px), or large (100% \u2014 fills its container). Sets a fixed width via data-size; the field never grows/shrinks on its own. Not from Penpot \u2014 its demo instances were all a single fixed 160px, an artifact of that documentation swatch's own frame size, not a real size system. These three values and their pixel widths were specified directly by the user rather than derived from Penpot (middle started at 240px, widened +60px to 300px on later user request). compact is 200px (a pane head's source dropdown)."
+      }
+    ],
+    "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc61",
+    "rationale": "Styled to Figma's Input, Type=text+icon (node 33:8199 of the application file): the same 40px box as `input` (1px base/400 border, 10px padding, no shadows) with the label and a 24px arrow 10px apart. Figma's Size property (transparent | filled) is exposed as `fill`. Hover fills the field (base/250) and darkens the border (base/750); Figma's focused variant (white fill, base/750 border, arrow pointing up) is applied for :focus-visible and for the open menu (aria-expanded), so the arrow shows which way the menu is. Colors come from the input tokens (--ds-color-input-*, plus --ds-color-input-icon for the base/600 arrow). The label is 50% opacity while it is only a prompt and full opacity once a choice is made, so `placeholder` (data-placeholder) is opt-in; component.js clears it on the paired dropdown-menu's ds-dropdown-select event. Renamed from Penpot's \"Input_with-icon\" because its content is a label plus a chevron, i.e. a select trigger, and the schema's name pattern calls for kebab-case describing behavior. The arrow reuses icons/arrow-down.svg. Figma has only default, hover and focused states, so no disabled or error state is styled. size (small / middle / large) is a fixed-width system not traceable to the design source; data-size=\"compact\" is 200px wide, for a dropdown in a pane head (Figma node 150:16284) -- mirror it onto the .ds-dropdown wrapper so the trigger fills it (see dropdown-menu). Replaces an earlier Penpot version; its `source` is kept for traceability. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Renders as a native <button> (not a real <select>). aria-haspopup=\"listbox\" is set so assistive tech announces it opens a choice list; aria-expanded is toggled automatically by components/dropdown-menu/component.js when this trigger is wrapped in a .ds-dropdown alongside a .ds-dropdown-menu (see index.html). It also still dispatches ds-input-dropdown-open on click/Enter/Space (free via <button>) independent of whether a real menu is attached, for a host page that wants to wire up its own menu instead."
+  },
+  {
+    "name": "loading-veil",
+    "description": "A dim veil over one area with a small dark \"Loading\" tooltip: the area under it is loading. Show and hide with the hidden attribute.",
+    "status": "stable",
+    "category": "popups",
+    "listed": false,
+    "variants": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "Loading",
+        "description": "Tooltip text."
+      }
+    ],
+    "source": "figma:APPFILEKEY#150:16233,150:16284,150:16299",
+    "rationale": "The veil covers its positioned parent (inset 0) above the content (z-index 5, below popups at 100 and toasts at 200) with the popup overlay color (bg.overlay) at 50% opacity, exactly like a popup's backdrop, so 'this area is busy' reads the same way as 'this area is behind a dialog'. The tooltip is a dark box (Figma base/900 with a base/1000 hairline, white text, 10px padding and gap) holding the spinner glyph (a CSS mask, so it takes the text color) and the label. It is centered horizontally and translated -50% / -50%, so the host places its center by setting style.top (Figma draws it at the middle of the window, not of the area). Not sourced from Figma: the hidden-attribute API and role=\"status\". Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [],
+    "a11y_notes": "role=\"status\" so the loading message is announced when the veil is shown; the spinner is aria-hidden. The veil does not trap focus: the host should also mark the area inert while loading if it must not be used."
+  },
+  {
+    "name": "nav-bar",
+    "description": "The primary top navigation bar: a workspace switcher (left), the page / section links (center), and a theme toggle (right). A composition shell, like table-row -- it composes real input-dropdown and text-button instances rather than restyling them. It stays pinned to the top of the viewport while the page scrolls (position:sticky, top:0), with an opaque background and a bottom hairline so it stays legible over scrolling content; this is part of the component, so every page that uses it gets the same behavior.",
+    "status": "stable",
+    "category": "navigation",
+    "layout": "wide",
+    "variants": [],
+    "props": [],
+    "source": "penpot:7cfc6f3b-95fe-808f-8008-8d3a693d14e4",
+    "rationale": "Layout from Penpot's Nav-bar instance: a flex row, centered, justify-content: space-between; both side slots are flex rows too, so buttons of different heights line up. Box values follow the Figma nav instance: 10px (spacing-cell) padding on all four sides and a 0.5px bottom hairline in object-dark-passive -- raw 0.5px because Figma draws it and --ds-border-width-thin (1px) stays correct for tables. Penpot's column gap of 101px is not reproduced: it is an artifact of a fixed 1240px demo board, and with space-between any explicit gap would be right at exactly one width. Sticky, not fixed: the bar is always the page's first full-width element, so both look the same once scrolled, but sticky keeps it in document flow and content below needs no hand-maintained offset. bg.surface and the hairline keep it legible over content scrolling beneath it.\n\nLeft: a composed input-dropdown at 160px (the width table-cell's dropdown cell uses for the same Penpot source). Center: text-buttons with no gap (Penpot's gap is 0; the buttons' own padding separates them). Which link is primary (current page) is markup the host supplies; Penpot's \"Property 1\" axis only changes which link carries it, so it isn't a style variant. Right: the theme toggle is a real text-button (secondary, active, dotted -- toggling stays on the page) with an icon and a visible label (\"Dark\" / \"Light\"); both name the target theme, the same convention the site's own toggle uses. The label is not sourced from Penpot, whose theme icon is a bare glyph. The theme icons draw a 16-unit circle in a 24-unit viewBox, so a spacing-7 (24px) box reproduces Penpot's 16px glyph. .ds-nav-bar__theme-* classes are kept only as stable selectors for the toggle script and carry no CSS.\n\nNotification dot: .ds-nav-bar__dot inside a nav link is a 12px accent-2 circle at the link's right edge, toggled with hidden -- an unread-updates marker. It is the only round shape in the system; Figma draws it round. Keeping it in sync across pages is the host's concern. Not sourced from the design: the link click-swap and the theme toggle's behavior, without which the current link would never change and the toggle wouldn't toggle. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "A real <nav aria-label=\"Primary\"> landmark (not in Penpot; a design tool has no landmarks). Center links are <button> elements with aria-current=\"page\" on the current one, updated on click by component.js; in a real site they should be <a href>. The theme toggle's accessible name is its visible label (\"Dark\" / \"Light\"), with the icon aria-hidden and no separate aria-label, so visible and accessible names can't diverge (WCAG 2.5.3); both update on every click to name what activating it does. The workspace switcher is input-dropdown as-is; see its notes.",
+    "uses": [
+      "input-dropdown",
+      "text-button"
+    ]
+  },
+  {
+    "name": "page-head",
+    "description": "The 60px bar under the nav bar of a work page: the page's title and its main action on the left, secondary actions on the right, one hairline underneath.",
+    "status": "stable",
+    "category": "navigation",
+    "listed": false,
+    "layout": "wide",
+    "variants": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "default": "Set name",
+        "description": "Page title (an h1), cut with an ellipsis when it is too long."
+      },
+      {
+        "name": "main_action",
+        "type": "string",
+        "required": false,
+        "default": "Save set",
+        "description": "Label of the text button next to the title."
+      }
+    ],
+    "source": "figma:APPFILEKEY#150:16217,150:16233,150:16362",
+    "rationale": "Height is spacing.9 + spacing.6 (60px), side padding spacing.6 (20px), bg.surface with one hairline (object-dark.passive) under it. The title is the heading-4 role (Inter SemiBold 20px) with line-height normal, so the bar's height, not the type scale, sets the rhythm. The gap between title and main action is spacing.cell (10px); the right group has no gap because text buttons hug their labels (see text-button). Both groups are flex rows with min-width 0, so a long title ellipsizes instead of pushing the actions out. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "text-button"
+    ],
+    "a11y_notes": "The title is an h1. The buttons are real text-buttons; keyboard focus uses their own ring."
+  },
+  {
+    "name": "pane",
+    "description": "One column of a two-column work area: a 56px head (title and caption at half opacity, optional action button) over a body that scrolls on its own. .ds-split lays panes side by side.",
+    "status": "stable",
+    "category": "cards-layouts",
+    "listed": false,
+    "layout": "wide",
+    "variants": [],
+    "props": [
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "default": "ds-pane-demo",
+        "description": "Prefix of the title's id, used by aria-labelledby."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "default": "Included projects",
+        "description": "Pane title."
+      },
+      {
+        "name": "caption",
+        "type": "string",
+        "required": false,
+        "default": "4 total",
+        "description": "Caption next to the title (a count, a page count)."
+      },
+      {
+        "name": "action",
+        "type": "string",
+        "required": false,
+        "default": "Add project",
+        "description": "Label of the head's text button."
+      }
+    ],
+    "source": "figma:APPFILEKEY#150:16217,150:16233,150:16362",
+    "rationale": "Head height is spacing.9 + spacing.5 (56px), side padding spacing.6, bg.surface, one hairline under it. The title uses the \"title\" role (Inter SemiBold 16px) and the caption the caption role (Inter Italic 16px), both at 50% opacity as in Figma, bottom-aligned so their baselines meet, spacing.cell apart. .ds-pane__body and .ds-pane__scroll are separate so a positioned body (e.g. one a loading-veil covers) can wrap the scrolling region, while a simple pane scrolls directly under the head. The scrollbar is hidden (scrollbar-width: none); wheel, keys and touch still scroll.\n\nAttributes: data-divider=\"start\" on the head and body draws a hairline on the pane's left edge (the divider between two panes); data-emphasis=\"true\" on the title shows it at full opacity; a body with the hidden attribute is hidden (tab panels).\n\nResizable split: any flex row with data-resizable and a .ds-split__handle between two neighbours. The handle is a 0-wide flex item on the border between them, with an 8px (spacing.3) grab area centered on the line and a 2px accent line on hover, focus and while dragging. Dragging, or ArrowLeft / ArrowRight (24px a step), resizes the target: data-resize-target=\"end\" (default) the element after the handle, \"start\" the one before it. data-min-size / data-min-rest set the target's and the rest's minimum in pixels (default 320 each). The size is applied as data-resized plus --_resize-size on the target, not an inline flex, so CSS states keep priority (sidebar-list's collapsed rule beats it, and the handle beside a collapsed sidebar is hidden). data-resize-key remembers the target's share of the row in localStorage (a share, so another window width keeps the proportion; missing or failing storage just starts equal). It emits ds-split-resize and a window resize, so nested splits re-apply their stored share and paper-preview's scroll thumb updates. Not sourced from Figma: the handle and resizing; the design shows only the divider line. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "text-button"
+    ],
+    "a11y_notes": "The pane is a <section>; label it with aria-labelledby pointing at the title. The head button is a real text-button. The resize handle is role=\"separator\" aria-orientation=\"vertical\", focusable, with aria-valuenow/min/max as the end pane's share of the split in percent; give it an aria-label naming what it resizes."
+  },
+  {
+    "name": "paper-preview",
+    "description": "A page preview shell for document-style cards (templates, collections), composed with skeleton placeholder content rather than real copy. Two modes: one-longread (a single continuous sheet, text placeholder only) and paged-preview (several A4 sheets stacked with gaps, scrollable inline, text and image placeholders). Each mode supports portrait and landscape.",
+    "status": "stable",
+    "category": "cards-layouts",
+    "variants": [
+      "one-longread",
+      "paged-preview",
+      "portrait",
+      "landscape"
+    ],
+    "props": [
+      {
+        "name": "mode",
+        "type": "string",
+        "required": false,
+        "default": "one-longread",
+        "description": "Sets data-mode. \"one-longread\" (default) renders a single continuous page with no gap/scroll behavior -- generalizes Penpot's real Template/Draft pattern (one board, no page split). \"paged-preview\" renders several .ds-paper-preview__page children stacked with an 8px gap inside a fixed-height, vertically-scrollable frame -- generalizes Penpot's real Collection/Template-Visual pattern (several Page-N boards in a flex column)."
+      },
+      {
+        "name": "orientation",
+        "type": "string",
+        "required": false,
+        "default": "portrait",
+        "description": "Sets data-orientation, which controls each sheet's aspect-ratio: \"portrait\" is 538:761, \"landscape\" 761:538 -- both true A4 (1:sqrt(2)), pixel-matched to Penpot's A4-proportioned Page-N boards and their transpose. The card stretches to 100% of its container's width; sheets scale with it."
+      }
+    ],
+    "source": "penpot:7cfc6f3b-95fe-808f-8008-8d913547ce01",
+    "rationale": "Generalizes the two structural patterns of Penpot's \"Paper-Cards\" board into a blank, reusable shell (Penpot has no paper-preview component): one-longread is a single uninterrupted sheet; paged-preview is several sheets in a column with a spacing.3 (8px) gap, Token-bound in Penpot and confirmed by measured positions. The container is bg.surface with no padding, so it shows only in the gaps between sheets. Sheets are true A4 (1:sqrt(2)): landscape 761:538, pixel-matched to Penpot's one A4-proportioned instance, portrait its transpose. Sheets are width:100% with aspect-ratio, so the proportion holds at any container width. In light, a sheet is white (Figma base/0); a picture inside a sheet fills its box (object-fit: cover). No shadow, border or radius: none of the sourced instances has any, so a flat rectangle is the actual sourced look.\n\npaged-preview scrolls inline within a fixed max-height of 500px (a viewport constraint, not a token; vh would break inside the auto-resizing iframe the site embeds demos in). The native scrollbar is hidden and replaced by an overlay thumb, the same technique gallery uses horizontally: it shows only while scrolling and fades out after, and as an absolutely positioned overlay it never shifts content. Placeholder bars reuse gallery-image's skeleton convention (object-white.disabled bars, spacing-2 within a stack, spacing-6 between sections); the image placeholder reuses gallery-image's object-dark-passive stand-in at 16:9. .ds-paper-preview-stack is the scrolling column of sheets used inside a pane. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "A visual placeholder shell: the skeleton bars and rectangles stand in for content that doesn't exist yet, so they carry no role or label. A host rendering real document content into the sheets adds the real structure at that point (headings, landmarks, alt text). The scrollable frame is a plain overflow:auto <div> with no tabindex or role=\"region\", since an empty region would be a false affordance; add both once real content is composed in. The custom scrollbar is aria-hidden and pointer-events:none -- a visual echo of native scrolling, not a control.",
+    "listed": false
+  },
+  {
+    "name": "popup",
+    "description": "A modal panel: a title, a body (free text, a single input field, or a gallery + text-icon selector), and a bottom action row of one or two buttons, shown over a real full-viewport dimmed backdrop that a trigger button opens and the bottom row's own buttons (or Escape/backdrop click) close. No close/X control -- dismissal is via the bottom row's own buttons.",
+    "status": "stable",
+    "category": "popups",
+    "layout": "wide",
+    "variants": [
+      "text",
+      "input",
+      "gallery"
+    ],
+    "props": [
+      {
+        "name": "type",
+        "type": "string",
+        "required": true,
+        "default": "text",
+        "description": "Sets data-type on .ds-popup__body. \"text\" renders free paragraphs (Penpot's \"Summary\"); \"input\" composes a real .ds-input field (Penpot's \"Description\"); \"gallery\" composes a real gallery filmstrip plus a gallery-image type=\"text-icon\" selector -- a smaller answer to Penpot's \"Image-sliders\", see rationale."
+      },
+      {
+        "name": "size",
+        "type": "string",
+        "required": false,
+        "default": "medium",
+        "description": "small (500px, Figma's confirmations), medium (800px, Add Description and Summary), or large (1200px, not from a Figma frame yet). Sets data-size on .ds-popup."
+      },
+      {
+        "name": "placement",
+        "type": "string",
+        "required": false,
+        "default": "center",
+        "description": "\"center\" (default: centered over a full-viewport backdrop dimmed 50%) or \"anchored\" (a confirmation: 10px under the trigger that opened it, at least 20px from the viewport edge, backdrop dimmed 30% -- see component.js's positionAnchored() and style.css). Sets data-placement on .ds-popup-overlay."
+      },
+      {
+        "name": "preview",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "inline: render the popup open, in the page flow (backdrop included), without the hidden attribute -- data-preview=\"inline\". Documentation only (the site's Popups card, Figma D_SYSTEM node 103:4815); never in product UI."
+      }
+    ],
+    "source": "penpot:28cec651-3f14-8022-8008-8c9a0be0c665",
+    "rationale": "Styled to Figma's popup-medium (application file, nodes 150:16627, 150:16661, 150:16695, 150:16729), superseding the earlier Penpot values. The panel is bg.surface with no shadow: the dimmed backdrop is what sets it off the page. Title, body and bottom row share one surface with no dividers (as in both design sources), so the panel reads as one plain stack. The title row is 60px with the heading role (heading-4, Inter SemiBold 20). The body has 20px side and 10px vertical padding and scrolls once the panel reaches the viewport; data-type=\"steps\" drops the padding for stacked popup-step sections that carry their own insets. The bottom row is 60px with the actions right-aligned 10px apart; text-button's brackets hang inside each button's 11px padding, so a button is exactly its label plus padding. There is no close (X) control: the design has none, and the bottom row's buttons (plus Escape and a backdrop click) dismiss. Figma's caption slot beside the title and its hidden header action are opacity 0 in every frame and are not modeled.\n\nSizes: medium 800px (Penpot's panel width; a modal's width is a design decision, not container-driven), small 500px (Figma's confirmation width), large 1173px (Figma's Add project frame, nodes 150:16503 / 150:16475). Backdrop (measured off the design's screens): base/600 gray at 50% behind a centered popup and 30% behind an anchored confirmation. It is a translucent ::before layer, not opacity on the overlay, which would also fade the panel. placement=\"anchored\" sits 10px under its trigger (spacing-3 + spacing-1), never closer than 20px (spacing-6) to a viewport edge, flips above the trigger when it would overflow, and caps its height to the viewport -- measured against documentElement.clientWidth/Height, so a scrollbar gutter doesn't push it past the visible edge.\n\nBody types: \"text\" (free paragraphs), \"input\" (Figma's filled textarea, 300px tall in a 320px row), and \"gallery\" -- a composed gallery filmstrip plus a gallery-image text-icon selector, with a \"Reset selection\" text-button wired through gallery's generic data-gallery-reset contract, so popup has no gallery-specific code. \"gallery\" is a deliberately smaller answer to Penpot's \"Image-sliders\" instance, which nests several sub-widgets that aren't built components.\n\nBehavior (component.js; not sourced -- a design tool doesn't model opening a dialog): a [data-popup-open] trigger shows the matching overlay; any bottom-row button with [data-popup-dismiss] closes it, as do Escape and a backdrop click; both are delegated listeners, so buttons added later work too. Focus moves to the panel on open and back to the trigger on close. Overlays stack: a popup opened from inside another gets a z-index 10 higher (base 100, above dropdown-menu), and Escape and Ctrl/Cmd+Enter act only on the topmost. Ctrl/Cmd+Enter presses the bottom-row action marked data-popup-confirm (template: confirm: true), else a priority=primary one -- every Figma action is a regular-weight secondary button, so primary can't be the only signal. A destructive action (e.g. \"Archive selected\") uses text-button's error status. Triggers and dismiss buttons are dotted: opening or closing a modal stays in the view. The anchored rule is scoped :not([hidden]) so it never overrides the hidden state. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "text-button",
+      "input",
+      "gallery",
+      "gallery-image",
+      "table-header-actions"
+    ],
+    "a11y_notes": "role=\"dialog\" with aria-labelledby pointing at its title (not in the design source). Implemented: showing and hiding, Escape and backdrop click to close, focus onto the dialog on open and back to the opener on close (also when popups are nested), and Escape / Ctrl+Enter acting only on the topmost popup. Ctrl/Cmd+Enter clicks the confirm button directly, so it is exactly as accessible as clicking it. Not implemented, a real gap: a Tab-cycling focus trap -- Tab can leave an open dialog; a production host should use the native <dialog> element's showModal() or a focus-trap library. The panel keeps a keyboard-only focus ring although Figma draws none. type=\"gallery\" inherits gallery's and gallery-image's own semantics (see their notes)."
+  },
+  {
+    "name": "popup-step",
+    "description": "One numbered step of a long popup body: a 56px head (numbered title at half opacity, optional text button) over a body that holds the step's control.",
+    "status": "stable",
+    "category": "popups",
+    "variants": [],
+    "props": [
+      {
+        "name": "number",
+        "type": "number",
+        "required": false,
+        "default": 1,
+        "description": "The step's number (the <ol start> value)."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "default": "Choose your project",
+        "description": "Step title."
+      },
+      {
+        "name": "action",
+        "type": "string",
+        "required": false,
+        "description": "Label of the head's text button (e.g. Reset the selection); omitted when absent."
+      }
+    ],
+    "source": "figma:APPFILEKEY#150:16503,150:16475",
+    "rationale": "The head is 56px (spacing.9 + spacing.5) with 20px side padding, no border and no fill: the popup surface shows through, and steps are separated by their own heads, not by rules. The title is an ordered list with start=N and one item, so the number is real list numbering; the 24px inline-start margin (spacing.7) makes room for it, and the title uses the \"title\" role at half opacity, like a pane title. The body is inset spacing.cell (10px) / spacing.6 (20px). A .ds-dropdown directly inside a step fills the width. The head's text button hugs its label (see text-button). Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "text-button"
+    ],
+    "a11y_notes": "Each title is an <ol> with a single <li> so screen readers announce the step number. The head button is a real text-button.",
+    "listed": false
+  },
+  {
+    "name": "radio",
+    "description": "A radio option drawn as a text button with a round Figma marker (ring in the accent color, filled when checked). Compose several in a .ds-radio-group.",
+    "status": "stable",
+    "category": "controls",
+    "variants": [],
+    "props": [
+      {
+        "name": "options",
+        "type": "array",
+        "required": false,
+        "description": "Each option: { value, label, checked }."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "Description amount",
+        "description": "aria-label of the radiogroup."
+      }
+    ],
+    "source": "figma:APPFILEKEY#150:16503,150:16475",
+    "rationale": "An option is a real .ds-text-button with role=radio, so it keeps the text button's type, underline and focus ring. The marker is CSS only: a ring spacing.8 / 2 (16px) in the accent color drawn with an inset shadow, and a spacing.9 / 4 (10px) dot when aria-checked is true, centered in a 24px (spacing.7) box. The text button's hover \"[ ]\" is removed (content: none) because the marker already shows which option is under the pointer. Height is spacing.9 (40px); options stack with a spacing.cell (10px) gap. Not sourced from Figma: the roving tabindex and arrow-key behavior in component.js. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [],
+    "a11y_notes": "role=\"radiogroup\" with role=\"radio\" options and aria-checked. Only the checked option is in the tab order (roving tabindex); arrow keys move and check."
+  },
+  {
+    "name": "sidebar-item",
+    "description": "One entry in a sidebar list (sidebar-list composes several). type=\"set\": one row of a sets sidebar (a clickable name, optional save toggle). type=\"card\": a subtitle, a saved-icon, a title and a status line. type=\"button\": a single primary action. Renamed from Penpot's \"Sidebar\" to avoid colliding with the composed list, which this system names sidebar-list.",
+    "status": "stable",
+    "category": "sidebar",
+    "variants": [
+      "card",
+      "button",
+      "set"
+    ],
+    "props": [
+      {
+        "name": "type",
+        "type": "string",
+        "required": true,
+        "default": "card",
+        "description": "\"card\" renders the subtitle/title/status card (Penpot's Default/PDF Downloaded/Submitted States -- identical layout, only the status text differs, so not modeled as three separate types); \"button\" renders a single centered .ds-text-button instead (Penpot's own \"Button\" State) -- not a card at all. \"set\" (not from Penpot, see rationale) renders a clickable set-name button + toggleable save icon on one row, one caption line below."
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "default": "Set name",
+        "description": "Only meaningful when type=\"set\". The set's name, rendered as a clickable secondary text-button (selects the set), truncated with an ellipsis when it overflows."
+      },
+      {
+        "name": "caption",
+        "type": "string",
+        "required": false,
+        "description": "Unused by the Figma set row (kept for the earlier Penpot set card)."
+      },
+      {
+        "name": "saved",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Only meaningful when type=\"set\". Initial data-saved state for the save icon; component.js keeps it in sync on click and dispatches ds-sidebar-item-favourite-toggle."
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "type=\"set\": marks the active set (fill and hairlines above and below)."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "description": "Only meaningful when type=\"set\". When given, the set name renders as an <a href> (still the same secondary/dotted text-button) instead of a <button data-select-set> -- for a sidebar whose rows navigate, e.g. an in-page section index (dotted, because it stays on the page; CLAUDE.md, Interaction conventions). Passed through the safe_url filter."
+      },
+      {
+        "name": "save",
+        "type": "boolean",
+        "required": false,
+        "default": true,
+        "description": "Only meaningful when type=\"set\". false omits the save button entirely (a navigation row has nothing to save). Default true."
+      }
+    ],
+    "source": "penpot:7cfc6f3b-95fe-808f-8008-8d9825fb44db",
+    "rationale": "type=\"set\" (Figma sets sidebar): a 44px row with the set's name as a text button and a 44px save button with Figma's bookmark icons (aria-pressed toggles them); the active set (data-active) is filled and ruled above and below, and its name uses the body-text medium weight, so the current set stands out without a new type scale. The saved icon is accent-1, the same as table-cell's row-level favourite: one save flag, one color, wherever it renders. With `href`, the name renders as an <a> (navigation, e.g. an in-page section index) instead of a <button>, and save=false omits the save button; one row layout serves both uses. Rows deviate from text-button's hover brackets: on hover and focus the whole row takes bg.surface-pressed, as table-row does, and the name gets no brackets -- the full-width fill already marks the click target. The dotted underline stays. A long name truncates with an ellipsis (the composed text button can shrink: flex 1 1 auto, min-width 0).\n\ntype=\"card\" and type=\"button\" (Penpot \"Sidebar\" states Default, PDF Downloaded, Submitted, Button): the main section is a space-between row and the sub section a column with rowGap spacing-3, both Token-bound in Penpot. Card padding is spacing-2 / spacing-5. Colors are read off the text layers: subtitle accent-1 (the one colored identifier a reader scans the list for), title text-active, status text-subactive. The saved icon is object-dark-active at spacing-7 (24px), like every other icon-only glyph. Width is 100%, because a sidebar's width comes from its container, not from Penpot's 340px demo board. type=\"button\" is shorter (70px vs 84px) and centered, holding one primary text-button, as Penpot's own instance is. Selecting, linking or adding records is the host application's concern. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "type=\"set\": the name is a real <button> (or <a> with href; the active row gets aria-current), and the save control is a real <button> with aria-pressed and an aria-label naming the set, so both are keyboard-operable. type=\"card\": the saved-icon is a decorative role=\"img\" span with an aria-label, not a control -- the design shows no affordance on it. type=\"button\" is a real <button> via text-button.",
+    "uses": [
+      "text-button"
+    ]
+  },
+  {
+    "name": "sidebar-list",
+    "description": "A sets sidebar: a 280px column with a head (title, collapse toggle) over a scrolling list of sidebar-item type=\"set\" rows. Collapses to a 64px strip.",
+    "status": "stable",
+    "category": "sidebar",
+    "variants": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "default": "Your sets",
+        "description": "Head title, shown at half opacity."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "Sets",
+        "description": "aria-label of the sidebar."
+      },
+      {
+        "name": "items",
+        "type": "array",
+        "required": false,
+        "description": "Set rows: { name, saved, active, href?, save? } -- href/save pass through to sidebar-item type=\"set\" (see its meta.json): href makes the row a link, save=false drops its save button."
+      }
+    ],
+    "source": "figma:APPFILEKEY#150:16217,150:16475,150:16503",
+    "rationale": "Width is spacing.9 x 7 (280px), collapsed spacing.row + 2 x spacing.cell (64px). The head is 56px (spacing.9 + spacing.5) with 10px padding and one hairline below; the title is the \"title\" role (Inter SemiBold 16px) at half opacity; the toggle is a 44 x 40px bordered button holding the accent-colored arrow (a CSS mask, so it takes the accent color), flipped when collapsed. The list has no rules between rows: only the active set is ruled, inside sidebar-item, so the one row that matters stands out. Surface is bg.surface with a right hairline in object-dark.passive in both themes (the design has no separate dark value yet). Collapse behavior and its ARIA state live in component.js; choosing and saving sets is the host page's concern (sidebar-item exposes data-select-set / data-save-set hooks). Replaces an earlier Penpot card sidebar. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "An <aside> with aria-label. The toggle is a real button with aria-expanded and a label that flips between Collapse sidebar and Expand sidebar; each set row's name and save buttons are real buttons (the save button uses aria-pressed).",
+    "uses": [
+      "sidebar-item"
+    ]
+  },
+  {
+    "name": "table-cell",
+    "description": "A single cell within a table-row of a queue table: text data, an icon/checkbox slot, a link, a dropdown/input field, or an action-button slot, depending on `type`. table-row composes several of these per row; header-block's divider marks the boundary between the header and the first row of cells.",
+    "status": "stable",
+    "category": "tables",
+    "layout": "wide",
+    "variants": [
+      "checkbox-cell",
+      "icon-cell",
+      "date",
+      "text-active-cell",
+      "text-passive-cell",
+      "text-subactive-cell",
+      "link",
+      "1-action",
+      "2-actions",
+      "3-actions",
+      "dropdown",
+      "input",
+      "empty-state",
+      "status-label"
+    ],
+    "props": [
+      {
+        "name": "type",
+        "type": "string",
+        "required": true,
+        "default": "text-active-cell",
+        "description": "Which cell kind this renders: checkbox-cell (was Penpot's \"icon\"), icon-cell (was \"saved\" and \"action-icons\", merged into one type that holds any number of icons), date, text-active-cell (was \"title\", \"organisation\" and \"description\", already identical), text-passive-cell (was \"source\"), text-subactive-cell (was \"summary\"), link, 1-action, 2-actions, 3-actions, dropdown, input, empty-state, status-label. See rationale."
+      },
+      {
+        "name": "content",
+        "type": "string",
+        "required": false,
+        "description": "The cell's text content, for text-bearing types (date, text-active-cell, text-passive-cell, text-subactive-cell, link, dropdown, input). Not applicable to checkbox-cell, icon-cell, 1-action, 2-actions, 3-actions, or empty-state, which have fixed or composed content. For 1-action/2-actions/3-actions, doubles as the primary (rightmost) button's label."
+      },
+      {
+        "name": "checkbox_role",
+        "type": "string",
+        "required": false,
+        "description": "Only meaningful when type=\"checkbox-cell\". Unset (default): the normal row-select checkbox (unchecked / checked), toggled by table-row off the row's data-selected. \"select-all\": adds a third icon (checkbox-semi-select) and marks the cell data-checkbox-role=\"select-all\", so table-row's select-all logic and table-cell's [data-state] rules can target it. Not sourced from the design."
+      },
+      {
+        "name": "editable",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Text-bearing types only (not checkbox-cell/icon-cell/dropdown/input/1-action/2-actions/3-actions/empty-state/status-label). Renders a hidden .ds-input sibling alongside the text span and marks the cell data-editable so a same-row [data-edit-trigger] button (see extra_attrs) can toggle it into edit mode -- see component.js."
+      },
+      {
+        "name": "extra_attrs",
+        "type": "string",
+        "required": false,
+        "description": "Only meaningful for type=\"1-action\" (and as the primary button's attrs for \"2-actions\"/\"3-actions\"). Raw attribute string passed through to the composed text-button's own extra_attrs passthrough (see text-button/template.html) -- e.g. extra_attrs='data-edit-trigger' to wire an Edit button at a row's own editable cell, the same pattern popup already uses for data-popup-open/dismiss."
+      },
+      {
+        "name": "secondary_extra_attrs",
+        "type": "string",
+        "required": false,
+        "description": "Only meaningful for type=\"2-actions\"/\"3-actions\". Same passthrough as extra_attrs, but for the secondary (middle, Dismiss-style) button instead of the primary one."
+      },
+      {
+        "name": "tertiary_label",
+        "type": "string",
+        "required": false,
+        "default": "Archive",
+        "description": "Only meaningful for type=\"3-actions\". Label for the leftmost, lowest-emphasis of the 3 buttons (secondary priority, same as the middle button)."
+      },
+      {
+        "name": "tertiary_extra_attrs",
+        "type": "string",
+        "required": false,
+        "description": "Only meaningful for type=\"3-actions\". Same passthrough as extra_attrs/secondary_extra_attrs, but for the tertiary (leftmost) button."
+      },
+      {
+        "name": "options",
+        "type": "array",
+        "required": false,
+        "description": "Only meaningful when type=\"dropdown\". A list of { value, label }: when given, the input-dropdown trigger is wired (data-dropdown-trigger) inside a .ds-dropdown wrapper with a dropdown-menu of these items, so the cell's dropdown actually opens (link components/dropdown-menu's component.js on the page). Omitted: the unwired trigger alone, unchanged."
+      },
+      {
+        "name": "dropdown_label",
+        "type": "string",
+        "required": false,
+        "default": "Choose",
+        "description": "Only meaningful with options. The trigger's aria-label (the visible text is the current value, not what the control is for)."
+      },
+      {
+        "name": "view_label",
+        "type": "string",
+        "required": false,
+        "description": "Text-bearing types only. Renders Figma's \"Single-active-t+button\" cell (D_SYSTEM node 28:949): the text clipped to one line with an ellipsis, followed by a secondary dotted text-button with this label (e.g. \"view\") that stays whole. The host page wires the button (e.g. to a popup showing the full text)."
+      }
+    ],
+    "source": "penpot:28cec651-3f14-8022-8008-8c9a0bca088c",
+    "rationale": "Layout (Figma flat table): every cell is one table row high -- spacing.row (44px) plus a 1px object-dark-passive hairline under it -- with spacing.cell (10px) padding, on bg.surface, and no vertical rules. Text is one line with an ellipsis; .ds-table-cell__clip clips an excerpt beside an inline \"view\" button. Cells share the row's width (flex 1 1 0%); fixed-content types (checkbox-cell, icon-cell, input, the action types, status-label) are flex: none and size to their content. Link cells right-align and never wrap (at most two lines, accent-1, underline on hover). Action cells left-align with a 16px right padding. A dropdown or input cell lets its field fill the cell; the input keeps its box border in the cell (Figma's table rows draw it), although input's transparent fill is borderless elsewhere.\n\nTypes: started as Penpot's 15 Type values and were merged where Penpot's own cells were identical. text-active-cell (was title / organisation / description -- pixel-identical in Penpot) is text.active body text; text-passive-cell (was source) and text-subactive-cell (was summary; body-text italic) keep Penpot's identifiers; icon-cell (was saved and action-icons) holds any number of icons, adopting action-icons' multi-icon layout, a deliberate deviation for a lone saved icon; checkbox-cell (was icon) is Penpot's generic single-icon cell, also used for the drag handle. Penpot's State axis is \"Value 1\" (an unused placeholder) on almost every type, so there is no `state` prop: hover lives in the composed controls. Composition, not restyling: action cells compose text-button, dropdown and input cells compose input-dropdown and input.\n\nIcons: every glyph is the Figma D_SYSTEM set (node 103:4711) in icons/, inlined by component.js so currentColor and --_icon-fill / --_icon-mark apply. Checkbox and save rest as an input-icon outline on an input-fill box (input-icon rather than Figma's text-inactive, which disappears on the dark surface) and turn accent on hover; a selected checkbox is an accent box with an inverse mark; a saved bookmark fills with accent-2. checkbox-cell carries both an unchecked and a checked icon, and table-row's CSS swaps them off the row's data-selected, so selection needs no extra script. The checkbox styling is scoped to [data-icon=\"checkbox\"], so a drag glyph in the same cell layout isn't recolored; data-icon=\"drag\" paints Figma's drag glyph.\n\nRow actions: in light, active action buttons rest in text-inactive (like an inactive tab title) and turn accent-1 while their row is hovered, focused or selected (Figma node 237:31166), so a long table isn't a wall of blue; disabled, loading, error and unread buttons keep their own color. Dark keeps them accent, because dark's text-inactive would not read on its background. 1-action, 2-actions and 3-actions share one shape (row, left-aligned, flex: none); 3-actions has no Penpot instance and follows 2-actions.\n\nAdditions not sourced from the design: `editable` renders the text and a hidden .ds-input side by side and toggles hidden, so the cell's size never changes between states; the trigger is a row's own button (extra_attrs='data-edit-trigger'), because editing sits behind an explicit action. extra_attrs / secondary_extra_attrs / tertiary_extra_attrs pass raw attributes through to the composed text-buttons (author markup, never user data). status-label is a plain, non-interactive span in system-success replacing an action group once a record is done -- not a disabled button, since there is nothing to click. `checkbox_role=\"select-all\"` adds a third, semi-selected icon for a header checkbox that table-row drives. Shift+click on a Save icon saves or unsaves the range since the last Save click in the same table (visible rows, DOM order), dispatched as one ds-table-cell-favourite-toggle event with detail.range = true. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "text-button",
+      "input-dropdown",
+      "input"
+    ],
+    "a11y_notes": "type=\"dropdown\" renders a real .ds-input-dropdown <button> (listen for its ds-input-dropdown-open event); type=\"input\" a real <input type=\"text\">; type=\"link\" a real <a href>. Icon cells use role=\"img\" with an aria-label per icon, since each icon is its own unit; the inlined SVGs carry no separate text. Icons are fetched at runtime relative to the script's own URL (so they work wherever the system is vendored), and need http(s): from file:// the icon slots stay empty. Known gaps: the Save icon toggles on click but stays role=\"img\" with no aria-pressed and no keyboard handler, so its state isn't announced and it is pointer-only, as is Shift+click range saving; `editable`'s switch to the input moves focus but isn't announced, and the input has no label. status-label is plain text."
+  },
+  {
+    "name": "table-footer",
+    "description": "The row under a table's last row that loads more of it (\"Load 10 more\", \"Load all 100\"): a 44px row on the pressed surface whose first button aligns with the third column's text.",
+    "status": "stable",
+    "category": "tables",
+    "listed": false,
+    "variants": [],
+    "props": [
+      {
+        "name": "first_label",
+        "type": "string",
+        "required": false,
+        "default": "Load 10 more",
+        "description": "Label of the first (text-aligned) button."
+      },
+      {
+        "name": "second_label",
+        "type": "string",
+        "required": false,
+        "default": "Load all 100",
+        "description": "Label of the second button."
+      },
+      {
+        "name": "first_action",
+        "type": "string",
+        "required": false,
+        "default": "load-more",
+        "description": "data-action value of the first button, for the host page to listen for."
+      },
+      {
+        "name": "second_action",
+        "type": "string",
+        "required": false,
+        "default": "load-all",
+        "description": "data-action value of the second button."
+      }
+    ],
+    "source": "figma:APPFILEKEY#64:7799",
+    "rationale": "Height is one table row: spacing.row (44px) plus the 1px hairline, like every table row. Fill is bg.surface-pressed (Figma base/100). The hairline is border.muted (base/150), with object-dark.passive as the fallback because border.muted has no dark value yet. Left padding is two 44px icon columns plus the 10px cell padding, so the first button's label starts where the Name column's text starts: the first button is a text-aligned button (no left padding, hover \"[\" hung outside the label), exactly like table-cell's text-active-cell button. Not sourced from Figma: the data-action hooks, through which the host page attaches its own load behavior; no behavior lives in the component. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [],
+    "a11y_notes": "Two real <button> elements; keyboard focus uses text-button's own focus ring. The row has no landmark role: it is part of the table's section."
+  },
+  {
+    "name": "table-header",
+    "description": "The title region of a table's header-block: either a single section title, a two-tab selector (e.g. switching between status views), or a title paired with a secondary info caption (e.g. page count). Sits to the left of table-header-actions inside header-block. Standalone, it renders as its own shaded/bordered chip (see rationale); nested inside header-block, that chip is reset to plain, since header-block's own row now carries the same shading across its full width instead (see components/header-block/meta.json).",
+    "status": "stable",
+    "category": "tables",
+    "variants": [
+      "1-tab",
+      "2-tabs",
+      "title-info"
+    ],
+    "props": [
+      {
+        "name": "type",
+        "type": "string",
+        "required": true,
+        "default": "1-tab",
+        "description": "1-tab (single title), 2-tabs (two clickable labels, one active/one inactive), or title-info (title + subactive caption). Maps to Penpot's `type` variant axis; Penpot's own values were kebab-cased (\"1 Tab\" -> \"1-tab\", etc.)."
+      }
+    ],
+    "source": "penpot:28cec651-3f14-8022-8008-8c9a0be20faf",
+    "rationale": "All three variants share two Token-bound values from Penpot's instances: a left inset of spacing.6 (20px) and, when there is a second element, a column gap of spacing.5 (16px). Title and tab labels use the heading-4 role; the component never uses bold heading weights. type=\"2-tabs\" encodes selection with color alone: the selected tab is text.active, the other text.inactive -- the system's existing active/inactive vocabulary. Clicking is wired in component.js because an active/inactive pair with no way to switch would be a dead affordance; the static design source doesn't model the click. type=\"title-info\" pairs the title with a bodyText caption in text.subactive, the token for de-emphasized but legible secondary text (e.g. \"3 pages\"). An optional `info` caption on 2-tabs (not sourced from Penpot) reuses the same caption styling, for a count under the tabs; without `info`, 2-tabs renders unchanged.\n\nStandalone, the component is a shaded chip: bg.surface-pressed with the border-width-thin / object-dark-passive border table-cell's grid uses, so it reads as part of the same bordered table. This is a deliberate deviation from Penpot, whose instances carry no background or border, modeled on a wikitable caption. bg.surface-pressed was chosen because it moves in the theme-appropriate emphasis direction in both palettes. Sizing stays content-hugging, because the component is a flex child of header-block's row next to table-header-actions. Inside header-block, the row itself carries the shading across its full width, so header-block/style.css resets this chip's background, border and padding there to avoid a doubled box. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "type=\"2 Tabs\" renders as role=\"tablist\" with role=\"tab\"/aria-selected on each label per WAI-ARIA tabs pattern, since Penpot's design implies exactly that interaction (one selected, one not, click to switch). type=\"1-tab\" and \"title-info\" render as plain text (no tab semantics, since there's nothing to select between). The new optional caption on \"2-tabs\" is a plain <span>, outside the tablist's own role semantics (a caption describing table contents, not a third tab)."
+  },
+  {
+    "name": "table-header-actions",
+    "description": "The action-button cluster docked at the right side of a table's header-block (e.g. \"Add item\", \"Export\", \"Clear filters\"). A row of 1-4 text-button instances, ordered from least to most emphasis with the single primary action always last/rightmost. Renamed from Penpot's literal component name \"table-header_right-block\" (see rationale).",
+    "status": "stable",
+    "category": "tables",
+    "listed": false,
+    "variants": [
+      "1-action",
+      "2-actions",
+      "3-actions",
+      "4-actions"
+    ],
+    "props": [],
+    "source": "penpot:28cec651-3f14-8022-8008-8c9a0bdb9ea8",
+    "rationale": "Renamed from Penpot's \"table-header_right-block\": the schema's name pattern rejects the underscore. Penpot's Actions axis values (\"1 Action\" ... \"3 Actions\", and inconsistently \"4\") are normalized to \"1-action\" ... \"4-actions\". The component is only a flex-row shell: column gap 0 (Token-confirmed in Penpot -- the buttons' own padding separates them) and right padding 0, because header-block's row already carries the 20px side padding and the buttons hug their labels. It composes real text-button instances rather than restyling buttons, because Penpot's source is itself composition: every child in every sampled instance is a text-button (no fill token, only a label). The emphasis pattern read off the instances: each extra action is lower emphasis, and the single primary action is always last, rightmost. Every sampled action (Add item, Export, Clear filters, Select all) acts within the current table view, so all use the dotted underline (CLAUDE.md, Interaction conventions). Each action may carry a `status` (text-button's, default 'active'), so bulk actions can render disabled until rows are selected. It sets no background, so header-block's shaded row shows through behind its buttons. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "text-button"
+    ]
+  },
+  {
+    "name": "table-header-cell",
+    "description": "A single column-header cell for a table's header row: a plain label, a sort button with a direction arrow when the column is sortable, and/or a favourite-all toggle for a Save column. Sibling cells sharing one [data-sort-group] container sort exclusively -- only one column at a time.",
+    "status": "stable",
+    "category": "tables",
+    "layout": "wide",
+    "variants": [
+      "plain",
+      "sortable",
+      "favourite-all",
+      "filter"
+    ],
+    "props": [
+      {
+        "name": "sortable",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "When true, renders the label inside a clickable sort button with a direction-arrow icon. When false, renders a plain, non-interactive label (unless favourite_all is also set)."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "Column",
+        "description": "The column's header text."
+      },
+      {
+        "name": "sort_dir",
+        "type": "string",
+        "required": false,
+        "default": "none",
+        "description": "Initial data-sort-dir: none, asc, or desc. Only meaningful when sortable=true."
+      },
+      {
+        "name": "favourite_all",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "For a Save column's header cell: adds a favourite-all toggle beside the sort button -- two independent click targets, the icon toggles every row's saved state and the arrow sorts by it. Sets data-favourite-all / data-type=\"icon-cell\" on the cell so table-row's updateFavouriteAllState() and table-cell's favourite listener drive it (see rationale)."
+      },
+      {
+        "name": "all_saved",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Initial data-saved state for the favourite-all button. Only meaningful when favourite_all=true; table-row/component.js's updateFavouriteAllState() keeps it in sync at runtime once rows exist."
+      },
+      {
+        "name": "filter",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Renders the label as a button that opens a dropdown-menu of values, for a column whose rows can be narrowed to one value. Sets data-filter / data-filter-value on the cell. Takes precedence over sortable. The page needs dropdown-menu's style.css and component.js as well."
+      },
+      {
+        "name": "filter_options",
+        "type": "array",
+        "required": false,
+        "default": [],
+        "description": "The values after the first item, each { value, label }. Only meaningful when filter=true."
+      },
+      {
+        "name": "filter_all_label",
+        "type": "string",
+        "required": false,
+        "default": "All",
+        "description": "Label of the first item, whose value is \"\" and which clears the filter. Only meaningful when filter=true."
+      },
+      {
+        "name": "filter_icon",
+        "type": "string",
+        "required": false,
+        "default": "arrow-down",
+        "description": "Only meaningful when filter=true. The icons/<name>.svg glyph beside the label: \"arrow\" (default) or \"filter\" -- Figma D_SYSTEM's filter glyph (node 38:2934), which its All table uses on a filterable column header."
+      }
+    ],
+    "source": "none",
+    "rationale": "Not built from a design-source instance: neither Penpot nor Figma had a column header with a sort affordance when it was built. It generalizes a working pattern from this repo's earlier sample table (site.css / site.js); every visual value was already token-bound there. Styled since to Figma's header cell (Table cell, header-cell text+icon: default 35:8275, hovered 35:8396, selected 35:8423) and the flat table: 44px plus a 1px hairline like a row. Labels use the \"data\" role (Inter Medium 13px, uppercase) in both themes -- type doesn't depend on the theme -- in the header-cell-label token (base/600) in light and text-subactive in dark.\n\nSortable: default is the header gray on the plain cell; hovered is black on base/100; selected -- the column with data-sort-dir asc or desc -- is the accent color on base/100, label and arrow always sharing one color. The label keeps its dotted underline (sorting stays in the view) and the 24px arrow (icons/arrow-down.svg) stays visible in every state, 10px from the label. The sort and favourite-all buttons carry the 10px cell padding, so the whole cell is clickable. Siblings in one [data-sort-group] sort exclusively. The component doesn't reorder rows: it cycles data-sort-dir and dispatches a bubbling event, and the host sorts its own rows -- a reusable header can't know the host table's row shape.\n\nfavourite_all: a Save column's header needs two independent click targets in one cell -- the icon toggles every row's saved state, a separate arrow sorts by it. The cell carries data-favourite-all and data-type=\"icon-cell\" so table-row's updateFavouriteAllState() and table-cell's favourite listener drive it; the icon markup is hand-matched to table-cell's icon-cell (a nested .ds-table-cell would draw a doubled box), so it isn't declared in `uses`, and the icon-cell padding it picks up is reset for the header layout.\n\nFilter (no design-source node): a header cell whose label opens a dropdown-menu of values. It reuses the sortable header's three states (selected = a value is chosen or the menu is open) and the 24px arrow, or Figma D_SYSTEM's filter glyph (node 38:2934) with filter_icon=\"filter\". The label keeps the column's name. The component records the choice (data-filter-value, accent state, aria-selected) and dispatches ds-table-header-cell-filter with {value, label}; the host narrows its rows. The dropdown wrapper and menu markup are hand-matched, so dropdown-menu isn't in `uses` and a host links its CSS and JS itself. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "The sort button is a native <button> with an aria-label (\"Sort by <label>\") stating the action; the direction is in data-sort-dir and not announced separately -- a host using a real <table> could add aria-sort on the header cell (the component assumes a CSS grid of divs, like table-row). Filter: the trigger is a native <button> with aria-haspopup=\"listbox\", aria-expanded kept by dropdown-menu, and an aria-label naming the column and, once chosen, the value (\"Filter by Type: Analysed\"); the menu is a role=\"listbox\" of role=\"option\" buttons with aria-selected on the chosen one. Escape and an outside click close it."
+  },
+  {
+    "name": "table-preview",
+    "description": "Every table type of the Figma D_SYSTEM table-row frame in one table: All, For review, Analyzed, Archived, Filtered, Queue, Collection, Reference and Draft, each with its own column set, one shown at a time. The Type column's header is a filter that switches the type; All shows every ticket with the All table's columns. Sortable Category / Due date / Status headers, a Status filter on All, and per-row Status dropdowns that recolor the row's status pill.",
+    "status": "stable",
+    "category": "tables",
+    "layout": "wide",
+    "variants": [
+      "all",
+      "for-review",
+      "analyzed",
+      "archived",
+      "filtered",
+      "queue",
+      "collection",
+      "reference",
+      "draft"
+    ],
+    "props": [
+      {
+        "name": "types",
+        "type": "array",
+        "required": true,
+        "description": "[{ id, label, columns, actions, in_all }]. columns: the column keys in order (template.html's COLUMNS: drag (a Reorder handle: drag the row up/down, via table-row), check, save, name, category, due, summary, type, status, status_sort, reason, details, dates, link, notes, updates, actions). actions: the table-cell spec of that type's Actions cell. in_all: whether that type's records appear in the first type's table. The first type is the combined one (All); its label is the Type filter's first item."
+      },
+      {
+        "name": "records",
+        "type": "array",
+        "required": true,
+        "description": "[{ type, status, name, category, due, summary, reason, details, dates, notes, updates }] -- one row each, in its own type's table (and in the first table if its type has in_all). A field a column does not use is ignored; a column whose field is missing renders empty."
+      },
+      {
+        "name": "status_options",
+        "type": "array",
+        "required": false,
+        "default": [],
+        "description": "[{ value, label }] offered by every Status dropdown and by All's Status filter. value is what the row's data-status becomes (table-row colors the pill for analysed / submitted / approved / pending / declined)."
+      },
+      {
+        "name": "active",
+        "type": "string",
+        "required": false,
+        "description": "The type id shown at load. Default: the first type."
+      }
+    ],
+    "source": "figma:DSYSTEMFILEKEY#28:1123",
+    "rationale": "Figma draws each table type as a separate Header + Table pair stacked down the table-row frame; this component puts them in one table so the column sets can be compared by switching. Column sets, header kinds and cell kinds are Figma's (see source): Category and Due date headers carry the sort arrow, All's Status header the filter glyph (icons/filter.svg, node 38:2934), Queue's Status the arrow; Summary / Reason cells are Figma's Single-active-t+button cell (text clipped, \"view\" kept whole); Status cells are dropdowns whose value is a pill in the row-status colors. One deliberate deviation: Figma's Full Description column is replaced by Type, whose header is the filter that picks the type, so the switch lives in the table's own vocabulary (a filterable column) rather than a separate control; types without Full Description (Collection, Template, Queue) get Type right after Name. Every cell is a real include of table-cell, table-header-cell or table-row; this component adds only the grid (one per type, so header and body share tracks via display:contents rows), the hidden-row fix display:contents needs, and the host wiring the composed components leave to their page (filter, sort, status). All nine types are rendered at build time and hidden, not built by script, because the composed components wire their behavior once at load. Column tracks are token-based: flexible text columns are minmax(spacing-9 x 4, 1fr), everything else max-content (Figma's fixed widths are the width of their content). Actions sit at 40% until row hover (data-reveal-actions), as Figma draws them. An optional `drag` column (blank header, table-row's drag handle) lets a table offer row reordering. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Each type's grid is role=\"table\" labelled with the type's name; hidden tables are removed from the accessibility tree by the hidden attribute. The Type and Status filters are table-header-cell filter buttons (aria-haspopup=\"listbox\", aria-label naming the column and the current choice); the row Status dropdowns carry aria-label \"Status of <name>\". Rows are grid items via display:contents, so there is no row role; screen readers read the cells in order. Selection, save and dropdown keyboard behavior are the composed components' own.",
+    "uses": [
+      "table-cell",
+      "table-header-cell",
+      "table-row"
+    ]
+  },
+  {
+    "name": "table-row",
+    "description": "One row of a queue table: a horizontal composition of table-cell instances (checkbox-cell, text cells, status, date, icon-cell, row actions), with a selected state toggled by clicking the row's own checkbox. table-row defines no cell content itself -- it is a flex container that composes table-cell. The demo shows every row Type of the Penpot source with its real cell composition and order, plus a block of rows stacked together with a header row.",
+    "status": "stable",
+    "category": "tables",
+    "layout": "wide",
+    "variants": [
+      "default",
+      "selected"
+    ],
+    "props": [
+      {
+        "name": "selected",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Whether the row is selected (Penpot's State axis, Default / Selected): its cells fill bg.surface-pressed and its checkbox shows the checked icon, both by CSS off this attribute. Toggled only by clicking the row's own checkbox (component.js)."
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "required": false,
+        "description": "Optional data-status on the row (analysed / submitted / approved / pending / declined): style.css colors the value of the row's dropdown-type cell as a status pill from the row-status tokens. Other values, or none, leave it plain."
+      }
+    ],
+    "source": "penpot:28cec651-3f14-8022-8008-8c9a0bd68c76",
+    "rationale": "Only Penpot's State axis (Default | Selected) is a style variant. Its other axes -- Type (Checkbox only, Analysed, Found, Archived, Submitted, Empty State, Collection, Check + Button, Snippet) and Comment -- only change which table-cells are composed, never the row's own CSS, so they are demo compositions, not props (as header-block treats its Type axis). Each Type's composition was read off its Penpot instance by x-position, not DOM order: Penpot authors rows in row-reverse with actions first, and this component uses plain left-to-right order, which renders the same and keeps the source readable. Penpot's \"Analysed2\" appears to be a leftover duplicate and is not demoed; the second, unlabeled checkbox of \"Check + Button\" is reproduced as it is, with no invented purpose.\n\nLayout (Figma flat table): the row is a flex container with align-items: stretch, so every cell is as tall as the tallest, like a real table row. Hover, focus-within and selected fills go on the cells, not the row, because hosts often lay rows out as display:contents inside a grid (so columns align across rows), and a display:contents element paints nothing. Selected is bg.surface-pressed; data-selected-fill=\"strong\" on the table container uses the darker base/250 (Figma screen 25). Checkbox and save icons show only on hover, focus, selected or saved (the header row always shows them), and data-reveal-actions on the container dims row actions to 40% until hover or keyboard focus, so a long table reads as data first. A row's data-status colors its Status dropdown's value as a pill in the row-status tokens.\n\nSelection: only a click on the row's own checkbox (a checkbox-cell containing [data-icon=\"checkbox\"], so a drag handle in the same cell type is excluded) toggles data-selected; the checked icon swaps in by CSS. Shift+click selects the range from the last clicked row in the same table (visible rows in DOM order, so it follows sorting and skips rows hidden by a search), as one ds-table-row-select event with detail.range = true. A [data-checkbox-group] container may hold one select-all header cell (table-cell checkbox_role=\"select-all\"), whose checked / semi / unchecked state follows how many rows are selected; clicking it selects all unless all are selected.\n\nReordering: a checkbox-cell holding Penpot's \"Drag\" glyph is a reorder handle. The row's own script uses native drag and drop, started only from the handle (draggable sits on the handle, which has a box even when the row is display:contents); dragover moves the row before or after the sibling under the pointer, measured on the sibling's first cell, and the dragged row's cells dim to 0.5 -- motion only as feedback. Hosts can drive their own drag and drop instead: data-dragging=\"true\" dims a row, data-drop=\"before\"/\"after\" draws an accent line on its top or bottom edge, and the whole handle cell shows the grab cursor. Not sourced from the design: selection, range selection, select-all and reordering. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "table-cell"
+    ],
+    "a11y_notes": "Selection listens only on the row's checkbox cell, so clicks on other cells and their controls never collide with it. No row roles are added (role=\"row\", aria-selected), since the system doesn't wrap rows in a role=\"table\" structure; a host adds them at table level. Known gaps: the row checkbox and the select-all control are role=\"img\" icons with aria-labels (\"Select row\", \"Select all rows\"), not real checkboxes, so their checked / mixed state isn't announced, and Shift+click range selection has no keyboard equivalent. The drag handle has aria-label=\"Reorder\", but native drag and drop is pointer-only; an accessible reorder needs a keyboard path (e.g. arrow keys on the focused handle with a live announcement), not implemented. The second checkbox of \"Check + Button\" is labeled plainly \"Checkbox\"."
+  },
+  {
+    "name": "tag",
+    "description": "A short label on a colored ground, for categories (accent-1/2/3), statuses (success, warning, danger) or a plain mark (neutral). Active is the solid, high-emphasis form; Passive the light tint for use in quantity, e.g. several tags in one row.",
+    "status": "stable",
+    "category": "tags",
+    "variants": [
+      "accent-1",
+      "accent-2",
+      "accent-3",
+      "success",
+      "warning",
+      "danger",
+      "neutral"
+    ],
+    "props": [
+      {
+        "name": "type",
+        "type": "string",
+        "required": false,
+        "default": "accent-1",
+        "description": "accent-1 | accent-2 | accent-3 | success | warning | danger | neutral. Sets data-type: which palette color the tag uses."
+      },
+      {
+        "name": "subtype",
+        "type": "string",
+        "required": false,
+        "default": "active",
+        "description": "active (solid fill, white text) or passive (light tint fill, the type's strong color as text). Sets data-subtype. Figma calls these Acive / Passive."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "tag",
+        "description": "The tag's text."
+      }
+    ],
+    "source": "figma:DSYSTEMFILEKEY#103:4746",
+    "rationale": "Built from the Figma D_SYSTEM Tag set (node 103:4746): 4px padding (spacing-2), 1px radius (radius-md), body text. Color carries the meaning and nothing else does: each type maps to one palette family (accent primary/secondary/tertiary, signal success/warning/error, neutral). Active uses the strong color as fill; Passive uses the light tint with the strong color as text, so a passive tag keeps its hue at lower weight and several tags in a row stay readable without every one shouting. The colored types use the raw palette on purpose: a category or status color must mean the same in both themes. Neutral is the one theme-aware type (text.active / text.inverced / bg.surface-pressed / text.subactive), because black on the dark surface would disappear. Figma names the warning family 'caution'; this system calls it signal.warning. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Plain inline text in a span, no role: the label itself is the content and is read as text. Color is never the only carrier of meaning -- the label says what the tag is. Passive tags on the light tints keep the strong color as text; the lightest pairs (warning passive) are the lowest contrast in the set, so use warning passive for supplementary marks, not for the only statement of a warning.",
+    "uses": []
+  },
+  {
+    "name": "text-button",
+    "description": "An unfilled, text-only action control whose color shows the status of the operation behind it (active / loading / confirmed / disabled / error) rather than pointer emphasis -- used where a label must show an async action moving from in-progress to done (e.g. an inline row action). A permanent solid or dotted underline marks it as clickable and says whether the click leaves the page; hover and keyboard focus add '[ ]' brackets.",
+    "status": "stable",
+    "category": "buttons",
+    "variants": [
+      "primary",
+      "secondary"
+    ],
+    "props": [
+      {
+        "name": "priority",
+        "type": "string",
+        "required": true,
+        "default": "primary",
+        "description": "primary (bold typography.buttonPrimary) or secondary (regular typography.buttonSecondary)."
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "required": false,
+        "default": "active",
+        "description": "active, loading, disabled, confirmed, or error. status=active, error and disabled carry the permanent underline (see `underline` prop; disabled draws it in the disabled color, Figma D_SYSTEM node 132:4987) -- loading/confirmed are not pointer-interactive states and carry none. error is a destructive-action confirmation state, not a disabled one."
+      },
+      {
+        "name": "underline",
+        "type": "string",
+        "required": true,
+        "default": "solid",
+        "description": "solid or dotted -- the permanent underline drawn under the label for status=active, error and disabled: solid when the action navigates to a new page/URL, dotted when it stays within the current view (opens/closes a popup, loads more rows, expands a section). Chosen per instance by what the action does, not by eye (CLAUDE.md, Interaction conventions)."
+      },
+      {
+        "name": "icon",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Optional icon name (an icons/<name>.svg file), rendered in a `.ds-text-button__icon` span next to a `.ds-text-button__label` span, spacing-button-gap (5px) apart. The icon has no color of its own: it inherits the status color. Omit for a plain text button."
+      },
+      {
+        "name": "unread",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "data-unread=\"true\": something new behind the button; secondary accent color."
+      },
+      {
+        "name": "icon_position",
+        "type": "string",
+        "required": false,
+        "default": "left",
+        "description": "left or right: where `icon` sits relative to the label (Figma D_SYSTEM Button Type=Text+L-icon / Text+R-icon). right renders the label span first and sets data-icon-position=\"right\". Ignored without `icon`."
+      },
+      {
+        "name": "icon_only",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Render only `icon`, no visible label (Figma Type=Icon / icon-outlined). `label` becomes the button's aria-label and title and is required -- template.html fails the compose if it or `icon` is missing. data-icon-only=\"true\"; 10px sides, 8px top/bottom (24px icon in Figma's 44x40 box)."
+      },
+      {
+        "name": "outlined",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "1px object-dark-passive border around the button (Figma Type=text-outlined / icon-outlined), taken out of the padding so an outlined button's outer box matches the plain one. data-outlined=\"true\"."
+      },
+      {
+        "name": "preview",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "hover: render the hover look (brackets, outlined accent border) without a pointer, via data-preview=\"hover\". Documentation only -- for pages that lay every state side by side (Figma D_SYSTEM node 132:4987); never set it in product UI."
+      }
+    ],
+    "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc55",
+    "rationale": "Two independent axes, each carried by exactly one property so neither can be misread as the other. Priority changes only typography (typography.buttonPrimary bold vs buttonSecondary regular). Status changes only color, reusing the design's own status vocabulary: active = accent-1 (the one interactive color), loading = system.warning, confirmed = system.success, disabled = object-dark.active, error = system.error-strong where a theme defines it, falling back to system.error. error is a destructive-action confirmation step (e.g. gallery's 'Reset selection' arms a second click): the button is still clickable, the color says what the next click does. The Penpot source's tertiary priority was dropped: it was only partly defined.\n\nUnderline: permanent, not hover-only, because the design draws it at rest. It means 'clickable', so it is drawn for active and error; disabled keeps it in the disabled color so the control still says what it would do while the color says it can't; loading and confirmed are not clickable and carry none. solid vs dotted follows the system-wide convention (solid leaves the page, dotted stays in the view; see CLAUDE.md, Interaction conventions). Solid is 1px (border-width-thin) so it doesn't turn into a bar under bold labels; dotted is 2px (border-width-default) because dot size follows thickness and 1px dots read as specks. The underline sits on an inner span (.ds-text-button__text, added by component.js for bare-text buttons, or .ds-text-button__label) because a browser paints an ancestor's text-decoration across its whole content box, which would include the bracket space.\n\nBrackets: hover and keyboard focus reveal '[ ]' around the label -- the affordance the Penpot source drew on every instance, kept as an interaction cue only. They are always rendered but transparent at rest, so revealing them changes color only and the button never changes width. In tight contexts (header-block rows, sidebar set rows, action/link table cells, page-head, pane and popup-step heads, block-row actions, icon-only buttons) the brackets hang inside the horizontal padding instead of reserving space, so the button hugs its label and neighbours never shift. Outlined buttons show no brackets: their border turns accent-1 on hover and focus instead, the border already being the control's edge.\n\nBox: no fill, no shadow, radius none -- the control is text and color already carries every state. Padding is spacing-cell (10px) vertical / spacing-button-x (11px) horizontal and the icon/bracket gap spacing-button-gap (5px), the figures Figma uses on every button, nav link and table action. Outlined adds the object-dark-passive hairline tables and cards already use, taken out of the padding so an outlined button's outer box matches a plain one. Icon-only buttons pad 8px top/bottom (spacing-3) and 10px sides (spacing-cell) around a 24px (spacing-7) glyph, the size used for standalone glyphs elsewhere.\n\nIcons have no color of their own and inherit the status color, so they track every status without per-status rules; glyphs are inlined via fetch (see component.js) so currentColor applies. unread (accent-2, the nav dot's color) marks that something new is behind the button. preview='hover' draws the hover look statically, for documentation pages only. In dark, system.warning is yellow.600, so loading stays distinct from active. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Renders as a native <button>. status=disabled also sets the native disabled attribute, since the action is genuinely unavailable. status=loading stays focusable; a host that wants it inert while loading must also set disabled. The permanent underline is supplementary (color already distinguishes the statuses), so forced-colors modes that strip text-decoration remove no information. Icon variants keep .ds-text-button__icon aria-hidden=\"true\": the label already supplies the full accessible name. The hover / focus brackets are CSS-generated ::before/::after content; browsers differ on whether generated content enters the accessible name, so the name never depends on it -- the button's own text is unchanged by hover or focus. Brackets also appear on :focus-visible, so keyboard users get the same affordance as a mouse hover."
+  },
+  {
+    "name": "toast",
+    "description": "A short confirmation or error message, stacked bottom-right, auto-dismissing. May carry one or two action buttons (e.g. links to something just generated). Created at runtime via window.dsToast.show(...), not pre-rendered markup -- see component.js.",
+    "status": "stable",
+    "category": "toasters",
+    "variants": [
+      "default",
+      "success",
+      "warning",
+      "error",
+      "with-actions"
+    ],
+    "props": [
+      {
+        "name": "message",
+        "type": "string",
+        "required": true,
+        "description": "The toast's text."
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "required": false,
+        "default": "default",
+        "description": "\"default\", \"success\", \"warning\" or \"error\". Picks the color family (Figma D_SYSTEM Toster, node 103:4772): its medium color fills the toast, its strong color draws the border and the close square. success and warning are Figma's; error uses signal.error, default the neutral base grays."
+      },
+      {
+        "name": "actions",
+        "type": "array",
+        "required": false,
+        "description": "Optional array of {label, onClick} (onClick is only meaningful through the real window.dsToast.show() call, not this illustrative template -- see component.js). Up to two."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "required": false,
+        "default": 5000,
+        "description": "Auto-dismiss delay in ms, only meaningful through window.dsToast.show(). The default (5000) is a judgment call, not a design-source value."
+      }
+    ],
+    "source": "none",
+    "rationale": "Styled to Figma D_SYSTEM's Toster (node 103:4772): a full status fill with a 1px border in the family's strong color, 20px system-message text, and a close button (a 24px square in the strong color with a white X). The fill carries the status at a glance; the X lets a reader drop a toast early instead of waiting out the timer. Figma draws success and warning; default and error follow the same pattern in the neutral and danger families. No shadow: the toast is edged by its border. Status colors are the fixed palette, as everywhere a color states a status, so the text is fixed black in both themes.\n\nBehavior follows the product rule the component was built for: every action that changes stored data produces a short confirmation toast, every failed action an error toast naming the operation and the reason, toasts stack bottom-right and auto-dismiss, and a toast may carry actions. Unlike every other component.js, which wires behavior onto markup a page already rendered, a toast only exists because an action just happened, so it exposes a runtime API (window.dsToast.show(...)). Hover and keyboard focus pause the dismiss timer (it restarts at the full duration afterwards, not the remaining time), so a toast with actions doesn't vanish under a reaching cursor or a focused button. The 5000ms default duration is a judgment call; the rule states that toasts auto-dismiss, not how fast. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "uses": [
+      "text-button"
+    ],
+    "a11y_notes": "role=\"status\" (not role=\"alert\") on each toast: a polite announcement, because toasts report routine results rather than interrupting -- anything that must interrupt uses popup. Action buttons are real, focusable <button> elements from text-button's template. Auto-dismiss is mitigated for mouse (hover pause) and keyboard (focusin/focusout on the toast keeps it alive while an action inside it is focused). Remaining gap: a toast without actions offers nothing to focus, so a screen-reader user reading it gets no pause. The close button is a real <button> with aria-label=\"Dismiss\" (the X is a CSS mask, no text)."
+  },
+  {
+    "name": "tooltip",
+    "description": "A hover/focus tooltip: add data-tooltip=\"...\" directly onto any real element to give it one, no wrapper markup required. E.g. explaining why a disabled Undo button is disabled.",
+    "status": "stable",
+    "category": "toasters",
+    "variants": [],
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "required": true,
+        "description": "The tooltip's text. In real usage this is the data-tooltip attribute value on the actual trigger element (a button, an icon span, etc.) -- not a separate component instance."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "Only used by this component's own demo trigger (template.html): the visible content of the illustrative element data-tooltip is attached to. In real use, data-tooltip goes on an element the page already has; this prop has no meaning there."
+      },
+      {
+        "name": "preview",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "visible: data-preview=\"visible\" on the [data-tooltip] element shows the tooltip without hover/focus. Documentation only (the site's Toasters and tooltips card); never in product UI."
+      }
+    ],
+    "source": "none",
+    "rationale": "Styled to Figma D_SYSTEM's Tooltip (node 103:4777): a dark fill (tooltip-bg, Figma base/900), a 1px tooltip-border, white body text, 10px padding, no shadow -- dark so it reads as a layer above the page in either theme. Pure CSS, no JavaScript: content: attr(data-tooltip) reads the trigger's own attribute, and :hover / :focus-visible are the whole show condition, because a tooltip's dismissal is exactly 'stop hovering or focusing'. Adding JS (as popup and dropdown-menu need for their open state) would be complexity with no functional gain. Figma's text+icon variant is not implemented: the bubble is the host's ::after, and a host's ::before is already taken (text-button's hover brackets), so there is no free box for an icon. Known limitation: no viewport clamping, so a trigger near a container edge can render the bubble partly off-screen. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": ":focus-visible (not just :hover) shows the tooltip, so keyboard users reach it with Tab. The tooltip text is CSS generated content and is not announced as a description; if it must be announced, the host should add aria-describedby pointing at a real, visually hidden text node. A native <button disabled> can't receive focus, so a tooltip on a disabled button is mouse-only; to make it keyboard-reachable, the host would use aria-disabled on a still-focusable button instead of the disabled attribute."
+  }
+]

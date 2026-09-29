@@ -1,0 +1,133 @@
+/*
+  table-header (Penpot Variant axis: type = "1 Tab" | "2 Tabs" | "Title + info")
+
+  Rules:
+  - Every value below is a var(--ds-*) reference from tokens/output.css.
+  - No decorative rule; color differences (active vs inactive tab) are the
+    state signal itself, not styling for its own sake.
+
+  Read directly off Penpot's three instances:
+  - Left inset is constant across all three: paddingLeft = spacing.6 (20px),
+    a Token-bound value in Penpot's own data (shape.tokens.paddingLeft),
+    not inferred.
+  - Gap between the title and a second element (2nd tab, or the info text)
+    is constant at columnGap = spacing.5 (16px), also Token-bound in Penpot's
+    data for both the "2 Tabs" and "Title + info" instances. "1 Tab" has no
+    second child, so no gap applies.
+  - type="1 Tab": one heading3 title, text.active.
+  - type="2 Tabs": two heading3 labels — the selected tab is text.active,
+    the other is text.inactive. This is Penpot's own status-coding for
+    selection state (same text.active/text.inactive vocabulary used
+    elsewhere, e.g. table-row's saved-icon states), not an invented affordance.
+  - type="Title + info": one heading3 title (text.active) plus one
+    bodyText caption (text.subactive) — e.g. "3 pages" in the source. This is
+    the same subactive token table-cell's Source/Empty-state cells use for
+    secondary, de-emphasized information.
+
+  Shaded caption chip (explicit request, 2026-09-03, "make the tables look
+  like https://en.wikipedia.org/wiki/Help:Category"): Penpot's own
+  table-header instances carry no background/border at all -- this
+  component's own prior rationale even states so explicitly, matching
+  header-block's plain-divider (not card/border) separation from the rows
+  below. That finding stands as a correct reading of Penpot; this is a
+  deliberate, flagged deviation from it, not a correction. bg.surface-pressed
+  is reused for the fill rather than inventing a new gray to approximate
+  Wikipedia's own #eaecf0 header shade (not a token in this system): it's
+  the same "one step more emphasized than bg.surface" token table-row
+  already uses for its own Selected state, and it moves in the
+  theme-appropriate emphasis direction in both palettes (darker in Light,
+  lighter in Dark), unlike object-white-passive which would flip direction
+  between themes. Border reuses the same border-width-thin/object-dark-passive
+  pairing added to table-cell (see that file's own comment) so the caption
+  reads as the same grid's top edge, not an unrelated box. Padding is added
+  on every side (not just the pre-existing left inset) purely so the
+  background/border don't visually clip flush against the text -- sizing
+  stays content-hugging (no width:100%) since this element is also used as
+  a flex child of header-block's own row, and stretching it would break
+  header-block's Penpot-sourced space-between layout with
+  table-header-actions.
+*/
+
+.ds-table-header {
+  display: flex;
+  align-items: center;
+  column-gap: var(--ds-spacing-5);
+  padding: var(--ds-spacing-3) var(--ds-spacing-5) var(--ds-spacing-3) var(--ds-spacing-6);
+  background-color: var(--ds-color-bg-surface-pressed);
+  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  box-sizing: border-box;
+}
+
+/*
+  Title split to its own rule, one step smaller than before (explicit
+  request, 2026-09-11, "change the Table header Title to one step
+  smaller one"): heading4 (18px), not heading3 (24px) -- the next step
+  down this system's own heading scale (heading1 40px, heading2 32px,
+  heading3 24px, heading4 18px, heading5 14px). Scoped to __title only,
+  not __tab: the request named the title specifically, and a 2-tabs
+  header (e.g. Archived/Filtered) has no separate "title" of its own to
+  shrink -- its tab labels stay heading3, previously sharing this same
+  rule with __title only because both happened to use the same size, not
+  because they're the same kind of text.
+*/
+.ds-table-header__title {
+  font-family: var(--ds-font-heading-4-family);
+  font-size: var(--ds-font-heading-4-size);
+  font-weight: var(--ds-font-heading-4-weight);
+  line-height: var(--ds-font-heading-4-line-height);
+  letter-spacing: var(--ds-font-heading-4-letter-spacing);
+  color: var(--ds-color-text-active);
+}
+
+/*
+  Same one-step-down treatment as __title, now extended to tabs too
+  (explicit request, 2026-09-11, "do the same for 'Archived'/'Filtered'
+  tabs"): heading4 (18px), not heading3 (24px) -- the prior round
+  deliberately left tabs at heading3 since only "Title" was named then;
+  this round names Archived/Filtered specifically, so 2-tabs headers
+  drop the same step __title already did.
+*/
+.ds-table-header__tab {
+  font-family: var(--ds-font-heading-4-family);
+  font-size: var(--ds-font-heading-4-size);
+  font-weight: var(--ds-font-heading-4-weight);
+  line-height: var(--ds-font-heading-4-line-height);
+  letter-spacing: var(--ds-font-heading-4-letter-spacing);
+  color: var(--ds-color-text-active);
+}
+
+/* type="2 Tabs": clickable tab labels, plain-button reset */
+.ds-table-header__tab {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/*
+  One step lighter, not two (explicit request, 2026-09-10, "make inactive
+  tab one step lighter"): text-inactive is the system's dimmest tier,
+  reserved for genuinely disabled/unusable text (see e.g. table-cell's
+  disabled-state rules) -- an unselected-but-still-clickable tab is a
+  weaker signal than that, so it reads one step down the same
+  active -> subactive -> inactive scale table-header__info already uses
+  for its own secondary caption text, not the bottom of it.
+*/
+.ds-table-header__tab[aria-selected="false"] {
+  color: var(--ds-color-text-subactive);
+}
+
+.ds-table-header__tab:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+/* type="Title + info": secondary caption text */
+.ds-table-header__info {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  color: var(--ds-color-text-subactive);
+}

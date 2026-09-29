@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div class="ds-split" style="height: 260px; background: var(--ds-color-bg-surface-pressed);">
+  {% with id='pane-a', title='Included projects', caption='4 total', action='Add project' %}{% include "components/pane/template.html" %}{% endwith %}
+  {% with id='pane-b', title='Preview', caption='9 Pages', action='Download PDF' %}{% include "components/pane/template.html" %}{% endwith %}
+</div>
+
+<p style="margin: var(--ds-spacing-7) 0 var(--ds-spacing-3); font-family: var(--ds-font-body-text-family); color: var(--ds-color-text-active);">Resizable: drag the line between the panes, or focus it and use the arrow keys.</p>
+<div class="ds-split" data-resizable data-resize-key="pane-demo" style="height: 260px; background: var(--ds-color-bg-surface-pressed);">
+  {% with id='pane-c', title='Included projects', caption='4 total', action='Add project' %}{% include "components/pane/template.html" %}{% endwith %}
+  <div class="ds-split__handle" role="separator" aria-orientation="vertical" tabindex="0" aria-label="Resize preview"></div>
+  {% with id='pane-d', title='Preview', caption='9 Pages', action='Download PDF' %}{% include "components/pane/template.html" %}{% endwith %}
+</div>
+
+<script src="../text-button/component.js"></script>
+<script src="component.js"></script>

@@ -1,0 +1,63 @@
+<!--
+  popup -- the four Figma popups (popup-medium 150:16627 / 150:16661 /
+  150:16695 / 150:16729) plus the gallery and large variants Figma has not
+  been read for yet.
+
+  Add Description (input) and Summary (text) are centered modals, 800px.
+  Archive selected? and Analyse with API call? are the small confirmations,
+  500px, anchored under whichever trigger opened them and dimmed lightly.
+  Every action is a regular-weight secondary text button, as in Figma;
+  "Archive selected" is status="error", the red destructive one. The action
+  Ctrl+Enter / Cmd+Enter presses is marked confirm.
+
+  Each overlay starts hidden and opens from its own trigger below
+  (component.js wires open/close; not from Figma -- a static design has no
+  notion of a page that opens a dialog).
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="../input/style.css">
+<link rel="stylesheet" href="../gallery/style.css">
+<link rel="stylesheet" href="../gallery-image/style.css">
+<link rel="stylesheet" href="../table-header-actions/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: flex; flex-direction: column; row-gap: var(--ds-spacing-6);">
+
+  {% with popup_id='popup-overlay-1', title='Add Description', type='input', placeholder='Paste the description here', bottom_actions=[{'label': 'Cancel'}, {'label': 'Save', 'confirm': true}] %}{% include "components/popup/template.html" %}{% endwith %}
+
+  {% with popup_id='popup-overlay-2', title='API Latency Incident Summary', type='text', paragraphs=[
+    'p95 latency on the search endpoint rose from 180 ms to 2.4 s after the nightly index rebuild; rolling the index back restores it.',
+    'p95 latency on the search endpoint rose from 180 ms to 2.4 s after the nightly index rebuild; rolling the index back restores it. p95 latency on the search endpoint rose from 180 ms to 2.4 s after the nightly index rebuild; rolling the index back restores it.',
+    'p95 latency on the search endpoint rose from 180 ms to 2.4 s after the nightly index rebuild; rolling the index back restores it. p95 latency on the search endpoint rose from 180 ms to 2.4 s after the nightly index rebuild; rolling the index back restores it. p95 latency on the search endpoint rose after the nightly index rebuild.'
+  ], bottom_actions=[{'label': 'Close', 'confirm': true}] %}{% include "components/popup/template.html" %}{% endwith %}
+
+  {% with popup_id='popup-overlay-3', title='Archive selected?', type='text', size='small', placement='anchored', paragraphs=['3 items move to Archived. You can unarchive them at any time.'], bottom_actions=[{'label': 'Archive selected', 'status': 'error', 'confirm': true}, {'label': 'Cancel'}] %}{% include "components/popup/template.html" %}{% endwith %}
+
+  {% with popup_id='popup-overlay-4', title='Analyse with API call?', type='text', size='small', placement='anchored', paragraphs=['This makes a real Claude API call for each selected item.'], bottom_actions=[{'label': 'Cancel'}, {'label': 'Analyse for 0.05$', 'confirm': true}] %}{% include "components/popup/template.html" %}{% endwith %}
+
+  {% with popup_id='popup-overlay-5', title='Select Images', type='gallery', gallery_id='popup-gallery-demo', bottom_actions=[{'label': 'Cancel'}, {'label': 'Select', 'priority': 'primary', 'confirm': true}] %}{% include "components/popup/template.html" %}{% endwith %}
+
+  {% with popup_id='popup-overlay-6', title='A larger dialog', type='text', size='large' %}{% include "components/popup/template.html" %}{% endwith %}
+
+  <!--
+    Trigger row -- not from Figma, added so this demo shows the real open
+    behavior instead of every instance being permanently open. dotted per
+    CLAUDE.md's Interaction Conventions: opening a modal stays on the
+    current page/view. The two anchored ones open under their own trigger.
+  -->
+  <div style="display: flex; column-gap: var(--ds-spacing-4); flex-wrap: wrap;">
+    {% with priority='secondary', status='active', underline='dotted', label='Add Description', extra_attrs='data-popup-open="popup-overlay-1"' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='secondary', status='active', underline='dotted', label='View summary', extra_attrs='data-popup-open="popup-overlay-2"' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='secondary', status='active', underline='dotted', label='Archive', extra_attrs='data-popup-open="popup-overlay-3"' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='secondary', status='active', underline='dotted', label='Analyse', extra_attrs='data-popup-open="popup-overlay-4"' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='secondary', status='active', underline='dotted', label='Open gallery modal', extra_attrs='data-popup-open="popup-overlay-5"' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='secondary', status='active', underline='dotted', label='Open large modal', extra_attrs='data-popup-open="popup-overlay-6"' %}{% include "components/text-button/template.html" %}{% endwith %}
+  </div>
+
+</div>
+
+<script src="../text-button/component.js"></script>
+<script src="../gallery/component.js"></script>
+<script src="../gallery-image/component.js"></script>
+<script src="component.js"></script>

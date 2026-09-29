@@ -1,0 +1,23 @@
+<!--
+  empty-state: message-only, then message+action, then icon+message+action.
+  Not paired with any real container here (paper-preview/set-table sizing
+  is each host's own concern) -- just the block itself.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: flex; flex-direction: column; gap: var(--ds-spacing-6);">
+
+  {% with message='Nothing here yet.' %}{% include "components/empty-state/template.html" %}{% endwith %}
+
+  {% with message='Add a project to see the preview', action_label='Add project' %}{% include "components/empty-state/template.html" %}{% endwith %}
+
+  {% with icon='drag', message='Add blocks from the reference template.' %}{% include "components/empty-state/template.html" %}{% endwith %}
+
+</div>
+
+{% with size='row', message='Add some blocks to see them here.' %}{% include "components/empty-state/template.html" %}{% endwith %}
+
+<script src="../text-button/component.js"></script>
+<script src="component.js"></script>

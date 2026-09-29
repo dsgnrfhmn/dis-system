@@ -1,0 +1,5 @@
+<div class="ds-popup-step__head">
+  <ol class="ds-popup-step__title" start="{{ number | default(1) }}"><li>{{ title | default('Choose your project') }}</li></ol>
+  {% if action %}{% with priority='secondary', status='active', underline='dotted', label=action %}{% include "components/text-button/template.html" %}{% endwith %}{% endif %}
+</div>
+<div class="ds-popup-step__body">{{ content | default('') }}</div>

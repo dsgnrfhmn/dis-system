@@ -1,0 +1,11 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: flex; width: 100%;" role="tablist">
+{% with active=true, label='For Review', count='4 total, 5 submitted' %}{% include "components/header-tab/template.html" %}{% endwith %}
+{% with active=false, label='Analysed', count='4 total, 5 submitted' %}{% include "components/header-tab/template.html" %}{% endwith %}
+{% with active=false, label='Archived', count='4 total, 5 submitted' %}{% include "components/header-tab/template.html" %}{% endwith %}
+{% with active=false, label='Filtered', count='4 total, 5 submitted' %}{% include "components/header-tab/template.html" %}{% endwith %}
+</div>
+
+<script src="component.js"></script>

@@ -1,0 +1,21 @@
+{% set _links = nav_links | default([
+  {'label': 'Events', 'current': false},
+  {'label': 'Items', 'current': false},
+  {'label': 'Profile', 'current': false},
+  {'label': 'Home', 'current': true}
+]) %}
+<nav class="ds-nav-bar" aria-label="Primary">
+  <div class="ds-nav-bar__left">
+    {% with size='small', value=workspace_label | default('Workspace') %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+  </div>
+
+  <div class="ds-nav-bar__center">
+    {% for link in _links %}
+    {% with priority=('primary' if link.current else 'secondary'), status='active', underline='solid', label=link.label, current=link.current %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+
+  <div class="ds-nav-bar__right">
+    {% with priority='secondary', status='active', underline='dotted', icon=theme_icon | default('theme-dark'), label=theme_label | default('Dark'), extra_class='ds-nav-bar__theme-toggle', icon_extra_class='ds-nav-bar__theme-icon', label_extra_class='ds-nav-bar__theme-label' %}{% include "components/text-button/template.html" %}{% endwith %}
+  </div>
+</nav>

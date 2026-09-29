@@ -1,0 +1,2 @@
+<!-- Figma D_SYSTEM DSYSTEMFILEKEY, icon set node 103:4711 (Type=checkbox, State=default; hover is the same glyph with an accent stroke, set by CSS). Ink is currentColor; a second paint, where there is one, comes from the private icon-fill / icon-mark custom properties set by the component that renders it (none when shown as a plain image). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19.5 4.5V19.5H4.5V4.5H19.5Z" stroke="currentColor" style="fill: var(--_icon-fill, none)"/></svg>

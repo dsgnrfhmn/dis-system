@@ -1,0 +1,6 @@
+{% set _actions = actions | default([{'label': 'Add item', 'priority': 'primary'}]) %}
+<div class="ds-table-header-actions">
+  {% for action in _actions %}
+  {% with priority=action.priority, status=action.status | default('active'), underline='dotted', label=action.label, extra_attrs=action.extra_attrs | default(none) %}{% include "components/text-button/template.html" %}{% endwith %}
+  {% endfor %}
+</div>

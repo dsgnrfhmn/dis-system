@@ -1,0 +1,46 @@
+{
+  "name": "table-footer",
+  "description": "The row under a table's last row that loads more of it (\"Load 10 more\", \"Load all 100\"): a 44px row on the pressed surface whose first button aligns with the third column's text.",
+  "status": "stable",
+  "category": "tables",
+  "listed": false,
+  "variants": [],
+  "props": [
+    {
+      "name": "first_label",
+      "type": "string",
+      "required": false,
+      "default": "Load 10 more",
+      "description": "Label of the first (text-aligned) button."
+    },
+    {
+      "name": "second_label",
+      "type": "string",
+      "required": false,
+      "default": "Load all 100",
+      "description": "Label of the second button."
+    },
+    {
+      "name": "first_action",
+      "type": "string",
+      "required": false,
+      "default": "load-more",
+      "description": "data-action value of the first button, for the host page to listen for."
+    },
+    {
+      "name": "second_action",
+      "type": "string",
+      "required": false,
+      "default": "load-all",
+      "description": "data-action value of the second button."
+    }
+  ],
+  "source": "figma:APPFILEKEY#64:7799",
+  "rationale": "Height is one table row: spacing.row (44px) plus the 1px hairline, like every table row. Fill is bg.surface-pressed (Figma base/100). The hairline is border.muted (base/150), with object-dark.passive as the fallback because border.muted has no dark value yet. Left padding is two 44px icon columns plus the 10px cell padding, so the first button's label starts where the Name column's text starts: the first button is a text-aligned button (no left padding, hover \"[\" hung outside the label), exactly like table-cell's text-active-cell button. Not sourced from Figma: the data-action hooks, through which the host page attaches its own load behavior; no behavior lives in the component. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [],
+  "a11y_notes": "Two real <button> elements; keyboard focus uses text-button's own focus ring. The row has no landmark role: it is part of the table's section."
+}

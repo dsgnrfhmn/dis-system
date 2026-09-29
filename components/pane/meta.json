@@ -1,0 +1,49 @@
+{
+  "name": "pane",
+  "description": "One column of a two-column work area: a 56px head (title and caption at half opacity, optional action button) over a body that scrolls on its own. .ds-split lays panes side by side.",
+  "status": "stable",
+  "category": "cards-layouts",
+  "listed": false,
+  "layout": "wide",
+  "variants": [],
+  "props": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "default": "ds-pane-demo",
+      "description": "Prefix of the title's id, used by aria-labelledby."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "default": "Included projects",
+      "description": "Pane title."
+    },
+    {
+      "name": "caption",
+      "type": "string",
+      "required": false,
+      "default": "4 total",
+      "description": "Caption next to the title (a count, a page count)."
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": false,
+      "default": "Add project",
+      "description": "Label of the head's text button."
+    }
+  ],
+  "source": "figma:APPFILEKEY#150:16217,150:16233,150:16362",
+  "rationale": "Head height is spacing.9 + spacing.5 (56px), side padding spacing.6, bg.surface, one hairline under it. The title uses the \"title\" role (Inter SemiBold 16px) and the caption the caption role (Inter Italic 16px), both at 50% opacity as in Figma, bottom-aligned so their baselines meet, spacing.cell apart. .ds-pane__body and .ds-pane__scroll are separate so a positioned body (e.g. one a loading-veil covers) can wrap the scrolling region, while a simple pane scrolls directly under the head. The scrollbar is hidden (scrollbar-width: none); wheel, keys and touch still scroll.\n\nAttributes: data-divider=\"start\" on the head and body draws a hairline on the pane's left edge (the divider between two panes); data-emphasis=\"true\" on the title shows it at full opacity; a body with the hidden attribute is hidden (tab panels).\n\nResizable split: any flex row with data-resizable and a .ds-split__handle between two neighbours. The handle is a 0-wide flex item on the border between them, with an 8px (spacing.3) grab area centered on the line and a 2px accent line on hover, focus and while dragging. Dragging, or ArrowLeft / ArrowRight (24px a step), resizes the target: data-resize-target=\"end\" (default) the element after the handle, \"start\" the one before it. data-min-size / data-min-rest set the target's and the rest's minimum in pixels (default 320 each). The size is applied as data-resized plus --_resize-size on the target, not an inline flex, so CSS states keep priority (sidebar-list's collapsed rule beats it, and the handle beside a collapsed sidebar is hidden). data-resize-key remembers the target's share of the row in localStorage (a share, so another window width keeps the proportion; missing or failing storage just starts equal). It emits ds-split-resize and a window resize, so nested splits re-apply their stored share and paper-preview's scroll thumb updates. Not sourced from Figma: the handle and resizing; the design shows only the divider line. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [
+    "text-button"
+  ],
+  "a11y_notes": "The pane is a <section>; label it with aria-labelledby pointing at the title. The head button is a real text-button. The resize handle is role=\"separator\" aria-orientation=\"vertical\", focusable, with aria-valuenow/min/max as the end pane's share of the split in percent; give it an aria-label naming what it resizes."
+}

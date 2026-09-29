@@ -1,0 +1,48 @@
+{
+  "name": "text-button",
+  "description": "TEMPLATE: a reduced copy of text-button -- an unfilled, text-only action control whose color shows the status of the operation behind it (active / loading / confirmed / disabled), not pointer emphasis.",
+  "status": "draft",
+  "category": "buttons",
+  "variants": [
+    "primary",
+    "secondary"
+  ],
+  "props": [
+    {
+      "name": "priority",
+      "type": "string",
+      "required": true,
+      "default": "primary",
+      "description": "primary (bold typography.buttonPrimary) or secondary (regular typography.buttonSecondary). Changes typography only, never color."
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "required": false,
+      "default": "active",
+      "description": "active, loading, confirmed or disabled. Changes color only. disabled also sets the native disabled attribute."
+    },
+    {
+      "name": "underline",
+      "type": "string",
+      "required": true,
+      "default": "solid",
+      "description": "solid when the click navigates to a new page/URL, dotted when it stays within the current view. Chosen per instance by what the action does, not by eye (CLAUDE.md, Interaction conventions)."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Button label",
+      "description": "Visible text; also the button's accessible name."
+    }
+  ],
+  "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc55",
+  "rationale": "Priority and status are independent axes, each encoded by exactly one property, so neither can be misread as the other: priority changes only typography weight (typography.buttonPrimary bold vs buttonSecondary regular), status changes only color. The status colors are the design's own status vocabulary, reused rather than invented: active = accent-1 (the one interactive color), loading = system.warning, confirmed = system.success, disabled = object-dark.active. The permanent underline marks 'clickable right now', so it is drawn only for active (and, in the disabled color, for disabled, where the design keeps it to show the control's kind); loading and confirmed are not clickable states and carry none. Its style follows the system-wide solid/dotted convention (solid navigates away, dotted stays in the view). The underline sits on an inner span because an ancestor's text-decoration paints across its whole content box, including the space reserved for the brackets. Hover and keyboard focus reveal '[ ]' brackets: they are always rendered but transparent at rest, so the affordance changes color only and never shifts surrounding layout. No fill, no shadow, radius none: the control is text, and color already carries all state. focus-visible outline is added for keyboard accessibility, which a static design source does not model.\n\n[TEMPLATE NOTE -- delete this paragraph when adapting: the rationale above is the required depth. Every claim traces to a value read off the design source (Figma get_design_context / get_variable_defs on the node) and says what it does for the user, not how it looks. Do the same for your component before writing CSS. The full, shipped version of this component is components/text-button/.]",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "Native <button>: role and Enter/Space activation are free. status=disabled uses the native disabled attribute since the action is genuinely unavailable; status=loading stays focusable (set disabled too if the host wants it inert). Status is conveyed by color alone; hosts should also change the label text (e.g. 'Saving...') so the state reaches assistive tech. The brackets are CSS-generated content, so the accessible name never depends on them. Visible focus-visible outline required; do not remove without an equivalent replacement.",
+  "uses": []
+}

@@ -1,0 +1,23 @@
+{
+  "name": "table-header-actions",
+  "description": "The action-button cluster docked at the right side of a table's header-block (e.g. \"Add item\", \"Export\", \"Clear filters\"). A row of 1-4 text-button instances, ordered from least to most emphasis with the single primary action always last/rightmost. Renamed from Penpot's literal component name \"table-header_right-block\" (see rationale).",
+  "status": "stable",
+  "category": "tables",
+  "listed": false,
+  "variants": [
+    "1-action",
+    "2-actions",
+    "3-actions",
+    "4-actions"
+  ],
+  "props": [],
+  "source": "penpot:28cec651-3f14-8022-8008-8c9a0bdb9ea8",
+  "rationale": "Renamed from Penpot's \"table-header_right-block\": the schema's name pattern rejects the underscore. Penpot's Actions axis values (\"1 Action\" ... \"3 Actions\", and inconsistently \"4\") are normalized to \"1-action\" ... \"4-actions\". The component is only a flex-row shell: column gap 0 (Token-confirmed in Penpot -- the buttons' own padding separates them) and right padding 0, because header-block's row already carries the 20px side padding and the buttons hug their labels. It composes real text-button instances rather than restyling buttons, because Penpot's source is itself composition: every child in every sampled instance is a text-button (no fill token, only a label). The emphasis pattern read off the instances: each extra action is lower emphasis, and the single primary action is always last, rightmost. Every sampled action (Add item, Export, Clear filters, Select all) acts within the current table view, so all use the dotted underline (CLAUDE.md, Interaction conventions). Each action may carry a `status` (text-button's, default 'active'), so bulk actions can render disabled until rows are selected. It sets no background, so header-block's shaded row shows through behind its buttons. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [
+    "text-button"
+  ]
+}

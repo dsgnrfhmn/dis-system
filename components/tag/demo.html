@@ -1,0 +1,17 @@
+<!--
+  tag demo: all 7 types, Active over Passive (Figma D_SYSTEM node 103:4746).
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: flex; flex-direction: column; gap: var(--ds-spacing-6); padding: var(--ds-spacing-6);">
+  {% for subtype in ['active', 'passive'] %}
+  <div style="display: flex; gap: var(--ds-spacing-6);">
+    {% for type in ['accent-1', 'accent-2', 'accent-3', 'success', 'warning', 'danger', 'neutral'] %}
+    {% include "components/tag/template.html" %}
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+
+<script src="component.js"></script>

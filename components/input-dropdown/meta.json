@@ -1,0 +1,49 @@
+{
+  "name": "input-dropdown",
+  "description": "A select-style field: shows the current choice with a dropdown affordance arrow, opens components/dropdown-menu when activated (composed, see index.html — wrap this trigger and a .ds-dropdown-menu together in a .ds-dropdown container). Renamed from Penpot's literal component name \"Input_with-icon\" — its content is a 'Dropdown' text label plus a chevron, i.e. a select trigger, not a text input with a decorative leading icon.",
+  "status": "stable",
+  "category": "inputs",
+  "variants": [
+    "small",
+    "middle",
+    "large",
+    "compact"
+  ],
+  "props": [
+    {
+      "name": "value",
+      "type": "string",
+      "required": true,
+      "default": "Select…",
+      "description": "The currently selected value shown in the field."
+    },
+    {
+      "name": "placeholder",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Set when `value` is only a prompt (\"Select option\"), not a real choice: the label is drawn at 50% opacity like Figma's placeholder text. Sets data-placeholder; component.js removes it when the paired dropdown-menu selects an item."
+    },
+    {
+      "name": "fill",
+      "type": "string",
+      "required": false,
+      "default": "transparent",
+      "description": "\"transparent\" (default) or \"filled\" (base/250 fill). Figma's Input property is named Size but its values are fills; exposed as fill so it stays distinct from the width `size` below. Sets data-fill. Hover fills either one."
+    },
+    {
+      "name": "size",
+      "type": "string",
+      "required": false,
+      "default": "middle",
+      "description": "small (140px), middle (300px), or large (100% — fills its container). Sets a fixed width via data-size; the field never grows/shrinks on its own. Not from Penpot — its demo instances were all a single fixed 160px, an artifact of that documentation swatch's own frame size, not a real size system. These three values and their pixel widths were specified directly by the user rather than derived from Penpot (middle started at 240px, widened +60px to 300px on later user request). compact is 200px (a pane head's source dropdown)."
+    }
+  ],
+  "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc61",
+  "rationale": "Styled to Figma's Input, Type=text+icon (node 33:8199 of the application file): the same 40px box as `input` (1px base/400 border, 10px padding, no shadows) with the label and a 24px arrow 10px apart. Figma's Size property (transparent | filled) is exposed as `fill`. Hover fills the field (base/250) and darkens the border (base/750); Figma's focused variant (white fill, base/750 border, arrow pointing up) is applied for :focus-visible and for the open menu (aria-expanded), so the arrow shows which way the menu is. Colors come from the input tokens (--ds-color-input-*, plus --ds-color-input-icon for the base/600 arrow). The label is 50% opacity while it is only a prompt and full opacity once a choice is made, so `placeholder` (data-placeholder) is opt-in; component.js clears it on the paired dropdown-menu's ds-dropdown-select event. Renamed from Penpot's \"Input_with-icon\" because its content is a label plus a chevron, i.e. a select trigger, and the schema's name pattern calls for kebab-case describing behavior. The arrow reuses icons/arrow-down.svg. Figma has only default, hover and focused states, so no disabled or error state is styled. size (small / middle / large) is a fixed-width system not traceable to the design source; data-size=\"compact\" is 200px wide, for a dropdown in a pane head (Figma node 150:16284) -- mirror it onto the .ds-dropdown wrapper so the trigger fills it (see dropdown-menu). Replaces an earlier Penpot version; its `source` is kept for traceability. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "Renders as a native <button> (not a real <select>). aria-haspopup=\"listbox\" is set so assistive tech announces it opens a choice list; aria-expanded is toggled automatically by components/dropdown-menu/component.js when this trigger is wrapped in a .ds-dropdown alongside a .ds-dropdown-menu (see index.html). It also still dispatches ds-input-dropdown-open on click/Enter/Space (free via <button>) independent of whether a real menu is attached, for a host page that wants to wire up its own menu instead."
+}

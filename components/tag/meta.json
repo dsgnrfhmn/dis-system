@@ -1,0 +1,46 @@
+{
+  "name": "tag",
+  "description": "A short label on a colored ground, for categories (accent-1/2/3), statuses (success, warning, danger) or a plain mark (neutral). Active is the solid, high-emphasis form; Passive the light tint for use in quantity, e.g. several tags in one row.",
+  "status": "stable",
+  "category": "tags",
+  "variants": [
+    "accent-1",
+    "accent-2",
+    "accent-3",
+    "success",
+    "warning",
+    "danger",
+    "neutral"
+  ],
+  "props": [
+    {
+      "name": "type",
+      "type": "string",
+      "required": false,
+      "default": "accent-1",
+      "description": "accent-1 | accent-2 | accent-3 | success | warning | danger | neutral. Sets data-type: which palette color the tag uses."
+    },
+    {
+      "name": "subtype",
+      "type": "string",
+      "required": false,
+      "default": "active",
+      "description": "active (solid fill, white text) or passive (light tint fill, the type's strong color as text). Sets data-subtype. Figma calls these Acive / Passive."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "tag",
+      "description": "The tag's text."
+    }
+  ],
+  "source": "figma:DSYSTEMFILEKEY#103:4746",
+  "rationale": "Built from the Figma D_SYSTEM Tag set (node 103:4746): 4px padding (spacing-2), 1px radius (radius-md), body text. Color carries the meaning and nothing else does: each type maps to one palette family (accent primary/secondary/tertiary, signal success/warning/error, neutral). Active uses the strong color as fill; Passive uses the light tint with the strong color as text, so a passive tag keeps its hue at lower weight and several tags in a row stay readable without every one shouting. The colored types use the raw palette on purpose: a category or status color must mean the same in both themes. Neutral is the one theme-aware type (text.active / text.inverced / bg.surface-pressed / text.subactive), because black on the dark surface would disappear. Figma names the warning family 'caution'; this system calls it signal.warning. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "Plain inline text in a span, no role: the label itself is the content and is read as text. Color is never the only carrier of meaning -- the label says what the tag is. Passive tags on the light tints keep the strong color as text; the lightest pairs (warning passive) are the lowest contrast in the set, so use warning passive for supplementary marks, not for the only statement of a warning.",
+  "uses": []
+}

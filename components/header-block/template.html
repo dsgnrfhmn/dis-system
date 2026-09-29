@@ -1,0 +1,29 @@
+{#
+  layout='bulk': the bulk-actions row over a table (the consuming app's For You):
+  table-header-actions flush left (actions act on the selected rows; pass
+  status='disabled' until something is selected), and, with search=true,
+  an always-open search docked to the right edge. No table-header.
+#}
+<div class="ds-header-block" data-size="{{ size | default('big') }}">
+  {% if layout == 'bulk' %}
+  <div class="ds-header-block__row" data-has-search="true">
+    {% with actions=actions | default([{'label': 'Archive', 'priority': 'secondary', 'status': 'disabled'}, {'label': 'Analyze', 'priority': 'primary', 'status': 'disabled'}]) %}{% include "components/table-header-actions/template.html" %}{% endwith %}
+    {% if search %}
+    <div class="ds-header-block__search" data-open="always" data-align="end">
+      {% with placeholder=search_placeholder | default('Search') %}{% include "components/input/template.html" %}{% endwith %}
+    </div>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="ds-header-block__row" data-has-search="{{ 'true' if search else 'false' }}">
+    {% with type=header_type | default('1-tab'), tab1=tab1, tab2=tab2, title=title, info=info %}{% include "components/table-header/template.html" %}{% endwith %}
+    {% if search %}
+    <div class="ds-header-block__search" data-open="false">
+      {% with priority='secondary', status='active', underline='dotted', label='Search' %}{% include "components/text-button/template.html" %}{% endwith %}
+      {% with placeholder=search_placeholder | default('Search') %}{% include "components/input/template.html" %}{% endwith %}
+    </div>
+    {% endif %}
+    {% with actions=actions | default([{'label': 'Add item', 'priority': 'primary'}]) %}{% include "components/table-header-actions/template.html" %}{% endwith %}
+  </div>
+{% endif %}
+</div>

@@ -1,0 +1,104 @@
+/*
+  sidebar-list
+  The sets sidebar of the Collection and Template pages (the consumer-app Figma file
+  APPFILEKEY, Collection nodes 150:16217 / 150:16475 / 150:16503,
+  Template screens 20-22). A 280px column on the surface color with one hairline on
+  its right edge: a 56px head (title at half opacity, collapse toggle) over a
+  scrolling list of sidebar-item type="set" rows. Collapsed (data-collapsed
+  = "true") it is a 64px strip holding only the toggle, its arrow flipped.
+  Replaces the earlier card sidebar (a stack of cards).
+*/
+.ds-sidebar-list {
+  flex: 0 0 calc(var(--ds-spacing-9) * 7);
+  width: calc(var(--ds-spacing-9) * 7);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ds-color-bg-surface);
+  border-right: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.ds-sidebar-list::-webkit-scrollbar {
+  display: none;
+}
+
+.ds-sidebar-list__head {
+  flex: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
+  padding: var(--ds-spacing-cell);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+.ds-sidebar-list__title {
+  font-family: var(--ds-font-title-family);
+  font-size: var(--ds-font-title-size);
+  font-weight: var(--ds-font-title-weight);
+  color: var(--ds-color-text-active);
+  opacity: 0.5;
+  white-space: nowrap;
+}
+
+.ds-sidebar-list__toggle {
+  flex: none;
+  box-sizing: border-box;
+  width: var(--ds-spacing-row);
+  height: var(--ds-spacing-9);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  cursor: pointer;
+}
+
+.ds-sidebar-list__toggle:hover {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-sidebar-list__toggle:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+.ds-sidebar-list__toggle-icon {
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  background-color: var(--ds-color-accent-1);
+  -webkit-mask: url("../../icons/arrow-left.svg") center / 100% 100% no-repeat;
+  mask: url("../../icons/arrow-left.svg") center / 100% 100% no-repeat;
+}
+
+.ds-sidebar-list[data-collapsed="true"] {
+  flex-basis: calc(var(--ds-spacing-row) + var(--ds-spacing-cell) * 2);
+  width: calc(var(--ds-spacing-row) + var(--ds-spacing-cell) * 2);
+}
+
+.ds-sidebar-list[data-collapsed="true"] .ds-sidebar-list__title,
+.ds-sidebar-list[data-collapsed="true"] .ds-sidebar-list__items {
+  display: none;
+}
+
+.ds-sidebar-list[data-collapsed="true"] .ds-sidebar-list__toggle-icon {
+  -webkit-mask-image: url("../../icons/arrow-right.svg");
+  mask-image: url("../../icons/arrow-right.svg");
+}
+
+/* Resizable (pane's data-resizable container, its component.js): once dragged the
+   sidebar carries data-resized and --_resize-size. The collapsed rule above is
+   more specific, so a collapsed sidebar keeps its collapsed width whatever was set,
+   and the handle beside a collapsed sidebar is not offered. */
+.ds-sidebar-list[data-resized]:not([data-collapsed="true"]) {
+  flex-basis: var(--_resize-size);
+  width: var(--_resize-size);
+}
+.ds-sidebar-list[data-collapsed="true"] + .ds-split__handle {
+  display: none;
+}

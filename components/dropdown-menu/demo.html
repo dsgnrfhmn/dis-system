@@ -1,0 +1,34 @@
+<!--
+  dropdown-menu only makes sense attached to a trigger, so this demo pairs
+  it with a real components/input-dropdown instance for a fully interactive
+  example — see components/input-dropdown/demo.html for the same pairing
+  from that component's side. This pairing is demo-only illustration, not
+  real composition (dropdown-menu's own template.html does not include
+  input-dropdown, and vice versa — see each meta.json's "uses"), so
+  input-dropdown's style.css/component.js are linked by hand below rather
+  than picked up automatically from a declared "uses" dependency.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../input-dropdown/style.css">
+<link rel="stylesheet" href="../divider/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div class="ds-dropdown">
+  {% with trigger=true %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+  {% include "components/dropdown-menu/template.html" %}
+</div>
+
+<div class="ds-dropdown">
+  {% with trigger=true, value='Middle' %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+  {% with items=[
+    {'value': 'short', 'label': 'Short'},
+    {'value': 'middle', 'label': 'Middle'},
+    {'value': 'full', 'label': 'Full'},
+    {'divider': true},
+    {'value': 'set-1', 'label': 'Release 2.4: Template'},
+    {'value': 'set-2', 'label': 'Collection Set 3'}
+  ], open=true %}{% include "components/dropdown-menu/template.html" %}{% endwith %}
+</div>
+
+<script src="../input-dropdown/component.js"></script>
+<script src="component.js"></script>

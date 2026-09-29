@@ -1,0 +1,793 @@
+{
+  "blue": {
+    "50": {
+      "$value": "#E5E5FF",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#C2C2FF",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "#8F8FFF",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#5C5CFF",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#4747FF",
+      "$type": "color",
+      "$description": ""
+    },
+    "500": {
+      "$value": "#0000EB",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#0000D6",
+      "$type": "color",
+      "$description": ""
+    },
+    "700": {
+      "$value": "#0000AD",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#000080",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "#00005C",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "cyan": {
+    "50": {
+      "$value": "#E5FFFF",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#C2FFFF",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "#8FFFFF",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#5CFFFF",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#47FFFF",
+      "$type": "color",
+      "$description": ""
+    },
+    "500": {
+      "$value": "#00EBEB",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#00D6D6",
+      "$type": "color",
+      "$description": ""
+    },
+    "700": {
+      "$value": "#00ADAD",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#008080",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "#005C5C",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "neutral": {
+    "50": {
+      "$value": "#F4F3F1",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#E3E1DD",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "#CDC9C1",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#B6B0A5",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#9F9789",
+      "$type": "color",
+      "$description": ""
+    },
+    "500": {
+      "$value": "#8C8473",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#766F60",
+      "$type": "color",
+      "$description": ""
+    },
+    "700": {
+      "$value": "#5F5A4E",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#49453C",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "#322F29",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "silver": {
+    "50": {
+      "$value": "#F2F2F2",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#E0E0E0",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "#C0C0C0",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#ADADAD",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#949494",
+      "$type": "color",
+      "$description": ""
+    },
+    "500": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#6B6B6B",
+      "$type": "color",
+      "$description": ""
+    },
+    "700": {
+      "$value": "#575757",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#424242",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "#2E2E2E",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "purple": {
+    "50": {
+      "$value": "#F1ECF8",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#DED2EF",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "#C2ABE3",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#A683D8",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#8A5BCD",
+      "$type": "color",
+      "$description": ""
+    },
+    "500": {
+      "$value": "#7439C6",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#6232A4",
+      "$type": "color",
+      "$description": ""
+    },
+    "700": {
+      "$value": "#4F2A84",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#3D2163",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "#2A1844",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "magenta": {
+    "50": {
+      "$value": "#FFE5FF",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#FFC2FF",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "#FF8FFF",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#FF5CFF",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#FF47FF",
+      "$type": "color",
+      "$description": ""
+    },
+    "500": {
+      "$value": "#EB00EB",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#D600D6",
+      "$type": "color",
+      "$description": ""
+    },
+    "700": {
+      "$value": "#AD00AD",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#850085",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "#5C005C",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "orange": {
+    "50": {
+      "$value": "#FAF1EA",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#F5DDCC",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "#EDC1A1",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#E7A474",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#E28746",
+      "$type": "color",
+      "$description": ""
+    },
+    "500": {
+      "$value": "#DF7020",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#B95E1D",
+      "$type": "color",
+      "$description": ""
+    },
+    "700": {
+      "$value": "#944D1A",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#703B15",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "#4C2910",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "yellow": {
+    "50": {
+      "$value": "#FBF7EA",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#F6EDCB",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "#F0DF9E",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#EBD270",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#E7C641",
+      "$type": "color",
+      "$description": ""
+    },
+    "500": {
+      "$value": "#E6BD19",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#BE9D18",
+      "$type": "color",
+      "$description": ""
+    },
+    "700": {
+      "$value": "#987E16",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#735F12",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "#4E410E",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "green": {
+    "50": {
+      "$value": "#ECF8F2",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#D2EFE0",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "#ABE3C7",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#83D8AD",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#5BCD94",
+      "$type": "color",
+      "$description": ""
+    },
+    "500": {
+      "$value": "#39C680",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#32A46B",
+      "$type": "color",
+      "$description": ""
+    },
+    "700": {
+      "$value": "#2A8457",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#216342",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "#18442E",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "red": {
+    "50": {
+      "$value": "#FAEBEC",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#F3CED1",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "#EBA3A9",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#E37881",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#DD4B57",
+      "$type": "color",
+      "$description": ""
+    },
+    "500": {
+      "$value": "#D92635",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#B4222E",
+      "$type": "color",
+      "$description": ""
+    },
+    "700": {
+      "$value": "#901E27",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#6D181F",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "#4A1216",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "black": {
+    "50": {
+      "$value": "#898682",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#7F7D78",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "#716E6A",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#62605D",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#54524F",
+      "$type": "color",
+      "$description": ""
+    },
+    "500": {
+      "$value": "#484744",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#3D3B39",
+      "$type": "color",
+      "$description": ""
+    },
+    "700": {
+      "$value": "#31302E",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#262523",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "#1A1918",
+      "$type": "color",
+      "$description": ""
+    },
+    "950": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Added 2026-09-12, explicit request (collection sidebar, dark mode): \"make the sidebar darker than the surface... if there is no darker color in the tokens do one\" -- black.900 (bg.surface's own dark-theme value) was already the darkest primitive defined anywhere in this file, so there was genuinely nothing darker to reference. Pure black continues this ramp's own trend (each step's RGB channels step down by a roughly consistent amount from 50 to 900) to its natural floor, and is not a new hue -- shadow.low in Color-Base-Dark.json already uses literal rgb(0,0,0) directly, so pure black is already part of this system's vocabulary, just not yet named as a primitive step of its own."
+    }
+  },
+  "base": {
+    "0": {
+      "$value": "#FFFFFF",
+      "$type": "color",
+      "$description": ""
+    },
+    "50": {
+      "$value": "#F7F7F7",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "#F3F2F0",
+      "$type": "color",
+      "$description": ""
+    },
+    "150": {
+      "$value": "#E9E8E6",
+      "$type": "color",
+      "$description": ""
+    },
+    "175": {
+      "$value": "#E4E3E1",
+      "$type": "color",
+      "$description": "Raw fill of the empty preview box on Collection (Figma node 150:16230). The Figma export has no variable for it; named base.175 because it sits between base.150 and base.200."
+    },
+    "200": {
+      "$value": "#DEDEDE",
+      "$type": "color",
+      "$description": ""
+    },
+    "250": {
+      "$value": "#D8D7D4",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "#D4D4D4",
+      "$type": "color",
+      "$description": ""
+    },
+    "350": {
+      "$value": "#CBC9C4",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "#B4B4B4",
+      "$type": "color",
+      "$description": ""
+    },
+    "550": {
+      "$value": "#93918E",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "#909090",
+      "$type": "color",
+      "$description": ""
+    },
+    "750": {
+      "$value": "#65615B",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable neutral/800"
+    },
+    "900": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable neutral/900"
+    },
+    "950": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": ""
+    },
+    "1000": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": ""
+    },
+    "warm-100": {
+      "$value": "#F2EEE6",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "accent": {
+    "primary": {
+      "$value": "#0000AD",
+      "$type": "color",
+      "$description": ""
+    },
+    "primary-alt": {
+      "$value": "#0000AB",
+      "$type": "color",
+      "$description": ""
+    },
+    "secondary": {
+      "$value": "#C614E1",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable accent/secondary"
+    },
+    "secondary-strong": {
+      "$value": "#9D5E20",
+      "$type": "color",
+      "$description": ""
+    },
+    "tertiary": {
+      "$value": "#CA7D25",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable accent/tertiary"
+    },
+    "primary-light": {
+      "$value": "#E8E8F3",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable accent/primary-light"
+    },
+    "secondary-light": {
+      "$value": "#F4ECF5",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable accent/secondary-light"
+    },
+    "tertiary-light": {
+      "$value": "#FCEAD9",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable accent/tertiary-light"
+    }
+  },
+  "signal": {
+    "error": {
+      "$value": "#F1A2A2",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable system/error"
+    },
+    "error-strong": {
+      "$value": "#CC6161",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable system/error-strong"
+    },
+    "success": {
+      "$value": "#72BD67",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable system/success"
+    },
+    "success-strong": {
+      "$value": "#388A2B",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable system/success-strong"
+    },
+    "warning": {
+      "$value": "#FAE98F",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable system/caution"
+    },
+    "warning-strong": {
+      "$value": "#C7AA14",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable system/caution-strong"
+    },
+    "success-light": {
+      "$value": "#E1EFDF",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable system/success-light"
+    },
+    "warning-light": {
+      "$value": "#FBF6EC",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable system/caution-light"
+    },
+    "error-light": {
+      "$value": "#F5EDED",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable system/error-light"
+    }
+  },
+  "row-status": {
+    "$description": "Status pill colors, sampled directly from Figma (nodes 254:19537 Analysed, 254:19577 Submitted, 254:19618 Approved, 254:27048 Pending, 254:27129 Declined, 2026-09-22; supersedes 237:30119's paler first pass, which this group also mistakenly routed through accent.primary-tint/secondary-tint and signal.*-tint -- wrong hues entirely, e.g. Submitted rendered blue-tinted instead of grey. Removed those four primitives rather than fix their values in place, since nothing else referenced them (grepped) and accent/signal are the wrong semantic home for statuses that aren't the app's two accent colors or a success/warning/error signal). Each value is the pill's text color at full strength; Color-Base-Light's row-status group also uses it, at Figma's own alpha, as the pill's background tint.",
+    "analysed": {
+      "$value": "{accent.tertiary}",
+      "$type": "color",
+      "$description": "Orange, accent.tertiary (#CA7D25, Figma accent/tertiary): the save icon's orange given to Analysed on 2026-09-24 (#BD7C3B via accent.secondary); repointed 2026-09-27 when accent.secondary became Figma's magenta, to keep Analysed orange. Figma had a literal purple #A32AF3 here (254:19537); replaced off-Figma."
+    },
+    "submitted": {
+      "$value": "{cyan.800}",
+      "$type": "color",
+      "$description": "Teal, #008080 (2026-09-24: Submitted gets a hue of its own and hands its grey to Archived). Figma had #808080 here; chosen off-Figma, not sampled. cyan.800 rather than blue: blue.700 is accent.primary (#0000AD), the app's link color, and green/yellow/red/purple are taken by the other statuses."
+    },
+    "archived": {
+      "$value": "{silver.500}",
+      "$type": "color",
+      "$description": "Grey, #808080, the Figma fill Submitted had (254:19577) until 2026-09-24. Archived is shown as a status in the consuming app's For You while a record is archived (2026-09-24)."
+    },
+    "approved": {
+      "$value": "#417639",
+      "$type": "color",
+      "$description": "Figma variable system/success-strong. Distinct from signal.success-strong (#52754D, already used by text-button's data-status=\"success\" elsewhere) -- kept separate rather than repointing that token, which would silently recolor an unrelated, already-shipped component."
+    },
+    "for-review": {
+      "$value": "#CAAF25",
+      "$type": "color",
+      "$description": "Figma variable system/warning-strong, the yellow Pending had (254:27048) until it was given to For review and removed Pending, 2026-09-24. Distinct from signal.warning-strong (#B09B2D) for the same reason as approved above."
+    },
+    "declined": {
+      "$value": "#A21D1D",
+      "$type": "color",
+      "$description": "Figma variable system/error-strong. Distinct from signal.error-strong (#AD0000, already used by text-button's data-status=\"error\") for the same reason as approved above."
+    }
+  }
+}

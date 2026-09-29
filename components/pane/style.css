@@ -1,0 +1,161 @@
+/*
+  pane
+  One column of a two-column work area (Collection: Included projects | Preview;
+  Template: Reference | Draft). A pane is a 56px head over a body that scrolls
+  on its own; .ds-split lays two or more panes side by side, sharing the width
+  equally. The head holds a title and a caption at half opacity on the left and
+  an optional text button on the right. The consumer-app Figma file APPFILEKEY,
+  Collection node 150:16217, Template node 150:16233.
+*/
+.ds-split {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+.ds-pane {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-pane__head {
+  flex: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
+  padding: 0 var(--ds-spacing-6);
+  background-color: var(--ds-color-bg-surface);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+.ds-pane__heading {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  column-gap: var(--ds-spacing-cell);
+  color: var(--ds-color-text-active);
+  white-space: nowrap;
+}
+
+.ds-pane__title {
+  font-family: var(--ds-font-title-family);
+  font-size: var(--ds-font-title-size);
+  font-weight: var(--ds-font-title-weight);
+  line-height: normal;
+  opacity: 0.5;
+}
+
+.ds-pane__caption {
+  font-family: var(--ds-font-caption-family);
+  font-size: var(--ds-font-caption-size);
+  font-style: var(--ds-font-caption-style);
+  font-weight: var(--ds-font-caption-weight);
+  line-height: normal;
+  opacity: 0.5;
+}
+
+/* Keeps the head's height and its heading position when a pane has no action. */
+.ds-pane__head-spacer {
+  visibility: hidden;
+}
+
+/* The area under the head. position: relative so an overlay (e.g. a loading
+   veil) can cover exactly this pane's body. */
+.ds-pane__body {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The scrolling region. The scrollbar is hidden; the page-level scroll
+   indicator style is the host's business. */
+.ds-pane__scroll {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.ds-pane__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.ds-pane__body[hidden] {
+  display: none;
+}
+
+/* data-divider="start": a hairline on the pane's left edge, the divider
+   between two panes. Put it on the head and on the body. */
+.ds-pane__head[data-divider="start"],
+.ds-pane__body[data-divider="start"] {
+  border-left: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+/* data-emphasis="true": the title at full opacity (Reference). */
+.ds-pane__title[data-emphasis="true"] {
+  opacity: 1;
+}
+
+/* Resizable container: a flex row with data-resizable (a .ds-split, or a page shell
+   of a sidebar and its main column) with a .ds-split__handle between its two
+   neighbours (component.js). The handle takes no width of its own: it is a 0-wide
+   flex item sitting on the border between the panes, with an 8px grab area
+   centred on that line and a 2px accent line that shows on hover, focus and
+   while dragging. The line between the panes stays where the panes' own
+   data-divider hairline draws it. */
+/* A resized pane: component.js sets data-resized and --_resize-size on it. */
+.ds-pane[data-resized] {
+  flex: 0 0 var(--_resize-size);
+}
+
+.ds-split__handle {
+  position: relative;
+  flex: none;
+  width: 0;
+  z-index: 3;
+  touch-action: none;
+  outline: none;
+}
+
+.ds-split__handle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--ds-spacing-3) * -0.5);
+  width: var(--ds-spacing-3);
+  cursor: col-resize;
+}
+
+.ds-split__handle::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--ds-border-width-thin) * -1);
+  width: calc(var(--ds-border-width-thin) * 2);
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.ds-split__handle:hover::after,
+.ds-split__handle:focus-visible::after,
+.ds-split[data-dragging="true"] > .ds-split__handle::after {
+  background-color: var(--ds-color-accent-1);
+}
+
+/* While dragging: no text selection anywhere in the split, and the resize
+   cursor wherever the pointer is. */
+.ds-split[data-dragging="true"] {
+  user-select: none;
+  cursor: col-resize;
+}

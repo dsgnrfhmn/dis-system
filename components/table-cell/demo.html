@@ -1,0 +1,95 @@
+<!--
+  table-cell
+  Action-bearing cells (1-action, 2-actions) compose real .ds-text-button
+  instances; dropdown composes .ds-input-dropdown; input composes .ds-input
+  -- all real reuse via template.html includes (see meta.json "uses"), not
+  a re-implementation.
+
+  Layout below (one row per Type, its name labeled to the right, both in a
+  CSS grid so every label lines up in a straight second column regardless
+  of each cell's own width) is this demo file's own presentation, not part
+  of the component -- table-cell itself has no opinion on how many are
+  shown together or how. Grid, not flex, specifically so table-cell's own
+  flex: 1 1 0% (see style.css) has no effect here.
+
+  Types shown: 12 rows for 12 current type names -- Penpot's original 15
+  Types minus title/organisation/description (merged into text-active-cell)
+  and minus saved/action-icons (merged into icon-cell, which holds any
+  number of icons -- shown here with 3) -- see style.css's header comment
+  for both merges. checkbox-cell here always renders unchecked: its
+  checked icon only shows inside a selected .ds-table-row (not present on
+  this standalone page) -- see components/table-row.
+
+  Header row: two bare .ds-table-cell chips ("Cell" / "Type"), bold text
+  (typography.bodyTextMedium) on a bg.surface-pressed background, matching
+  the same shaded-header treatment used elsewhere in this pass -- this is
+  this demo file's own presentation, not a table-cell prop or variant.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="../input/style.css">
+<link rel="stylesheet" href="../input-dropdown/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: grid; grid-template-columns: max-content max-content; align-items: center; column-gap: var(--ds-spacing-4); row-gap: var(--ds-spacing-3);">
+
+  <div class="ds-table-cell" style="background-color: var(--ds-color-bg-surface-pressed);">
+    <span class="ds-table-cell__text" style="font-family: var(--ds-font-body-text-medium-family); font-size: var(--ds-font-body-text-medium-size); font-weight: var(--ds-font-body-text-medium-weight); line-height: var(--ds-font-body-text-medium-line-height); letter-spacing: var(--ds-font-body-text-medium-letter-spacing);">Cell</span>
+  </div>
+  <div class="ds-table-cell" style="background-color: var(--ds-color-bg-surface-pressed);">
+    <span class="ds-table-cell__text" style="font-family: var(--ds-font-body-text-medium-family); font-size: var(--ds-font-body-text-medium-size); font-weight: var(--ds-font-body-text-medium-weight); line-height: var(--ds-font-body-text-medium-line-height); letter-spacing: var(--ds-font-body-text-medium-letter-spacing);">Type</span>
+  </div>
+
+  {% with type='checkbox-cell' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">checkbox-cell (checked hidden here -- only shows inside a selected .ds-table-row)</span>
+
+  {% with type='icon-cell' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">icon-cell (was saved [1 icon] and action-icons [2 icons], merged -- holds any number, shown here with 3)</span>
+
+  {% with type='date', content='16.08.2026' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">date</span>
+
+  {% with type='text-active-cell', content='Title' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">text-active-cell (was title / organisation / description)</span>
+
+  {% with type='text-passive-cell', content='Reference' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">text-passive-cell (was source)</span>
+
+  {% with type='text-subactive-cell', content='Caption' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">text-subactive-cell (was summary)</span>
+
+  {% with type='link', content='open link' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">link</span>
+
+  {% with type='1-action', content='Confirm' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">1-action</span>
+
+  {% with type='2-actions', secondary_label='Dismiss', content='Confirm' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">2-actions</span>
+
+  {% with type='3-actions', tertiary_label='Archive', secondary_label='Mark Submitted', content='Prepare Submission' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">3-actions (not Penpot-sourced -- see meta.json rationale)</span>
+
+  {% with type='dropdown', content='Status' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">dropdown</span>
+
+  {% with type='input', input_value=none, content='Add a note' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">input</span>
+
+  {% with type='empty-state', content='Nothing here yet.' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">empty-state</span>
+
+  {% with type='status-label', content='Submitted' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">status-label</span>
+
+  <div class="ds-table-row" style="display: contents;">
+    {% with type='text-active-cell', content='Editable block text', editable=true %}{% include "components/table-cell/template.html" %}{% endwith %}
+    {% with type='1-action', content='Edit', extra_attrs='data-edit-trigger' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  </div>
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">text-active-cell editable=true (click Edit -- blur commits, Escape reverts)</span>
+
+</div>
+
+<script src="../text-button/component.js"></script>
+<script src="../input-dropdown/component.js"></script>
+<script src="component.js"></script>

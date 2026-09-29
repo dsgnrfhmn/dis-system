@@ -1,0 +1,30 @@
+{
+  "name": "radio",
+  "description": "A radio option drawn as a text button with a round Figma marker (ring in the accent color, filled when checked). Compose several in a .ds-radio-group.",
+  "status": "stable",
+  "category": "controls",
+  "variants": [],
+  "props": [
+    {
+      "name": "options",
+      "type": "array",
+      "required": false,
+      "description": "Each option: { value, label, checked }."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Description amount",
+      "description": "aria-label of the radiogroup."
+    }
+  ],
+  "source": "figma:APPFILEKEY#150:16503,150:16475",
+  "rationale": "An option is a real .ds-text-button with role=radio, so it keeps the text button's type, underline and focus ring. The marker is CSS only: a ring spacing.8 / 2 (16px) in the accent color drawn with an inset shadow, and a spacing.9 / 4 (10px) dot when aria-checked is true, centered in a 24px (spacing.7) box. The text button's hover \"[ ]\" is removed (content: none) because the marker already shows which option is under the pointer. Height is spacing.9 (40px); options stack with a spacing.cell (10px) gap. Not sourced from Figma: the roving tabindex and arrow-key behavior in component.js. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [],
+  "a11y_notes": "role=\"radiogroup\" with role=\"radio\" options and aria-checked. Only the checked option is in the tab order (roving tabindex); arrow keys move and check."
+}

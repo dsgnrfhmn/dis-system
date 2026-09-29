@@ -1,0 +1,71 @@
+/*
+  divider (Penpot component name: "Divider" — lowercased here for schema
+  compliance; meta.json.name must match ^[a-z][a-z0-9-]*$)
+
+  Rules:
+  - Every value below is a var(--ds-*) reference from tokens/output.css.
+  - No decorative rule: this is a single 1px separator rectangle, exactly as
+    modeled in Penpot (one rectangle child, no shadow/gradient/motion).
+
+  Penpot's own instance: full-width rectangle, height 1px, fill text.subactive.
+  Height maps to --ds-border-width-thin (1px) rather than a spacing token —
+  it is a hairline rule, not a spaced block, so the border-width scale is the
+  correct semantic source for the value (not spacing.1, which is also 2px in
+  the raw scale and would be the wrong token family for a stroke-like line).
+*/
+
+.ds-divider {
+  width: 100%;
+  height: var(--ds-border-width-thin);
+  background-color: var(--ds-color-text-subactive);
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+  Vertical orientation (added 2026-09-12, explicit request, not from
+  Penpot -- its own source models one non-variant horizontal rule only:
+  the consuming app's Collection header-actions row needed a separator *between*
+  buttons in a horizontal row, not between stacked sections, the same
+  category of functional-gap addition as table-header-cell's own sort
+  behavior. Swaps width/height (thin width instead of thin height)
+  rather than introducing a second component -- same rule, rotated.
+
+  Color overridden to object-dark-passive, not the base rule's
+  text-subactive (explicit request, same day, "same color as
+  everywhere"): every other border/divider line in this app's own
+  tables (table-cell/table-header-cell borders, header-block's own
+  border) uses object-dark-passive -- text-subactive stays the base
+  horizontal rule's own Penpot-sourced color (a rule between stacked
+  sections against bg.surface), but a vertical divider sitting among
+  this app's bordered tables reads as one more border line, so it takes
+  that vocabulary instead.
+
+  Height reduced to spacing-6 (20px) with align-self:center, not
+  align-self:stretch (explicit request, same day, "50% smaller, aligned
+  to center" instead of filling the full row height): a text-button's
+  own rendered height is spacing-3 padding top+bottom (16px) plus an
+  18px/1.2-line-height line box (~21.6px) ~= 37.6px; half of that is
+  ~18.8px, and spacing-6 is the nearest step on the spacing scale rather
+  than an unbound pixel value.
+
+  Shape changed from a short vertical line to a small square dot
+  (explicit request, 2026-09-12, "'.' instead of '|'" between the
+  header-actions buttons): width and height both set to spacing-1 (the
+  smallest step on the spacing scale) instead of a thin-width/spacing-6-
+  height rectangle. Square, not circular -- every radius token in this
+  system resolves to 0 or 1px (Base-Shapes.json's own data; see
+  tokens/build.py's documented gap on radius.full specifically resolving
+  to 0, not a pill shape), so a circular dot would be the one rounded
+  shape anywhere in this "Base" style's flat, square-cornered vocabulary
+  -- a real, deliberate deviation this codebase's own CLAUDE.md asks to
+  flag rather than silently introduce. A small square reads as a "dot"
+  well enough at this size without breaking that vocabulary.
+*/
+.ds-divider[data-orientation="vertical"] {
+  width: var(--ds-spacing-1);
+  height: var(--ds-spacing-1);
+  align-self: center;
+  background-color: var(--ds-color-object-dark-passive);
+}

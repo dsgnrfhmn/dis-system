@@ -1,0 +1,26 @@
+<!--
+  header-block composes real table-header and table-header-actions
+  instances into one shaded, bordered header bar. See meta.json rationale
+  for why only `size` is a header-block-level variant -- the Type axis
+  (Archived/Analysed/Queue below) only changes which table-header/
+  table-header-actions content is composed, not header-block's own CSS.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../table-header/style.css">
+<link rel="stylesheet" href="../table-header-actions/style.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="../input/style.css">
+<link rel="stylesheet" href="style.css">
+
+{% with size='big', header_type='2-tabs', tab1='Status A', tab2='Status B', actions=[{'label': 'Add item', 'priority': 'primary'}] %}{% include "components/header-block/template.html" %}{% endwith %}
+
+{% with size='big', header_type='1-tab', title='Title', actions=[{'label': 'Clear filters', 'priority': 'secondary'}, {'label': 'Select all', 'priority': 'secondary'}, {'label': 'Export', 'priority': 'secondary'}, {'label': 'Add item', 'priority': 'primary'}] %}{% include "components/header-block/template.html" %}{% endwith %}
+
+{% with size='small', header_type='1-tab', title='Title', actions=[{'label': 'Add item', 'priority': 'primary'}] %}{% include "components/header-block/template.html" %}{% endwith %}
+
+{% with size='big', header_type='1-tab', title='Title', search=true, search_placeholder='Search', actions=[{'label': 'Add item', 'priority': 'primary'}] %}{% include "components/header-block/template.html" %}{% endwith %}
+
+<script src="../table-header/component.js"></script>
+<script src="../text-button/component.js"></script>
+<script src="../input/component.js"></script>
+<script src="component.js"></script>

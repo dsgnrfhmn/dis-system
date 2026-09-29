@@ -1,0 +1,390 @@
+{
+  "typography": {
+    "navLinkMedium": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.navLinkMedium}",
+        "fontWeights": "{font.weight.bold}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "buttonPrimary": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.buttonPrimary}",
+        "fontWeights": "{font.weight.bold}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "heading1": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.heading1}",
+        "fontWeights": "{font.weight.regular}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "heading5": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.heading5}",
+        "fontWeights": "{font.weight.medium}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "heading3": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.heading3}",
+        "fontWeights": "{font.weight.medium}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "bodyTextItalic": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.bodyText}",
+        "fontWeights": "{font.weight.regular-italic}",
+        "lineHeights": "{font.lineHeight.tight}",
+        "letterSpacing": "0"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "heading2": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.heading2}",
+        "fontWeights": "{font.weight.regular}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "heading4": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.heading4}",
+        "fontWeights": "{font.weight.medium}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "bodyText": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.bodyText}",
+        "fontWeights": "{font.weight.regular}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "caption": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.caption}",
+        "fontWeights": "{font.weight.regular-italic}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": "bodyText, 4px smaller -- de-emphasized secondary text (e.g. table header-cell labels, table-header's own info caption)"
+    },
+    "textLink": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.textLink}",
+        "fontWeights": "{font.weight.regular}",
+        "lineHeights": "{font.lineHeight.tight}",
+        "letterSpacing": "0",
+        "textDecoration": "underline"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "buttonSecondary": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.buttonSecondary}",
+        "fontWeights": "{font.weight.regular}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "bodyTextMedium": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.bodyTextMedium}",
+        "fontWeights": "{font.weight.medium}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "navLink": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.navLink}",
+        "fontWeights": "{font.weight.regular}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "title": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.title}",
+        "fontWeights": "{font.weight.semibold}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "data": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.data}",
+        "fontWeights": "{font.weight.medium}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "micro": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.micro}",
+        "fontWeights": "{font.weight.regular}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": ""
+    },
+    "cardTitle": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.cardTitle}",
+        "fontWeights": "{font.weight.semibold}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable heading (card header title)"
+    },
+    "systemMessage": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.base}"
+        ],
+        "fontSizes": "{font.size.systemMessage}",
+        "fontWeights": "{font.weight.regular}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": "Figma D_SYSTEM system-message (toast text, node 103:4772)"
+    }
+  },
+  "font": {
+    "family": {
+      "base": {
+        "$value": [
+          "Inter",
+          "sans-serif"
+        ],
+        "$type": "fontFamilies",
+        "$description": ""
+      }
+    },
+    "size": {
+      "navLinkMedium": {
+        "$value": "18",
+        "$type": "dimension",
+        "$description": "nav link medium"
+      },
+      "buttonPrimary": {
+        "$value": 16,
+        "$type": "dimension",
+        "$description": "text button primary"
+      },
+      "heading1": {
+        "$value": "40",
+        "$type": "dimension",
+        "$description": ""
+      },
+      "heading5": {
+        "$value": "18",
+        "$type": "dimension",
+        "$description": ""
+      },
+      "heading3": {
+        "$value": "24",
+        "$type": "dimension",
+        "$description": "from CSS: formerly heading-2"
+      },
+      "heading2": {
+        "$value": "32",
+        "$type": "dimension",
+        "$description": ""
+      },
+      "heading4": {
+        "$value": 20,
+        "$type": "dimension",
+        "$description": ""
+      },
+      "bodyText": {
+        "$value": 16,
+        "$type": "dimension",
+        "$description": "body text regular/italic"
+      },
+      "caption": {
+        "$value": 16,
+        "$type": "dimension",
+        "$description": "bodyText size minus 4px, per explicit request 2026-09-11"
+      },
+      "textLink": {
+        "$value": 16,
+        "$type": "dimension",
+        "$description": "text link"
+      },
+      "buttonSecondary": {
+        "$value": 16,
+        "$type": "dimension",
+        "$description": "text button secondary"
+      },
+      "bodyTextMedium": {
+        "$value": "16",
+        "$type": "dimension",
+        "$description": "body text medium"
+      },
+      "navLink": {
+        "$value": "18",
+        "$type": "dimension",
+        "$description": "nav link, regular"
+      },
+      "title": {
+        "$value": 16,
+        "$type": "dimension",
+        "$description": ""
+      },
+      "data": {
+        "$value": 13,
+        "$type": "dimension",
+        "$description": ""
+      },
+      "micro": {
+        "$value": 10,
+        "$type": "dimension",
+        "$description": ""
+      },
+      "cardTitle": {
+        "$value": 20,
+        "$type": "dimension",
+        "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable heading/font-size (card header title)"
+      },
+      "systemMessage": {
+        "$value": 20,
+        "$type": "dimension",
+        "$description": "Figma D_SYSTEM system-message/font-size (toast text)"
+      }
+    },
+    "lineHeight": {
+      "tight": {
+        "$value": "1.2",
+        "$type": "number",
+        "$description": "from CSS: line-height 1.2 everywhere"
+      }
+    },
+    "weight": {
+      "regular": {
+        "$value": "400",
+        "$type": "fontWeights",
+        "$description": ""
+      },
+      "medium": {
+        "$value": "500",
+        "$type": "fontWeights",
+        "$description": ""
+      },
+      "bold": {
+        "$value": "700",
+        "$type": "fontWeights",
+        "$description": ""
+      },
+      "regular-italic": {
+        "$value": "400 italic",
+        "$type": "fontWeights",
+        "$description": ""
+      },
+      "semibold": {
+        "$value": 600,
+        "$type": "fontWeights",
+        "$description": ""
+      }
+    }
+  }
+}

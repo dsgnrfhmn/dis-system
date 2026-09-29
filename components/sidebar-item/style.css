@@ -1,0 +1,228 @@
+/*
+  sidebar-item (Penpot component: "Sidebar", State axis: Default /
+  PDF Downloaded / Submitted / Button)
+
+  One entry in a sidebar list (composed by sidebar-list,
+  Penpot: "Sidebar / Organism"). Three of the four states are the same
+  card layout with different status text; "Button" is a different shape
+  entirely -- a lone primary action, not a card -- so it gets its own
+  data-type value ("button") rather than forcing it into the card
+  markup with empty fields.
+
+  Card padding (spacing-2 top/bottom, spacing-5 left/right) and width
+  (100%, not Penpot's fixed 340px demo width -- a sidebar list's real
+  width is whatever its container gives it, 340px is just this demo
+  board's own width) read directly off Penpot's real "Sidebar" instances
+  via MCP, all four States sampled.
+*/
+
+.ds-sidebar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: var(--ds-spacing-2) var(--ds-spacing-5);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ---- type="card" (Penpot: Default / PDF Downloaded / Submitted -- same
+   layout, only the status text differs, so not modeled as separate
+   types): main-section is alignItems:center, justifyContent:space-between
+   (subtitle pinned left, saved-icon pinned right); sub-section is a
+   column with rowGap spacing-3 (8px). Both Token-bound in Penpot's own
+   shape.tokens, not pixel-matched. ---- */
+.ds-sidebar-item__main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.ds-sidebar-item__sub {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--ds-spacing-3);
+}
+
+/* Subtitle: accent-1 (#0000AD in Penpot's own instance data, resolves
+   to this token exactly) -- the one colored-not-neutral text in the card,
+   functioning as the primary identifier a user scans the list for. */
+.ds-sidebar-item__subtitle {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  color: var(--ds-color-accent-1);
+}
+
+.ds-sidebar-item__title {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  color: var(--ds-color-text-active);
+}
+
+/* Status text: text-subactive -- de-emphasized secondary information,
+   the same token table-cell's Source/Empty-state cells use. */
+.ds-sidebar-item__status {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  color: var(--ds-color-text-subactive);
+}
+
+/* Saved-icon: same spacing-7 (24px) box + object-dark-active color as
+   every other icon-only glyph in this system (checkbox-cell/icon-cell,
+   nav-bar's theme icon) -- #949494 in Penpot's own fill data resolves to
+   this exact token. icons/save.svg already bakes its real 16px
+   glyph into a 24-unit viewBox (see table-cell/meta.json's verified
+   glyph-padding note), so scaling to fill this box reproduces Penpot's
+   real size with no extra sizing logic. */
+.ds-sidebar-item__icon {
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  display: inline-flex;
+  color: var(--ds-color-object-dark-active);
+  --_icon-fill: var(--ds-color-input-fill);
+}
+
+.ds-sidebar-item__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- type="button": Penpot's own instance is shorter (70px vs 84px)
+   because it holds one centered .ds-text-button (Priority=Primary) and
+   nothing else -- justifyContent:center here (vs flex-start for the
+   cards above) is Token-bound in Penpot's own data for this State
+   specifically, not an inconsistency to normalize away. ---- */
+.ds-sidebar-item[data-type="button"] {
+  justify-content: center;
+}
+
+/*
+  type="set" (A8, added 2026-09-09, not from Penpot -- no MCP access this
+  session to check, and the earlier survey found only card/button States):
+  for the consuming app's Collection/Template sidebars (the consumer spec),
+  which need a clickable set name (not a plain label -- selects the set),
+  one caption line (not two, unlike type="card"'s title+status), and a
+  save icon that actually toggles (type="card"'s icon is deliberately
+  inert -- Penpot's own source shows no affordance on it there; this is
+  a different, consumer-specific requirement, not a correction of that).
+  Reuses type="card"'s own main/sub row structure and spacing (row-gap
+  spacing-3 between the name row and the caption) rather than inventing
+  a new layout -- only the content differs.
+*/
+
+/* Active/selected set (explicit request, 2026-09-12): the currently
+   selected set's name uses the bodyTextMedium type token (heavier
+   weight), the same "medium" token table-cell/table-row's own header-cell
+   labels already use elsewhere in this system -- not a new type scale
+   invented for this state. Specificity (5 attribute/class steps) beats
+   text-button's own [data-priority="secondary"] font rule outright, so
+   no !important is needed regardless of stylesheet load order. */
+
+/* ---- type="set": one row of the Figma sidebar (Collection / Template sets) ------
+   A 44px row: the set's name as a text button, and a 44px save button with
+   Figma's save icon, painted from tokens (see .ds-sidebar-item__save-icon). The
+   active set is filled and ruled above and below; the rule sits in a
+   transparent border otherwise, so selecting a set never shifts the rows. */
+.ds-sidebar-item[data-type="set"] {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  height: var(--ds-spacing-row);
+  border-top: var(--ds-border-width-thin) solid transparent;
+  border-bottom: var(--ds-border-width-thin) solid transparent;
+}
+
+.ds-sidebar-item[data-type="set"][data-active="true"] {
+  background-color: var(--ds-color-bg-surface-pressed);
+  border-top-color: var(--ds-color-object-dark-passive);
+  border-bottom-color: var(--ds-color-object-dark-passive);
+}
+
+/* Hover / keyboard focus: the whole row takes the selected fill, as in
+   table-row, and the name gets no hover brackets (explicit request,
+   2026-09-28). The full-width fill already says "this row is the click
+   target"; brackets around the name on top of it were a second, redundant
+   affordance. The dotted underline stays. */
+.ds-sidebar-item[data-type="set"]:hover,
+.ds-sidebar-item[data-type="set"]:focus-within {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-sidebar-item[data-type="set"] .ds-text-button[data-status]::before,
+.ds-sidebar-item[data-type="set"] .ds-text-button[data-status]::after {
+  content: none;
+}
+
+.ds-sidebar-item[data-type="set"] .ds-text-button {
+  flex: 1 1 0;
+  min-width: 0;
+  justify-content: flex-start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-sidebar-item[data-type="set"] .ds-text-button__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ds-sidebar-item__save {
+  flex: none;
+  box-sizing: border-box;
+  width: var(--ds-spacing-row);
+  height: var(--ds-spacing-row);
+  padding: var(--ds-spacing-cell);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-sidebar-item__save:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: calc(-1 * var(--ds-border-width-default));
+}
+
+/* The Figma save icon (icons/save.svg, inlined by component.js) in its
+   three states, painted from tokens like table-cell's save column: an
+   input-fill bookmark with an input-icon outline at rest, an
+   accent-2-hover outline on hover, filled accent-2 once saved. */
+.ds-sidebar-item__save-icon {
+  display: block;
+  flex: none;
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  color: var(--ds-color-input-icon);
+  --_icon-fill: var(--ds-color-input-fill);
+}
+
+.ds-sidebar-item__save-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ds-sidebar-item__save:hover .ds-sidebar-item__save-icon {
+  color: var(--ds-color-accent-2-hover);
+}
+
+.ds-sidebar-item__save[aria-pressed="true"] .ds-sidebar-item__save-icon {
+  color: var(--ds-color-accent-2);
+  --_icon-fill: currentColor;
+}

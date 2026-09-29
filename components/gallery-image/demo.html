@@ -1,0 +1,34 @@
+<!--
+  gallery-image (Penpot component: "Image", inside board "Gallery / Image")
+
+  Type="Image" (default): a single image thumbnail in a multi-select
+  gallery. Type="Text-icon" (Subtype: Short/Middle/Full): a text
+  skeleton/loading placeholder wired as a single-select radio group by
+  component.js. See meta.json rationale for the full derivation of both.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: flex; column-gap: var(--ds-spacing-4); flex-wrap: wrap; align-items: flex-start;">
+  {% with type='image', format='landscape' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+  {% with type='image', format='landscape', selected=true, badge=1 %}{% include "components/gallery-image/template.html" %}{% endwith %}
+  {% with type='image', format='portrait' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+  {% with type='image', format='square' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+</div>
+
+<div style="display: flex; flex-direction: row; column-gap: var(--ds-spacing-4); margin-top: var(--ds-spacing-6);">
+  {% with type='text-icon', subtype='short' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+  {% with type='text-icon', subtype='middle', selected=true %}{% include "components/gallery-image/template.html" %}{% endwith %}
+  {% with type='text-icon', subtype='full' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+</div>
+
+<!-- type="picker": no src (placeholder fill), picked with badge, a loaded
+     picture, and a src that fails (falls back to the fill). -->
+<div style="display: flex; flex-direction: row; column-gap: var(--ds-spacing-4); margin-top: var(--ds-spacing-6);">
+  {% with type='picker', extra_attrs='aria-label="Image 1"' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+  {% with type='picker', selected=true, badge=1, extra_attrs='aria-label="Image 2, picked 1"' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+  {% with type='picker', src='../../icons/add.svg', extra_attrs='aria-label="Image 3"' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+  {% with type='picker', src='missing.jpg', extra_attrs='aria-label="Image 4"' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+</div>
+
+<script src="component.js"></script>

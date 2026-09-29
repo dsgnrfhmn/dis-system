@@ -1,0 +1,25 @@
+{#
+  extra_attrs: optional raw-attribute passthrough for a composing parent
+  (e.g. gallery) that must add its own interactive-control attributes
+  (role, tabindex, aria-pressed, data-image-id) — this component is a
+  static thumbnail on its own, see meta.json a11y_notes.
+  src / alt (type="picker" only): the picture's URL and its alt text.
+  Without src the card shows its token placeholder fill. alt defaults to
+  empty: the picker <button> normally carries the accessible name
+  (aria-label via extra_attrs), so the picture must not repeat it.
+#}
+{% set _type = type | default('image') %}
+{% if _type == 'picker' %}
+<button type="button" class="ds-gallery-image" data-type="picker" aria-pressed="{{ 'true' if selected else 'false' }}"{% if extra_attrs %} {{ extra_attrs | safe }}{% endif %}><span class="ds-gallery-image__image">{% if src %}<img class="ds-gallery-image__img" src="{{ src | safe_url }}" alt="{{ alt | default('') | e }}" loading="lazy" decoding="async">{% endif %}</span>{% if selected and badge is defined %}<span class="ds-gallery-image__badge">{{ badge }}</span>{% endif %}</button>
+{% elif _type == 'image' %}
+<div class="ds-gallery-image" data-format="{{ format | default('landscape') }}"{% if selected %} data-selected="true"{% endif %}{% if extra_attrs %} {{ extra_attrs | safe }}{% endif %}>{% if selected and badge is defined %}<span class="ds-gallery-image__badge">{{ badge }}</span>{% endif %}</div>
+{% else %}
+{% set _bar_counts = {'short': 2, 'middle': 3, 'full': 5} %}
+{% set _subtype = subtype | default('short') %}
+<div class="ds-gallery-image" data-type="text-icon"{% if selected %} data-selected="true"{% endif %}{% if extra_attrs %} {{ extra_attrs | safe }}{% endif %}>
+  <span class="ds-gallery-image__label">{{ _subtype | capitalize }}</span>
+  <div class="ds-gallery-image__bars">
+    {% for i in range(_bar_counts[_subtype]) %}<div class="ds-gallery-image__bar{% if loop.last %} ds-gallery-image__bar--short{% endif %}"></div>{% endfor %}
+  </div>
+</div>
+{% endif %}

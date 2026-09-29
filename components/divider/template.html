@@ -1,0 +1,2 @@
+{% set _orientation = orientation | default('horizontal') %}
+<hr class="ds-divider" data-orientation="{{ _orientation }}" role="separator"{% if _orientation == 'vertical' %} aria-orientation="vertical"{% endif %}>

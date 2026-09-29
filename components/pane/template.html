@@ -1,0 +1,12 @@
+<section class="ds-pane" aria-labelledby="{{ id | default('ds-pane-demo') }}-title">
+  <div class="ds-pane__head">
+    <div class="ds-pane__heading">
+      <span class="ds-pane__title" id="{{ id | default('ds-pane-demo') }}-title">{{ title | default('Included projects') }}</span>
+      <span class="ds-pane__caption">{{ caption | default('4 total') }}</span>
+    </div>
+    {% with priority='secondary', status='active', underline='dotted', label=action | default('Add project') %}{% include "components/text-button/template.html" %}{% endwith %}
+  </div>
+  <div class="ds-pane__body">
+    <div class="ds-pane__scroll">{{ content | default('') }}</div>
+  </div>
+</section>

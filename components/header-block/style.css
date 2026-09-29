@@ -1,0 +1,226 @@
+/*
+  header-block (Penpot: "Table / header-block", Variant axes: Type x Size)
+
+  This is a composition shell: it lays out a table-header and a
+  table-header-actions cluster (see index.html, which links both sibling
+  stylesheets and reuses their real classes; no longer divider's -- see the
+  2026-09-03 note below). Only the
+  Size axis ("Big" | "Small") changes this component's own layout values —
+  the Type axis (Archived / Found / Analysed / Queue in Penpot) only
+  changes which title/tabs/actions content is slotted in, which is
+  table-header's and table-header-actions' concern, not header-block's own
+  CSS. See meta.json for why Type isn't modeled as a style variant here.
+
+  Values read directly off Penpot's 5 instances:
+  - size="big": outer paddingTop = spacing.6 (20px, Token-bound in Penpot's
+    shape.tokens). Inner row's top/bottom padding = 16px -- pixel-matches
+    spacing.5 but was NOT Token-bound in Penpot's own data for the Big
+    instances; used anyway per CLAUDE.md (no magic numbers when a token
+    value matches exactly).
+  - size="small": outer paddingTop = spacing.0 (0px, Token-bound). Inner
+    row's top/bottom padding = spacing.3 (8px, Token-bound) -- this one
+    genuinely differs in kind, not just value, from the Big row's padding.
+  - Inner row is always: flex row, alignItems:center, justifyContent:
+    space-between (pushes table-header left, table-header-actions right --
+    this is the only place `justify-content: space-between` appears in the
+    Tables board, and it is load-bearing: it's what visually right-docks
+    the actions cluster, not a stylistic flourish).
+  - Divider sat below the row, full width, no extra margin (Penpot's rows
+    butt directly against the divider) -- true of the verified Penpot
+    source; see the 2026-09-03 note below for why this component no longer
+    composes it.
+
+  Full-width shaded/bordered header row (explicit request, 2026-09-03,
+  "apply [the wikitable treatment] to all elements on the tables page"):
+  Penpot's own header-block instances carry no background/border on this
+  row at all -- a deliberate, flagged deviation from the verified source,
+  the same category of change already made to table-cell's grid and
+  table-header's own standalone chip (see both of those files' comments).
+  background-color/border reuse the exact bg.surface-pressed +
+  border-width-thin/object-dark-passive pairing already established there,
+  so the whole header-block__row now reads as one continuous shaded bar
+  spanning both the title/tabs AND the actions cluster, not just the title
+  portion -- table-header-actions itself needed no CSS change to fit this:
+  it has no background of its own, so header-block__row's fill already
+  shows through behind its buttons.
+
+  table-header's own background/border (added directly to .ds-table-header
+  itself, for when it's used standalone/outside header-block) are reset to
+  none when nested here, and its own padding collapses back to just its
+  original Penpot-verified left inset -- otherwise two boxes would nest
+  visibly inside each other (table-header's own chip inside
+  header-block__row's now-bigger bar), which reads as a mistake, not a
+  deliberate two-tier design.
+
+  Divider removal (explicit request, 2026-09-03): the `<hr class="ds-divider"
+  role="separator">` this component used to compose below the row is no
+  longer in index.html, and .ds-header-block .ds-divider's margin override
+  is gone with it. Once header-block__row carries its own border-bottom,
+  a divider directly beneath it would sit flush against that border in a
+  *different* color (divider uses text.subactive, the grid border uses
+  object-dark-passive) -- a visibly doubled, two-tone line, not one clean
+  edge. Rather than repaint divider itself to match (it's a generic,
+  reusable component used wherever a plain rule is needed, not
+  table-specific -- restyling it here would leak this one composition's
+  color choice into every other consumer), the redundant element was
+  dropped: the header row's own border-bottom now does the same
+  separating role the divider used to play, and butts directly against
+  table-row's own matching-color top border below it (see table-cell's
+  grid-border comment) as one continuous, single-color line. The divider
+  component itself is unchanged and still valid wherever else a plain
+  separator is needed -- this only removes its one specific usage inside
+  header-block.
+*/
+
+.ds-header-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ds-header-block[data-size="big"] {
+  padding-top: var(--ds-spacing-0);
+}
+
+.ds-header-block[data-size="small"] {
+  padding-top: var(--ds-spacing-0);
+}
+
+.ds-header-block__row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--ds-color-bg-surface-pressed);
+  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+/*
+  spacing-2, not spacing-5 (explicit request, 2026-09-11, two rounds:
+  first "make the table header row also 16px smaller height", then
+  "reduce it more by 8px height"): spacing-5 -> spacing-3 (16px off) ->
+  spacing-2 (another 8px off), 24px off the row's total height so far.
+  "big" is now one step smaller than "small" (below) on this property --
+  a real, flagged inversion of the size-variant naming, not an oversight
+  -- verified data-size="small" is not used on any .ds-header-block
+  anywhere in the consuming app (the data-size="small" hits elsewhere in this repo's
+  consumers are on unrelated components, .ds-input-dropdown/.ds-popup,
+  that happen to share the same attribute name), so this has no visible
+  effect on any real usage; left as its own explicit rule for "big"
+  rather than touching "small"'s own value, since neither request was
+  about the size-variant relationship.
+*/
+.ds-header-block[data-size="big"] .ds-header-block__row {
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-6) + var(--ds-border-width-thin));
+  padding: 0 var(--ds-spacing-6);
+  gap: 0;
+  border: 0;
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  background-color: var(--ds-color-bg-surface);
+}
+
+.ds-header-block[data-size="small"] .ds-header-block__row {
+  padding-top: var(--ds-spacing-3);
+  padding-bottom: var(--ds-spacing-3);
+}
+
+/*
+  Search zone (added 2026-09-09, no Penpot source -- see meta.json
+  rationale). Originally centered (flex:1, absorbing all remaining
+  space between table-header and table-header-actions) -- superseded
+  2026-09-10 (explicit request, "search should be on the right, where
+  the other buttons are"): search no longer grows to fill the middle,
+  it sits flush against table-header-actions as one right-docked
+  group. margin-left:auto on the search zone itself pushes it (and,
+  since it's a normal flex sibling, everything after it in DOM order --
+  table-header-actions is always the next element per template.html)
+  to the row's right edge, while table-header stays pinned left --
+  space-between doesn't work for this 3-child case (Penpot's own row
+  layout was only ever 2 children; see the pre-2026-09-09 version of
+  this comment), so flex-start + one auto-margin reproduces the same
+  "one thing left, everything else right" docking without needing a
+  second wrapper element around search+actions together.
+
+  Superseded again 2026-09-21 (explicit request, "make all bulk actions
+  aligned on the left instead of right", Figma 237:30119 draws Search
+  first and the bulk actions right after it, flush left): margin-left:auto
+  is gone. Search and table-header-actions now follow the table-header (or
+  the row's left padding when there is none) at the row's own gap, in DOM
+  order. Nothing else in the row changes.
+*/
+.ds-header-block__row[data-has-search="true"] {
+  justify-content: flex-start;
+  gap: var(--ds-spacing-5);
+}
+
+.ds-header-block__search {
+  flex: none;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Fixed width only while open -- a bare shrink-to-fit box has nothing
+   for the composed .ds-input's own width:100% to resolve against.
+   240px matches this system's other established single-line field
+   width (table-cell's own pre-100% Notes field, input/meta.json). */
+.ds-header-block__search[data-open="true"],
+.ds-header-block__search[data-open="always"] {
+  width: 240px;
+}
+
+/*
+  data-open="always" (2026-09-24: "make it open always"):
+  the input only, no "Search" trigger in the markup. component.js leaves a
+  zone without a trigger alone, so nothing collapses it on blur.
+  data-align="end": the zone docks to the row's right edge (margin-left:auto)
+  while whatever comes before it (the bulk actions) stays on the left. Put the
+  zone last in the row for it.
+*/
+.ds-header-block__search[data-align="end"] {
+  margin-left: auto;
+}
+
+/*
+  Button-reveal (explicit request, 2026-09-10, "search in tables should
+  be hidden in secondary text button 'Search'. When the user presses it,
+  the input field appears"): supersedes the always-visible input this
+  zone originally shipped with (A1, 2026-09-09). Both the trigger button
+  and the input are always in the DOM (component.js only toggles which
+  is shown, via data-open on this wrapper) -- same reasoning table-cell's
+  own editable-cell pattern already uses for its text/input swap, rather
+  than creating/destroying the input element on each toggle.
+*/
+.ds-header-block__search[data-open="false"] .ds-input {
+  display: none;
+}
+
+/* The opened search field stays boxed at rest, overriding input's
+   borderless transparent default (it stands alone in the header row). */
+.ds-header-block__search .ds-input:not([data-fill="filled"]):not(:hover):not(:focus) {
+  border-color: var(--ds-color-input-border, var(--ds-color-object-dark-passive));
+}
+
+.ds-header-block__search[data-open="true"] .ds-text-button {
+  display: none;
+}
+
+/* Left inset (revised 2026-09-04, explicit request: "the title should sit closer to the edge, the same way the buttons on the right sit close to the right edge" -- the title should sit as close to the row's left edge
+   as table-header-actions' own buttons sit to its right edge). An earlier
+   pass on the same date tried matching this to the grid's own column
+   text instead (spacing.3, then a larger #tables-sample-only calc()
+   chasing wherever the Saved column's label happened to start) -- dropped
+   now that the actual goal is a visually symmetric header bar, not
+   column alignment: table-header-actions already ends with
+   padding-right: spacing.5 (table-header-actions/style.css), so
+   table-header starts with the same spacing.5 here, making the bar's
+   left/right insets equal. The #tables-sample-specific override this
+   used to need (site.css) is removed along with it -- this single value
+   now covers every header-block usage, standalone or composed. */
+.ds-header-block__row .ds-table-header {
+  background: none;
+  border: none;
+  padding: 0 0 0 var(--ds-spacing-5);
+}

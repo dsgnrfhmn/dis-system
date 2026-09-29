@@ -1,0 +1,333 @@
+/*
+  table-header-cell
+
+  Extracted and generalized from this repo's former tables.html page (since removed):
+  .sample-table__header-cell / .sample-table__sort-btn / .sample-table__
+  sort-icon (site.css) and initSampleTableSort (site.js) implemented
+  exactly this -- a real, working, then-live pattern on this repo's own
+  demo page, just never pulled out of page-local CSS/JS into a reusable
+  components/ entry. Not Penpot-sourced (site.css's own comment
+  says so: "a real functional addition, not from Penpot", same category as
+  table-row's drag-reorder/checkbox-swap) -- generalizing already-tested
+  code, not inventing new behavior.
+
+  Base box (border/padding/min-height/flex) comes from .ds-table-cell,
+  reused unmodified so a header-cell row lines up exactly with the data
+  cells below it -- this component only adds the header-specific
+  background/typography/sort-affordance on top, mirroring
+  .sample-table__header-cell's own approach of layering onto the bare
+  cell rather than re-declaring its box model.
+*/
+
+/*
+  Base padding (explicit request, 2026-09-11, "align header cell texts to
+  the table cells ... table cell text have around 8px left padding, do it
+  for header cells across all tables"): table-cell/style.css's own base
+  .ds-table-cell rule already carries padding: spacing-5 spacing-3, but
+  this component's bare (non-sortable, non-favourite_all) variant renders
+  as a plain .ds-table-header-cell div with no .ds-table-cell class
+  composed alongside it in every consumer -- so a plain label ("Name",
+  "Summary", ...) sat flush against the cell's left border with zero
+  inset while the data cells below it (which do carry .ds-table-cell)
+  had the standard 8px. Declaring the same padding here directly, rather
+  than requiring every consumer to also add the .ds-table-cell class,
+  fixes it regardless of which classes a given consumer's markup
+  happens to carry. The sortable and favourite_all variants below already
+  own their own internal padding (on the button, so its whole area stays
+  clickable) and reset this back to 0 on the outer cell, unaffected by
+  this addition.
+*/
+/*
+  Base border, same fix and same reasoning as the padding fix above
+  (2026-09-11): a plain .ds-table-header-cell div with no .ds-table-cell
+  class alongside it (every current consumer's "Name"/"Summary"/...
+  labels) got no border at all before this, since table-cell/style.css's
+  own border-top/border-left lives on the .ds-table-cell class
+  specifically. Declared directly here too, so a header row's plain
+  cells match their sortable/favourite_all siblings (which do carry
+  .ds-table-cell and already got a border) and the data cells below them,
+  instead of sitting borderless next to bordered neighbors. Two sides
+  only, not four -- same border-doubling reasoning as table-cell's own
+  base rule; this table's own outer right/bottom edge is closed on its
+  grid container, not per-cell, exactly as with data rows.
+*/
+/*
+  No background (explicit request, 2026-09-11, "remove the grey
+  background from header row and leave it only for table header block"):
+  bg-surface-pressed was shared between two different things that
+  happened to look similar -- the title/search/actions bar (table-header/
+  style.css's own background, still there, header-block/style.css's own
+  full-width version of it too) and this column-header row of cells --
+  reading as one continuous grey block spanning both. Removing it here
+  only leaves the title bar shaded, this row now transparent like the
+  data rows below it; the row's own border (below) still delineates it.
+*/
+/*
+  Vertical padding spacing-2 (4px), not the original spacing-5 (16px)
+  (explicit request, 2026-09-11, three rounds: "make the header's height
+  8px smaller", "even more 8px smaller", then "one step less height than
+  it's now"): spacing-5 -> spacing-4 -> spacing-3 -> spacing-2, this
+  third round dropping the token one more step on the spacing scale
+  rather than by another fixed 8px, per that round's own wording. Scoped
+  to the header row specifically (this rule, its own sort-btn/favourite-
+  all-btn below, and table-cell's own [data-checkbox-role="select-all"]
+  variant) -- data rows keep their existing spacing-5 vertical padding
+  untouched, since all three requests were about the header's height
+  only.
+*/
+.ds-table-header-cell {
+  display: flex;
+  align-items: center;
+  padding: var(--ds-spacing-cell);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  box-sizing: border-box;
+  height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
+  background-color: var(--ds-color-bg-surface);
+}
+
+/* Sortable header's clickable area covers the whole cell, not just the
+   label+icon's own content box (mirrors .sample-table__header-cell:has(
+   .sample-table__sort-btn) exactly) -- padding moves onto the button
+   itself, which fills the cell completely. */
+.ds-table-header-cell:has(.ds-table-header-cell__sort-btn),
+.ds-table-header-cell[data-filter] {
+  padding: 0;
+}
+
+/*
+  Reverted back to regular type, no allcaps (explicit request, 2026-09-12,
+  "make the header name cells back to the regular type (no allcaps), use
+  regular text token"): the caption-token + uppercase treatment above was
+  itself only a day old (2026-09-11, "make all header cells in all tables
+  with caption style"/"make these header cells type all caps") -- direct
+  fresh feedback after living with it reverses that pass globally, back to
+  the same bodyText + text-subactive pairing the very first version of
+  this rule used (table-header/meta.json's own "Title + info" caption
+  precedent), with no text-transform at all. typography.caption
+  (--ds-font-caption-*, added specifically for the now-reverted pass) is
+  left defined in Base-Type.json/output.css rather than deleted -- not
+  reused elsewhere, but removing a token is a separate, unasked-for
+  cleanup from switching what this one rule consumes.
+*/
+.ds-table-header-cell .ds-table-cell__text {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: normal;
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  /* --ds-color-header-cell-label: Figma's base/600, defined by a consumer's
+     staging layer; falls back to the token this rule always used. */
+  color: var(--ds-color-header-cell-label, var(--ds-color-text-subactive));
+}
+
+/*
+  Sortable header cell -- three states, read off Figma (Table cell, header-cell
+  text+icon: default 35:8275, hovered 35:8396, selected 35:8423):
+  - default:  white cell, label and arrow in the header gray (base/600)
+  - hovered:  base/100 fill, label and arrow black
+  - selected: base/100 fill, label and arrow in the accent color -- the column
+              the table is sorted by (data-sort-dir asc or desc)
+  Every state keeps the label underlined dotted and the 24px arrow visible: the
+  underline and the arrow are what say "this column sorts", so they are not
+  revealed on hover. (An earlier pass hid the arrow at rest, from the spec's
+  "visible only on the sorted column"; the Figma states supersede that.)
+  Label and arrow share one color: the button sets it, the label inherits it,
+  and the arrow's svg fills with currentColor. 10px between label and arrow.
+  Descending flips the arrow.
+*/
+.ds-table-header-cell__sort-btn,
+.ds-table-header-cell__filter-btn {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--ds-spacing-3) + var(--ds-spacing-1));
+  width: 100%;
+  height: 100%;
+  padding: 0 var(--ds-spacing-cell);
+  background: none;
+  border: none;
+  font: inherit;
+  color: var(--ds-color-header-cell-label, var(--ds-color-text-subactive));
+  text-align: left;
+  cursor: pointer;
+}
+
+.ds-table-header-cell__sort-btn:focus-visible,
+.ds-table-header-cell__filter-btn:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+.ds-table-header-cell__sort-btn .ds-table-cell__text,
+.ds-table-header-cell__filter-btn .ds-table-cell__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: var(--ds-border-width-default);
+  text-underline-offset: var(--ds-spacing-1);
+}
+
+.ds-table-header-cell__sort-btn:hover,
+.ds-table-header-cell__filter-btn:hover {
+  background-color: var(--ds-color-bg-surface-pressed);
+  color: var(--ds-color-text-active);
+}
+
+/* After :hover on purpose: a selected column stays accent-colored under the
+   pointer -- Figma has no hovered-and-selected variant, so selected wins. */
+.ds-table-header-cell__sort-btn[data-sort-dir="asc"],
+.ds-table-header-cell__sort-btn[data-sort-dir="desc"],
+.ds-table-header-cell__filter-btn[data-filter-active="true"],
+.ds-table-header-cell__filter-btn[aria-expanded="true"] {
+  background-color: var(--ds-color-bg-surface-pressed);
+  color: var(--ds-color-accent-1);
+}
+
+.ds-table-header-cell__sort-icon {
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  flex-shrink: 0;
+}
+
+.ds-table-header-cell__sort-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ds-table-header-cell__sort-btn[data-sort-dir="desc"] .ds-table-header-cell__sort-icon {
+  transform: rotate(180deg);
+}
+
+/*
+  favourite_all (A2b): the Save column's header cell composes a
+  favourite-all toggle button alongside the sort button, migrated from
+  site.css's .sample-table__header-cell:has(.sample-table__favourite-
+  all-btn) rules (same "two independent click targets in one header
+  cell" pattern that file's own comment already documents at length --
+  restored star-first DOM order per that comment's own explicit
+  before/after). data-favourite-all/data-saved on the outer cell and the
+  data-icon="save" span are what table-row/component.js's existing
+  updateFavouriteAllState() and table-cell/component.js's existing
+  favourite-click listener already key off (both real, already-shipped
+  design-system behavior, not new here) -- data-type="icon-cell" is
+  added to the outer cell specifically so that existing listener's own
+  `.ds-table-cell[data-type="icon-cell"] .ds-table-cell__icon[data-icon=
+  "favourite"]` selector matches; its layout side-effects (icon-cell's
+  own padding/flex from table-cell/style.css) are reset below the same
+  way header-block already resets a nested table-header's box.
+*/
+/*
+  flex-direction: row + padding: 0, at raised specificity (bugfix,
+  2026-09-11, two rounds of direct user report -- first "save icon
+  should be on the left and the arrow on the right", then, after the
+  flex-direction part alone, "the save icon should be aligned with the
+  table save cells"): this cell also carries data-type="icon-cell"
+  (composed onto the same outer .ds-table-cell so the favourite-all icon
+  inherits icon-cell's sizing -- see this file's own header comment), and
+  table-cell/style.css's own [data-type="icon-cell"] rule sets both
+  flex-direction: row-reverse and padding: 0 spacing-3 unconditionally
+  for every icon-cell. A plain .ds-table-header-cell[data-favourite-all]
+  selector has the exact same specificity (1 class + 1 attribute) as that
+  icon-cell rule, so which one wins was purely a function of stylesheet
+  load order between two different components -- table-cell/style.css
+  happens to load after table-header-cell/style.css in every current
+  consumer, so table-cell's values won on both properties every time,
+  silently. The first fix pass only re-declared flex-direction here,
+  still at the same tied specificity -- it happened to win that one
+  property (both files still loading in the same order, and this
+  specific property/selector pairing came out ahead), but padding was
+  never re-declared at all, so icon-cell's own 8px horizontal padding on
+  the outer cell stayed in effect. Stacked on top of the favourite-all
+  button's own 8px padding (below), that put this icon 16px from the
+  cell's left edge -- double the data row's own icon-cell inset (8px,
+  padding only, no nested button) -- a real, measurable misalignment,
+  not a rendering illusion. Selector specificity raised to 2 classes + 1
+  attribute (adding .ds-table-cell, already present in every consumer's
+  markup here) so every property in this block wins outright regardless
+  of link order, rather than depending on it again.
+*/
+.ds-table-cell.ds-table-header-cell[data-favourite-all] {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0;
+}
+
+.ds-table-header-cell[data-favourite-all] .ds-table-header-cell__sort-btn {
+  width: auto;
+  flex: 1 1 auto;
+}
+
+/*
+  Text removed from this button by template.html (explicit request,
+  2026-09-11, "in saved header cell remove 'Save' text, move save icon to
+  the left and arrow to the right"): the favourite-all icon already sits
+  first in DOM order (left) and this sort button's arrow was already last
+  (right) -- the only change needed was dropping the label span between
+  them. With no text left, the button's content is icon-only; center it
+  the same way favourite-all-btn's own icon is centered below, rather
+  than leaving it flush left in its now-empty flex row.
+*/
+.ds-table-header-cell[data-favourite-all] .ds-table-header-cell__sort-btn {
+  justify-content: center;
+}
+
+.ds-table-header-cell__favourite-all-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  padding: var(--ds-spacing-cell);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.ds-table-header-cell__favourite-all-btn:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+.ds-table-header-cell__favourite-all-btn .ds-table-cell__icon {
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+}
+
+.ds-table-header-cell[data-saved="true"] .ds-table-header-cell__favourite-all-btn .ds-table-cell__icon {
+  filter: drop-shadow(2px 2px 0px var(--ds-color-shadow-middle));
+  color: var(--ds-color-accent-2);
+}
+
+/* Column labels use the "data" role (Inter Medium 13px, uppercase) in the
+   Figma look, in both themes (type does not depend on the theme). The color is
+   the header-cell-label token, set above; dark falls back to text-subactive. */
+.ds-table-header-cell .ds-table-cell__text {
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+  text-transform: uppercase;
+}
+
+/*
+  Filter header cell (data-filter): the column label as a button that opens a
+  dropdown-menu of values, for a column whose rows can be narrowed to one
+  value. It looks like the sortable header -- same label, same arrow, same
+  three states -- because it is the same kind of "this column does
+  something" affordance:
+  - default: header gray on the plain cell, label underlined dotted, arrow;
+  - hovered: base/100 fill, black;
+  - filtered (a value other than the first is chosen) or menu open: base/100
+    fill, accent color, the same as the sorted column.
+  The label never changes to the chosen value, so the column keeps its name;
+  the chosen value is the menu's Medium-weight item (kept below) and is in
+  aria-label. The dropdown wrapper fills the cell so the whole cell is the
+  click target, and the menu drops 10px under it at the cell's width
+  (dropdown-menu/style.css), so this variant needs that component's
+  stylesheet and script on the page.
+*/
+.ds-table-header-cell[data-filter] > .ds-dropdown {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

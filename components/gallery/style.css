@@ -1,0 +1,165 @@
+/*
+  gallery (Penpot component: "Gallery")
+
+  Composition shell only, like table-row/sidebar-list -- does not restyle
+  the composed .ds-gallery-image children, only arranges them in a row.
+  Layout read directly off Penpot's real instance via MCP: flex row,
+  alignItems:start, justifyContent:start, columnGap spacing-4 (12px,
+  Token-bound in Penpot's own data).
+
+  Overflow handling: explicit host request -- a horizontally-scrolling
+  filmstrip/slider, replacing an earlier flex-wrap reflow. Penpot's own
+  source specifies neither (a fixed-width demo row with few images, no
+  overflow behavior defined at all) -- this is the same category of
+  functional addition the wrap choice was, just a different (now
+  requested) answer to "what happens when more images than fit one row
+  are composed here": nowrap + overflow-x:auto lets the row scroll
+  instead of reflowing to a second line (flex-shrink handling below).
+
+  spacing-3 (8px) padding-top/bottom: explicit host request -- without it,
+  a selected item's 1px outline (see gallery-image/style.css) sits flush
+  against this element's own edge. overflow-x:auto implicitly forces
+  overflow-y to a clipping value too (the CSS overflow spec: one axis
+  non-visible makes an other axis "visible" compute to "auto"), so that
+  outline was being clipped top/bottom with zero padding -- this is a
+  functional fix for real clipping, not decorative spacing.
+*/
+
+.ds-gallery {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  column-gap: var(--ds-spacing-4);
+  padding-top: var(--ds-spacing-3);
+  padding-bottom: var(--ds-spacing-3);
+  overflow-x: auto;
+  /* Native scrollbar hidden -- replaced by .ds-gallery__scrollbar below,
+     a custom indicator shown only while actively scrolling (explicit host
+     request), which the native scrollbar can't do without browser/OS
+     support that isn't guaranteed. */
+  scrollbar-width: none;
+}
+
+.ds-gallery::-webkit-scrollbar {
+  display: none;
+}
+
+/* flex-shrink:0 stops the browser's default flex-shrink from squishing
+   gallery-image's own pixel-matched widths to fit the row (see header).
+   cursor:pointer on each image: its own click-to-select affordance (see
+   component.js) -- same pattern table-row/style.css already documents
+   for its own click-to-select checkbox-cell. cursor:grab on .ds-gallery
+   itself (below): a separate, later-added affordance -- explicit host
+   request to drag the row itself to scroll it, like a touch swipe done
+   with a mouse. The two affordances coexist: an image shows "clickable"
+   (pointer), the gaps/padding between them show "draggable" (grab) --
+   component.js only starts a drag for mouse/pen pointers (touch already
+   scrolls natively via overflow-x:auto) and suppresses an image's own
+   click if the pointer actually moved past a small threshold, so a real
+   drag doesn't also toggle whatever image it ends over. */
+.ds-gallery {
+  cursor: grab;
+}
+
+.ds-gallery.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.ds-gallery > .ds-gallery-image {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/*
+  Custom scrollbar (component.js computes the thumb's width/position, and
+  now wires it as a real interactive control -- drag the thumb, or click
+  the track, to scroll; see component.js's own header comment). Lives in
+  .ds-gallery-wrapper, outside the scrolling .ds-gallery element itself --
+  an indicator positioned inside the scroll container would scroll away
+  with the content instead of staying put as a fixed overlay.
+
+  Always visible, small/unobtrusive at rest (spacing-2, 4px). Grows to
+  spacing-4 (12px) on hover or while actively being dragged -- explicit
+  host request, so it's easier to see/grab -- via a plain height change,
+  not a layout-safe technique like outline/transform, made safe here a
+  different way: .ds-gallery__scrollbar is position:absolute (removed
+  from .ds-gallery-wrapper's normal flow entirely), and the wrapper
+  reserves spacing-4 of padding-bottom once, sized for the GROWN state up
+  front. Growing/shrinking the bar therefore only changes how much of
+  that already-reserved space it visually fills -- it can never push
+  .ds-gallery-wrapper's own box height around, so nothing after it in the
+  page ever jumps, the same requirement the earlier show/hide-on-scroll
+  version already had to satisfy.
+*/
+.ds-gallery-wrapper {
+  position: relative;
+  padding-bottom: var(--ds-spacing-4);
+}
+
+/* Track/thumb fills (explicit request, 2026-09-05, "track one step
+   greyer per our theme tokens, thumb accent"): previously text-subactive/
+   text-active -- foreground tokens calibrated for legible text, not
+   backgrounds, so text-subactive in particular renders as a light,
+   attention-grabbing bar in dark theme (neutral.200, close to white) --
+   the opposite of an unobtrusive track fill. bg-surface-pressed is this
+   codebase's own established "one step more emphasized/greyer than
+   bg-surface" token (see table-header/meta.json's own rationale for that
+   exact phrase, used there for the same reason) -- a real background
+   token, one step darker/greyer than the page's own bg-surface in both
+   themes. The thumb switches to accent-1, this system's existing
+   interactive-color vocabulary, so the draggable control reads as
+   distinct from its track rather than two different shades of the same
+   neutral. */
+.ds-gallery__scrollbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--ds-spacing-2);
+  background-color: var(--ds-color-bg-surface-pressed);
+  cursor: pointer;
+}
+
+.ds-gallery__scrollbar:hover,
+.ds-gallery__scrollbar.is-dragging {
+  height: var(--ds-spacing-4);
+}
+
+.ds-gallery__scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  min-width: var(--ds-spacing-5);
+  background-color: var(--ds-color-accent-1);
+  cursor: grab;
+}
+
+.ds-gallery__scrollbar.is-dragging .ds-gallery__scrollbar-thumb {
+  cursor: grabbing;
+}
+
+/* Now a real focusable control (role="scrollbar", see component.js) --
+   same focus-ring technique input/filled-button/gallery-image's own
+   selected-state frame already use (outline, not border, so it doesn't
+   grow the thumb past its computed width/position). */
+.ds-gallery__scrollbar-thumb:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-border-width-thin);
+}
+
+/* ---- .ds-gallery-picker: a plain scrolling row of picker cards ---------------
+   Cards 10px apart, one row that scrolls sideways when there are more than
+   fit (Figma clips the row). Unlike .ds-gallery it has no custom scrollbar and
+   no drag-to-scroll: the native thin scrollbar is used, and each card is a
+   button of its own (see gallery-image type="picker"). */
+.ds-gallery-picker {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  column-gap: var(--ds-spacing-cell);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}

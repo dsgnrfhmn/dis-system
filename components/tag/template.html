@@ -1,0 +1,6 @@
+{#
+  tag: a short label on a colored ground (Figma D_SYSTEM Tag, node 103:4746).
+  type: accent-1 | accent-2 | accent-3 | success | warning | danger | neutral
+  subtype: active (solid fill, inverse text) | passive (light tint, colored text)
+#}
+<span class="ds-tag" data-type="{{ type | default('accent-1') }}" data-subtype="{{ subtype | default('active') }}">{{ label | default('tag') }}</span>

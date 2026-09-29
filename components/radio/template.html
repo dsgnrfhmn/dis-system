@@ -1,0 +1,10 @@
+{% set _options = options | default([
+  {'value': 'short', 'label': 'Short', 'checked': true},
+  {'value': 'middle', 'label': 'Middle', 'checked': false},
+  {'value': 'full', 'label': 'Full', 'checked': false}
+]) %}
+<div class="ds-radio-group" role="radiogroup" aria-label="{{ label | default('Description amount') }}">
+  {% for option in _options %}
+  <button type="button" class="ds-text-button ds-radio" role="radio" aria-checked="{{ 'true' if option.checked else 'false' }}" tabindex="{{ '0' if option.checked else '-1' }}" data-value="{{ option.value }}" data-priority="secondary" data-status="active" data-underline="dotted"><span class="ds-radio__icon" aria-hidden="true"></span><span class="ds-text-button__text">{{ option.label }}</span></button>
+  {% endfor %}
+</div>

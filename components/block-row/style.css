@@ -1,0 +1,136 @@
+/*
+  block-row
+  One text block in a list of blocks (the Template pages): the block's text, and on
+  the right its actions. Rows carry no hairlines: a block is its text plus a
+  trailing blank line, at least 60px tall, on the surface color. Consumer-app Figma
+  file APPFILEKEY, Template nodes 150:16233 and 150:16275.
+  Two kinds (data-type):
+  - "source": a block to pick from. Its Add action shows on hover; once the
+    block is already used (data-included="true") the row is shaded and the
+    action hidden.
+  - "editable": a block of the document being built. A drag handle on the left
+    (its icon shows on hover), Edit / Delete on the right on hover, and an
+    in-place edit mode (data-editing="true": the text becomes a textarea).
+  Drag and drop is driven by the host page through data-dragging and data-drop,
+  like table-row.
+*/
+.ds-block-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ds-block-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  background-color: var(--ds-color-bg-surface);
+}
+
+.ds-block-row:hover,
+.ds-block-row:focus-within {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-block-row__text {
+  flex: 1 1 0;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: calc(var(--ds-spacing-9) + var(--ds-spacing-6));
+  padding: var(--ds-spacing-cell);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: normal;
+  color: var(--ds-color-text-active);
+  overflow-wrap: anywhere;
+}
+
+.ds-block-row__actions {
+  flex: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* Actions and the drag icon only show on hover / focus, or while editing. */
+.ds-block-row:not(:hover):not(:focus-within):not([data-editing="true"]) .ds-block-row__actions .ds-text-button,
+.ds-block-row:not(:hover):not(:focus-within) .ds-block-row__drag-icon {
+  opacity: 0;
+}
+
+/* A source block that is already in the document: shaded, no Add action. */
+.ds-block-row[data-type="source"][data-included="true"] {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+:root:not([data-theme="dark"]) .ds-block-row[data-type="source"][data-included="true"] {
+  background-color: var(--ds-color-base-warm-100);
+}
+
+.ds-block-row[data-type="source"][data-included="true"] .ds-block-row__actions .ds-text-button {
+  visibility: hidden;
+}
+
+.ds-block-row__drag {
+  flex: none;
+  box-sizing: border-box;
+  width: var(--ds-spacing-row);
+  padding: var(--ds-spacing-cell);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+}
+
+.ds-block-row__drag-icon {
+  display: block;
+  flex: none;
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  background-color: var(--ds-color-input-icon);
+  -webkit-mask: url("../../icons/drag.svg") center / 100% 100% no-repeat;
+  mask: url("../../icons/drag.svg") center / 100% 100% no-repeat;
+}
+
+.ds-block-row[data-type="editable"] .ds-block-row__actions {
+  padding-right: var(--ds-spacing-5);
+}
+
+.ds-block-row[data-type="editable"][data-editing="true"] {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-block-row[data-type="editable"][data-editing="true"] .ds-block-row__text {
+  padding: 0;
+}
+
+.ds-block-row__edit {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: var(--ds-spacing-cell);
+  border: var(--ds-border-width-thin) solid var(--ds-color-accent-1);
+  border-radius: 0;
+  background-color: var(--ds-color-bg-surface);
+  color: var(--ds-color-text-active);
+  font: inherit;
+  line-height: normal;
+  resize: none;
+  overflow: hidden;
+  outline: none;
+}
+
+/* Drag and drop, driven by the host page. */
+.ds-block-row[data-dragging="true"] {
+  opacity: 0.5;
+}
+
+.ds-block-row[data-drop="before"] {
+  box-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-accent-1);
+}
+
+.ds-block-row[data-drop="after"] {
+  box-shadow: inset 0 calc(var(--ds-border-width-default) * -1) 0 var(--ds-color-accent-1);
+}

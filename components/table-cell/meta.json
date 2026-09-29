@@ -1,0 +1,107 @@
+{
+  "name": "table-cell",
+  "description": "A single cell within a table-row of a queue table: text data, an icon/checkbox slot, a link, a dropdown/input field, or an action-button slot, depending on `type`. table-row composes several of these per row; header-block's divider marks the boundary between the header and the first row of cells.",
+  "status": "stable",
+  "category": "tables",
+  "layout": "wide",
+  "variants": [
+    "checkbox-cell",
+    "icon-cell",
+    "date",
+    "text-active-cell",
+    "text-passive-cell",
+    "text-subactive-cell",
+    "link",
+    "1-action",
+    "2-actions",
+    "3-actions",
+    "dropdown",
+    "input",
+    "empty-state",
+    "status-label"
+  ],
+  "props": [
+    {
+      "name": "type",
+      "type": "string",
+      "required": true,
+      "default": "text-active-cell",
+      "description": "Which cell kind this renders: checkbox-cell (was Penpot's \"icon\"), icon-cell (was \"saved\" and \"action-icons\", merged into one type that holds any number of icons), date, text-active-cell (was \"title\", \"organisation\" and \"description\", already identical), text-passive-cell (was \"source\"), text-subactive-cell (was \"summary\"), link, 1-action, 2-actions, 3-actions, dropdown, input, empty-state, status-label. See rationale."
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "required": false,
+      "description": "The cell's text content, for text-bearing types (date, text-active-cell, text-passive-cell, text-subactive-cell, link, dropdown, input). Not applicable to checkbox-cell, icon-cell, 1-action, 2-actions, 3-actions, or empty-state, which have fixed or composed content. For 1-action/2-actions/3-actions, doubles as the primary (rightmost) button's label."
+    },
+    {
+      "name": "checkbox_role",
+      "type": "string",
+      "required": false,
+      "description": "Only meaningful when type=\"checkbox-cell\". Unset (default): the normal row-select checkbox (unchecked / checked), toggled by table-row off the row's data-selected. \"select-all\": adds a third icon (checkbox-semi-select) and marks the cell data-checkbox-role=\"select-all\", so table-row's select-all logic and table-cell's [data-state] rules can target it. Not sourced from the design."
+    },
+    {
+      "name": "editable",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Text-bearing types only (not checkbox-cell/icon-cell/dropdown/input/1-action/2-actions/3-actions/empty-state/status-label). Renders a hidden .ds-input sibling alongside the text span and marks the cell data-editable so a same-row [data-edit-trigger] button (see extra_attrs) can toggle it into edit mode -- see component.js."
+    },
+    {
+      "name": "extra_attrs",
+      "type": "string",
+      "required": false,
+      "description": "Only meaningful for type=\"1-action\" (and as the primary button's attrs for \"2-actions\"/\"3-actions\"). Raw attribute string passed through to the composed text-button's own extra_attrs passthrough (see text-button/template.html) -- e.g. extra_attrs='data-edit-trigger' to wire an Edit button at a row's own editable cell, the same pattern popup already uses for data-popup-open/dismiss."
+    },
+    {
+      "name": "secondary_extra_attrs",
+      "type": "string",
+      "required": false,
+      "description": "Only meaningful for type=\"2-actions\"/\"3-actions\". Same passthrough as extra_attrs, but for the secondary (middle, Dismiss-style) button instead of the primary one."
+    },
+    {
+      "name": "tertiary_label",
+      "type": "string",
+      "required": false,
+      "default": "Archive",
+      "description": "Only meaningful for type=\"3-actions\". Label for the leftmost, lowest-emphasis of the 3 buttons (secondary priority, same as the middle button)."
+    },
+    {
+      "name": "tertiary_extra_attrs",
+      "type": "string",
+      "required": false,
+      "description": "Only meaningful for type=\"3-actions\". Same passthrough as extra_attrs/secondary_extra_attrs, but for the tertiary (leftmost) button."
+    },
+    {
+      "name": "options",
+      "type": "array",
+      "required": false,
+      "description": "Only meaningful when type=\"dropdown\". A list of { value, label }: when given, the input-dropdown trigger is wired (data-dropdown-trigger) inside a .ds-dropdown wrapper with a dropdown-menu of these items, so the cell's dropdown actually opens (link components/dropdown-menu's component.js on the page). Omitted: the unwired trigger alone, unchanged."
+    },
+    {
+      "name": "dropdown_label",
+      "type": "string",
+      "required": false,
+      "default": "Choose",
+      "description": "Only meaningful with options. The trigger's aria-label (the visible text is the current value, not what the control is for)."
+    },
+    {
+      "name": "view_label",
+      "type": "string",
+      "required": false,
+      "description": "Text-bearing types only. Renders Figma's \"Single-active-t+button\" cell (D_SYSTEM node 28:949): the text clipped to one line with an ellipsis, followed by a secondary dotted text-button with this label (e.g. \"view\") that stays whole. The host page wires the button (e.g. to a popup showing the full text)."
+    }
+  ],
+  "source": "penpot:28cec651-3f14-8022-8008-8c9a0bca088c",
+  "rationale": "Layout (Figma flat table): every cell is one table row high -- spacing.row (44px) plus a 1px object-dark-passive hairline under it -- with spacing.cell (10px) padding, on bg.surface, and no vertical rules. Text is one line with an ellipsis; .ds-table-cell__clip clips an excerpt beside an inline \"view\" button. Cells share the row's width (flex 1 1 0%); fixed-content types (checkbox-cell, icon-cell, input, the action types, status-label) are flex: none and size to their content. Link cells right-align and never wrap (at most two lines, accent-1, underline on hover). Action cells left-align with a 16px right padding. A dropdown or input cell lets its field fill the cell; the input keeps its box border in the cell (Figma's table rows draw it), although input's transparent fill is borderless elsewhere.\n\nTypes: started as Penpot's 15 Type values and were merged where Penpot's own cells were identical. text-active-cell (was title / organisation / description -- pixel-identical in Penpot) is text.active body text; text-passive-cell (was source) and text-subactive-cell (was summary; body-text italic) keep Penpot's identifiers; icon-cell (was saved and action-icons) holds any number of icons, adopting action-icons' multi-icon layout, a deliberate deviation for a lone saved icon; checkbox-cell (was icon) is Penpot's generic single-icon cell, also used for the drag handle. Penpot's State axis is \"Value 1\" (an unused placeholder) on almost every type, so there is no `state` prop: hover lives in the composed controls. Composition, not restyling: action cells compose text-button, dropdown and input cells compose input-dropdown and input.\n\nIcons: every glyph is the Figma D_SYSTEM set (node 103:4711) in icons/, inlined by component.js so currentColor and --_icon-fill / --_icon-mark apply. Checkbox and save rest as an input-icon outline on an input-fill box (input-icon rather than Figma's text-inactive, which disappears on the dark surface) and turn accent on hover; a selected checkbox is an accent box with an inverse mark; a saved bookmark fills with accent-2. checkbox-cell carries both an unchecked and a checked icon, and table-row's CSS swaps them off the row's data-selected, so selection needs no extra script. The checkbox styling is scoped to [data-icon=\"checkbox\"], so a drag glyph in the same cell layout isn't recolored; data-icon=\"drag\" paints Figma's drag glyph.\n\nRow actions: in light, active action buttons rest in text-inactive (like an inactive tab title) and turn accent-1 while their row is hovered, focused or selected (Figma node 237:31166), so a long table isn't a wall of blue; disabled, loading, error and unread buttons keep their own color. Dark keeps them accent, because dark's text-inactive would not read on its background. 1-action, 2-actions and 3-actions share one shape (row, left-aligned, flex: none); 3-actions has no Penpot instance and follows 2-actions.\n\nAdditions not sourced from the design: `editable` renders the text and a hidden .ds-input side by side and toggles hidden, so the cell's size never changes between states; the trigger is a row's own button (extra_attrs='data-edit-trigger'), because editing sits behind an explicit action. extra_attrs / secondary_extra_attrs / tertiary_extra_attrs pass raw attributes through to the composed text-buttons (author markup, never user data). status-label is a plain, non-interactive span in system-success replacing an action group once a record is done -- not a disabled button, since there is nothing to click. `checkbox_role=\"select-all\"` adds a third, semi-selected icon for a header checkbox that table-row drives. Shift+click on a Save icon saves or unsaves the range since the last Save click in the same table (visible rows, DOM order), dispatched as one ds-table-cell-favourite-toggle event with detail.range = true. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [
+    "text-button",
+    "input-dropdown",
+    "input"
+  ],
+  "a11y_notes": "type=\"dropdown\" renders a real .ds-input-dropdown <button> (listen for its ds-input-dropdown-open event); type=\"input\" a real <input type=\"text\">; type=\"link\" a real <a href>. Icon cells use role=\"img\" with an aria-label per icon, since each icon is its own unit; the inlined SVGs carry no separate text. Icons are fetched at runtime relative to the script's own URL (so they work wherever the system is vendored), and need http(s): from file:// the icon slots stay empty. Known gaps: the Save icon toggles on click but stays role=\"img\" with no aria-pressed and no keyboard handler, so its state isn't announced and it is pointer-only, as is Shift+click range saving; `editable`'s switch to the input moves focus but isn't announced, and the input has no label. status-label is plain text."
+}

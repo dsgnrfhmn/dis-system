@@ -1,0 +1,668 @@
+/*
+  Styles for index.html, dis-system's single long-read page (also linked
+  by the consuming app's pages -- which is why the long-read layout below is scoped to
+  body.site-longread instead of restyling body/main globally).
+  Every value here is a var(--ds-*) reference; this file does not define
+  its own colors/spacing/type. Page-level chrome is components/nav-bar
+  itself (see nav.js for its wiring) — this file adds no background/shadow
+  of its own around it, since that would be reimplementing the component's
+  own look from outside it rather than using it as-is. The one exception is
+  .ds-nav-bar__brand below: nav-bar's own left slot is Penpot's
+  workspace-switcher dropdown (see components/nav-bar/index.html), but this
+  site's own nav bar replaces it with plain site-title text by explicit
+  request — that's this site's own chrome, not part of the
+  component, so it's styled here rather than in nav-bar/style.css.
+*/
+
+/* --- index.html: long-read layout ---
+   Scoped to body.site-longread on purpose: the consuming app links this same file for
+   its own pages, and none of this belongs to them. Column layout sized to
+   the viewport: nav-bar on top, then the section sidebar (components/
+   sidebar-list, unmodified) beside a <main> that is the one scroll
+   container -- so the sidebar and nav-bar stay in view without either
+   needing its own sticky offset, and the sidebar's #anchor links scroll
+   <main>, not the window. Grey page background (bg.surface-pressed)
+   separates the page from the white surfaces placed on it: the nav-bar,
+   the sidebar and each component card. */
+body.site-longread {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.site-longread .site-shell {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+.site-longread .site-shell > main {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* Web-view chrome, per Figma D_SYSTEM nodes 103:4594 (nav) and 103:4596
+   (sidebar). Site-only overrides: nav-bar/sidebar-list/sidebar-item stay
+   as they are for the consuming app and the galleries.
+   - No nav hairline: here the nav-bar never has content scrolling under
+     it (<main> is the scroll container), so the rule nav-bar keeps for
+     its sticky case separates nothing.
+   - No sidebar right rule: the white sidebar against the grey page
+     background already marks the edge.
+   - Active section row: filled (bg.surface-pressed) with the name in
+     text-active, medium weight, no underline -- it's where you are, not a
+     link to follow; no top/bottom rules. */
+.site-longread > .ds-nav-bar {
+  border-bottom: none;
+}
+
+.site-longread .site-sidebar {
+  border-right: none;
+}
+
+.site-longread .site-sidebar .ds-sidebar-item[data-type="set"][data-active="true"] {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
+
+/* Section links are <a>s, so on top of text-button's own dotted underline
+   (on its text span) the browser's default solid <a> underline propagated
+   under every row as a second line. Only the dotted one is in Figma. */
+.site-longread .site-sidebar a.ds-text-button {
+  text-decoration-line: none;
+}
+
+/* Active row: no underline at either level. */
+.site-longread .site-sidebar .ds-sidebar-item[data-active="true"] .ds-text-button,
+.site-longread .site-sidebar .ds-sidebar-item[data-active="true"] .ds-text-button__text {
+  color: var(--ds-color-text-active);
+  font-weight: var(--ds-font-body-text-medium-weight);
+  text-decoration-line: none;
+}
+
+/* A sidebar jump lands the section's heading main's own top padding below
+   the edge, where it sits on first load -- not flush against the nav-bar. */
+.site-longread .site-shell > main > section,
+.site-longread .site-card[id] {
+  scroll-margin-top: var(--ds-spacing-7);
+}
+
+/* Content column, after the Figma Make "Design-System-Webpage" layout
+   (layout only; every value is one of this system's tokens): capped at
+   1400px (spacing-9 x 35, the same multiple-of-spacing-9 sizing
+   sidebar-list uses for its 280px) and centered in whatever width the
+   sidebar leaves, 32px side gutters, 80px (spacing-9 x 2) between
+   sections -- twice the 40px between subsections inside one, so a
+   section boundary reads as the larger break. */
+.site-longread .site-shell > main {
+  padding: calc(var(--ds-spacing-9) + var(--ds-spacing-3)) var(--ds-spacing-8);
+  gap: calc(var(--ds-spacing-9) * 2);
+}
+
+.site-longread .site-shell > main > * {
+  width: 100%;
+  max-width: calc(var(--ds-spacing-9) * 35);
+  margin-inline: auto;
+}
+
+/* Component galleries: two columns, as in Make's component grid. A card
+   whose component can't be read at half width carries data-layout="wide"
+   (meta.json's `layout`, emitted by scripts/build_manifest.py) and spans
+   both. Columns are at least 480px (spacing-9 x 12), so the 1400px
+   content column fits exactly two and a narrower window falls back to
+   one without a hard-coded breakpoint. Dense flow lets the next narrow
+   card fill the half-row a wide card would otherwise leave empty, so the
+   order is alphabetical except where that back-fill moves a card up. */
+.site-longread .component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ds-spacing-9) * 12)), 1fr));
+  grid-auto-flow: row dense;
+  gap: var(--ds-spacing-5);
+  align-items: start;
+}
+
+.site-longread .component-card[data-layout="wide"] {
+  grid-column: 1 / -1;
+}
+
+/* Primitives cards, after the Figma D_SYSTEM web-view (Colors 103:4608,
+   Typography 103:4670). Shell: white surface edged by the tief-1 bevel, a
+   60px header (10px/20px padding around a 40px line) holding the card
+   title, a 40px-padded content block, and an italic help-text footer
+   (20px) with the rationale for the family. Cards stack 24px apart. */
+.site-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-7);
+}
+
+.site-cards > h2 {
+  margin: 0;
+}
+
+/* A single card at the top of a gallery section (Buttons) keeps the same
+   24px from the generated cards that stacked cards keep from each other. */
+section:not(.site-cards) > .site-card {
+  margin-bottom: var(--ds-spacing-7);
+}
+
+.site-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--ds-color-bg-surface);
+  box-shadow: var(--ds-shadow-tief-1);
+}
+
+.site-card__header {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--ds-spacing-9) + var(--ds-spacing-cell) * 2);
+  padding: var(--ds-spacing-cell) var(--ds-spacing-6);
+}
+
+.site-card .site-card__title {
+  margin: 0;
+  font-family: var(--ds-font-card-title-family);
+  font-size: var(--ds-font-card-title-size);
+  font-weight: var(--ds-font-card-title-weight);
+  line-height: var(--ds-font-card-title-line-height);
+  letter-spacing: var(--ds-font-card-title-letter-spacing);
+  color: var(--ds-color-text-active);
+}
+
+.site-card__content {
+  padding: var(--ds-spacing-9);
+}
+
+.site-card__help {
+  margin: 0;
+  padding: var(--ds-spacing-6);
+  font-family: var(--ds-font-body-text-italic-family);
+  font-size: var(--ds-font-body-text-italic-size);
+  font-weight: var(--ds-font-body-text-italic-weight);
+  font-style: var(--ds-font-body-text-italic-style);
+  line-height: var(--ds-font-body-text-italic-line-height);
+  color: var(--ds-color-text-active);
+}
+
+/* Colors: three equal columns 10px apart, each a caption label over a
+   stack of full-width strips. Strip labels sit on raw palette fills that
+   don't change with the theme, so their color is a fixed primitive too
+   (data-on, from site.js): base-0 on dark fills, base-900 on light ones.
+   Strip labels use the bodyText token (explicit request, 2026-09-28:
+   Figma's 12px read too small and had no type token of its own). */
+.color-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ds-spacing-cell);
+  align-items: start;
+}
+
+.color-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-cell);
+  min-width: 0;
+}
+
+.color-column__label {
+  margin: 0;
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+  line-height: var(--ds-font-data-line-height);
+  text-transform: uppercase;
+  color: var(--ds-color-text-subactive);
+}
+
+.color-strip {
+  padding: var(--ds-spacing-2) var(--ds-spacing-cell);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.color-strip[data-on="light"] {
+  color: var(--ds-color-base-0);
+}
+
+.color-strip[data-on="dark"] {
+  color: var(--ds-color-base-900);
+}
+
+/* Typography: ruled rows 8px apart, sample and description in two equal
+   columns (10px cell padding), description at the de-emphasized text
+   color. Rows are at least 44px (the row token); the 40/32px headings
+   grow them rather than overflow. */
+.type-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-3);
+}
+
+.type-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  min-height: var(--ds-spacing-row);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+.type-row > * {
+  padding: var(--ds-spacing-cell);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.type-row__sample {
+  color: var(--ds-color-text-active);
+}
+
+.type-row[data-decoration] .type-row__sample {
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--ds-border-width-thin);
+  text-underline-offset: var(--ds-spacing-1);
+}
+
+.type-row[data-decoration="dotted"] .type-row__sample {
+  text-decoration-style: dotted;
+  text-decoration-thickness: var(--ds-border-width-default);
+}
+
+.type-row[data-upper] .type-row__sample {
+  text-transform: uppercase;
+}
+
+.type-row__meta {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  color: var(--ds-color-text-subactive);
+}
+
+.type-row__meta code {
+  margin-left: var(--ds-spacing-3);
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+}
+
+/* Footer: Make's closing rule, three items spread across the row. */
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-spacing-5);
+  padding-top: var(--ds-spacing-7);
+  border-top: var(--ds-border-width-thin) solid var(--ds-color-text-subactive);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  line-height: var(--ds-font-body-text-line-height);
+  color: var(--ds-color-text-active);
+  background-color: var(--ds-color-bg-surface);
+}
+
+/* Site title, per the Figma web-view nav (D_SYSTEM node 103:4594): body
+   text medium (16/500), in a 40px-tall slot like the toggle beside it. */
+.ds-nav-bar__brand {
+  display: inline-flex;
+  align-items: center;
+  height: var(--ds-spacing-9);
+  font-family: var(--ds-font-body-text-medium-family);
+  font-size: var(--ds-font-body-text-medium-size);
+  font-weight: var(--ds-font-body-text-medium-weight);
+  line-height: var(--ds-font-body-text-medium-line-height);
+  color: var(--ds-color-text-active);
+}
+
+main {
+  padding: var(--ds-spacing-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-9);
+}
+
+section h2 {
+  font-family: var(--ds-font-heading-2-family);
+  font-size: var(--ds-font-heading-2-size);
+  font-weight: var(--ds-font-heading-2-weight);
+  line-height: var(--ds-font-heading-2-line-height);
+  margin: 0 0 var(--ds-spacing-2) 0;
+}
+
+section p.note {
+  font-family: var(--ds-font-body-text-italic-family);
+  font-style: italic;
+  color: var(--ds-color-text-subactive);
+  margin: 0 0 var(--ds-spacing-6) 0;
+}
+
+section > hr {
+  border: none;
+  border-top: var(--ds-border-width-thin) solid var(--ds-color-text-subactive);
+  margin: 0 0 var(--ds-spacing-6) 0;
+}
+
+
+/* --- Overview: hero ---
+   Layout after the Figma Make "Design-System-Webpage" hero: a 12-column
+   row, title block (eyebrow, heading-1 title, heading-4 tagline) on 8
+   columns and the lead on the last 4, bottom-aligned, ruled off below.
+   Type and color stay this system's own: heading-1 -> heading-4 ->
+   body-text-medium, hierarchy carried by size/weight per PRINCIPLES.md. */
+
+.site-hero {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--ds-spacing-7);
+  align-items: end;
+  padding-bottom: var(--ds-spacing-8);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-text-subactive);
+}
+
+.site-hero__title {
+  grid-column: span 8;
+}
+
+.site-hero__lead {
+  grid-column: span 4;
+}
+
+.site-hero__eyebrow {
+  font-family: var(--ds-font-heading-5-family);
+  font-size: var(--ds-font-heading-5-size);
+  font-weight: var(--ds-font-heading-5-weight);
+  line-height: var(--ds-font-heading-5-line-height);
+  text-transform: uppercase;
+  color: var(--ds-color-text-subactive);
+  margin: 0 0 var(--ds-spacing-5) 0;
+}
+
+#overview .hero-title {
+  font-family: var(--ds-font-heading-1-family);
+  font-size: var(--ds-font-heading-1-size);
+  font-weight: var(--ds-font-heading-1-weight);
+  line-height: var(--ds-font-heading-1-line-height);
+  margin: 0 0 var(--ds-spacing-2) 0;
+}
+
+#overview .hero-tagline {
+  font-family: var(--ds-font-heading-4-family);
+  font-size: var(--ds-font-heading-4-size);
+  font-weight: var(--ds-font-heading-4-weight);
+  line-height: var(--ds-font-heading-4-line-height);
+  color: var(--ds-color-text-subactive);
+  margin: 0;
+}
+
+#overview .lead {
+  font-family: var(--ds-font-body-text-medium-family);
+  font-size: var(--ds-font-body-text-medium-size);
+  font-weight: var(--ds-font-body-text-medium-weight);
+  line-height: var(--ds-font-body-text-medium-line-height);
+  margin: 0;
+}
+
+
+/* Pairs of smaller cards (spacing + shadow) side
+   by side, 24px apart like the card stack. Columns are at least 480px
+   (spacing-9 x 12, as in the component grid), so a narrow window falls
+   back to one card per row without a breakpoint. */
+.site-card-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ds-spacing-9) * 12)), 1fr));
+  gap: var(--ds-spacing-7);
+  align-items: stretch;
+}
+
+/* Paired cards stretch to the taller one; the help text stays at the
+   bottom and the content block takes the slack. */
+.site-card-pair > .site-card > .site-card__content {
+  flex: 1 1 auto;
+}
+
+/* Buttons card, Figma D_SYSTEM node 103:4732: one centered row, 20px
+   apart, wrapping on narrow widths. */
+.button-set {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--ds-spacing-6);
+}
+
+/* A card whose content is a presentation page (showcase/<card>.html,
+   composed from real component templates): the page carries Figma's own
+   40px content padding, so the frame fills the block edge to edge. site.js
+   sizes it to its content and syncs its theme. */
+.site-card__content[data-frame="true"] {
+  padding: 0;
+}
+
+.site-card__frame {
+  display: block;
+  width: 100%;
+  border: none;
+}
+
+/* Card footer with the Show/Hide toggle (Figma 132:4960): a 60px bar,
+   20px sides, the button's own 11px padding on top of that. */
+.site-card__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-cell);
+  min-height: calc(var(--ds-spacing-9) + var(--ds-spacing-cell) * 2);
+  padding: var(--ds-spacing-cell) var(--ds-spacing-6);
+}
+
+/* Expanded region: 40px padding (Figma 132:5256); the Buttons type x state
+   list (left-aligned, wrapping, 20px apart) above the card's generated
+   component previews, 24px between them. */
+.site-card__all {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-7);
+  padding: var(--ds-spacing-9);
+}
+
+.site-card__all > .button-set {
+  justify-content: flex-start;
+}
+
+.site-card__all[hidden] {
+  display: none;
+}
+
+/* --- Primitives: icons ---
+   Figma D_SYSTEM node 103:4711: one centered row of 24px icons, 20px
+   apart, wrapping on narrow widths. */
+.icon-set {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--ds-spacing-6);
+}
+
+.icon-set__icon {
+  display: block;
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  color: var(--ds-color-input-icon);
+}
+
+.icon-set__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Figma's colors per group: grey acts on the view (the default above),
+   accent-1 marks state, accent-2 is the alert dot; checkbox and save show
+   their rest state (outline on an input-fill box). */
+.icon-set__icon:is([data-icon^="radio"], [data-icon^="theme"], [data-icon="loading"], [data-icon="counter"]) {
+  color: var(--ds-color-accent-1);
+}
+
+.icon-set__icon[data-icon="counter"] {
+  --_icon-fill: var(--ds-color-bg-surface);
+}
+
+.icon-set__icon[data-icon="notification"] {
+  color: var(--ds-color-accent-2);
+}
+
+.icon-set__icon:is([data-icon="checkbox"], [data-icon="save"]) {
+  color: var(--ds-color-input-icon);
+  --_icon-fill: var(--ds-color-input-fill);
+}
+
+/* --- Primitives: shadows ---
+   After the Figma D_SYSTEM shadow block (node 124:6952): the card's
+   content block turns grey (bg.surface-pressed) so the bevel has a page to
+   sit on, 56px white squares (bg.surface) 20px apart, centered. 56px =
+   spacing-9 + spacing-5. Labels (not in Figma) name each step, since the
+   page is also a reference. */
+.site-card__content[data-surface="pressed"] {
+  background: var(--ds-color-bg-surface-pressed);
+}
+
+.shadow-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ds-spacing-6);
+}
+
+.shadow-sample {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-spacing-3);
+}
+
+.shadow-sample .box {
+  width: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
+  background: var(--ds-color-bg-surface);
+}
+
+.shadow-sample .label {
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+  line-height: var(--ds-font-data-line-height);
+  color: var(--ds-color-text-subactive);
+}
+
+/* --- Primitives: spacing --- */
+
+.spacing-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ds-spacing-3);
+}
+
+.spacing-sample {
+  display: grid;
+  grid-template-columns: 1fr 120px 60px;
+  align-items: center;
+  gap: var(--ds-spacing-4);
+  width: 100%;
+  max-width: 480px;
+}
+
+.spacing-sample .bar {
+  height: var(--ds-spacing-5);
+  background: var(--ds-color-accent-1);
+}
+
+.spacing-sample .label {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+}
+
+.spacing-sample .value {
+  font-family: var(--ds-font-body-text-family);
+  font-size: 12px;
+  color: var(--ds-color-text-subactive);
+}
+
+/* --- category sections: component cards --- */
+
+.component-card {
+  background: var(--ds-color-bg-surface);
+  box-shadow: var(--ds-shadow-tief-1);
+}
+
+.component-card .card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: var(--ds-spacing-4) var(--ds-spacing-5);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+.component-card .card-header a {
+  font-family: var(--ds-font-text-link-family);
+  font-size: 14px;
+  text-decoration: var(--ds-font-text-link-text-decoration);
+  color: var(--ds-color-accent-1);
+}
+
+.component-card .card-body {
+  background: var(--ds-color-bg-surface);
+}
+
+.component-card iframe {
+  width: 100%;
+  border: none;
+  display: block;
+}
+
+.component-card .card-desc {
+  padding: var(--ds-spacing-4) var(--ds-spacing-5);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  color: var(--ds-color-text-subactive);
+  border-top: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+/* --- Comments scratchpad ---
+   Site-wide notes popup, see comments.js for the open/close/persistence
+   wiring. Composes the real components/popup as-is (.ds-popup-overlay/
+   .ds-popup/.ds-popup__*, linked via components/popup/style.css on every
+   page) -- only the full-width text field inside .ds-popup__body's own
+   "comments" data-type is this feature's own CSS (one plain field you type
+   into directly; the Org-mode preview was removed 2026-09-27). #comments-trigger is a plain .ds-text-button
+   instance (secondary; dotted, since it opens a popup on this page rather
+   than navigating) -- no new button style invented for it. */
+
+.ds-popup__body[data-type="comments"] .ds-comments-input {
+  width: 100%;
+  resize: vertical;
+  font-family: var(--ds-font-body-text-family);
+}

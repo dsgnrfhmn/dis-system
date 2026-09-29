@@ -1,0 +1,10 @@
+<div class="ds-page-head">
+  <div class="ds-page-head__left">
+    <h1 class="ds-page-head__title">{{ title | default('Set name') }}</h1>
+    {% with priority='secondary', status='active', underline='dotted', label=main_action | default('Save set') %}{% include "components/text-button/template.html" %}{% endwith %}
+  </div>
+  <div class="ds-page-head__right">
+    {% with priority='secondary', status='active', underline='dotted', label='Undo' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='secondary', status='active', underline='dotted', label='Download PDF' %}{% include "components/text-button/template.html" %}{% endwith %}
+  </div>
+</div>

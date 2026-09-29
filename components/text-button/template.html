@@ -1,0 +1,22 @@
+{#
+  extra_class / icon_extra_class / label_extra_class: optional extension
+  points for a composing parent (e.g. nav-bar's theme-toggle) that needs
+  its own stable classes on this component's root/icon/label without
+  forking its markup — see nav-bar/template.html. extra_attrs: raw
+  attribute passthrough for a composing parent that needs to wire its own
+  behavior contract onto this button (e.g. popup's data-popup-dismiss,
+  data-popup-open, or gallery's data-gallery-reset) without this component
+  knowing about any of them.
+  icon_position: 'left' (default) or 'right' -- where the icon sits
+  relative to the label. icon_only: render the icon alone; `label` is then
+  required and becomes the button's aria-label/title (fails the compose
+  loudly if missing -- an icon-only button without a name is inaccessible).
+  outlined: 1px border around the button (Figma text-outlined /
+  icon-outlined). preview: 'hover' draws the hover look statically, for
+  documentation pages showing every state (never in product UI).
+#}
+{% set _icon = icon | default(none) %}
+{% set _right = _icon and (icon_position | default('left')) == 'right' %}
+{% if icon_only and not label %}{{ icon_only_requires_a_label() }}{% endif %}
+{% if icon_only and not _icon %}{{ icon_only_requires_an_icon() }}{% endif %}
+<button class="ds-text-button{% if extra_class %} {{ extra_class }}{% endif %}" type="button" data-priority="{{ priority | default('primary') }}" data-status="{{ status | default('active') }}" data-underline="{{ underline | default('solid') }}"{% if outlined %} data-outlined="true"{% endif %}{% if icon_only %} data-icon-only="true" aria-label="{{ label }}" title="{{ label }}"{% elif _right %} data-icon-position="right"{% endif %}{% if preview %} data-preview="{{ preview }}"{% endif %}{% if status == 'disabled' %} disabled{% endif %}{% if current %} aria-current="page"{% endif %}{% if extra_attrs %} {{ extra_attrs | safe }}{% endif %}>{% if icon_only %}<span class="ds-text-button__icon{% if icon_extra_class %} {{ icon_extra_class }}{% endif %}" data-icon="{{ _icon }}" aria-hidden="true"></span>{% elif _right %}<span class="ds-text-button__label{% if label_extra_class %} {{ label_extra_class }}{% endif %}">{{ label | default('Button label') }}</span><span class="ds-text-button__icon{% if icon_extra_class %} {{ icon_extra_class }}{% endif %}" data-icon="{{ _icon }}" aria-hidden="true"></span>{% elif _icon %}<span class="ds-text-button__icon{% if icon_extra_class %} {{ icon_extra_class }}{% endif %}" data-icon="{{ _icon }}" aria-hidden="true"></span><span class="ds-text-button__label{% if label_extra_class %} {{ label_extra_class }}{% endif %}">{{ label | default('Button label') }}</span>{% else %}{{ label | default('Button label') }}{% endif %}</button>

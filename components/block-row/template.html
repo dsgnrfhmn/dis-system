@@ -1,0 +1,17 @@
+{% if type == 'editable' %}
+<li class="ds-block-row" data-type="editable">
+  <div class="ds-block-row__drag" data-drag-handle draggable="true"><span class="ds-block-row__drag-icon" role="img" aria-label="Reorder"></span></div>
+  <div class="ds-block-row__text">{{ text | default('Block text') }}</div>
+  <div class="ds-block-row__actions">
+    {% with priority='secondary', status='active', underline='dotted', label='Edit' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='secondary', status='active', underline='dotted', label='Delete' %}{% include "components/text-button/template.html" %}{% endwith %}
+  </div>
+</li>
+{% else %}
+<li class="ds-block-row" data-type="source" data-included="{{ 'true' if included else 'false' }}">
+  <div class="ds-block-row__text">{{ text | default('Block text') }}</div>
+  <div class="ds-block-row__actions">
+    {% with priority='secondary', status='active', underline='dotted', label='Add' %}{% include "components/text-button/template.html" %}{% endwith %}
+  </div>
+</li>
+{% endif %}

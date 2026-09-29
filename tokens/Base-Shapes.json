@@ -1,0 +1,189 @@
+{
+  "borderWidth": {
+    "thin": {
+      "$value": "1",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "default": {
+      "$value": "2",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "thick": {
+      "$value": "3",
+      "$type": "dimension",
+      "$description": ""
+    }
+  },
+  "radius": {
+    "sm": {
+      "$value": "0",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "none": {
+      "$value": "0",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "md": {
+      "$value": "1",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "full": {
+      "$value": "0",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "lg": {
+      "$value": "2",
+      "$type": "dimension",
+      "$description": ""
+    }
+  },
+  "spacing": {
+    "0": {
+      "$value": "0",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "1": {
+      "$value": "2",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "2": {
+      "$value": "4",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "3": {
+      "$value": "8",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "4": {
+      "$value": "12",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "5": {
+      "$value": "16",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "6": {
+      "$value": "20",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "7": {
+      "$value": "24",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "8": {
+      "$value": "32",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "9": {
+      "$value": "40",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "cell": {
+      "$value": "10",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "row": {
+      "$value": "44",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "button-x": {
+      "$value": "11",
+      "$type": "dimension",
+      "$description": ""
+    },
+    "button-gap": {
+      "$value": "5",
+      "$type": "dimension",
+      "$description": "Gap between a button's icon, label and hover brackets (Figma gap-[5px] on every button, nav link and table action). Added 2026-09-28 from the value components already used."
+    },
+    "focus-offset": {
+      "$value": "2",
+      "$type": "dimension",
+      "$description": "Gap between a control and its keyboard focus ring (outline-offset). Added 2026-09-28 from the value every component already used."
+    }
+  },
+  "shadow": {
+    "tief-1": {
+      "$value": [
+        {
+          "offsetX": "1",
+          "offsetY": "1",
+          "blur": "0",
+          "spread": "0",
+          "color": "{base.600}",
+          "inset": false
+        },
+        {
+          "offsetX": "-1",
+          "offsetY": "-1",
+          "blur": "0",
+          "spread": "0",
+          "color": "{base.250}",
+          "inset": false
+        }
+      ],
+      "$type": "shadow",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) variable effect tief-1 (card edge)"
+    },
+    "tief-2": {
+      "$value": [
+        {
+          "offsetX": "2",
+          "offsetY": "2",
+          "blur": "0",
+          "spread": "0",
+          "color": "{base.600}",
+          "inset": false
+        },
+        {
+          "offsetX": "-1",
+          "offsetY": "-1",
+          "blur": "0",
+          "spread": "0",
+          "color": "{base.250}",
+          "inset": false
+        }
+      ],
+      "$type": "shadow",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) node 124:6972 (unnamed effect: -1/-1 neutral/250 + 2/2 neutral/600)"
+    }
+  },
+  "none": {
+    "$value": "0",
+    "$type": "borderRadius",
+    "$description": ""
+  },
+  "low": {
+    "$value": "1",
+    "$type": "borderRadius",
+    "$description": ""
+  },
+  "mid": {
+    "$value": "2",
+    "$type": "borderRadius",
+    "$description": ""
+  },
+  "high": {
+    "$value": "4",
+    "$type": "borderRadius",
+    "$description": ""
+  }
+}

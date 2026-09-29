@@ -1,0 +1,70 @@
+{
+  "name": "sidebar-item",
+  "description": "One entry in a sidebar list (sidebar-list composes several). type=\"set\": one row of a sets sidebar (a clickable name, optional save toggle). type=\"card\": a subtitle, a saved-icon, a title and a status line. type=\"button\": a single primary action. Renamed from Penpot's \"Sidebar\" to avoid colliding with the composed list, which this system names sidebar-list.",
+  "status": "stable",
+  "category": "sidebar",
+  "variants": [
+    "card",
+    "button",
+    "set"
+  ],
+  "props": [
+    {
+      "name": "type",
+      "type": "string",
+      "required": true,
+      "default": "card",
+      "description": "\"card\" renders the subtitle/title/status card (Penpot's Default/PDF Downloaded/Submitted States -- identical layout, only the status text differs, so not modeled as three separate types); \"button\" renders a single centered .ds-text-button instead (Penpot's own \"Button\" State) -- not a card at all. \"set\" (not from Penpot, see rationale) renders a clickable set-name button + toggleable save icon on one row, one caption line below."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "default": "Set name",
+      "description": "Only meaningful when type=\"set\". The set's name, rendered as a clickable secondary text-button (selects the set), truncated with an ellipsis when it overflows."
+    },
+    {
+      "name": "caption",
+      "type": "string",
+      "required": false,
+      "description": "Unused by the Figma set row (kept for the earlier Penpot set card)."
+    },
+    {
+      "name": "saved",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Only meaningful when type=\"set\". Initial data-saved state for the save icon; component.js keeps it in sync on click and dispatches ds-sidebar-item-favourite-toggle."
+    },
+    {
+      "name": "active",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "type=\"set\": marks the active set (fill and hairlines above and below)."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "Only meaningful when type=\"set\". When given, the set name renders as an <a href> (still the same secondary/dotted text-button) instead of a <button data-select-set> -- for a sidebar whose rows navigate, e.g. an in-page section index (dotted, because it stays on the page; CLAUDE.md, Interaction conventions). Passed through the safe_url filter."
+    },
+    {
+      "name": "save",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Only meaningful when type=\"set\". false omits the save button entirely (a navigation row has nothing to save). Default true."
+    }
+  ],
+  "source": "penpot:7cfc6f3b-95fe-808f-8008-8d9825fb44db",
+  "rationale": "type=\"set\" (Figma sets sidebar): a 44px row with the set's name as a text button and a 44px save button with Figma's bookmark icons (aria-pressed toggles them); the active set (data-active) is filled and ruled above and below, and its name uses the body-text medium weight, so the current set stands out without a new type scale. The saved icon is accent-1, the same as table-cell's row-level favourite: one save flag, one color, wherever it renders. With `href`, the name renders as an <a> (navigation, e.g. an in-page section index) instead of a <button>, and save=false omits the save button; one row layout serves both uses. Rows deviate from text-button's hover brackets: on hover and focus the whole row takes bg.surface-pressed, as table-row does, and the name gets no brackets -- the full-width fill already marks the click target. The dotted underline stays. A long name truncates with an ellipsis (the composed text button can shrink: flex 1 1 auto, min-width 0).\n\ntype=\"card\" and type=\"button\" (Penpot \"Sidebar\" states Default, PDF Downloaded, Submitted, Button): the main section is a space-between row and the sub section a column with rowGap spacing-3, both Token-bound in Penpot. Card padding is spacing-2 / spacing-5. Colors are read off the text layers: subtitle accent-1 (the one colored identifier a reader scans the list for), title text-active, status text-subactive. The saved icon is object-dark-active at spacing-7 (24px), like every other icon-only glyph. Width is 100%, because a sidebar's width comes from its container, not from Penpot's 340px demo board. type=\"button\" is shorter (70px vs 84px) and centered, holding one primary text-button, as Penpot's own instance is. Selecting, linking or adding records is the host application's concern. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "type=\"set\": the name is a real <button> (or <a> with href; the active row gets aria-current), and the save control is a real <button> with aria-pressed and an aria-label naming the set, so both are keyboard-operable. type=\"card\": the saved-icon is a decorative role=\"img\" span with an aria-label, not a control -- the design shows no affordance on it. type=\"button\" is a real <button> via text-button.",
+  "uses": [
+    "text-button"
+  ]
+}

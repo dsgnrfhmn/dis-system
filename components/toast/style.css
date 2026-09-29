@@ -1,0 +1,112 @@
+/*
+  toast
+
+  Not from Penpot -- no toast/notification board or component exists in
+  this repo's earlier Penpot survey, no MCP access this session to
+  re-check. Built directly from the consumer spec:
+  "Toasts stack bottom-right and auto-dismiss," a toast may carry actions,
+  and a failed action produces an error toast.
+
+  Look since 2026-09-27: Figma D_SYSTEM's Toster (node 103:4772), see the
+  .ds-toast rule below. The stack is 480px (spacing-9 x 12), Figma's toast
+  width, capped to the viewport.
+*/
+
+.ds-toast-stack {
+  position: fixed;
+  bottom: var(--ds-spacing-6);
+  right: var(--ds-spacing-6);
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--ds-spacing-3);
+  z-index: 200;
+  width: min(calc(var(--ds-spacing-9) * 12), calc(100vw - var(--ds-spacing-6) * 2));
+}
+
+/*
+  Toast, Figma D_SYSTEM node 103:4772 (Toster: warning, success). One status
+  color family per toast: the family's medium color fills it, its strong
+  color draws the 1px border and fills the 24px close square (white X).
+  Figma draws success and warning; error and default follow the same
+  pattern in the danger (signal.error) and neutral (base) families. The
+  palette colors are fixed on purpose -- a status color means the same in
+  both themes -- so the text is fixed black (base-1000) on every fill.
+  Figma's toast has no shadow: the border is its edge.
+*/
+.ds-toast {
+  --_toast-fill: var(--ds-color-base-150);
+  --_toast-strong: var(--ds-color-base-600);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-spacing-cell);
+  padding: var(--ds-spacing-6) var(--ds-spacing-cell);
+  background-color: var(--_toast-fill);
+  border: var(--ds-border-width-thin) solid var(--_toast-strong);
+}
+
+.ds-toast[data-status="success"] {
+  --_toast-fill: var(--ds-color-signal-success);
+  --_toast-strong: var(--ds-color-signal-success-strong);
+}
+
+.ds-toast[data-status="warning"] {
+  --_toast-fill: var(--ds-color-signal-warning);
+  --_toast-strong: var(--ds-color-signal-warning-strong);
+}
+
+.ds-toast[data-status="error"] {
+  --_toast-fill: var(--ds-color-signal-error);
+  --_toast-strong: var(--ds-color-signal-error-strong);
+}
+
+.ds-toast__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-3);
+  min-width: 0;
+}
+
+.ds-toast__message {
+  font-family: var(--ds-font-system-message-family);
+  font-size: var(--ds-font-system-message-size);
+  font-weight: var(--ds-font-system-message-weight);
+  line-height: var(--ds-font-system-message-line-height);
+  letter-spacing: var(--ds-font-system-message-letter-spacing);
+  color: var(--ds-color-base-1000);
+}
+
+.ds-toast__actions {
+  display: flex;
+  column-gap: var(--ds-spacing-3);
+}
+
+/* Close: a 24px square in the strong color with a white X (Figma's Close
+   icon, drawn from icons/close.svg as a mask so it can be white). */
+.ds-toast__close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  padding: 0;
+  border: none;
+  border-radius: var(--ds-radius-none);
+  background-color: var(--_toast-strong);
+  cursor: pointer;
+}
+
+.ds-toast__close::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: var(--ds-color-base-0);
+  -webkit-mask: url("../../icons/close.svg") center / 100% 100% no-repeat;
+  mask: url("../../icons/close.svg") center / 100% 100% no-repeat;
+}
+
+.ds-toast__close:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-base-1000);
+  outline-offset: var(--ds-spacing-focus-offset);
+}

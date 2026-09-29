@@ -1,0 +1,222 @@
+/*
+  popup (Figma: popup-medium -- Add Description 150:16627, Summary 150:16661,
+  Archive selected? 150:16695, Analyse with API call? 150:16729)
+
+  Rules: every value is a var(--ds-*) reference from tokens/output.css.
+
+  One white panel of three stacked rows, no dividers and no shadow (Figma
+  draws neither -- the dimmed backdrop is what sets the panel off the page):
+  - title:  60px tall, 20px side padding, the "heading" role (Inter SemiBold
+            20), one line with an ellipsis
+  - body:   20px side / 10px top and bottom padding; scrolls when the panel
+            hits the viewport, so title and actions stay in view
+  - bottom: 60px tall, 20px side padding, actions right-aligned, 10px apart
+
+  Widths: medium 800px (Add Description, Summary), small 500px
+  (confirmations). large stays 1200px -- Figma's popup-large (177:35519) has
+  not been read yet.
+
+  Backdrop, measured off design-update/screens 5-8: base/600 gray at 50%
+  behind a centered modal and at 30% behind an anchored confirmation (white
+  reads 199 and 221 through them). --ds-color-bg-overlay is that gray.
+*/
+
+/*
+  .ds-popup-overlay: a real full-viewport layer, position:fixed + inset:0,
+  above dropdown-menu's own z-index of 10 so an open modal is never under an
+  open dropdown. The dim is a ::before with its own opacity, not an opacity
+  on the overlay: that would fade the panel inside it too.
+*/
+.ds-popup-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ds-spacing-7);
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: auto;
+}
+
+/* display:flex above always beats the UA's [hidden]{display:none} (author
+   over UA regardless of specificity), so hidden needs its own rule -- same
+   fix dropdown-menu's [hidden] rule applies. */
+.ds-popup-overlay[hidden] {
+  display: none;
+}
+
+/* data-preview="inline": the open popup drawn in the page flow instead of
+   over the viewport, backdrop included, for documentation pages that show
+   it next to other components (the site's Popups card). Not for product UI:
+   there it is always opened by component.js. */
+.ds-popup-overlay[data-preview="inline"] {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  padding: var(--ds-spacing-9);
+}
+
+.ds-popup-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--ds-color-bg-overlay);
+  opacity: 0.5;
+  z-index: 0;
+}
+
+/*
+  placement="anchored" (the confirmation kind, the consumer spec):
+  the overlay stays a full-viewport click-catching layer -- outside click
+  still closes -- but no longer centers its panel; component.js's
+  positionAnchored() places the panel next to the trigger by inline style.
+  It is dimmed too, lighter (30%) than a modal (50%), as in Figma's
+  confirmation screens.
+  :not([hidden]) so this rule does not match while hidden is present: it has
+  the same specificity as .ds-popup-overlay[hidden] above and comes later, so
+  without it display:block beat display:none and an anchored popup sat
+  unstyled in the viewport corner on every load.
+*/
+.ds-popup-overlay[data-placement="anchored"]:not([hidden]) {
+  display: block;
+  padding: 0;
+}
+
+.ds-popup-overlay[data-placement="anchored"]::before {
+  opacity: 0.3;
+}
+
+.ds-popup-overlay > .ds-popup {
+  position: relative;
+  z-index: 1;
+}
+
+.ds-popup {
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+  max-width: 100%;
+  max-height: 100%;
+  background-color: var(--ds-color-bg-surface);
+}
+
+/* small = Figma's confirmation width. large is not from a Figma frame yet. */
+.ds-popup[data-size="small"] {
+  width: 500px;
+}
+
+.ds-popup[data-size="large"] {
+  width: 1173px;
+}
+
+/* The panel takes programmatic focus when it opens (tabindex="-1"); this
+   ring only shows for keyboard users, and is not in Figma. */
+.ds-popup:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: calc(-1 * var(--ds-border-width-default));
+}
+
+/* ---- title ---- */
+.ds-popup__title {
+  display: block;
+  flex: none;
+  box-sizing: border-box;
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-6));
+  padding: 0 var(--ds-spacing-6);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: calc(var(--ds-spacing-9) + var(--ds-spacing-6));
+  font-family: var(--ds-font-heading-4-family);
+  font-size: var(--ds-font-heading-4-size);
+  font-weight: var(--ds-font-heading-4-weight);
+  letter-spacing: var(--ds-font-heading-4-letter-spacing);
+  color: var(--ds-color-text-active);
+}
+
+/* ---- body ---- */
+.ds-popup__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: calc(var(--ds-spacing-3) + var(--ds-spacing-1)) var(--ds-spacing-6);
+}
+
+/*
+  type="text": body copy. Paragraphs are separated by one blank line, as in
+  Figma's Summary (each blank line is an empty paragraph the height of a
+  text line, which is exactly 1lh). white-space:pre-line keeps the line
+  breaks of a plain-text value, so a consumer can set one text node that
+  contains blank lines instead of building <p> elements.
+*/
+.ds-popup__body[data-type="text"] {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  color: var(--ds-color-text-active);
+}
+
+.ds-popup__body[data-type="text"] p {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.ds-popup__body[data-type="text"] p + p {
+  margin-top: 1lh;
+}
+
+/*
+  type="input": a real .ds-input (components/input) -- in Figma the filled
+  one, 300px tall inside a 320px row (so 10px above and below it, which the
+  body's own padding provides). 7 x 40px + 20px composes 300px from the
+  spacing scale; a fixed height, so the panel is the same size empty or full
+  and long text scrolls inside the field.
+*/
+.ds-popup__body[data-type="input"] .ds-input[data-type="textarea"] {
+  height: calc(var(--ds-spacing-9) * 7 + var(--ds-spacing-6));
+  resize: none;
+}
+
+/* ---- bottom: actions ----
+   60px row, 20px side padding, right-aligned, 10px between buttons.
+   text-button reserves ~9.5px of invisible "[ ]" bracket space each side
+   for its hover brackets, which would put the labels further from the edge
+   and from each other than Figma's 11px button padding + 10px gap. Here the
+   brackets hang inside the button's own 11px padding instead (5px from the
+   label, text-button's own column-gap), so a button is exactly its label
+   plus padding and nothing shifts on hover. Same technique as the consuming app's header
+   row and table action buttons; it belongs in text-button itself, and moves
+   there once that component's own change is confirmed. */
+.ds-popup__bottom {
+  --_popup-button-inset: calc(var(--ds-spacing-4) - var(--ds-border-width-thin));
+
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  column-gap: calc(var(--ds-spacing-3) + var(--ds-spacing-1));
+  box-sizing: border-box;
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-6));
+  padding: 0 var(--ds-spacing-6);
+}
+
+.ds-popup__bottom .ds-text-button {
+  position: relative;
+}
+
+.ds-popup__bottom .ds-text-button::before {
+  position: absolute;
+  right: calc(100% - var(--_popup-button-inset) + var(--ds-spacing-button-gap));
+}
+
+.ds-popup__bottom .ds-text-button::after {
+  position: absolute;
+  left: calc(100% - var(--_popup-button-inset) + var(--ds-spacing-button-gap));
+}
+
+/* A body made of stacked popup-step sections carries its own insets. */
+.ds-popup__body[data-type="steps"] {
+  padding: 0;
+}

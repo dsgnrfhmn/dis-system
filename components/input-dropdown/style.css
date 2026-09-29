@@ -1,0 +1,131 @@
+/*
+  input-dropdown (Figma: Input, Type=text+icon -- Size=transparent|filled,
+  State=default|hover|focused; node 33:8199 in the consumer-app Figma file)
+
+  Rules: every value is a var(--ds-*) reference from tokens/output.css.
+  Same box as `input` (see components/input/style.css, which also lists the
+  --ds-color-input-* slots and their fallbacks): 40px, 1px border, 10px
+  padding -- laid out for a label plus a trailing arrow, 10px apart.
+
+  fill (data-fill, "Size" in Figma): transparent (default) or "filled"
+  (base/250). Hover fills both. The focused look is also the open look: a
+  white fill with the darker border, and the arrow pointing up once the
+  paired menu is open (aria-expanded, see below).
+
+  size (not from Figma -- its input frames are one fixed 280px, an artifact
+  of that documentation swatch): small = 140px, middle = 300px (default),
+  large = 100% (fills its container). The field never grows/shrinks on its
+  own -- pick a size.
+
+  Figma has three states (default, hover, focused) and no disabled, error
+  or pressed state, so none is styled here.
+
+  icon: .ds-input-dropdown__icon is spacing-7 (24px), Figma's icon frame,
+  drawn in --ds-color-input-icon (base/600). Was 20px against Penpot's
+  20x20 arrow board.
+*/
+
+.ds-input-dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--ds-spacing-3) + var(--ds-spacing-1));
+  box-sizing: border-box;
+  width: 300px; /* middle -- the default when data-size isn't set */
+  height: var(--ds-spacing-9);
+  padding: calc(var(--ds-spacing-3) + var(--ds-spacing-1));
+  border: var(--ds-border-width-thin) solid var(--ds-color-input-border, var(--ds-color-object-dark-passive));
+  border-radius: var(--ds-radius-none);
+  cursor: pointer;
+
+  background-color: transparent;
+  color: var(--ds-color-text-active);
+  text-align: left;
+
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+}
+
+.ds-input-dropdown[data-fill="filled"] {
+  background-color: var(--ds-color-input-fill, var(--ds-color-object-white-passive));
+}
+
+/* Figma 35:8233 (Input, Type=text+icon, Size=transparent, State=default): no border
+   and no fill until hover or focus, which then draw both (rules below). The border
+   is kept transparent rather than removed, so hover does not move the label by 1px.
+   Declared before the hover / focus rules on purpose (equal specificity with the
+   focus rule), and only the filled variant keeps its border at rest. */
+.ds-input-dropdown:not([data-fill="filled"]) {
+  border-color: transparent;
+}
+
+.ds-input-dropdown[data-size="small"] {
+  width: 140px;
+}
+
+.ds-input-dropdown[data-size="large"] {
+  width: 100%;
+}
+
+.ds-input-dropdown__icon {
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  flex-shrink: 0;
+  color: var(--ds-color-input-icon, currentColor);
+}
+
+.ds-input-dropdown__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* aria-expanded is set by dropdown-menu/component.js when its paired menu
+   opens/closes. Figma's focused variant shows the arrow pointing up, so
+   flipping the same arrow asset is the signal that the menu is open. No
+   transition: instant flip, no animation. */
+.ds-input-dropdown[aria-expanded="true"] .ds-input-dropdown__icon {
+  transform: rotate(180deg);
+}
+
+.ds-input-dropdown:hover:not([aria-expanded="true"]) {
+  background-color: var(--ds-color-input-fill, var(--ds-color-object-white-passive));
+  border-color: var(--ds-color-input-border-hover, var(--ds-color-object-dark-pressed));
+}
+
+/* Focused / open: fill and border change alone, as in Figma -- no extra
+   outline. Unlike the text input, the border stays gray (base/750). */
+.ds-input-dropdown:focus-visible,
+.ds-input-dropdown[aria-expanded="true"] {
+  background-color: var(--ds-color-bg-surface);
+  border-color: var(--ds-color-input-border-hover, var(--ds-color-object-dark-pressed));
+  outline: none;
+}
+
+/* data-placeholder: the label is a prompt, not a choice yet -- Figma draws
+   that text at 50% opacity (default and hover), full opacity once filled.
+   component.js removes the attribute when the paired menu selects. */
+.ds-input-dropdown[data-placeholder] [data-dropdown-value] {
+  opacity: 0.5;
+}
+
+/* data-size="compact": 200px, the source dropdown in a pane head (Reference). */
+.ds-input-dropdown[data-size="compact"] {
+  width: 200px;
+}
+
+/* Disabled: a value that shows a state and offers no choice (For You's Status on a
+   For Review row: it leaves For Review only through Analyze). No hover or focus
+   response, the label keeps the enabled look and the arrow is dropped so it does not read as
+   something to open. A native disabled button takes no click, so the menu never opens. */
+.ds-input-dropdown:disabled,
+.ds-input-dropdown:disabled:hover {
+  cursor: default;
+  background-color: transparent;
+  border-color: transparent;
+}
+.ds-input-dropdown:disabled .ds-input-dropdown__icon {
+  visibility: hidden;
+}

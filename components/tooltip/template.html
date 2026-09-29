@@ -1,0 +1,7 @@
+{#
+  tooltip is an attribute, not a wrapper: add data-tooltip="..." directly
+  onto any real element (a button, an icon span, etc.) to give it a
+  hover/focus tooltip -- no wrapping markup required. This fragment is
+  just a minimal illustrative default for the gallery/demo.
+#}
+<span class="ds-tooltip-demo" tabindex="0" data-tooltip="{{ text | default('Tooltip text') }}"{% if preview %} data-preview="{{ preview }}"{% endif %}>{{ label | default('Hover or focus me') }}</span>

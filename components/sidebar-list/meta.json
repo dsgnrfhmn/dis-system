@@ -1,0 +1,39 @@
+{
+  "name": "sidebar-list",
+  "description": "A sets sidebar: a 280px column with a head (title, collapse toggle) over a scrolling list of sidebar-item type=\"set\" rows. Collapses to a 64px strip.",
+  "status": "stable",
+  "category": "sidebar",
+  "variants": [],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "default": "Your sets",
+      "description": "Head title, shown at half opacity."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Sets",
+      "description": "aria-label of the sidebar."
+    },
+    {
+      "name": "items",
+      "type": "array",
+      "required": false,
+      "description": "Set rows: { name, saved, active, href?, save? } -- href/save pass through to sidebar-item type=\"set\" (see its meta.json): href makes the row a link, save=false drops its save button."
+    }
+  ],
+  "source": "figma:APPFILEKEY#150:16217,150:16475,150:16503",
+  "rationale": "Width is spacing.9 x 7 (280px), collapsed spacing.row + 2 x spacing.cell (64px). The head is 56px (spacing.9 + spacing.5) with 10px padding and one hairline below; the title is the \"title\" role (Inter SemiBold 16px) at half opacity; the toggle is a 44 x 40px bordered button holding the accent-colored arrow (a CSS mask, so it takes the accent color), flipped when collapsed. The list has no rules between rows: only the active set is ruled, inside sidebar-item, so the one row that matters stands out. Surface is bg.surface with a right hairline in object-dark.passive in both themes (the design has no separate dark value yet). Collapse behavior and its ARIA state live in component.js; choosing and saving sets is the host page's concern (sidebar-item exposes data-select-set / data-save-set hooks). Replaces an earlier Penpot card sidebar. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "An <aside> with aria-label. The toggle is a real button with aria-expanded and a label that flips between Collapse sidebar and Expand sidebar; each set row's name and save buttons are real buttons (the save button uses aria-pressed).",
+  "uses": [
+    "sidebar-item"
+  ]
+}

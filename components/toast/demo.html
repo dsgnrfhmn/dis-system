@@ -1,0 +1,48 @@
+<!--
+  toast: template.html above shows the markup a real call produces,
+  purely for illustration. The buttons below are real triggers -- click
+  one to see window.dsToast.show() actually create and auto-dismiss a
+  toast in the bottom-right corner.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: flex; flex-direction: column; gap: var(--ds-spacing-6); max-width: calc(var(--ds-spacing-9) * 12);">
+
+  {% include "components/toast/template.html" %}
+  {% with status='success', message='Success notification text.' %}{% include "components/toast/template.html" %}{% endwith %}
+  {% with status='warning', message='Warning notification text' %}{% include "components/toast/template.html" %}{% endwith %}
+
+  {% with status='error', message='Analysis failed: the request timed out.' %}{% include "components/toast/template.html" %}{% endwith %}
+
+  {% with message='7 new, 12 filtered.', actions=[{'label': 'View'}] %}{% include "components/toast/template.html" %}{% endwith %}
+
+  <div style="display: flex; column-gap: var(--ds-spacing-4);">
+    {% with priority='primary', status='active', underline='dotted', label='Show plain toast', extra_attrs='data-demo-toast="plain"' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='primary', status='active', underline='dotted', label='Show error toast', extra_attrs='data-demo-toast="error"' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='primary', status='active', underline='dotted', label='Show toast with actions', extra_attrs='data-demo-toast="actions"' %}{% include "components/text-button/template.html" %}{% endwith %}
+  </div>
+
+</div>
+
+<script src="../text-button/component.js"></script>
+<script src="component.js"></script>
+<script>
+  // Demo-only wiring, not part of the component: real consumers call
+  // window.dsToast.show() directly from their own action handlers.
+  document.querySelectorAll('[data-demo-toast]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (button.dataset.demoToast === 'plain') {
+        window.dsToast.show({ message: 'Collection set saved.' });
+      } else if (button.dataset.demoToast === 'error') {
+        window.dsToast.show({ message: 'Analyse failed: the request timed out.', status: 'error' });
+      } else if (button.dataset.demoToast === 'actions') {
+        window.dsToast.show({
+          message: '7 new, 12 filtered.',
+          actions: [{ label: 'View template set' }, { label: 'View collection set' }],
+        });
+      }
+    });
+  });
+</script>

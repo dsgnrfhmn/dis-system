@@ -1,0 +1,36 @@
+{
+  "name": "paper-preview",
+  "description": "A page preview shell for document-style cards (templates, collections), composed with skeleton placeholder content rather than real copy. Two modes: one-longread (a single continuous sheet, text placeholder only) and paged-preview (several A4 sheets stacked with gaps, scrollable inline, text and image placeholders). Each mode supports portrait and landscape.",
+  "status": "stable",
+  "category": "cards-layouts",
+  "variants": [
+    "one-longread",
+    "paged-preview",
+    "portrait",
+    "landscape"
+  ],
+  "props": [
+    {
+      "name": "mode",
+      "type": "string",
+      "required": false,
+      "default": "one-longread",
+      "description": "Sets data-mode. \"one-longread\" (default) renders a single continuous page with no gap/scroll behavior -- generalizes Penpot's real Template/Draft pattern (one board, no page split). \"paged-preview\" renders several .ds-paper-preview__page children stacked with an 8px gap inside a fixed-height, vertically-scrollable frame -- generalizes Penpot's real Collection/Template-Visual pattern (several Page-N boards in a flex column)."
+    },
+    {
+      "name": "orientation",
+      "type": "string",
+      "required": false,
+      "default": "portrait",
+      "description": "Sets data-orientation, which controls each sheet's aspect-ratio: \"portrait\" is 538:761, \"landscape\" 761:538 -- both true A4 (1:sqrt(2)), pixel-matched to Penpot's A4-proportioned Page-N boards and their transpose. The card stretches to 100% of its container's width; sheets scale with it."
+    }
+  ],
+  "source": "penpot:7cfc6f3b-95fe-808f-8008-8d913547ce01",
+  "rationale": "Generalizes the two structural patterns of Penpot's \"Paper-Cards\" board into a blank, reusable shell (Penpot has no paper-preview component): one-longread is a single uninterrupted sheet; paged-preview is several sheets in a column with a spacing.3 (8px) gap, Token-bound in Penpot and confirmed by measured positions. The container is bg.surface with no padding, so it shows only in the gaps between sheets. Sheets are true A4 (1:sqrt(2)): landscape 761:538, pixel-matched to Penpot's one A4-proportioned instance, portrait its transpose. Sheets are width:100% with aspect-ratio, so the proportion holds at any container width. In light, a sheet is white (Figma base/0); a picture inside a sheet fills its box (object-fit: cover). No shadow, border or radius: none of the sourced instances has any, so a flat rectangle is the actual sourced look.\n\npaged-preview scrolls inline within a fixed max-height of 500px (a viewport constraint, not a token; vh would break inside the auto-resizing iframe the site embeds demos in). The native scrollbar is hidden and replaced by an overlay thumb, the same technique gallery uses horizontally: it shows only while scrolling and fades out after, and as an absolutely positioned overlay it never shifts content. Placeholder bars reuse gallery-image's skeleton convention (object-white.disabled bars, spacing-2 within a stack, spacing-6 between sections); the image placeholder reuses gallery-image's object-dark-passive stand-in at 16:9. .ds-paper-preview-stack is the scrolling column of sheets used inside a pane. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "A visual placeholder shell: the skeleton bars and rectangles stand in for content that doesn't exist yet, so they carry no role or label. A host rendering real document content into the sheets adds the real structure at that point (headings, landmarks, alt text). The scrollable frame is a plain overflow:auto <div> with no tabindex or role=\"region\", since an empty region would be a false affordance; add both once real content is composed in. The custom scrollbar is aria-hidden and pointer-events:none -- a visual echo of native scrolling, not a control.",
+  "listed": false
+}

@@ -1,0 +1,12 @@
+<!--
+  TEMPLATE component: a reduced copy of components/text-button/ (the full,
+  shipped component has icons, outlined, icon-only and composing-parent
+  hooks on top of this -- read it once the basics below are clear).
+  Copy this whole folder to components/<name>/ and adapt. This file holds
+  ONLY the component's raw markup fragment -- no <link>/<script> tags, no
+  page structure. Parameterize by prop (Jinja2 variables with defaults)
+  and by variant; every prop here is declared in meta.json's `props`.
+  The label sits in its own span so the underline decorates only the
+  text, not the bracket space reserved around it (see style.css).
+-->
+<button class="ds-text-button" type="button" data-priority="{{ priority | default('primary') }}" data-status="{{ status | default('active') }}" data-underline="{{ underline | default('solid') }}"{% if status == 'disabled' %} disabled{% endif %}><span class="ds-text-button__text">{{ label | default('Button label') }}</span></button>

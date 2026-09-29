@@ -1,0 +1,25 @@
+{% set _mode = mode | default('one-longread') %}
+{% set _orientation = orientation | default('portrait') %}
+{% macro _page(with_image, line_count) %}
+<div class="ds-paper-preview__page">
+  {% if with_image %}<div class="ds-paper-preview__image"></div>{% endif %}
+  <div class="ds-paper-preview__heading"></div>
+  <div class="ds-paper-preview__lines">
+    {% for i in range(line_count) %}<div class="ds-paper-preview__line{% if loop.last %} ds-paper-preview__line--short{% endif %}"></div>{% endfor %}
+  </div>
+</div>
+{% endmacro %}
+{% if _mode == 'paged-preview' %}
+<div class="ds-paper-preview-wrapper">
+  <div class="ds-paper-preview" data-mode="paged-preview" data-orientation="{{ _orientation }}">
+    {% for i in range(page_count | default(3)) %}{{ _page(true, lines_per_page | default(3)) }}{% endfor %}
+  </div>
+  <div class="ds-paper-preview__scrollbar" aria-hidden="true">
+    <div class="ds-paper-preview__scrollbar-thumb"></div>
+  </div>
+</div>
+{% else %}
+<div class="ds-paper-preview" data-mode="one-longread" data-orientation="{{ _orientation }}">
+  {{ _page(false, lines_count | default(5)) }}
+</div>
+{% endif %}

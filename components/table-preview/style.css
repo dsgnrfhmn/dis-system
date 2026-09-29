@@ -1,0 +1,48 @@
+/*
+  table-preview
+  One CSS grid per table type (its columns come from template.html's
+  COLUMNS, as an inline grid-template-columns of token-based tracks), so a
+  header cell and the cells under it always share a track -- the same
+  grid + display:contents rows technique table-row's own demo uses. The
+  look is table-cell / table-row's Figma flat table, unmodified: this file
+  only lays the cells out and closes the outer edge.
+*/
+.ds-table-preview {
+  overflow-x: auto;
+  background-color: var(--ds-color-bg-surface);
+}
+
+/* As wide as its container; the flexible text columns share what is left
+   after the content-sized ones and clip their text (table-cell), so the
+   table only scrolls sideways once even their minimums no longer fit. */
+.ds-table-preview__table {
+  display: grid;
+  width: 100%;
+}
+
+.ds-table-preview__table[hidden] {
+  display: none;
+}
+
+.ds-table-preview__table .ds-table-row {
+  display: contents;
+}
+
+/* display:contents drops the row's own box, and with it the UA [hidden]
+   rule -- restore it so a filtered-out row actually disappears. */
+.ds-table-preview__table .ds-table-row[hidden] {
+  display: none;
+}
+
+/* The filter header cells sit in a wrapper that marks what they filter
+   (data-preview-filter); the wrapper is not a grid item of its own. */
+.ds-table-preview__filter {
+  display: contents;
+}
+
+/* A dropdown cell's control fills its column, so every row's arrow lines
+   up with the header's (same rule the consuming app's For You tables use). */
+.ds-table-preview .ds-table-cell[data-type="dropdown"] .ds-dropdown {
+  flex: 1 1 auto;
+  min-width: 0;
+}

@@ -1,0 +1,52 @@
+{
+  "name": "empty-state",
+  "description": "A standalone empty-state block: optional icon, message, optional action button. For non-table-row empty states (a paper-preview with nothing selected, a set table with no blocks yet) -- a table-row-shaped empty cell should keep using table-cell's own type=\"empty-state\" instead.",
+  "status": "stable",
+  "category": "cards-layouts",
+  "variants": [
+    "message-only",
+    "with-action",
+    "with-icon",
+    "row",
+    "block",
+    "text",
+    "fill"
+  ],
+  "props": [
+    {
+      "name": "message",
+      "type": "string",
+      "required": false,
+      "default": "Nothing here yet.",
+      "description": "The empty-state text. Reuses table-cell's own Penpot-sourced empty-state string/typography as the default."
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "Optional icon name (matches an icons/<name>.svg file), shown above the message."
+    },
+    {
+      "name": "action_label",
+      "type": "string",
+      "required": false,
+      "description": "Optional action button label (e.g. \"Add project\"). Composes a real text-button instance (secondary, dotted underline -- the action stays on the current view, it doesn't navigate). Omit for a message-only empty state."
+    },
+    {
+      "name": "size",
+      "type": "string",
+      "required": false,
+      "description": "\"row\": a 44px row for an empty table or block list (centered caption at half opacity, hairline under it)."
+    }
+  ],
+  "source": "none",
+  "rationale": "The design source has no standalone empty-state component. table-cell's type=\"empty-state\" is sourced, but is shaped as one table-row cell (no icon or action slot), so it can't represent an empty preview, picker or pane. This component reuses table-cell's sourced message styling (bodyTextItalic, text.subactive) and adds only the layout a cell can't offer: a centered column with an optional icon above the message and an optional action (a real text-button, declared in `uses`) below it. The icon size (spacing-8, 32px) is a judgment call, not sourced: larger than inline spacing-7 glyphs because it heads a standalone block. The action is secondary / dotted because adding something from an empty state happens in place rather than navigating away.\n\nSizes, from the application's Figma screens:\n- data-size=\"row\": the empty row under a table head or block list. One table row high (spacing.row plus the hairline), the caption role (Inter Italic 16px) in text.active, the whole row including its hairline at 50% opacity; the hairline is base/150 in light and the pressed surface in dark.\n- data-size=\"block\": the empty area inside a picker. Fills its row, 40px above and below, caption role at half opacity, on the pressed surface (base/50 in light).\n- data-size=\"text\": one plain left-aligned line at half opacity on the surface color, inset spacing.cell, no height or hairline of its own.\n- data-size=\"fill\": the empty box of a preview pane. Absolutely positioned 20px inside its positioned parent, filled with base.175 (a palette token, the same in both themes), a hairline on its left edge, the message centered, the whole box at half opacity.\nRendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [
+    "text-button"
+  ],
+  "a11y_notes": "The icon is aria-hidden: the message already carries the full meaning. The action is a real, focusable <button> from text-button's template, with no accessibility gap beyond what that component documents."
+}

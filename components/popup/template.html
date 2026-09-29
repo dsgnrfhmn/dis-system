@@ -1,0 +1,43 @@
+{#
+  bottom_actions: a list of {label, priority, status, confirm}. priority defaults to
+  secondary and status to active -- Figma draws every popup action in the same
+  regular-weight accent color, so nothing is bold unless the consumer asks. status
+  "error" is the red destructive action ("Archive selected"). confirm marks the
+  action Ctrl+Enter / Cmd+Enter presses (component.js falls back to a
+  priority="primary" button when none is marked).
+#}
+{% set _type = type | default('text') %}
+{% set _popup_id = popup_id | default('popup-overlay-1') %}
+{% set _title_id = _popup_id ~ '-title' %}
+<div class="ds-popup-overlay" id="{{ _popup_id }}" data-placement="{{ placement | default('center') }}"{% if preview == 'inline' %} data-preview="inline"{% else %} hidden{% endif %}>
+  <div class="ds-popup" data-size="{{ size | default('medium') }}" role="dialog" aria-labelledby="{{ _title_id }}" tabindex="-1">
+    <div class="ds-popup__title" id="{{ _title_id }}">{{ title | default('Title') }}</div>
+    <div class="ds-popup__body" data-type="{{ _type }}">
+    {% if _type == 'input' %}
+      {% with type='textarea', fill='filled', placeholder=placeholder | default('Paste the description here') %}{% include "components/input/template.html" %}{% endwith %}
+    {% elif _type == 'gallery' %}
+      <div style="display: flex; justify-content: flex-end; margin-bottom: var(--ds-spacing-3);">
+        {% with actions=[{'label': reset_label | default('Reset selection'), 'priority': 'secondary', 'extra_attrs': 'data-gallery-reset="' ~ (gallery_id | default('popup-gallery-demo')) ~ '"'}] %}{% include "components/table-header-actions/template.html" %}{% endwith %}
+      </div>
+      {% with gallery_id=gallery_id | default('popup-gallery-demo') %}{% include "components/gallery/template.html" %}{% endwith %}
+      <div style="display: flex; flex-direction: row; column-gap: var(--ds-spacing-4); margin-top: var(--ds-spacing-6);">
+        {% for subtype in ['short', 'middle', 'full'] %}
+        {% with type='text-icon', subtype=subtype %}{% include "components/gallery-image/template.html" %}{% endwith %}
+        {% endfor %}
+      </div>
+    {% else %}
+      {% for p in paragraphs | default([
+        'Placeholder body copy for this dialog. It can span multiple paragraphs and carries more detail than the title alone conveys.',
+        'A second paragraph, for a caption that runs long enough to wrap onto more than one line.'
+      ]) %}
+      <p>{{ p }}</p>
+      {% endfor %}
+    {% endif %}
+    </div>
+    <div class="ds-popup__bottom">
+      {% for action in bottom_actions | default([{'label': 'Close', 'priority': 'secondary'}]) %}
+      {% with priority=action.priority | default('secondary'), status=action.status | default('active'), underline='dotted', label=action.label, extra_attrs='data-popup-dismiss' ~ (' data-popup-confirm' if action.confirm else '') %}{% include "components/text-button/template.html" %}{% endwith %}
+      {% endfor %}
+    </div>
+  </div>
+</div>

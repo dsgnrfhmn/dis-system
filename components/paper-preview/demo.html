@@ -1,0 +1,31 @@
+<!--
+  paper-preview -- an A4 page preview shell for document-style cards,
+  composed with skeleton placeholder content. All four mode x orientation
+  combinations sit in a 2x2 grid (demo-only wrapper, not part of the
+  component itself) for easier visual comparison -- see meta.json
+  rationale for the exact page/line counts sourced per combination.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--ds-spacing-4); align-items: start;">
+
+  <div style="min-width: 0;">
+    {% with mode='one-longread', orientation='portrait', lines_count=5 %}{% include "components/paper-preview/template.html" %}{% endwith %}
+  </div>
+
+  <div style="min-width: 0;">
+    {% with mode='one-longread', orientation='landscape', lines_count=3 %}{% include "components/paper-preview/template.html" %}{% endwith %}
+  </div>
+
+  <div style="min-width: 0;">
+    {% with mode='paged-preview', orientation='portrait', page_count=3, lines_per_page=3 %}{% include "components/paper-preview/template.html" %}{% endwith %}
+  </div>
+
+  <div style="min-width: 0;">
+    {% with mode='paged-preview', orientation='landscape', page_count=3, lines_per_page=2 %}{% include "components/paper-preview/template.html" %}{% endwith %}
+  </div>
+
+</div>
+
+<script src="component.js"></script>

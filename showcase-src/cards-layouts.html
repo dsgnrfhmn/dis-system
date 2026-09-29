@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cards layouts</title>
+<!-- Cards layouts card, Figma D_SYSTEM node 122:3656: the three image
+     formats (landscape, portrait, square) and the empty placeholder,
+     40px apart. Images are gallery-image; the placeholder is empty-state. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/text-button/style.css">
+<link rel="stylesheet" href="../components/gallery-image/style.css">
+<link rel="stylesheet" href="../components/empty-state/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>.showcase { align-items: center; }</style>
+</head>
+<body>
+<div class="showcase">
+  {% with format='landscape' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+  {% with format='portrait' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+  {% with format='square' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+  {% with message='Add a project to see the preview' %}{% include "components/empty-state/template.html" %}{% endwith %}
+</div>
+<script src="../components/text-button/component.js"></script>
+<script src="../components/empty-state/component.js"></script>
+</body>
+</html>

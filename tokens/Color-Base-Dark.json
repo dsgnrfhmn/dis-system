@@ -1,0 +1,389 @@
+{
+  "accent-2": {
+    "default": {
+      "$value": "{magenta.700}",
+      "$type": "color",
+      "$description": ""
+    },
+    "hover": {
+      "$value": "{magenta.800}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): one step darker than accent-2 (magenta.700), as light hover is one step stronger"
+    },
+    "pressed": {
+      "$value": "{magenta.800}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): same as hover, as in light"
+    }
+  },
+  "reflect": {
+    "default": {
+      "$value": "{black.300}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "accent-1": {
+    "default": {
+      "$value": "{orange.600}",
+      "$type": "color",
+      "$description": ""
+    },
+    "hover": {
+      "$value": "{orange.500}",
+      "$type": "color",
+      "$description": ""
+    },
+    "pressed": {
+      "$value": "{orange.700}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "object-dark": {
+    "passive": {
+      "$value": "{silver.600}",
+      "$type": "color",
+      "$description": ""
+    },
+    "active": {
+      "$value": "{silver.700}",
+      "$type": "color",
+      "$description": ""
+    },
+    "disabled": {
+      "$value": "{silver.800}",
+      "$type": "color",
+      "$description": ""
+    },
+    "pressed": {
+      "$value": "{silver.500}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "shadow": {
+    "low": {
+      "$value": "rgb(0, 0, 0)",
+      "$type": "color",
+      "$description": ""
+    },
+    "middle": {
+      "$value": "{black.900}",
+      "$type": "color",
+      "$description": ""
+    },
+    "high": {
+      "$value": "{black.800}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "text": {
+    "active": {
+      "$value": "{neutral.50}",
+      "$type": "color",
+      "$description": ""
+    },
+    "subactive": {
+      "$value": "{neutral.200}",
+      "$type": "color",
+      "$description": ""
+    },
+    "inactive": {
+      "$value": "{silver.800}",
+      "$type": "color",
+      "$description": ""
+    },
+    "inverced": {
+      "$value": "{black.900}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "bg": {
+    "surface": {
+      "$value": "{black.900}",
+      "$type": "color",
+      "$description": "Explicit request 2026-09-12, \"completely dark, from our token base\": was {silver.900} (#2E2E2E), silver's own ramp bottoms out there with no darker step. black.900 (#1A1918) is the darkest primitive defined anywhere in Base-Primitives.json, and already used elsewhere in this same file (text.inverced, object-white.passive, shadow.middle) -- not a new value."
+    },
+    "surface-pressed": {
+      "$value": "{silver.800}",
+      "$type": "color",
+      "$description": ""
+    },
+    "overlay": {
+      "$value": "{silver.900}",
+      "$type": "color",
+      "$description": ""
+    },
+    "sidebar": {
+      "$value": "{black.950}",
+      "$type": "color",
+      "$description": "Reversed same day (explicit request, \"make the color of sidebar darker than the surface\" -- superseding the original \"one step lighter\" request a few messages earlier): black.950 (#000000, pure black, added to Base-Primitives.json specifically because black.900 -- bg.surface's own value -- was already the darkest primitive that existed). Matches Light theme's own existing relationship (bg.sidebar/silver.300 is already darker than bg.surface/silver.200 there), which this dark-theme value hadn't matched until now."
+    },
+    "row-selected": {
+      "$value": "{silver.700}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): one step above surface-pressed (silver.800, the hover fill) so selected stays distinct from hover, as light base.250 vs base.100"
+    }
+  },
+  "system": {
+    "error": {
+      "$value": "{red.600}",
+      "$type": "color",
+      "$description": ""
+    },
+    "success": {
+      "$value": "{green.600}",
+      "$type": "color",
+      "$description": ""
+    },
+    "warning": {
+      "$value": "{yellow.600}",
+      "$type": "color",
+      "$description": "Explicit request 2026-09-28: was {orange.600}, identical to accent-1 in dark, so text-button's active and loading statuses could not be told apart. yellow.600 keeps warning yellow as in light and on the same .600 step as dark's system.error (red.600) and system.success (green.600)."
+    },
+    "highlight": {
+      "$value": "{yellow.400}",
+      "$type": "color",
+      "$description": ""
+    },
+    "error-strong": {
+      "$value": "{red.400}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): readable red text on the dark surface (light uses signal.error-strong)"
+    }
+  },
+  "object-white": {
+    "passive": {
+      "$value": "{black.900}",
+      "$type": "color",
+      "$description": ""
+    },
+    "active": {
+      "$value": "{silver.800}",
+      "$type": "color",
+      "$description": ""
+    },
+    "disabled": {
+      "$value": "{silver.300}",
+      "$type": "color",
+      "$description": ""
+    },
+    "pressed": {
+      "$value": "{silver.300}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "tooltip-bg": {
+    "default": {
+      "$value": "{silver.900}",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) tooltip, node 103:4777: base/900 #2e2e2e fill (Figma base/900, not neutral/900); the same in both themes -- a tooltip is a dark layer over any page"
+    }
+  },
+  "tooltip-border": {
+    "default": {
+      "$value": "{base.1000}",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) tooltip, node 103:4777: base/1000 border; the same in both themes -- a tooltip is a dark layer over any page"
+    }
+  },
+  "tooltip-text": {
+    "default": {
+      "$value": "{base.0}",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) tooltip, node 103:4777: base/0 text; the same in both themes -- a tooltip is a dark layer over any page"
+    }
+  },
+  "row-status": {
+    "analysed-text": {
+      "$value": "{orange.300}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+    },
+    "analysed-bg": {
+      "$value": "rgba(231, 164, 116, 0.2)",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+    },
+    "submitted-text": {
+      "$value": "{cyan.600}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+    },
+    "submitted-bg": {
+      "$value": "rgba(0, 214, 214, 0.2)",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+    },
+    "archived-text": {
+      "$value": "{silver.400}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+    },
+    "archived-bg": {
+      "$value": "rgba(148, 148, 148, 0.2)",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+    },
+    "approved-text": {
+      "$value": "{green.400}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+    },
+    "approved-bg": {
+      "$value": "rgba(91, 205, 148, 0.2)",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+    },
+    "for-review-text": {
+      "$value": "{yellow.400}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+    },
+    "for-review-bg": {
+      "$value": "rgba(231, 198, 65, 0.2)",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+    },
+    "declined-text": {
+      "$value": "{red.300}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+    },
+    "declined-bg": {
+      "$value": "rgba(227, 120, 129, 0.2)",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+    }
+  },
+  "border-default": {
+    "default": {
+      "$value": "{silver.600}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): same step as object-dark.passive in dark"
+    }
+  },
+  "border-subtle": {
+    "default": {
+      "$value": "{silver.700}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): one step quieter than border-default"
+    }
+  },
+  "border-muted": {
+    "default": {
+      "$value": "{silver.800}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): quietest rule, just above the surface"
+    }
+  },
+  "border-strong": {
+    "default": {
+      "$value": "{neutral.50}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the dark theme text color, as light uses base.1000 (its text color)"
+    }
+  },
+  "border-disabled": {
+    "default": {
+      "$value": "{silver.800}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): as muted"
+    }
+  },
+  "border-focus": {
+    "default": {
+      "$value": "{silver.400}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): clearly lighter than default, as light base.750 is clearly darker"
+    }
+  },
+  "border-inverse": {
+    "default": {
+      "$value": "{silver.50}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): inverse of the dark surface, as light uses a near-black"
+    }
+  },
+  "border-on-accent": {
+    "default": {
+      "$value": "{base.0}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): white on the accent fill, same as light"
+    }
+  },
+  "border-transparent": {
+    "default": {
+      "$value": "rgba(180, 180, 180, 0)",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): same as light"
+    }
+  },
+  "icon-primary": {
+    "default": {
+      "$value": "{neutral.50}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): dark text color"
+    }
+  },
+  "icon-secondary": {
+    "default": {
+      "$value": "{silver.400}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): muted icon, as light base.750"
+    }
+  },
+  "icon-disabled": {
+    "default": {
+      "$value": "{silver.700}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): low-contrast icon, as light base.600"
+    }
+  },
+  "input-fill": {
+    "default": {
+      "$value": "{black.700}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a step lighter than the dark surface (black.900), as light base.250 is a step darker than white"
+    }
+  },
+  "input-border": {
+    "default": {
+      "$value": "{silver.600}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): same step as border-default"
+    }
+  },
+  "input-border-hover": {
+    "default": {
+      "$value": "{silver.400}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): lighter on hover, as light goes darker"
+    }
+  },
+  "input-border-focus": {
+    "default": {
+      "$value": "{orange.600}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): dark accent-1, as light uses accent.primary"
+    }
+  },
+  "input-icon": {
+    "default": {
+      "$value": "{silver.500}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): muted glyph on the dark fill"
+    }
+  },
+  "header-cell-label": {
+    "default": {
+      "$value": "{silver.500}",
+      "$type": "color",
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): muted column label, as light base.600"
+    }
+  }
+}

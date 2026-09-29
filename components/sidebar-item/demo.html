@@ -1,0 +1,25 @@
+<!--
+  sidebar-item (Penpot component: "Sidebar") -- renamed to avoid colliding
+  with the composed list, which this system names sidebar-list. type="set"
+  is one row of the Figma sets sidebar (Collection / Template); type="card"
+  (default) is one title/subtitle/status card and type="button" a lone primary
+  action, both from the earlier Penpot sidebar.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: flex; flex-direction: column; width: 280px;">
+  {% with type='set', name='Release 2.4: Collection', saved=true, active=true %}{% include "components/sidebar-item/template.html" %}{% endwith %}
+  {% with type='set', name='Collection Set 3' %}{% include "components/sidebar-item/template.html" %}{% endwith %}
+</div>
+
+<div style="display: flex; flex-direction: column; width: 340px; row-gap: var(--ds-spacing-3); margin-top: var(--ds-spacing-7);">
+  {% for i in range(3) %}
+  {% include "components/sidebar-item/template.html" %}
+  {% endfor %}
+  {% with type='button' %}{% include "components/sidebar-item/template.html" %}{% endwith %}
+</div>
+
+<script src="../text-button/component.js"></script>
+<script src="component.js"></script>

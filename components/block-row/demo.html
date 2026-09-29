@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: flex; gap: var(--ds-spacing-6); background: var(--ds-color-bg-surface-pressed);">
+  <ul class="ds-block-list" style="flex: 1;">
+    {% with type='source', text='Runbook: restart the ingest worker, then drain the queue.' %}{% include "components/block-row/template.html" %}{% endwith %}
+    {% with type='source', included=true, text='Escalation: page on-call after 15 minutes without an update.' %}{% include "components/block-row/template.html" %}{% endwith %}
+    {% with type='source', text='Rollback: redeploy the previous tag and clear the CDN cache.' %}{% include "components/block-row/template.html" %}{% endwith %}
+  </ul>
+  <ul class="ds-block-list" style="flex: 1;">
+    {% with type='editable', text='Escalation: page on-call after 15 minutes without an update.' %}{% include "components/block-row/template.html" %}{% endwith %}
+    {% with type='editable', text='Runbook: restart the ingest worker, then drain the queue.' %}{% include "components/block-row/template.html" %}{% endwith %}
+  </ul>
+</div>
+
+<script src="../text-button/component.js"></script>
+<script src="component.js"></script>

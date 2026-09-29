@@ -1,0 +1,20 @@
+<!--
+  nav-bar
+  Composition shell (like table-row) around real components: an
+  .ds-input-dropdown workspace switcher (left, 160px pixel-matched -- see
+  style.css, not one of input-dropdown's own declared sizes), a row of
+  .ds-text-button page links (center), and a real .ds-text-button
+  icon+label instance as the theme toggle (right). See meta.json's
+  rationale for the columnGap deviation and the theme-toggle's own
+  component reuse.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../input-dropdown/style.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="style.css">
+
+{% include "components/nav-bar/template.html" %}
+
+<script src="../input-dropdown/component.js"></script>
+<script src="../text-button/component.js"></script>
+<script src="component.js"></script>

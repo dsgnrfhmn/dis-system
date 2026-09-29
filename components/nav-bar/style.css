@@ -1,0 +1,197 @@
+/*
+  nav-bar (Penpot Variant axis: "Property 1" = section A / Template / Value 3)
+
+  Composition shell only, like table-row -- it does not restyle the
+  composed .ds-input-dropdown or .ds-text-button children, only positions
+  them. Real vector glyphs (arrow, theme-dark/theme-light) are loaded the
+  same [data-icon] fetch-and-inline way every other component in this
+  system does (see table-cell/component.js).
+
+  Layout, read directly off Penpot's real "Nav-bar" instance via MCP:
+  flex row, alignItems:center, justifyContent:space-between, three
+  children (left/center/right), none of them flex-growing -- the browser
+  distributes any leftover width between them via space-between, same as
+  a real nav bar spanning a page's full width would need.
+
+  Left/right padding (16px = spacing-5 each side): in Penpot's own data
+  this actually lives on the "Nav / left" and "Nav / right" child boards
+  (leftPadding on left, rightPadding on right), not the outer Nav-bar
+  board itself (which has zero padding of its own). Flattened onto this
+  component's own left/right padding instead of building three more
+  sub-components (nav-bar-left/-center/-right) for what is otherwise pure
+  positioning -- consistent with CLAUDE.md's "don't add abstractions
+  beyond what the task requires."
+
+  columnGap: Penpot's own instance carries columnGap:101 on the outer
+  Nav-bar board -- NOT reproduced. That figure is an artifact of a fixed
+  1240px demo board (1240px content-width minus the three groups' own
+  widths, divided up), not a deliberate spacing value, and no token in
+  tokens/output.css is anywhere near it. Because the three groups already
+  use justify-content:space-between, gap is redundant for a full-width
+  real usage (space-between alone distributes the remaining width
+  correctly at any viewport size) and a fixed 101px gap would only ever
+  be wrong once the container isn't exactly 1240px. Flagged per CLAUDE.md
+  rather than hardcoding a non-token pixel value that fights its own
+  layout mechanism.
+
+  Fixed-on-scroll (explicit request, 2026-09-04, "navbar in the
+  system should be fixed always on all pages"): implemented as
+  position:sticky, not position:fixed. Every real usage of this component
+  places it as the first element in the page (see index.html here, and
+  every root page's own markup) with nothing above it, and it always spans
+  the full viewport width -- for that specific case sticky and fixed are
+  visually identical once the user scrolls (both end up pinned at top:0),
+  but sticky keeps the bar in normal document flow instead of removing it,
+  so the page content below it is pushed down by the bar's own real
+  rendered height automatically. position:fixed would take it out of flow
+  and require a matching top-padding/margin on whatever follows it to
+  avoid the bar covering the first row of content -- and since this
+  component's own height is not a fixed token (it's derived from its
+  composed children's padding/line-height, which can differ by theme or
+  future content), that padding would either have to duplicate this exact
+  height as a second, easily-drifting value or be measured at runtime via
+  JS for a purely cosmetic reason. Sticky avoids inventing that value
+  entirely, per CLAUDE.md's "no ad-hoc numbers" rule, while producing the
+  same always-visible result the request asked for. background-color and
+  border-bottom below are new for the same reason: a bar that now stays on
+  screen while content scrolls underneath it needs to stay legible against
+  that content, which its previous transparent/borderless look (correct
+  for a bar that scrolled away with the page) can no longer guarantee --
+  this is the sticky behavior's own functional requirement, not decoration
+  added alongside it. bg.surface is the same background token every
+  card/page-chrome surface in this system already uses (see site.css's
+  .component-card); border-width-thin + object-dark-passive is the same
+  hairline pairing already used for other content-separating dividers
+  (component-card's card-header, category-list -- see site.css).
+*/
+
+/*
+  Padding and border-width overridden to exact Figma pixel values (explicit
+  request, 2026-09-17, "use exactly the same characteristics as
+  in figma... overwrite tokens and characteristics from the current
+  implementation"), superseding this file's own pre-redesign rationale
+  above (16px/spacing-5 left-right-only, chosen to match table-header-
+  actions' inset -- a pre-Figma decision, not updated for the Figma
+  re-skin the way colors/typography were): Figma's own nav instance is
+  p-[10px] on all four sides (not left/right only), giving the bar real
+  top/bottom breathing room this component never had -- the previous
+  0-top/bottom padding is why the whole bar rendered visibly shorter/
+  flatter than Figma regardless of any token fix. border-b-[0.5px] is
+  Figma's own hairline width for this specific border (not every border
+  in this system -- table-row's own border has no such modifier in Figma,
+  i.e. a real 1px default, so --ds-border-width-thin itself is correct
+  there and is intentionally NOT changed; only this component's own
+  border gets the narrower value, as a direct pixel override). 10px isn't
+  on this system's spacing scale (nearest is spacing-3/8px or spacing-4/
+  12px) and 0.5px has no border-width token at all -- both flagged per
+  CLAUDE.md as deliberate deviations, not invented decoration.
+*/
+.ds-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--ds-spacing-cell);
+  position: sticky;
+  top: 0;
+  background-color: var(--ds-color-bg-surface);
+  border-bottom: 0.5px solid var(--ds-color-object-dark-passive);
+}
+
+/* ---- left: workspace switcher (.ds-input-dropdown, composed as-is) ----
+   Penpot's own instance measures this field at 160px -- pixel-matched,
+   not Token-bound in Penpot's data, but the same value table-cell's own
+   dropdown-type cell already uses for the same "Input_with-icon" source
+   component (see table-cell/style.css) -- not a coincidence, the same
+   Penpot field, reused at its own real width rather than
+   .ds-input-dropdown's unrelated default (300px, this system's own
+   invented middle size, sized for a standalone field, not fitted to
+   Penpot's actual nav-bar instance).
+
+   Fix, not a Penpot value (flagged visible misalignment,
+   2026-09-04): .ds-nav-bar__left/__right previously had no flex rule of
+   their own, unlike __center below -- fine while each held a single
+   child, but __right now holds two sibling .ds-text-button instances
+   (Comments + the theme toggle) that differ in height (the toggle's own
+   icon makes it taller), so without their own flex row + alignItems:
+   center they fell back to inline-block default baseline alignment and
+   visibly didn't line up. Both slots now get the exact same
+   display:flex; align-items:center .ds-nav-bar itself already uses for
+   these three slots as a group -- consistent, not a new layout concept,
+   just applied one level deeper. ---- */
+.ds-nav-bar__left,
+.ds-nav-bar__right {
+  display: flex;
+  align-items: center;
+}
+
+.ds-nav-bar__left .ds-input-dropdown {
+  width: 160px;
+}
+
+/* ---- center: page links. Penpot's own layout is columnGap:0 here too
+   -- not an omission, adjacent .ds-text-button instances already carry
+   their own spacing.3 padding on all sides (see text-button/style.css),
+   which is what visually separates them, the same reasoning
+   table-header-actions' meta.json already documents for its own
+   zero-gap button row. Which one carries data-priority="primary" (the
+   current page) vs "secondary" (the rest) is markup the consumer
+   supplies, not this component's concern -- matches Penpot's own
+   Property 1 axis (section A/Template/...) only changing which link is "current",
+   never the container's own CSS, so it isn't modeled as a style variant
+   here either (same reasoning table-row applies to its Type axis). ---- */
+.ds-nav-bar__center {
+  display: flex;
+  align-items: center;
+}
+
+/* ---- right: theme toggle. Penpot's own instance is a bare icon board
+   (Icons / Theme-dark or Theme-light) with no button chrome at all --
+   fills:[], no stroke, no shadow on any wrapping shape.
+
+   As of 2026-09-04 (explicit request) this is no longer a bespoke
+   button: it's a real .ds-text-button instance (priority=secondary,
+   status=active, underline=dotted -- theme toggling stays on the current
+   page/view, so dotted per CLAUDE.md's Interaction conventions), using
+   that component's own icon+label variant (.ds-text-button__icon +
+   .ds-text-button__label, itself a same-day addition not sourced from
+   Penpot -- see text-button/meta.json's own rationale). This class
+   (".ds-nav-bar__theme-toggle", kept alongside ".ds-text-button" on the
+   same element) and its icon/label counterparts below are now pure JS
+   hooks with no CSS of their own -- text-button/style.css supplies all
+   visual styling (padding, hover-underline, status-color, icon size/gap),
+   the same real component reuse this file's own header comment already
+   describes for the workspace switcher and center links. Concretely this
+   means: icon and label are accent-1 blue (status=active), same as any
+   other active text-button, not the previous bespoke object-dark-active
+   gray -- an intentional look change that comes from genuinely reusing
+   the component rather than styling a lookalike.
+
+   ".ds-nav-bar__theme-toggle"/"__theme-icon"/"__theme-label" now carry no
+   CSS of their own at all -- kept only as component.js/nav.js's stable
+   selectors so the toggle/click logic doesn't have to query by
+   text-button's own generic classes (which could match unrelated
+   .ds-text-button instances elsewhere in the same nav-bar, e.g. the
+   center links). ---- */
+
+/* ---- Notification dot on a nav link (Figma screen 24, right of "Queue") ----
+   Put <span class="ds-nav-bar__dot"> inside a nav link (anywhere in it: the text button wraps its label); toggle it with the
+   hidden attribute. The one round shape in the system (a 12px circle): Figma
+   draws it round. */
+.ds-nav-bar .ds-text-button:has(.ds-nav-bar__dot) {
+  position: relative;
+}
+
+.ds-nav-bar__dot {
+  position: absolute;
+  top: 50%;
+  right: var(--ds-spacing-1);
+  width: var(--ds-spacing-3);
+  height: var(--ds-spacing-3);
+  margin-top: calc(var(--ds-spacing-3) / -2);
+  border-radius: 50%;
+  background-color: var(--ds-color-accent-2);
+}
+
+.ds-nav-bar__dot[hidden] {
+  display: none;
+}

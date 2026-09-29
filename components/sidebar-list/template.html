@@ -1,0 +1,16 @@
+{% set _items = items | default([
+  {'name': 'Release 2.4: Collection', 'saved': true, 'active': true},
+  {'name': 'Collection Set 3', 'saved': false, 'active': false},
+  {'name': 'Security fixes', 'saved': true, 'active': false}
+]) %}
+<aside class="ds-sidebar-list" aria-label="{{ label | default('Sets') }}" data-collapsed="false">
+  <div class="ds-sidebar-list__head">
+    <span class="ds-sidebar-list__title">{{ title | default('Your sets') }}</span>
+    <button type="button" class="ds-sidebar-list__toggle" aria-expanded="true" aria-label="Collapse sidebar"><span class="ds-sidebar-list__toggle-icon" aria-hidden="true"></span></button>
+  </div>
+  <div class="ds-sidebar-list__items">
+    {% for item in _items %}
+    {% with type='set', name=item.name, saved=item.saved, active=item.active, href=item.href, save=item.save if item.save is defined else true %}{% include "components/sidebar-item/template.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+</aside>

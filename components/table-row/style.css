@@ -1,0 +1,260 @@
+/*
+  table-row (Penpot Variant axes: Type x State x Comment)
+
+  This is a composition shell around real .ds-table-cell instances (see
+  components/table-cell) -- it does not restyle cell content, only the row
+  container itself. Only Penpot's State axis (Default | Selected) changes
+  this container's own CSS; Type (Checkbox only / Analysed / Found /
+  Archived / Submitted / Empty State / Collection / Check + Button /
+  Snippet) and Comment (No comment / Comment input) only change which
+  table-cell instances are composed inside a row -- table-cell's own concern,
+  not table-row's -- so neither is modeled as a style variant here (same
+  reasoning header-block applies to its Type axis vs. its Size axis). See
+  meta.json for the full domain-specificity flag and the row-reverse note.
+
+  data-selected="true": background-color = bg.surface-pressed, Token-bound
+  in Penpot's own data on every "Selected" row instance sampled (7 of the
+  15). Default rows carry no fill token at all (transparent) in every
+  instance sampled -- the page/table background shows through.
+
+  alignItems (explicit request history, not from Penpot -- its own row
+  instances are alignItems:start, verified directly against the source):
+  first changed start -> center ("align all elements in the table
+  horizontally"), now superseded by a further change center -> stretch
+  (2026-09-03, "row height should always be fixed from the tallest cell").
+  stretch is flexbox's own built-in mechanism for exactly that: every
+  .ds-table-cell in the row (an auto-height flex item) fills the row's
+  full cross-axis height, which is set by whichever cell is tallest --
+  the same behavior a real <table>'s <tr>/<td> gives for free, and the
+  reason no explicit height/JS measurement is needed here. Each cell's own
+  internal align-items (set per Type in table-cell/style.css -- flex-start
+  for text cells, center for icon/action/field cells) still governs where
+  that cell's own content sits within its now-taller box; row-level
+  align-items only governs the cell boxes themselves, not their contents.
+  This still matters most now that text-bearing cells clamp to a bounded
+  1-2 line height (table-cell/style.css) rather than growing arbitrarily,
+  so a row's max height stays predictable instead of being driven by one
+  outlier cell's uncapped content.
+*/
+
+.ds-table-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+}
+
+.ds-table-row[data-selected="true"] {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+/* Row-select checkbox follows selection: table-cell's checkbox-cell type
+   carries both an unchecked and a checked icon span (see
+   table-cell/style.css); this just flips which is visible, keyed off the
+   same data-selected component.js already sets. Not from Penpot -- its
+   checkbox source has no checked state at all -- but a selected row whose
+   own checkbox still renders unchecked is a real inconsistency. */
+.ds-table-row[data-selected="true"] [data-checkbox-state="unchecked"] {
+  display: none;
+}
+
+.ds-table-row[data-selected="true"] [data-checkbox-state="checked"] {
+  display: inline-flex;
+}
+
+/* Selection now only toggles via a click on checkbox-cell itself (see
+   component.js) -- give it a pointer cursor so that's visible, and no
+   other cell type gets one. Scoped to a checkbox-cell that actually holds
+   the checkbox icon, not just data-type="checkbox-cell" in general: Type
+   "Icon" in Penpot's own data (checkbox-cell's source Type) isn't
+   checkbox-specific -- Collection and Snippet use the identical
+   layout for a reorder-handle icon instead (Penpot's own "Drag" asset,
+   verified via MCP: same
+   alignItems:center/padding:spacing.5-all-sides shape.tokens as every
+   checkbox instance, just a different icon glyph, no checked/unchecked
+   state). A drag handle isn't a row-selection control, so it must not get
+   the pointer cursor (or, in component.js, the click-to-select listener)
+   that a real checkbox-cell gets. */
+.ds-table-row > .ds-table-cell[data-type="checkbox-cell"]:has(.ds-table-cell__icon[data-icon="checkbox"]) {
+  cursor: pointer;
+}
+
+/* Reorder-handle affordance + feedback (see component.js's reordering
+   block for why -- the icon itself is Penpot's real "Drag" asset,
+   unmodified; only the dragging behavior is not from Penpot). cursor:grab
+   on the handle icon itself, not
+   the whole checkbox-cell it sits in, since only the icon is the actual
+   drag source (component.js only arms `draggable` on mousedown targeting
+   this icon). ds-table-row--dragging is toggled by component.js for the
+   duration of a drag; opacity is feedback that a drag is in progress, not
+   decoration (PRINCIPLES.md: motion/state changes only for feedback). */
+.ds-table-row > .ds-table-cell[data-type="checkbox-cell"] .ds-table-cell__icon[data-icon="drag"] {
+  cursor: grab;
+}
+
+/* Targets the row's own children, not the row itself -- same reasoning
+   as this file's [data-selected="true"] rule below, and the identical
+   fix already documented in table-row/demo.html's own comment: a row is
+   `display: contents` in every real consumer, so it has no box of its
+   own for opacity to paint (bugfix, 2026-09-12, see component.js's own
+   comment on this same consumer pattern breaking the drag feature). */
+.ds-table-row.ds-table-row--dragging > .ds-table-cell {
+  opacity: 0.5;
+}
+
+/* The extra left inset Penpot's own "Title" instance had (see
+   table-cell/style.css's text-active-cell comment) belonged to it only
+   because it was always the row's leftmost cell -- structural, not a
+   property of that content type. This used to be reproduced here as a
+   :first-child rule bumping that one cell's left padding to spacing-5
+   (16px) instead of table-cell's own spacing-3 (8px) base.
+
+   Removed on explicit request, 2026-09-03 ("add that 8px indent to all
+   cells, left and right"): "all cells" now explicitly includes whichever
+   one is leftmost, so a surviving 16px special-case here would put the
+   first cell in every row out of step with every other cell's 8px inset
+   again -- the exact asymmetry the original :first-child rule existed to
+   introduce, now flagged as no longer wanted rather than silently kept.
+   table-cell/style.css's own spacing-3 left/right padding (data/
+   text-active-cell rule) already applies uniformly to the first cell with
+   no override needed. */
+
+/* ---- Status pill (Figma 254:19537/254:19577/254:19618/254:27048/254:27129,
+   2026-09-22) ---------------------------------------------------------------
+   A direct report, after checking the Figma nodes again: "put back the
+   default row background color to white as it was but make the status
+   dropdown as is in the design". The row used to tint every cell by
+   data-status (Figma 237:30119, first pass) -- wrong: every real row in the
+   6 newer nodes above keeps every .ds-table-cell at var(--ds-color-bg-
+   surface), white, including the Status cell's own cell background. Only
+   the Status dropdown's value label carries color there, as a small pill.
+   That block is removed outright (not weakened to a lower-specificity
+   override) so no cell tint can resurface by accident.
+
+   [data-dropdown-value] lives inside a table-cell[data-type="dropdown"]'s
+   .ds-input-dropdown (see the statusCell of the consumer's own row scripts).
+   table-cell/style.css already dims it to 50% opacity at rest (its "look
+   like a placeholder until chosen" rule) -- these 6 statuses override that
+   back to full opacity, since Figma shows the pill at full strength always,
+   open or closed. The selector chain below matches that table-cell rule's
+   own specificity (.class + [attr] + .class + [attr] + [attr] = 0,5,0 each)
+   on purpose, so the override wins on cascade order (this file is linked
+   after table-cell/style.css on every page) rather than needing
+   !important -- don't reorder those two <link> tags.
+
+   A status without a rule here (filtered) keeps the cell's
+   plain 50%-opacity label, unstyled, same as before. The tokens are light
+   only (Color-Base-Light, group row-status): with no dark value the var()
+   is invalid in dark and the pill stays plain text, no invented dark tint. */
+.ds-table-row[data-status="analysed"] .ds-table-cell[data-type="dropdown"] [data-dropdown-value] {
+  background-color: var(--ds-color-row-status-analysed-bg);
+  color: var(--ds-color-row-status-analysed-text);
+  opacity: 1;
+  display: inline-flex;
+  border-radius: var(--ds-radius-md);
+  padding: var(--ds-spacing-2);
+}
+.ds-table-row[data-status="submitted"] .ds-table-cell[data-type="dropdown"] [data-dropdown-value] {
+  background-color: var(--ds-color-row-status-submitted-bg);
+  color: var(--ds-color-row-status-submitted-text);
+  opacity: 1;
+  display: inline-flex;
+  border-radius: var(--ds-radius-md);
+  padding: var(--ds-spacing-2);
+}
+.ds-table-row[data-status="for_review"] .ds-table-cell[data-type="dropdown"] [data-dropdown-value] {
+  background-color: var(--ds-color-row-status-for-review-bg);
+  color: var(--ds-color-row-status-for-review-text);
+  opacity: 1;
+  display: inline-flex;
+  border-radius: var(--ds-radius-md);
+  padding: var(--ds-spacing-2);
+}
+.ds-table-row[data-status="archived"] .ds-table-cell[data-type="dropdown"] [data-dropdown-value] {
+  background-color: var(--ds-color-row-status-archived-bg);
+  color: var(--ds-color-row-status-archived-text);
+  opacity: 1;
+  display: inline-flex;
+  border-radius: var(--ds-radius-md);
+  padding: var(--ds-spacing-2);
+}
+.ds-table-row[data-status="approved"] .ds-table-cell[data-type="dropdown"] [data-dropdown-value] {
+  background-color: var(--ds-color-row-status-approved-bg);
+  color: var(--ds-color-row-status-approved-text);
+  opacity: 1;
+  display: inline-flex;
+  border-radius: var(--ds-radius-md);
+  padding: var(--ds-spacing-2);
+}
+.ds-table-row[data-status="declined"] .ds-table-cell[data-type="dropdown"] [data-dropdown-value] {
+  background-color: var(--ds-color-row-status-declined-bg);
+  color: var(--ds-color-row-status-declined-text);
+  opacity: 1;
+  display: inline-flex;
+  border-radius: var(--ds-radius-md);
+  padding: var(--ds-spacing-2);
+}
+
+/* ---- Figma flat table: row states -------------------------------------
+   Cells carry the fill, so the hover / selected fill goes on the cells
+   (rows may be display:contents inside a grid). */
+.ds-table-row:hover > .ds-table-cell,
+.ds-table-row:focus-within > .ds-table-cell {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+/* Selected is darker than hover (consumer-app Figma 237:31166: base/250, 2026-09-24),
+   and wins while the selected row is hovered. bg-row-selected has no dark
+   value, so dark keeps surface-pressed. */
+.ds-table-row[data-selected="true"] > .ds-table-cell {
+  background-color: var(--ds-color-bg-row-selected, var(--ds-color-bg-surface-pressed));
+}
+
+/* Checkbox and save icons only appear on row hover / focus, or once the row
+   is selected / saved. The header row (not a .ds-table-row) always shows them. */
+.ds-table-row:not(:hover):not(:focus-within):not([data-selected="true"]) > .ds-table-cell[data-type="checkbox-cell"] .ds-table-cell__icon,
+.ds-table-row:not(:hover):not(:focus-within) > .ds-table-cell[data-type="icon-cell"] .ds-table-cell__icon:not([data-saved="true"]) {
+  opacity: 0;
+}
+
+/* Optional: per-row action buttons sit at 40% and go to 100% on hover / keyboard
+   focus of the row (Figma 22:8700: opacity 0.4 on every action button, always
+   visible). Set data-reveal-actions on the table container. The attribute name
+   is from when they were hidden until then (opacity 0); it is kept so pages
+   and demos that set it need no change. A selected row shows them at 100% too
+   (consumer-app Figma 237:31166, 2026-09-24). */
+[data-reveal-actions] .ds-table-row .ds-table-cell[data-type="1-action"] .ds-text-button,
+[data-reveal-actions] .ds-table-row .ds-table-cell[data-type="2-actions"] .ds-text-button {
+  opacity: 0.4;
+}
+[data-reveal-actions] .ds-table-row:hover .ds-table-cell[data-type="1-action"] .ds-text-button,
+[data-reveal-actions] .ds-table-row:focus-within .ds-table-cell[data-type="1-action"] .ds-text-button,
+[data-reveal-actions] .ds-table-row[data-selected="true"] .ds-table-cell[data-type="1-action"] .ds-text-button,
+[data-reveal-actions] .ds-table-row:hover .ds-table-cell[data-type="2-actions"] .ds-text-button,
+[data-reveal-actions] .ds-table-row:focus-within .ds-table-cell[data-type="2-actions"] .ds-text-button,
+[data-reveal-actions] .ds-table-row[data-selected="true"] .ds-table-cell[data-type="2-actions"] .ds-text-button {
+  opacity: 1;
+}
+
+/* Drag and drop driven by the host page: the whole handle cell shows the grab
+   cursor, a row being dragged dims, and data-drop marks where it would land
+   (an accent line on the top or bottom edge). The component's own script uses
+   the .ds-table-row--dragging class instead. */
+.ds-table-row > .ds-table-cell[data-type="checkbox-cell"]:has(.ds-table-cell__icon[data-icon="drag"]) {
+  cursor: grab;
+}
+.ds-table-row[data-dragging="true"] > .ds-table-cell {
+  opacity: 0.5;
+}
+.ds-table-row[data-drop="before"] > .ds-table-cell {
+  box-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-accent-1);
+}
+.ds-table-row[data-drop="after"] > .ds-table-cell {
+  box-shadow: inset 0 calc(var(--ds-border-width-default) * -1) 0 var(--ds-color-accent-1);
+}
+
+/* data-selected-fill="strong" on the table container: selected rows are filled
+   one step darker (Figma base/250) than the hover fill. Light theme only. */
+:root:not([data-theme="dark"]) [data-selected-fill="strong"] .ds-table-row[data-selected="true"] > .ds-table-cell {
+  background-color: var(--ds-color-base-250);
+}

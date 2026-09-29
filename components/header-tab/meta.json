@@ -1,0 +1,48 @@
+{
+  "name": "header-tab",
+  "description": "One panel in a full-width row of N equal-width section tabs (e.g. a For Review / Analysed / Archived / Filtered strip) -- each tab is its own flex:1 box with a background and border that change with selection, tiling edge to edge across the row. Distinct from table-header's type=\"2-tabs\" (a single content-hugging chip holding both labels); see rationale. The host composes N instances inside a shared role=\"tablist\" wrapper and typically renders a header-block bar below the strip for the active tab's own search and bulk actions.",
+  "status": "stable",
+  "category": "tables",
+  "layout": "wide",
+  "variants": [
+    "active",
+    "inactive"
+  ],
+  "props": [
+    {
+      "name": "active",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Whether this tab is the current section. Sets aria-selected and switches background/text color/underline per rationale."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "default": "Tab",
+      "description": "The tab's title text (e.g. \"For Review\")."
+    },
+    {
+      "name": "count",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "Optional secondary caption rendered beside the label (e.g. \"4 total, 5 submitted\"). Omitted entirely from the DOM when not passed, matching table-header's own optional info caption."
+    },
+    {
+      "name": "size",
+      "type": "string",
+      "required": false,
+      "description": "\"compact\": 56px tabs for a pane head (see rationale); default is the 60px full-width strip."
+    }
+  ],
+  "source": "figma:APPFILEKEY#150:16076,150:16077",
+  "rationale": "Read from the application's Figma file: the repeated \"header\" instance used identically across its section screens (nodes 150:16076 active / 150:16077 inactive), with only the active assignment changing. Height is a fixed 60px, the same as the nav bar it sits flush beneath; padding is Figma's 10px vertical / 20px horizontal. The label and count sit in an inner .ds-header-tab__text wrapper with Figma's bottom alignment and 10px gap, while the outer tab centers that block vertically -- Figma's own two-level structure.\n\nColors read off Figma's two states: active = bg.surface + text.active label; inactive = bg.surface-pressed + text.subactive label, the same active/inactive vocabulary table-header's 2-tabs uses. The count uses text.subactive in both states (Figma's 50% caption). Figma's 0.5px bottom border is drawn with border-width-thin in object-dark-passive, the pairing table-cell and table-header use for their borders, rather than a 0.5px-only token. The inactive label carries Figma's permanent dotted underline: it stays in the view when clicked (CLAUDE.md, Interaction conventions).\n\nWhy not an extension of table-header's 2-tabs: that variant is one content-hugging chip holding both labels, sitting beside table-header-actions; here each tab independently stretches flex:1 across the whole row, carries its own background and border, and the strip sits above a separate header bar. None of 2-tabs' CSS transfers. Figma's \"actions-block\" child holds one invisible, unpopulated placeholder button on every instance and is not modeled.\n\ndata-size=\"compact\" is a pane-head tab (Figma node 150:16299): 56px tall, 20px side padding, a hairline on the left of every tab (the divider between panes), the label in the \"title\" role, the count in the caption role and hidden while the tab is open. .ds-header-tabs holds tabs as a flex row. Not sourced from Figma: click-to-switch in component.js, scoped to the nearest role=\"tablist\" ancestor because each tab is composed independently by the host; a tab row that never switches would be a dead affordance. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "A real role=\"tab\" <button>, per the WAI-ARIA tabs pattern. The host wraps the tabs in a role=\"tablist\" container (this component doesn't own that wrapper) and pairs each tab with its role=\"tabpanel\". aria-selected reflects the active prop and is kept in sync on click by component.js. The focus-visible outline (accent-1, 2px, matching table-header's tabs) has no Figma equivalent: static design tools don't model keyboard focus.",
+  "uses": []
+}

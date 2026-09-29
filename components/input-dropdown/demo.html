@@ -1,0 +1,42 @@
+<!--
+  input-dropdown — select-style trigger field, fully interactive: each
+  instance is paired with a real components/dropdown-menu (wrapped in
+  .ds-dropdown) instead of only dispatching an event with nothing
+  listening. This pairing is demo-only illustration, not real composition
+  (input-dropdown's own template.html does not include dropdown-menu, and
+  vice versa — see each meta.json's "uses"; both components describe the
+  pairing as a consumer-level convention, not a structural dependency), so
+  dropdown-menu's style.css/component.js are linked by hand below rather
+  than picked up automatically from a declared "uses" dependency.
+
+  Three fixed sizes (small/middle/large — see meta.json's `size` prop and
+  style.css's own header comment for why these aren't from Penpot). The
+  field never resizes itself; data-size picks a fixed width.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../dropdown-menu/style.css">
+
+<div style="display: flex; align-items: flex-start; gap: var(--ds-spacing-6); flex-wrap: wrap;">
+
+  <div class="ds-dropdown">
+    {% with size='middle', placeholder=true, trigger=true %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+    {% include "components/dropdown-menu/template.html" %}
+  </div>
+
+  <div class="ds-dropdown">
+    {% with size='middle', fill='filled', trigger=true %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+    {% include "components/dropdown-menu/template.html" %}
+  </div>
+
+</div>
+
+<div style="margin-top: var(--ds-spacing-6);">
+  <div class="ds-dropdown" data-size="large">
+    {% with size='large', trigger=true %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+    {% include "components/dropdown-menu/template.html" %}
+  </div>
+</div>
+
+<script src="component.js"></script>
+<script src="../dropdown-menu/component.js"></script>

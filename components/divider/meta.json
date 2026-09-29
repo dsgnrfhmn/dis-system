@@ -1,0 +1,26 @@
+{
+  "name": "divider",
+  "description": "A single 1px rule for separating two stacked sections (horizontal, Penpot's own instance) or two items in a row, e.g. grouped buttons in a table-header-actions bar (vertical, not from Penpot).",
+  "status": "stable",
+  "category": "tables",
+  "listed": false,
+  "variants": [
+    "horizontal",
+    "vertical"
+  ],
+  "props": [
+    {
+      "name": "orientation",
+      "type": "string",
+      "required": false,
+      "default": "horizontal",
+      "description": "\"horizontal\" (default, Penpot's instance) renders a full-width, 1px, text-subactive rule for separating stacked sections. \"vertical\" (not sourced from Penpot) renders a small object-dark-passive square dot (spacing-1 x spacing-1), centered on its cross axis, for separating items within a horizontal row -- e.g. grouping buttons in a table-header-actions bar."
+    }
+  ],
+  "source": "penpot:28cec651-3f14-8022-8008-8c9a0bde2f51",
+  "rationale": "Penpot's \"Divider\" is a single main instance with one child rectangle, horizontal only; renamed to lowercase to satisfy the schema's name pattern. Horizontal: a full-width rule whose height is --ds-border-width-thin (1px) -- the border-width scale, because a hairline is a stroke, and spacing's smallest step (2px) would double its weight. Its fill is text.subactive, the token this system reserves for de-emphasized but visible content (table-cell's Source cell uses it for the same reason): enough contrast to read as a rule against bg.surface without competing with the text around it. No radius, no shadow: it is a flat rule. Vertical (not sourced from Penpot, which models only the horizontal instance): separates items within a horizontal row, e.g. grouped buttons in table-header-actions. It is a small square dot (spacing-1 x spacing-1), a design decision that replaced an earlier short vertical line, in object-dark.passive, the table border color, so it belongs to the same bordered vocabulary as the table around it; it is centered on the cross axis. Square, not round, because every radius token in the Base style resolves to 0 or 1px and a circle would be the one rounded shape in the system. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ]
+}

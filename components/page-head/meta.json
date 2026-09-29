@@ -1,0 +1,35 @@
+{
+  "name": "page-head",
+  "description": "The 60px bar under the nav bar of a work page: the page's title and its main action on the left, secondary actions on the right, one hairline underneath.",
+  "status": "stable",
+  "category": "navigation",
+  "listed": false,
+  "layout": "wide",
+  "variants": [],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "default": "Set name",
+      "description": "Page title (an h1), cut with an ellipsis when it is too long."
+    },
+    {
+      "name": "main_action",
+      "type": "string",
+      "required": false,
+      "default": "Save set",
+      "description": "Label of the text button next to the title."
+    }
+  ],
+  "source": "figma:APPFILEKEY#150:16217,150:16233,150:16362",
+  "rationale": "Height is spacing.9 + spacing.6 (60px), side padding spacing.6 (20px), bg.surface with one hairline (object-dark.passive) under it. The title is the heading-4 role (Inter SemiBold 20px) with line-height normal, so the bar's height, not the type scale, sets the rhythm. The gap between title and main action is spacing.cell (10px); the right group has no gap because text buttons hug their labels (see text-button). Both groups are flex rows with min-width 0, so a long title ellipsizes instead of pushing the actions out. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [
+    "text-button"
+  ],
+  "a11y_notes": "The title is an h1. The buttons are real text-buttons; keyboard focus uses their own ring."
+}

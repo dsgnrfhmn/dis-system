@@ -1,0 +1,8 @@
+<!--
+  table-footer: the "load more" row under a table. The first button aligns
+  with the third column's text; further buttons follow it.
+-->
+<div class="ds-table-footer">
+  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-action="{{ first_action | default('load-more') }}">{{ first_label | default('Load 10 more') }}</button>
+  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-action="{{ second_action | default('load-all') }}">{{ second_label | default('Load all 100') }}</button>
+</div>

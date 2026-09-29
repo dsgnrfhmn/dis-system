@@ -1,0 +1,54 @@
+/*
+  radio
+  A radio option drawn as a text button with a round Figma marker: a 24px ring
+  in the accent color, filled in the middle when checked (Add project's
+  "Choose description amount"). Put .ds-radio on a .ds-text-button that carries
+  role="radio" and aria-checked, and lay several out in a .ds-radio-group.
+  The consumer-app Figma file APPFILEKEY, node 150:16503.
+*/
+.ds-radio-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--ds-spacing-cell);
+}
+
+.ds-radio {
+  height: var(--ds-spacing-9);
+}
+
+/* The label is the option's own text: no hover "[ ]" around it. */
+.ds-radio.ds-text-button[data-status]::before,
+.ds-radio.ds-text-button[data-status]::after {
+  content: none;
+}
+
+.ds-radio__icon {
+  position: relative;
+  flex: none;
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  color: var(--ds-color-accent-1);
+}
+
+.ds-radio__icon::before,
+.ds-radio__icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ds-radio__icon::before {
+  width: calc(var(--ds-spacing-8) / 2);
+  height: calc(var(--ds-spacing-8) / 2);
+  box-shadow: inset 0 0 0 var(--ds-border-width-thin) currentColor;
+}
+
+.ds-radio[aria-checked="true"] .ds-radio__icon::after {
+  width: calc(var(--ds-spacing-9) / 4);
+  height: calc(var(--ds-spacing-9) / 4);
+  background-color: currentColor;
+}

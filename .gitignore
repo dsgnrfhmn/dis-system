@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Local tooling and agent config -- never published (CLAUDE.md is public)
+.claude/
+.mcp.json
+PLAN.md
+
+# Shell / git config that may be mounted into the working dir
+.bashrc
+.bash_profile
+.profile
+.zshrc
+.zprofile
+.gitconfig
+.ripgreprc
+
+# Secrets
+.env
+.env.*

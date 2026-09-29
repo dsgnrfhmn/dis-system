@@ -1,0 +1,232 @@
+/*
+  paper-preview
+
+  No single "Paper-preview" node exists in Penpot yet (see meta.json
+  rationale) -- every value below is instead read off the real, existing
+  "Paper-Cards" board via MCP, which already contains two real structural
+  patterns this component generalizes into a blank/content-less shell:
+
+  - one-longread: Template / Draft are a single continuous board
+    with no page split -- fills:[] on the outer container (fully
+    transparent, no visible backdrop), the "paper" itself token-bound to
+    object-white.passive (confirmed via shape.tokens on the real Rectangle,
+    #E0E0E0 light / #1A1918 dark in tokens/output.css).
+  - paged-preview: Collection and Template / Visual both stack several Page-N boards
+    in a flex column with rowGap Token-bound to spacing.3 (8px, confirmed
+    via shape.tokens -- also confirmed empirically: real y-position deltas
+    between Collection's own Page-1/Page-2/Page-3 and Template / Visual's own
+    Page-1/Page-2 both measure exactly 8px apart). The outer container in
+    both cases is Token-bound to bg.surface (#C0C0C0 light / #2E2E2E dark)
+    with zero padding on every side (spacing.0), which is why the backdrop
+    only ever shows in the gaps *between* pages here, never as a margin
+    around them.
+
+  A4 proportions (1 : sqrt(2)) are a real-world paper standard, not a
+  Penpot- or token-sourced value, applied to the one real A4-proportioned
+  instance in the file: Collection's own Page-N boards measure 761x538px
+  (761/538 = 1.4139, matching sqrt(2) = 1.41421 almost exactly) --
+  pixel-matched, not Token-bound. Portrait reuses that exact same measured
+  page transposed (538x761) rather than a separately invented ratio.
+  Template/Draft's own 760x920 size was NOT reused -- it isn't
+  actually A4-proportioned (ratio 0.826), and the task calls for a true
+  A4 page specifically.
+
+  Ambiguity flagged per CLAUDE.md: Penpot's own sampled "paper" fill is
+  inconsistent across instances -- object-white.passive on Template /
+  Draft / Template-Visual's Page-1, but bg.surface-pressed on Collection's own
+  Page-N boards. object-white.passive was picked here (majority of
+  instances, and the semantically correct "this is a white sheet of
+  paper" token) -- bg.surface-pressed isn't reused anywhere in this
+  component.
+
+  Width (explicit host request, 2026-09-04): each card stretches to 100%
+  of its container rather than a fixed pixel width, so it fits whatever
+  grid cell/column it's placed in instead of overflowing or leaving dead
+  space. Pages therefore can't use a fixed pixel width/height (that would
+  either overflow a narrower container or leave the card short of 100% in
+  a wider one) -- aspect-ratio keeps the true A4 proportion (538:761
+  portrait, 761:538 landscape, both sourced above) while width and height
+  scale together with the container.
+
+  Scroll behavior (explicit host request, 2026-09-04): [data-mode=
+  "paged-preview"]'s overflow-y:auto is what makes the "inline scroll" the
+  original task asked for actually happen -- a fixed viewport (max-height:
+  500px, a functional constraint, not a design token) tall enough to show
+  a page or so before the rest requires scrolling, so the card doesn't
+  simply grow to fit however many pages are composed inside it. A FIXED
+  pixel value, deliberately not vh-based (an earlier version used 70vh,
+  corrected 2026-09-04): this component is embedded in the root index.html's
+  gallery via an auto-resizing <iframe> (site.js measures the iframe's
+  rendered content height on load and sets the iframe's own height to
+  match) -- vh resolves against the IFRAME's own viewport, which starts
+  at the browser's small default iframe height before that resize script
+  runs, so 70vh collapsed to a sliver on first paint and the resize
+  script then measured and locked in that already-shrunk height,
+  clipping the whole card. A fixed px value has no such circular
+  dependency on the embedding context's own not-yet-resized size. The
+  native scrollbar is hidden entirely (scrollbar-width:none /
+  ::-webkit-scrollbar{display:none}) and replaced with a custom indicator
+  (component.js computes its thumb size/position from the real scroll
+  state) that is visible only while actively scrolling -- same
+  functional-gap category and exact same technique gallery/style.css
+  already uses for its own horizontal scrollbar, just rotated to this
+  component's vertical scroll axis. This is also what keeps content from
+  "jumping" when the scrollbar appears/disappears (the second explicit
+  part of the same request): the custom indicator is an absolutely
+  positioned overlay on .ds-paper-preview-wrapper, not a participant in
+  either element's normal layout flow, so its own opacity toggling never
+  changes .ds-paper-preview's available width the way a native scrollbar
+  reserving/releasing a track width would.
+
+  Placeholder content (explicit host request, 2026-09-04, "so I can see
+  them better" + text/image placeholders): rather than invent new
+  placeholder styling, this reuses the exact skeleton-bar convention
+  gallery-image/style.css already established for "generic placeholder
+  text" (Type="text-icon": object-white.disabled bars, spacing-2 between
+  bars in a stack, spacing-6 between stack and its neighboring section) --
+  consistency over novelty, per PRINCIPLES.md. __heading/__line reuse that
+  same bar look and the same object-white.disabled token; __image (only
+  composed on paged-preview's own demo pages, per the host's explicit
+  text+image vs. text-only split) reuses object-dark-passive, the same
+  token gallery-image's own Type="Image" placeholder uses for a stand-in
+  photo. __image's own 16:9 aspect-ratio (rather than a percentage height)
+  keeps it "just a gray rectangle" of a fixed, sensible shape regardless
+  of how large or small the page itself is scaled to.
+*/
+
+.ds-paper-preview {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--ds-spacing-3);
+  width: 100%;
+}
+
+.ds-paper-preview__page {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--ds-spacing-6);
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--ds-spacing-6);
+  background-color: var(--ds-color-object-white-passive);
+}
+
+.ds-paper-preview__image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  flex-shrink: 0;
+  background-color: var(--ds-color-object-dark-passive);
+}
+
+.ds-paper-preview__heading {
+  width: 55%;
+  height: 16px;
+  flex-shrink: 0;
+  background-color: var(--ds-color-object-white-disabled);
+}
+
+.ds-paper-preview__lines {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--ds-spacing-2);
+}
+
+.ds-paper-preview__line {
+  width: 100%;
+  height: 6px;
+  flex-shrink: 0;
+  background-color: var(--ds-color-object-white-disabled);
+}
+
+.ds-paper-preview__line--short {
+  width: 40%;
+}
+
+.ds-paper-preview[data-orientation="portrait"] .ds-paper-preview__page {
+  aspect-ratio: 538 / 761;
+}
+
+.ds-paper-preview[data-orientation="landscape"] .ds-paper-preview__page {
+  aspect-ratio: 761 / 538;
+}
+
+.ds-paper-preview[data-mode="paged-preview"] {
+  background-color: var(--ds-color-bg-surface);
+  max-height: 500px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.ds-paper-preview[data-mode="paged-preview"]::-webkit-scrollbar {
+  display: none;
+}
+
+.ds-paper-preview-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.ds-paper-preview__scrollbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--ds-spacing-2);
+  background-color: var(--ds-color-text-subactive);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ds-paper-preview-wrapper.is-scrolling .ds-paper-preview__scrollbar {
+  opacity: 1;
+}
+
+.ds-paper-preview__scrollbar-thumb {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  min-height: var(--ds-spacing-5);
+  background-color: var(--ds-color-text-active);
+}
+
+/* ---- Figma: white sheets and a sheet stack for a pane --------------------
+   Sheets are white in the light theme (dark keeps its own fill). A picture in
+   a sheet fills its box. .ds-paper-preview-stack is the scrolling column of
+   sheets inside a pane (Template Preview): 20px around, sheets centered, at most 560px
+   wide, 20px apart. */
+:root:not([data-theme="dark"]) .ds-paper-preview__page {
+  background-color: var(--ds-color-base-0);
+}
+
+.ds-paper-preview__image {
+  position: relative;
+  overflow: hidden;
+}
+
+.ds-paper-preview__image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ds-paper-preview-stack {
+  box-sizing: border-box;
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--ds-spacing-6);
+  scrollbar-width: none;
+}
+
+.ds-paper-preview-stack::-webkit-scrollbar {
+  display: none;
+}
+
+.ds-paper-preview-stack .ds-paper-preview__page {
+  width: min(100%, calc(var(--ds-spacing-9) * 14));
+  margin: 0 auto var(--ds-spacing-6);
+}

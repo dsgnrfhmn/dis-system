@@ -1,0 +1,145 @@
+/*
+  empty-state
+
+  Not from Penpot as its own component -- no standalone "empty state"
+  board was found anywhere in this repo's earlier Penpot survey. Reuses
+  table-cell's own already-sourced type="empty-state" typography exactly
+  (bodyTextItalic + text.subactive, the same "Nothing here yet." string
+  that component's own rationale traces to a real Penpot instance) rather
+  than inventing new empty-state styling -- this component only adds the
+  layout (centered column, optional icon/action) a table-row-shaped cell
+  can't offer, for the non-table-row cases table-cell doesn't cover: a
+  paper-preview with nothing selected, a set table with no blocks yet.
+*/
+
+.ds-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-spacing-4);
+  padding: var(--ds-spacing-6);
+  text-align: center;
+}
+
+.ds-empty-state__icon {
+  width: var(--ds-spacing-8);
+  height: var(--ds-spacing-8);
+  color: var(--ds-color-text-subactive);
+}
+
+.ds-empty-state__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ds-empty-state__message {
+  font-family: var(--ds-font-body-text-italic-family);
+  font-size: var(--ds-font-body-text-italic-size);
+  font-weight: var(--ds-font-body-text-italic-weight);
+  line-height: var(--ds-font-body-text-italic-line-height);
+  letter-spacing: var(--ds-font-body-text-italic-letter-spacing);
+  font-style: var(--ds-font-body-text-italic-style);
+  color: var(--ds-color-text-subactive);
+}
+
+/* ---- data-size="row": an empty table / list, one 44px row (Figma) --------
+   The message is centered in a row as tall as a table row, in the caption role
+   at half opacity, with one hairline under it (base/150 in the light theme,
+   the pressed surface in dark). No icon. Used under a table head or a block
+   list when it has no rows. */
+.ds-empty-state[hidden] {
+  display: none;
+}
+
+.ds-empty-state[data-size="row"] {
+  flex-direction: row;
+  box-sizing: border-box;
+  height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
+  padding: var(--ds-spacing-cell);
+  gap: 0;
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-bg-surface-pressed);
+  opacity: 0.5;
+}
+
+:root:not([data-theme="dark"]) .ds-empty-state[data-size="row"] {
+  border-bottom-color: var(--ds-color-base-150);
+}
+
+.ds-empty-state[data-size="row"] .ds-empty-state__message {
+  font-family: var(--ds-font-caption-family);
+  font-size: var(--ds-font-caption-size);
+  font-style: var(--ds-font-caption-style);
+  font-weight: var(--ds-font-caption-weight);
+  line-height: normal;
+  color: var(--ds-color-text-active);
+}
+
+/* ---- data-size="block": the empty area of a picker (Figma) ---------------
+   A wide block that fills the row it sits in: 40px above and below, a
+   centered message in the caption role (half opacity) on the pressed surface
+   (base/50 in the light theme). */
+.ds-empty-state[data-size="block"] {
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  gap: 0;
+  padding: var(--ds-spacing-9) var(--ds-spacing-6);
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+:root:not([data-theme="dark"]) .ds-empty-state[data-size="block"] {
+  background-color: var(--ds-color-base-50);
+}
+
+.ds-empty-state[data-size="block"] .ds-empty-state__message {
+  font-family: var(--ds-font-caption-family);
+  font-size: var(--ds-font-caption-size);
+  font-style: var(--ds-font-caption-style);
+  font-weight: var(--ds-font-caption-weight);
+  color: var(--ds-color-text-active);
+  opacity: 0.5;
+}
+
+/* ---- data-size="text": a plain empty line under a table ------------------
+   Left-aligned regular text at half opacity on the surface color, inset 10px
+   (Queue: "No submissions yet."). No fixed height, no hairline. */
+.ds-empty-state[data-size="text"] {
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0;
+  padding: var(--ds-spacing-cell);
+  background-color: var(--ds-color-bg-surface);
+  text-align: left;
+  opacity: 0.5;
+}
+
+.ds-empty-state[data-size="text"] .ds-empty-state__message {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  font-style: normal;
+  color: var(--ds-color-text-active);
+}
+
+/* ---- data-size="fill": the empty area of a preview pane (Figma) ----------
+   An inset box, 20px from every edge of its positioned parent, on base/175
+   with a hairline on its left edge and the message centered in the caption
+   role. The whole box is at half opacity, as Figma draws it. */
+.ds-empty-state[data-size="fill"] {
+  position: absolute;
+  inset: var(--ds-spacing-6);
+  flex-direction: row;
+  gap: 0;
+  padding: 0;
+  background-color: var(--ds-color-base-175);
+  box-shadow: inset var(--ds-border-width-thin) 0 0 0 var(--ds-color-object-dark-passive);
+  opacity: 0.5;
+}
+
+.ds-empty-state[data-size="fill"] .ds-empty-state__message {
+  font-family: var(--ds-font-caption-family);
+  font-size: var(--ds-font-caption-size);
+  font-style: var(--ds-font-caption-style);
+  font-weight: var(--ds-font-caption-weight);
+  color: var(--ds-color-text-active);
+}

@@ -1,0 +1,57 @@
+{
+  "name": "table-preview",
+  "description": "Every table type of the Figma D_SYSTEM table-row frame in one table: All, For review, Analyzed, Archived, Filtered, Queue, Collection, Reference and Draft, each with its own column set, one shown at a time. The Type column's header is a filter that switches the type; All shows every ticket with the All table's columns. Sortable Category / Due date / Status headers, a Status filter on All, and per-row Status dropdowns that recolor the row's status pill.",
+  "status": "stable",
+  "category": "tables",
+  "layout": "wide",
+  "variants": [
+    "all",
+    "for-review",
+    "analyzed",
+    "archived",
+    "filtered",
+    "queue",
+    "collection",
+    "reference",
+    "draft"
+  ],
+  "props": [
+    {
+      "name": "types",
+      "type": "array",
+      "required": true,
+      "description": "[{ id, label, columns, actions, in_all }]. columns: the column keys in order (template.html's COLUMNS: drag (a Reorder handle: drag the row up/down, via table-row), check, save, name, category, due, summary, type, status, status_sort, reason, details, dates, link, notes, updates, actions). actions: the table-cell spec of that type's Actions cell. in_all: whether that type's records appear in the first type's table. The first type is the combined one (All); its label is the Type filter's first item."
+    },
+    {
+      "name": "records",
+      "type": "array",
+      "required": true,
+      "description": "[{ type, status, name, category, due, summary, reason, details, dates, notes, updates }] -- one row each, in its own type's table (and in the first table if its type has in_all). A field a column does not use is ignored; a column whose field is missing renders empty."
+    },
+    {
+      "name": "status_options",
+      "type": "array",
+      "required": false,
+      "default": [],
+      "description": "[{ value, label }] offered by every Status dropdown and by All's Status filter. value is what the row's data-status becomes (table-row colors the pill for analysed / submitted / approved / pending / declined)."
+    },
+    {
+      "name": "active",
+      "type": "string",
+      "required": false,
+      "description": "The type id shown at load. Default: the first type."
+    }
+  ],
+  "source": "figma:DSYSTEMFILEKEY#28:1123",
+  "rationale": "Figma draws each table type as a separate Header + Table pair stacked down the table-row frame; this component puts them in one table so the column sets can be compared by switching. Column sets, header kinds and cell kinds are Figma's (see source): Category and Due date headers carry the sort arrow, All's Status header the filter glyph (icons/filter.svg, node 38:2934), Queue's Status the arrow; Summary / Reason cells are Figma's Single-active-t+button cell (text clipped, \"view\" kept whole); Status cells are dropdowns whose value is a pill in the row-status colors. One deliberate deviation: Figma's Full Description column is replaced by Type, whose header is the filter that picks the type, so the switch lives in the table's own vocabulary (a filterable column) rather than a separate control; types without Full Description (Collection, Template, Queue) get Type right after Name. Every cell is a real include of table-cell, table-header-cell or table-row; this component adds only the grid (one per type, so header and body share tracks via display:contents rows), the hidden-row fix display:contents needs, and the host wiring the composed components leave to their page (filter, sort, status). All nine types are rendered at build time and hidden, not built by script, because the composed components wire their behavior once at load. Column tracks are token-based: flexible text columns are minmax(spacing-9 x 4, 1fr), everything else max-content (Figma's fixed widths are the width of their content). Actions sit at 40% until row hover (data-reveal-actions), as Figma draws them. An optional `drag` column (blank header, table-row's drag handle) lets a table offer row reordering. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "Each type's grid is role=\"table\" labelled with the type's name; hidden tables are removed from the accessibility tree by the hidden attribute. The Type and Status filters are table-header-cell filter buttons (aria-haspopup=\"listbox\", aria-label naming the column and the current choice); the row Status dropdowns carry aria-label \"Status of <name>\". Rows are grid items via display:contents, so there is no row role; screen readers read the cells in order. Selection, save and dropdown keyboard behavior are the composed components' own.",
+  "uses": [
+    "table-cell",
+    "table-header-cell",
+    "table-row"
+  ]
+}

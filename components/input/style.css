@@ -1,0 +1,97 @@
+/*
+  input (Figma: Input, Type=text -- Size=transparent|filled, State=default|
+  hover|focused; node 33:8199 in the consumer-app Figma file)
+
+  Rules: every value is a var(--ds-*) reference from tokens/output.css.
+
+  Figma draws a 40px box with a 1px border and 10px padding. Its "Size"
+  property is really a fill choice (transparent or base/250), so it is
+  exposed here as `fill` (data-fill) -- `size` would collide with
+  input-dropdown's width scale. State is native CSS, no `state` prop:
+  - default:  base/400 border; transparent, or base/250 with data-fill=
+              "filled"; placeholder is body text at 50% opacity
+  - hover:    base/250 fill and base/750 border, for BOTH fills (the
+              transparent field fills in on hover)
+  - focus:    white fill, accent border; typed text at full opacity
+  Figma has exactly these three states. It has no disabled, error or
+  active-pressed state, so none is styled here.
+
+  Input-specific slots, each with a fallback to a token dis-system itself
+  defines in both themes:
+    --ds-color-input-fill          base/250        -> object-white-passive
+    --ds-color-input-border        base/400        -> object-dark-passive
+    --ds-color-input-border-hover  base/750        -> object-dark-pressed
+    --ds-color-input-border-focus  accent primary  -> accent-1
+  A consumer's staging layer (the consumer's own token file) defines the slots to
+  get Figma's values; a theme that doesn't define them (dark, until its
+  export exists) keeps a working field on the fallbacks.
+*/
+
+.ds-input {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--ds-spacing-9);
+  padding: calc(var(--ds-spacing-3) + var(--ds-spacing-1));
+  border: var(--ds-border-width-thin) solid var(--ds-color-input-border, var(--ds-color-object-dark-passive));
+  border-radius: var(--ds-radius-none);
+
+  background-color: transparent;
+  color: var(--ds-color-text-active);
+}
+
+/* Transparent (the default fill) has no visible edge at rest -- Figma
+   D_SYSTEM Input size=transparent (node 103:4762): it sits in a row or a
+   toolbar that already frames it. Hover and focus below bring the border
+   back. Same treatment input-dropdown's transparent fill already has.
+   Contexts that need a boxed transparent field at rest (table notes cell,
+   header-block search) restore the border in their own CSS. */
+.ds-input:not([data-fill="filled"]) {
+  border-color: transparent;
+}
+
+.ds-input[data-fill="filled"] {
+  background-color: var(--ds-color-input-fill, var(--ds-color-object-white-passive));
+}
+
+.ds-input::placeholder {
+  color: var(--ds-color-text-active);
+  opacity: 0.5;
+}
+
+.ds-input:hover:not(:focus) {
+  background-color: var(--ds-color-input-fill, var(--ds-color-object-white-passive));
+  border-color: var(--ds-color-input-border-hover, var(--ds-color-object-dark-pressed));
+}
+
+/*
+  Focus is the fill and border change alone, as in Figma -- no extra
+  outline. The border goes from a gray to the accent color, which is a
+  strong enough signal on its own.
+*/
+.ds-input:focus {
+  background-color: var(--ds-color-bg-surface);
+  border-color: var(--ds-color-input-border-focus, var(--ds-color-accent-1));
+  outline: none;
+}
+
+/*
+  type="textarea" (added 2026-09-09, not from Penpot or Figma -- the input
+  designs are single-line only). Migrated verbatim from for-you.html's own
+  local override (.foryou-description-textarea, the consuming app's open-call description
+  field), which existed only because this variant didn't. A <textarea>
+  inherits none of <input>'s UA styling, so the box/color/type rules above
+  apply through the shared class; only what a multi-line field needs is
+  added here. The fixed 40px height is dropped for it.
+*/
+.ds-input[data-type="textarea"] {
+  display: block;
+  height: auto;
+  min-height: 160px;
+  resize: vertical;
+}

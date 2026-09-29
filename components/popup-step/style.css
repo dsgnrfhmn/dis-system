@@ -1,0 +1,45 @@
+/*
+  popup-step
+  One numbered step of a long popup body (Add project: 1 Choose your project,
+  2 Choose work images, ...). A 56px head with the numbered title at half
+  opacity on the left and an optional text button ("Reset the selection") on
+  the right, over a body inset 10px / 20px that holds the step's control
+  (a dropdown, a gallery, radios). Stack several inside a
+  .ds-popup__body[data-type="steps"]. The consumer-app Figma file APPFILEKEY,
+  nodes 150:16503 (empty) and 150:16475 (with a project).
+*/
+.ds-popup-step__head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
+  padding: 0 var(--ds-spacing-6);
+}
+
+.ds-popup-step__title {
+  margin: 0;
+  padding: 0;
+  font-family: var(--ds-font-title-family);
+  font-size: var(--ds-font-title-size);
+  font-weight: var(--ds-font-title-weight);
+  color: var(--ds-color-text-active);
+  opacity: 0.5;
+  white-space: nowrap;
+}
+
+.ds-popup-step__title li {
+  margin-inline-start: var(--ds-spacing-7);
+  line-height: normal;
+}
+
+.ds-popup-step__body {
+  box-sizing: border-box;
+  padding: var(--ds-spacing-cell) var(--ds-spacing-6);
+}
+
+.ds-popup-step__body .ds-dropdown {
+  display: block;
+  width: 100%;
+}

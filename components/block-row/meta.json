@@ -1,0 +1,45 @@
+{
+  "name": "block-row",
+  "description": "One text block in a list of blocks: the text and, on hover, its actions. Kind \"source\" is a block to pick (Add; shaded once already used); kind \"editable\" has a drag handle, Edit / Delete and an in-place edit mode.",
+  "status": "stable",
+  "category": "tables",
+  "listed": false,
+  "layout": "wide",
+  "variants": [
+    "source",
+    "editable"
+  ],
+  "props": [
+    {
+      "name": "type",
+      "type": "string",
+      "required": false,
+      "default": "source",
+      "description": "\"source\" or \"editable\"."
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "default": "Block text",
+      "description": "The block's text."
+    },
+    {
+      "name": "included",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Kind \"source\": the block is already in the document (row shaded, Add hidden)."
+    }
+  ],
+  "source": "figma:APPFILEKEY#150:16233,150:16275",
+  "rationale": "Rows have no hairlines and no vertical rules, unlike table-row: Figma draws these panes as flat block lists on white, each row its text with a trailing blank line, so min-height is spacing.9 + spacing.6 (60px) and padding spacing.cell (10px). Hover and focus-within fill bg.surface-pressed. Actions and the drag icon are at opacity 0 until hover or focus (or edit mode), like table-row's hover-only icons, so a long list reads as text first; keyboard focus keeps them reachable. An already-included source block is shaded (Figma base/warm-100 in light, bg.surface-pressed in dark) and its Add button is visibility:hidden, not removed, so the row keeps its width. Edit mode swaps the text for a textarea with an accent border and drops the text padding, so the box sits where the text was. Drag and drop is driven by the host page through data-dragging (dimmed) and data-drop=\"before\"/\"after\" (an accent line on the top or bottom edge), the same attribute API table-row offers. Not sourced from Figma: the hover / focus reveal of the actions. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [
+    "text-button"
+  ],
+  "a11y_notes": "Rows are <li> inside a <ul class=\"ds-block-list\">; give the list an aria-label. Actions are real buttons; the drag handle is a plain element with a labelled icon (drag and drop has no keyboard equivalent here, the host page must offer one if it matters)."
+}

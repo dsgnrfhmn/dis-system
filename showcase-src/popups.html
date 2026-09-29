@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Popups</title>
+<!-- Popups card, Figma D_SYSTEM node 103:4812: Small / Medium / Big tabs
+     (header-tab) over an open popup on its backdrop (popup, drawn inline via
+     the documentation-only preview). The tabs switch the popup's own size
+     prop (small 500px / medium 800px / large 1200px). The popup's buttons
+     do nothing here: popup/component.js, which closes it, isn't loaded. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/text-button/style.css">
+<link rel="stylesheet" href="../components/input/style.css">
+<link rel="stylesheet" href="../components/header-tab/style.css">
+<link rel="stylesheet" href="../components/popup/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>
+  .showcase { display: block; padding: 0; }
+  .showcase__tabs { display: flex; }
+  .showcase__tabs > .ds-header-tab { flex: 1 1 0; }
+</style>
+</head>
+<body>
+<div class="showcase">
+  <div class="showcase__tabs" role="tablist" aria-label="Popup size" data-popup-size-tabs>
+    {% with label='Small' %}{% include "components/header-tab/template.html" %}{% endwith %}
+    {% with label='Medium', active=true %}{% include "components/header-tab/template.html" %}{% endwith %}
+    {% with label='Big' %}{% include "components/header-tab/template.html" %}{% endwith %}
+  </div>
+  {% with preview='inline', popup_id='showcase-popup', type='input', title='Title', placeholder='Input Placeholder', size='medium', bottom_actions=[{'label': 'Button', 'priority': 'secondary'}, {'label': 'Button', 'priority': 'primary'}] %}{% include "components/popup/template.html" %}{% endwith %}
+</div>
+<script src="../components/text-button/component.js"></script>
+<script src="../components/input/component.js"></script>
+<script src="../components/header-tab/component.js"></script>
+<script>
+  // Tab label -> popup size (header-tab only switches aria-selected).
+  const SIZES = { Small: 'small', Medium: 'medium', Big: 'large' };
+  const popup = document.querySelector('#showcase-popup .ds-popup');
+  document.querySelector('[data-popup-size-tabs]').addEventListener('ds-header-tab-change', (e) => {
+    popup.dataset.size = SIZES[e.detail.selected.textContent.trim()];
+  });
+</script>
+</body>
+</html>

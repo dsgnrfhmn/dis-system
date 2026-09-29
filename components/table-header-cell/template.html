@@ -1,0 +1,31 @@
+{% set _sortable = sortable | default(false) %}
+{% set _favourite_all = favourite_all | default(false) %}
+{% set _filter = filter | default(false) %}
+<div class="ds-table-cell ds-table-header-cell"{% if _filter %} data-filter data-filter-value=""{% endif %}{% if _favourite_all %} data-type="icon-cell" data-favourite-all data-saved="{{ 'true' if all_saved else 'false' }}"{% endif %}>
+{% if _favourite_all %}
+  <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="{{ 'true' if all_saved else 'false' }}" aria-label="Mark all as saved">
+    <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
+  </button>
+{% endif %}
+{% if _filter %}
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by {{ label | default('Column') }}" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">{{ label | default('Column') }}</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="{{ filter_icon | default('arrow-down') }}" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">{{ filter_all_label | default('All') }}</button>
+{% for option in filter_options | default([]) %}
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="{{ option.value }}" aria-selected="false">{{ option.label }}</button>
+{% endfor %}
+    </div>
+  </div>
+{% elif _sortable %}
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="{{ sort_dir | default('none') }}" aria-label="Sort by {{ label | default('Column') }}">
+    {% if not _favourite_all %}<span class="ds-table-cell__text">{{ label | default('Column') }}</span>{% endif %}
+    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+{% elif not _favourite_all %}
+  <span class="ds-table-cell__text">{{ label | default('Column') }}</span>
+{% endif %}
+</div>

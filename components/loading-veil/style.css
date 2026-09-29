@@ -1,0 +1,52 @@
+/*
+  loading-veil
+  A dim veil over one area (a pane body) with a small dark "Loading" tooltip on
+  top: the area under it is loading and cannot be used. The veil uses the same
+  overlay color as popups at 50%. The tooltip is horizontally centered; the host
+  sets its vertical position (style.top), because Figma draws it at the middle of
+  the window, not of the area. The consumer-app Figma file APPFILEKEY, node
+  150:16233. The area must be position: relative (.ds-pane__body is).
+*/
+.ds-loading-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+.ds-loading-veil[hidden] {
+  display: none;
+}
+
+.ds-loading-veil::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--ds-color-bg-overlay);
+  opacity: 0.5;
+}
+
+.ds-loading-veil__tip {
+  position: absolute;
+  left: 50%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: var(--ds-spacing-cell);
+  padding: var(--ds-spacing-cell);
+  background-color: var(--ds-color-base-900);
+  border: var(--ds-border-width-thin) solid var(--ds-color-base-1000);
+  color: var(--ds-color-base-0);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  line-height: normal;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.ds-loading-veil__icon {
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  background-color: currentColor;
+  -webkit-mask: url("../../icons/loading.svg") center / 100% 100% no-repeat;
+  mask: url("../../icons/loading.svg") center / 100% 100% no-repeat;
+}

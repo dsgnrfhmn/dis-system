@@ -1,0 +1,270 @@
+/*
+  gallery-image (Penpot Variant axes: Format = landscape/Portrait/Square,
+  Type = Image/Text-icon, Subtype = Value 1/Short/Middle/Full,
+  State = Default/Selected)
+
+  Sizes read directly off Penpot's real "Image" instances via MCP, all
+  three Format values sampled -- height is fixed at 160px across all
+  three, only width changes: landscape 260px (wider), portrait 130px
+  (narrower), square 160px (equal). Pixel-matched, not Token-bound in
+  Penpot's own shape.tokens.
+
+  Fill: a flat object-dark-passive gray (#ADADAD in Penpot's own data)
+  stands in for a real photo -- Penpot's own instances carry no image
+  asset either, so this reproduces the same placeholder rather than
+  inventing stock imagery; a real consumer sets an actual background
+  image on this element. Ambiguity flagged per CLAUDE.md: #ADADAD also
+  resolves to object-dark-disabled, bg-surface-pressed, and (light theme)
+  object-white-disabled/pressed in tokens/output.css -- object-dark-
+  passive was picked as the closest semantic fit (a neutral, non-
+  state-specific fill), not because Penpot's data disambiguates it.
+
+  Selection badge (State="Selected" only): a small numbered square,
+  bottom-right corner, flush with both edges (Penpot's own instance
+  measures it at exactly image-width-24 / image-height-24, i.e. zero
+  inset) -- text.inverced numeral in typography.heading5 (14px/700 --
+  matches Penpot's own text-child data exactly). Not from Penpot's own
+  "Icons / Number-label" component as an SVG (it's just a filled square
+  with a text character, no vector glyph) -- reproduced directly in
+  HTML/CSS instead of fetching an icon asset for it.
+
+  Badge fill: accent-1, matching the selected-state outline's own color
+  (see that rule below) -- reverted 2026-09-05 (explicit request, "make
+  the number block orange like the border") from an intermediate
+  text-active fill (earlier request: "change color from blue to black"),
+  back to Penpot's own originally-sampled accent color. text-inverced
+  stays the numeral color regardless -- same accent-1/text-inverced
+  contrast pairing filled-button already uses for its own accent fill.
+*/
+
+.ds-gallery-image {
+  position: relative;
+  height: 160px;
+  background-color: var(--ds-color-object-dark-passive);
+}
+
+.ds-gallery-image[data-format="landscape"] {
+  width: 260px;
+}
+
+.ds-gallery-image[data-format="portrait"] {
+  width: 130px;
+}
+
+.ds-gallery-image[data-format="square"] {
+  width: 160px;
+}
+
+/* Hover: explicit host request -- an outline only, text-active, no
+   background fill (an earlier version filled Type="text-icon" with
+   bg-surface-pressed on hover; replaced with this border-only treatment,
+   applied to both types for one consistent interaction affordance, not
+   two different ones). outline rather than border, same box-model reason
+   the selected-state frame below uses it: doesn't grow this element's
+   pixel-matched size or shift a composing row's layout while hovered.
+   Placed before the selected-state rule on purpose -- equal specificity
+   (.class:hover vs .class[attr]), so source order decides, and a
+   selected item being hovered should keep showing its own (accent)
+   outline rather than switch to this hover color. */
+.ds-gallery-image:hover {
+  outline: var(--ds-border-width-thin) solid var(--ds-color-text-active);
+}
+
+/* Selected-state frame: explicit host request, border-width-thin (1px)
+   solid accent-1 -- reverted from an earlier text-active version, back to
+   Penpot's own originally-sampled accent color, now applied as the
+   shared selected indicator across both types. Type="image"'s own badge
+   fill now matches this same accent-1 (see header comment) rather than
+   diverging from it. Implemented as outline rather than
+   border: an actual border would add to this element's pixel-matched
+   width/height (no box-sizing:border-box reset in this standalone demo
+   -- see gallery/style.css's own box model), growing it 2px past
+   Penpot's real measurements and shifting the row's layout only while an
+   item is selected. outline paints the same 1px frame without affecting
+   layout, the same technique input/filled-button's own style.css already
+   uses for their focus rings. */
+.ds-gallery-image[data-selected="true"] {
+  outline: var(--ds-border-width-thin) solid var(--ds-color-accent-1);
+}
+
+/*
+  Type="Text-icon" (Subtype: Short/Middle/Full) -- read directly off
+  Penpot's real "Gallery / Image" instances via MCP, all three Subtype
+  values sampled and exported as PNG to confirm visually: NOT a second
+  image-thumbnail look, it's a text skeleton/loading placeholder -- a bold
+  label ("Short"/"Middle"/"Full", the Subtype's own name) above a stack of
+  flat gray bars standing in for lines of text, the last bar always
+  shorter than the rest. Previously flagged and deferred (see git history)
+  as "actual purpose unclear from the sampled data alone" -- now built
+  since that purpose has been confirmed directly via MCP + export_shape.
+
+  Width: NOT fixed at Penpot's own sampled 566px -- explicit host request,
+  since these three are meant to sit side by side (like gallery's own
+  row) and stretch to fill whatever block contains them, not stay pinned
+  to Penpot's single sampled board width. flex:1 1 0 + min-width:0 makes
+  each instance share the row's available width evenly when composed as
+  flex siblings (see gallery-image/index.html's own demo wrapper); outside
+  a flex row it still fills its containing block by default, since
+  width:auto on a block-level box already does that -- no extra CSS
+  needed for that case. Height stays Penpot's own fixed 120px (unrelated
+  to the width request) -- box-sizing:border-box added locally (this
+  standalone demo has no global border-box reset) so padding doesn't grow
+  it past that. padding: spacing-6 (20px all sides) -- Token-bound in Penpot's own data
+  (paddingTop/Right/Bottom/Left: "spacing.6"). Gap between the label and
+  the bar stack (20px) and the bars' own gap (4px) are NOT Token-bound in
+  Penpot's own data (a raw, unbound number in both cases) but numerically
+  identical to spacing-6 and spacing-2 respectively -- used here since
+  they're the correct semantic values, not a coincidence worth ignoring.
+  Bar height (6px) has no matching token at all (checked every raw
+  spacing/border-width/radius value in Base-Shapes.json) -- pixel-matched
+  from Penpot's real measurement instead, the same category of gap
+  gallery-image's own Format-driven width/height already documents.
+
+  Fixed height with visible overflow, not auto-height: Penpot's own three
+  sampled boards are ALL fixed at height=120 (verticalSizing:"fix") with
+  clipContent:false, even though Middle's and Full's own content
+  (label + gap + bar stack, by their own sampled child sizes) computes to
+  108px/128px -- taller than the 120px box for Full. Reproduced faithfully
+  as height:120px + default (visible) overflow, matching clipContent:false
+  exactly, rather than switching to auto-height and silently "fixing" what
+  reads as an unresized-board quirk in Penpot's own source data.
+
+  Bar fill is object-white.disabled (Token-bound in Penpot's own data,
+  distinct from the Image type's object-dark-passive placeholder fill).
+  Last bar in each stack is a fixed 80px (Penpot's own
+  horizontalSizing:"fix", not a percentage) regardless of subtype; every
+  bar above it is horizontalSizing:"fill" (100% of the stack's width).
+  Label uses typography.heading4 (18px/700, matches Penpot's own
+  text-child data exactly) in text.active.
+*/
+.ds-gallery-image[data-type="text-icon"] {
+  box-sizing: border-box;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 120px;
+  padding: var(--ds-spacing-6);
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--ds-spacing-6);
+  cursor: pointer;
+}
+
+/* Click-to-select is wired in component.js -- explicit host request so
+   this can be tested interactively. Hover styling itself (a shared,
+   fill-less outline) lives on the universal .ds-gallery-image:hover rule
+   above, not here. */
+
+.ds-gallery-image__label {
+  font-family: var(--ds-font-heading-4-family);
+  font-size: var(--ds-font-heading-4-size);
+  font-weight: var(--ds-font-heading-4-weight);
+  line-height: var(--ds-font-heading-4-line-height);
+  letter-spacing: var(--ds-font-heading-4-letter-spacing);
+  color: var(--ds-color-text-active);
+}
+
+.ds-gallery-image__bars {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--ds-spacing-2);
+  width: 100%;
+}
+
+.ds-gallery-image__bar {
+  height: 6px;
+  width: 100%;
+  background-color: var(--ds-color-object-white-disabled);
+}
+
+.ds-gallery-image__bar--short {
+  width: 80px;
+}
+
+.ds-gallery-image__badge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ds-color-accent-1);
+  color: var(--ds-color-text-inverced);
+  font-family: var(--ds-font-heading-5-family);
+  font-size: var(--ds-font-heading-5-size);
+  font-weight: var(--ds-font-heading-5-weight);
+  line-height: var(--ds-font-heading-5-line-height);
+  letter-spacing: var(--ds-font-heading-5-letter-spacing);
+}
+
+/* ---- type="picker": a selectable image card (Figma, Add project) ----------
+   A 160px square <button> with aria-pressed. Picked, it gets a 2px accent
+   frame, a 4px surface mat around the picture and a small numbered badge (the
+   pick order) in the bottom-right corner. The picture is a placeholder until
+   real images exist: its fill is object-dark.passive. With a `src` prop
+   the template renders an <img> over that fill, covering the card; while
+   it loads, or if it fails (component.js hides a failed <img>), the fill
+   shows. The host passes only data (src/alt), never a style value. */
+.ds-gallery-image[data-type="picker"] {
+  flex: none;
+  box-sizing: border-box;
+  width: calc(var(--ds-spacing-9) * 4);
+  height: calc(var(--ds-spacing-9) * 4);
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: var(--ds-border-width-default) solid transparent;
+  cursor: pointer;
+}
+
+.ds-gallery-image[data-type="picker"][aria-pressed="true"] {
+  border-color: var(--ds-color-accent-1);
+}
+
+.ds-gallery-image[data-type="picker"][aria-pressed="true"]:hover {
+  outline: none;
+}
+
+.ds-gallery-image[data-type="picker"]:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+.ds-gallery-image__image {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  background-color: var(--ds-color-object-dark-passive);
+  background-clip: content-box;
+}
+
+.ds-gallery-image__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ds-gallery-image__img[hidden] {
+  display: none;
+}
+
+.ds-gallery-image[data-type="picker"][aria-pressed="true"] .ds-gallery-image__image {
+  border: var(--ds-spacing-2) solid var(--ds-color-bg-surface);
+}
+
+.ds-gallery-image[data-type="picker"] .ds-gallery-image__badge {
+  box-sizing: border-box;
+  padding: var(--ds-spacing-2);
+  background-color: var(--ds-color-bg-surface);
+  background-clip: content-box;
+  color: var(--ds-color-accent-1);
+  font-family: var(--ds-font-micro-family);
+  font-size: var(--ds-font-micro-size);
+  font-weight: var(--ds-font-micro-weight);
+  letter-spacing: normal;
+  line-height: 1;
+}

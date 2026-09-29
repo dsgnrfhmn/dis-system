@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tags</title>
+<!-- Tags card, Figma D_SYSTEM node 103:4746: every tag type, Active over
+     Passive, left-aligned, 20px apart, 40px padding. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/tag/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>
+  .showcase { justify-content: flex-start; gap: var(--ds-spacing-6); }
+  .showcase__col { align-items: flex-start; }
+</style>
+</head>
+<body>
+<div class="showcase">
+  {% for type in ['accent-1', 'accent-2', 'accent-3', 'success', 'warning', 'danger', 'neutral'] %}
+  <div class="showcase__col">
+    {% with subtype='active' %}{% include "components/tag/template.html" %}{% endwith %}
+    {% with subtype='passive' %}{% include "components/tag/template.html" %}{% endwith %}
+  </div>
+  {% endfor %}
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toasters and tooltips</title>
+<!-- Toasters and tooltips card, Figma D_SYSTEM node 103:4772: a warning and
+     a success toast side by side (each half the row, 20px apart) over one
+     tooltip, 40px apart. Tooltips are shown without hover via the
+     documentation-only data-preview. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/text-button/style.css">
+<link rel="stylesheet" href="../components/toast/style.css">
+<link rel="stylesheet" href="../components/tooltip/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>
+  .showcase { flex-direction: column; align-items: stretch; }
+  .showcase__row > .ds-toast { flex: 1 1 0; }
+  /* the bubble sits above its trigger: room for it (one 40px line + offset) */
+  .showcase__row--tooltips { padding-top: calc(var(--ds-spacing-9) + var(--ds-spacing-3)); }
+</style>
+</head>
+<body>
+<div class="showcase">
+  <div class="showcase__row">
+    {% with message='Warning notification text', status='warning' %}{% include "components/toast/template.html" %}{% endwith %}
+    {% with message='Success notification text.', status='success' %}{% include "components/toast/template.html" %}{% endwith %}
+  </div>
+  <div class="showcase__row showcase__row--tooltips">
+    {% with text='Help text about the feature', label='Hover or focus me', preview='visible' %}{% include "components/tooltip/template.html" %}{% endwith %}
+  </div>
+</div>
+<script src="../components/text-button/component.js"></script>
+<script src="../components/toast/component.js"></script>
+</body>
+</html>

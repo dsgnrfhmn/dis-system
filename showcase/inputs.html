@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inputs</title>
+<!-- Inputs card, Figma D_SYSTEM node 103:4761: transparent inputs on the
+     left, filled on the right; a text field over a dropdown in each, 280px
+     wide, 20px apart, the two columns 40px apart. Each dropdown is paired
+     with a real dropdown-menu (.ds-dropdown wrapper + trigger), as in
+     input-dropdown's own demo: click it to open the menu, pick an option. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/input/style.css">
+<link rel="stylesheet" href="../components/input-dropdown/style.css">
+<link rel="stylesheet" href="../components/dropdown-menu/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>.showcase__col { width: calc(var(--ds-spacing-9) * 7); }</style>
+</head>
+<body>
+<div class="showcase">
+  <div class="showcase__col">
+<input class="ds-input" type="text" data-fill="transparent" placeholder="Input Placeholder">
+    <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="large" data-fill="transparent" data-placeholder aria-haspopup="listbox" data-dropdown-trigger>
+  <span data-dropdown-value>Input Placeholder</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+<div class="ds-dropdown-menu" role="listbox" hidden>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="option-a">Option A</button>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="option-b">Option B</button>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="option-c">Option C</button>
+</div>
+    </div>
+  </div>
+  <div class="showcase__col">
+<input class="ds-input" type="text" data-fill="filled" placeholder="Input Placeholder">
+    <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="large" data-fill="filled" data-placeholder aria-haspopup="listbox" data-dropdown-trigger>
+  <span data-dropdown-value>Input Placeholder</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+<div class="ds-dropdown-menu" role="listbox" hidden>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="option-a">Option A</button>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="option-b">Option B</button>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="option-c">Option C</button>
+</div>
+    </div>
+  </div>
+</div>
+<script src="../components/dropdown-menu/component.js"></script>
+<script src="../components/input-dropdown/component.js"></script>
+<script src="../components/input/component.js"></script>
+</body>
+</html>

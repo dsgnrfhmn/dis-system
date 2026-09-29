@@ -1,0 +1,5 @@
+{% if type == 'textarea' %}
+<textarea class="ds-input" data-type="textarea"{% if fill %} data-fill="{{ fill }}"{% endif %} rows="{{ rows | default(8) }}"{% if not value %} placeholder="{{ placeholder | default('Placeholder text') }}"{% endif %}>{{ value | default('') }}</textarea>
+{% else %}
+<input class="ds-input" type="text"{% if fill %} data-fill="{{ fill }}"{% endif %}{% if value %} value="{{ value }}"{% else %} placeholder="{{ placeholder | default('Placeholder text') }}"{% endif %}>
+{% endif %}

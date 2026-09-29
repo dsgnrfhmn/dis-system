@@ -1,0 +1,85 @@
+{
+  "name": "table-header-cell",
+  "description": "A single column-header cell for a table's header row: a plain label, a sort button with a direction arrow when the column is sortable, and/or a favourite-all toggle for a Save column. Sibling cells sharing one [data-sort-group] container sort exclusively -- only one column at a time.",
+  "status": "stable",
+  "category": "tables",
+  "layout": "wide",
+  "variants": [
+    "plain",
+    "sortable",
+    "favourite-all",
+    "filter"
+  ],
+  "props": [
+    {
+      "name": "sortable",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "When true, renders the label inside a clickable sort button with a direction-arrow icon. When false, renders a plain, non-interactive label (unless favourite_all is also set)."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Column",
+      "description": "The column's header text."
+    },
+    {
+      "name": "sort_dir",
+      "type": "string",
+      "required": false,
+      "default": "none",
+      "description": "Initial data-sort-dir: none, asc, or desc. Only meaningful when sortable=true."
+    },
+    {
+      "name": "favourite_all",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "For a Save column's header cell: adds a favourite-all toggle beside the sort button -- two independent click targets, the icon toggles every row's saved state and the arrow sorts by it. Sets data-favourite-all / data-type=\"icon-cell\" on the cell so table-row's updateFavouriteAllState() and table-cell's favourite listener drive it (see rationale)."
+    },
+    {
+      "name": "all_saved",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Initial data-saved state for the favourite-all button. Only meaningful when favourite_all=true; table-row/component.js's updateFavouriteAllState() keeps it in sync at runtime once rows exist."
+    },
+    {
+      "name": "filter",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Renders the label as a button that opens a dropdown-menu of values, for a column whose rows can be narrowed to one value. Sets data-filter / data-filter-value on the cell. Takes precedence over sortable. The page needs dropdown-menu's style.css and component.js as well."
+    },
+    {
+      "name": "filter_options",
+      "type": "array",
+      "required": false,
+      "default": [],
+      "description": "The values after the first item, each { value, label }. Only meaningful when filter=true."
+    },
+    {
+      "name": "filter_all_label",
+      "type": "string",
+      "required": false,
+      "default": "All",
+      "description": "Label of the first item, whose value is \"\" and which clears the filter. Only meaningful when filter=true."
+    },
+    {
+      "name": "filter_icon",
+      "type": "string",
+      "required": false,
+      "default": "arrow-down",
+      "description": "Only meaningful when filter=true. The icons/<name>.svg glyph beside the label: \"arrow\" (default) or \"filter\" -- Figma D_SYSTEM's filter glyph (node 38:2934), which its All table uses on a filterable column header."
+    }
+  ],
+  "source": "none",
+  "rationale": "Not built from a design-source instance: neither Penpot nor Figma had a column header with a sort affordance when it was built. It generalizes a working pattern from this repo's earlier sample table (site.css / site.js); every visual value was already token-bound there. Styled since to Figma's header cell (Table cell, header-cell text+icon: default 35:8275, hovered 35:8396, selected 35:8423) and the flat table: 44px plus a 1px hairline like a row. Labels use the \"data\" role (Inter Medium 13px, uppercase) in both themes -- type doesn't depend on the theme -- in the header-cell-label token (base/600) in light and text-subactive in dark.\n\nSortable: default is the header gray on the plain cell; hovered is black on base/100; selected -- the column with data-sort-dir asc or desc -- is the accent color on base/100, label and arrow always sharing one color. The label keeps its dotted underline (sorting stays in the view) and the 24px arrow (icons/arrow-down.svg) stays visible in every state, 10px from the label. The sort and favourite-all buttons carry the 10px cell padding, so the whole cell is clickable. Siblings in one [data-sort-group] sort exclusively. The component doesn't reorder rows: it cycles data-sort-dir and dispatches a bubbling event, and the host sorts its own rows -- a reusable header can't know the host table's row shape.\n\nfavourite_all: a Save column's header needs two independent click targets in one cell -- the icon toggles every row's saved state, a separate arrow sorts by it. The cell carries data-favourite-all and data-type=\"icon-cell\" so table-row's updateFavouriteAllState() and table-cell's favourite listener drive it; the icon markup is hand-matched to table-cell's icon-cell (a nested .ds-table-cell would draw a doubled box), so it isn't declared in `uses`, and the icon-cell padding it picks up is reset for the header layout.\n\nFilter (no design-source node): a header cell whose label opens a dropdown-menu of values. It reuses the sortable header's three states (selected = a value is chosen or the menu is open) and the 24px arrow, or Figma D_SYSTEM's filter glyph (node 38:2934) with filter_icon=\"filter\". The label keeps the column's name. The component records the choice (data-filter-value, accent state, aria-selected) and dispatches ds-table-header-cell-filter with {value, label}; the host narrows its rows. The dropdown wrapper and menu markup are hand-matched, so dropdown-menu isn't in `uses` and a host links its CSS and JS itself. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "The sort button is a native <button> with an aria-label (\"Sort by <label>\") stating the action; the direction is in data-sort-dir and not announced separately -- a host using a real <table> could add aria-sort on the header cell (the component assumes a CSS grid of divs, like table-row). Filter: the trigger is a native <button> with aria-haspopup=\"listbox\", aria-expanded kept by dropdown-menu, and an aria-label naming the column and, once chosen, the value (\"Filter by Type: Analysed\"); the menu is a role=\"listbox\" of role=\"option\" buttons with aria-selected on the chosen one. Escape and an outside click close it."
+}

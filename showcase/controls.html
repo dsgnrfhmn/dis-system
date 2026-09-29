@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Controls</title>
+<!-- Controls card, Figma D_SYSTEM node 122:3789: an 800px column holding a
+     radio choice (Short / Middle / Full description) over a gallery strip
+     of square images, 40px apart, 20px side padding. radio + gallery. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/text-button/style.css">
+<link rel="stylesheet" href="../components/radio/style.css">
+<link rel="stylesheet" href="../components/gallery-image/style.css">
+<link rel="stylesheet" href="../components/gallery/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>
+  .showcase__col { width: calc(var(--ds-spacing-9) * 20); max-width: 100%; gap: var(--ds-spacing-9); padding: 0 var(--ds-spacing-6); box-sizing: border-box; }
+  .showcase { padding-inline: 0; }
+</style>
+</head>
+<body>
+<div class="showcase">
+  <div class="showcase__col">
+<div class="ds-radio-group" role="radiogroup" aria-label="Description amount">
+  <button type="button" class="ds-text-button ds-radio" role="radio" aria-checked="false" tabindex="-1" data-value="short" data-priority="secondary" data-status="active" data-underline="dotted"><span class="ds-radio__icon" aria-hidden="true"></span><span class="ds-text-button__text">Short description</span></button>
+  <button type="button" class="ds-text-button ds-radio" role="radio" aria-checked="false" tabindex="-1" data-value="middle" data-priority="secondary" data-status="active" data-underline="dotted"><span class="ds-radio__icon" aria-hidden="true"></span><span class="ds-text-button__text">Middle description</span></button>
+  <button type="button" class="ds-text-button ds-radio" role="radio" aria-checked="false" tabindex="-1" data-value="full" data-priority="secondary" data-status="active" data-underline="dotted"><span class="ds-radio__icon" aria-hidden="true"></span><span class="ds-text-button__text">Full description</span></button>
+</div>
+<div class="ds-gallery-wrapper">
+  <div class="ds-gallery">
+<div class="ds-gallery-image" data-format="square" role="button" tabindex="0" aria-pressed="false" data-image-id="1"></div>
+<div class="ds-gallery-image" data-format="square" role="button" tabindex="0" aria-pressed="false" data-image-id="2"></div>
+<div class="ds-gallery-image" data-format="square" role="button" tabindex="0" aria-pressed="false" data-image-id="3"></div>
+<div class="ds-gallery-image" data-format="square" role="button" tabindex="0" aria-pressed="false" data-image-id="4"></div>
+<div class="ds-gallery-image" data-format="square" role="button" tabindex="0" aria-pressed="false" data-image-id="5"></div>
+<div class="ds-gallery-image" data-format="square" role="button" tabindex="0" aria-pressed="false" data-image-id="6"></div>
+<div class="ds-gallery-image" data-format="square" role="button" tabindex="0" aria-pressed="false" data-image-id="7"></div>
+  </div>
+  <div class="ds-gallery__scrollbar" aria-hidden="true">
+    <div class="ds-gallery__scrollbar-thumb"></div>
+  </div>
+</div>
+  </div>
+</div>
+<script src="../components/text-button/component.js"></script>
+<script src="../components/radio/component.js"></script>
+<script src="../components/gallery/component.js"></script>
+<script src="../components/gallery-image/component.js"></script>
+</body>
+</html>

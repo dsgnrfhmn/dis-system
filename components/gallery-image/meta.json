@@ -1,0 +1,65 @@
+{
+  "name": "gallery-image",
+  "description": "One item of a gallery. type=\"image\" (default): a thumbnail standing in for a photo, with an optional badge marking selection order. type=\"picker\": a selectable 160px square card with an optional real image. type=\"text-icon\": a text skeleton placeholder -- a bold label above a stack of gray bars, the last one shorter, in short / middle / full lengths -- selectable as a radio group with its text-icon siblings.",
+  "status": "stable",
+  "category": "cards-layouts",
+  "variants": [
+    "landscape",
+    "portrait",
+    "square",
+    "text-icon-short",
+    "text-icon-middle",
+    "text-icon-full"
+  ],
+  "props": [
+    {
+      "name": "type",
+      "type": "string",
+      "required": false,
+      "default": "image",
+      "description": "Sets data-type. \"image\" (default, attribute omitted in markup) renders the photo-thumbnail look, sized by the format prop below. \"text-icon\" renders the skeleton/placeholder look instead (120px fixed height, flexible width -- see rationale; format is not applicable in that case, Penpot only samples Text-icon at Format=landscape). Kebab-cased from Penpot's own Type axis (Image/Text-icon)."
+    },
+    {
+      "name": "format",
+      "type": "string",
+      "required": false,
+      "default": "landscape",
+      "description": "Only applies when type=\"image\". Sets data-format, controlling width at a fixed 160px height: landscape (260px, wider), portrait (130px, narrower), square (160px, equal). Kebab-cased from Penpot's own Format axis (landscape/Portrait/Square)."
+    },
+    {
+      "name": "selected",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Sets data-selected, which every type renders as the same outline frame (see rationale). For type=\"image\" the host also renders the .ds-gallery-image__badge child with the selection's order number (this component doesn't generate it). For type=\"text-icon\" this only sets the initial state -- component.js wires single-select radio semantics across each group of text-icon siblings, so at most one card per group ends up selected at runtime."
+    },
+    {
+      "name": "subtype",
+      "type": "string",
+      "required": false,
+      "default": null,
+      "description": "Only applies when type=\"text-icon\": short / middle / full, matching Penpot's Subtype axis. It determines how many .ds-gallery-image__bar children the template renders (1 full-width + 1 short for short, 2+1 for middle, 4+1 for full) and the label text."
+    },
+    {
+      "name": "src",
+      "type": "string",
+      "required": false,
+      "default": null,
+      "description": "Only applies when type=\"picker\": URL of the picture, rendered as an <img> (object-fit: cover, loading=lazy) over the placeholder fill. Omit for the placeholder. A failed load is hidden by component.js so the fill shows."
+    },
+    {
+      "name": "alt",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "Only applies with src: the <img>'s alt text. Empty by default because the picker <button> carries the accessible name (aria-label); set it only when the button has none."
+    }
+  ],
+  "source": "penpot:7cfc6f3b-95fe-808f-8008-8de593b3ca67",
+  "rationale": "type=\"image\": sizes from Penpot's \"Image\" instances, all three formats sampled -- height 160px, width 260 / 130 / 160px for landscape / portrait / square (pixel-matched). The fill is a flat object-dark-passive gray standing in for a photo, as Penpot's own instances do (a flat-color rectangle, no image asset); a host sets a real background-image. Penpot's #ADADAD matches several tokens; object-dark-passive was chosen as the neutral, non-state fill. The selection badge (Penpot State=\"Selected\") is a small square flush in the bottom-right corner: a text-inverced numeral in typography.heading5 on accent-1, the same color as the selected frame. Penpot's \"Number-label\" is a filled square with a text character, so it is HTML text, not an icon. The number and which images are selected are host state (gallery supplies them).\n\nSelected frame (all types): a 1px accent-1 outline. Hover (all types): a 1px text-active outline, no fill -- one shared affordance for both types. Outlines, not borders, so the pixel-matched sizes don't grow; hover is declared before selected so a hovered selected item keeps its accent outline.\n\ntype=\"text-icon\" (Penpot Subtype short / middle / full, purpose confirmed from Penpot's variants and exports): a skeleton placeholder -- the subtype's name as a bold label above flat gray bars standing in for lines of text, ending in one shorter 80px bar (short = 1+1 bars, middle = 2+1, full = 4+1). Boards are 120px high with spacing-6 (20px) padding; bar height and gaps are documented in style.css, including Penpot's visible overflow for middle and full. Width is not Penpot's 566px: the cards sit side by side and share their container (flex 1 1 0, min-width 0). Selection works as a radio group (component.js): siblings sharing a parent form one group, one selected at a time, with roving tabindex and arrow keys like native radios.\n\ntype=\"picker\": a selectable 160px square <button> with aria-pressed. Picked, it shows a 2px accent frame, a 4px surface mat around the picture and a small numbered badge (pick order). The placeholder fill is object-dark.passive; with the `src` prop the template renders an <img> (object-fit: cover) over it, and the fill shows while it loads or if it fails (component.js hides a failed image). The host passes only data, never a style value. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "type=\"image\" on its own is a static thumbnail; composed in gallery, gallery's component.js makes it a real toggle (role=\"button\", tabindex, aria-pressed). A host with real photos should add an accessible label per image. type=\"picker\" is a native <button> with aria-pressed. type=\"text-icon\": the shared parent gets role=\"radiogroup\", each card role=\"radio\" with aria-checked, and a roving tabindex, so the group is one Tab stop; arrow keys move focus and selection together, Enter/Space select -- native radio behavior. Note: text-icon's real purpose is a loading skeleton, and a selectable skeleton isn't a real UI pattern; the selection exists to demonstrate the shared selected frame. Used purely as a loading state, wire no selection and mark the surrounding container role=\"status\" / aria-busy instead."
+}

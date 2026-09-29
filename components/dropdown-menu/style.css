@@ -1,0 +1,122 @@
+/*
+  dropdown-menu (Penpot: "dropdown-menu", items = "Action item" variant, State: Default/Hover)
+
+  Rules: every value is a var(--ds-*) reference from tokens/output.css.
+
+  Menu container: fill bg-surface, shadow raised-high-dark, no
+  padding/gap -- items touch edge-to-edge (same zero-gap "one continuous
+  surface" pattern as the Modals popup shell). Positioning (absolute,
+  below the trigger) is this component's own addition -- Penpot's source
+  has no floating-layer concept -- but the 8px offset between trigger and
+  menu (top: 100% + spacing-3) is not invented: Penpot's own "open
+  dropdown" reference frame lays out trigger + menu in a column with
+  rowGap bound to token spacing.3. See meta.json rationale.
+
+  Item state -> token mapping, read directly off Penpot's Action item
+  instances:
+  - default: transparent (no fill token on the instance)
+  - hover:   fill object-white-pressed, shadow sunken-low
+
+  Restyled to Figma (consumer-app Figma file, APPFILEKEY, node 45:6594, opened
+  state), superseding the Penpot values above where they differ:
+  - panel: white, 1px border in the same base/750 as the open trigger
+    (--ds-color-input-border-hover), no shadow -- the border is the edge;
+  - 10px between trigger and panel (Figma's column gap), panel exactly as
+    wide as the trigger (border-box);
+  - items are 44px rows with 10px padding, text on one line; hover fills
+    base/100 (bg-surface-pressed) with no shadow; the current value's item
+    (aria-selected, kept by component.js) is Medium weight (label role).
+  10px / 44px have no spacing token, composed from the scale (8+2, 40+4).
+*/
+
+.ds-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* A trigger sized data-size="large" (100% width) needs a block-level
+   wrapper to fill its container -- an inline-block wrapper sizes to its
+   own content, which is circular when that content is itself width:100%.
+   Small/middle triggers have their own explicit fixed width regardless
+   of the wrapper, so they stay on the inline-block default above.
+   Mirror data-size="large" onto the .ds-dropdown wrapper itself (not just
+   the trigger) to opt into this -- see components/input-dropdown/index.html. */
+.ds-dropdown[data-size="large"] {
+  display: block;
+}
+
+.ds-dropdown-menu {
+  position: absolute;
+  top: calc(100% + var(--ds-spacing-3) + var(--ds-spacing-1));
+  left: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  background-color: var(--ds-color-bg-surface);
+  border: var(--ds-border-width-thin) solid var(--ds-color-input-border-hover, var(--ds-color-object-dark-pressed));
+  box-shadow: none;
+  border-radius: var(--ds-radius-none);
+}
+
+.ds-dropdown-menu[hidden] {
+  display: none;
+}
+
+.ds-dropdown-menu__item {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: calc(var(--ds-spacing-9) + var(--ds-spacing-2));
+  text-align: left;
+  white-space: nowrap;
+  padding: calc(var(--ds-spacing-3) + var(--ds-spacing-1));
+  border: none;
+  border-radius: var(--ds-radius-none);
+  background: none;
+  cursor: pointer;
+
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  color: var(--ds-color-text-active);
+}
+
+.ds-dropdown-menu__item:hover,
+.ds-dropdown-menu__item:focus-visible {
+  background-color: var(--ds-color-bg-surface-pressed);
+  outline: none;
+}
+
+/* The item matching the trigger's current value. */
+.ds-dropdown-menu__item[aria-selected="true"] {
+  font-weight: var(--ds-font-body-text-medium-weight);
+}
+
+/* Mirror data-size="compact" from the trigger (input-dropdown) onto the
+   wrapper, like "large": a block-level container the 200px trigger fills. */
+.ds-dropdown[data-size="compact"] {
+  display: block;
+}
+
+/* A divider between groups of options is a plain hairline in the same color as
+   the table rules, not the darker stacked-section rule. */
+.ds-dropdown-menu .ds-divider {
+  background-color: var(--ds-color-object-dark-passive);
+}
+
+/* An option that cannot be chosen right now (a status a record cannot move to).
+   It stays listed so the whole vocabulary is visible; a native disabled button
+   takes no click, so component.js needs no change. Put the reason in title. */
+.ds-dropdown-menu__item:disabled {
+  color: var(--ds-color-text-inactive);
+  cursor: not-allowed;
+}
+.ds-dropdown-menu__item:disabled:hover {
+  background-color: transparent;
+}

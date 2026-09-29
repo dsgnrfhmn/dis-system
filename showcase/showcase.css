@@ -1,0 +1,39 @@
+/*
+  Layout for the presentation pages in showcase/ (composed from
+  showcase-src/*.html by `python scripts/compose.py --pages showcase-src
+  --output showcase`). Each page is one card's content block on index.html,
+  embedded in an iframe: real component instances from their own
+  template.html, laid out as in that card's Figma block. Only layout lives
+  here -- every visual comes from the components' own style.css. All values
+  are tokens.
+*/
+html,
+body {
+  margin: 0;
+  background: var(--ds-color-bg-surface);
+  color: var(--ds-color-text-active);
+  font-family: var(--ds-font-body-text-family);
+}
+
+/* Figma content-block: 40px top/bottom, content centered. */
+.showcase {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--ds-spacing-9);
+  padding: var(--ds-spacing-9) var(--ds-spacing-9);
+}
+
+.showcase__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-6);
+}
+
+.showcase__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--ds-spacing-6);
+}

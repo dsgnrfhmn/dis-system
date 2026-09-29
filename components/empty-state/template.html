@@ -1,0 +1,16 @@
+{#
+  Standalone empty-state block: icon (optional) + message + optional
+  action button. table-cell's own type="empty-state" already covers a
+  table-row-shaped empty cell (see that component) -- this is for the
+  non-table-row case (a paper-preview with nothing to show, a set table
+  with no blocks yet), reusing the same "Nothing here yet." typography.
+#}
+<div class="ds-empty-state"{% if size %} data-size="{{ size }}"{% endif %}>
+{% if icon %}
+  <span class="ds-empty-state__icon" data-icon="{{ icon }}" aria-hidden="true"></span>
+{% endif %}
+  <span class="ds-empty-state__message">{{ message | default('Nothing here yet.') }}</span>
+{% if action_label %}
+  {% with priority='secondary', status='active', underline='dotted', label=action_label %}{% include "components/text-button/template.html" %}{% endwith %}
+{% endif %}
+</div>

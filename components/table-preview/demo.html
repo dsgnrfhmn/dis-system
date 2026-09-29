@@ -1,0 +1,81 @@
+<meta charset="utf-8">
+<!--
+  table-preview: the nine table types of Figma D_SYSTEM's table-row frame
+  (DSYSTEMFILEKEY, node 28:1123) in one table. Pick a type in the
+  Type column's header to switch the columns; "All" shows every
+  ticket (For review, Analyzed, Archived, Filtered, Queue)
+  with the All table's columns. Column sets are Figma's, per type
+  (Header variants 28:1154 / 1124 / 1132 / 1143 / 1166 / 1184 / 1189 /
+  1192 / 1175), with Full Description replaced by Type; where a type has
+  no Full Description (Collection, Template, Queue) Type follows Name. Row
+  content is illustrative -- Figma's rows carry one placeholder record
+  (a name, a category and a date) or "Table cell".
+  Action labels are Figma's where it names them; the Template types' rows say
+  only "Button" there, so Add (Reference) and Edit / Delete (Draft)
+  follow block-row's own source / editable kinds.
+  dropdown-menu is linked by hand: its menus are inlined by table-cell and
+  table-header-cell, not included, so it is not in "uses".
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../dropdown-menu/style.css">
+
+{% set types = [
+  {'id': 'all', 'label': 'All', 'in_all': false,
+   'columns': ['check', 'save', 'name', 'category', 'due', 'summary', 'type', 'status', 'link', 'notes', 'actions']},
+  {'id': 'for-review', 'label': 'For review', 'in_all': true,
+   'columns': ['check', 'save', 'name', 'category', 'type', 'link', 'actions'],
+   'actions': {'type': '2-actions', 'secondary_label': 'Archive', 'content': 'Analyze'}},
+  {'id': 'analyzed', 'label': 'Analyzed', 'in_all': true,
+   'columns': ['check', 'save', 'name', 'category', 'due', 'summary', 'type', 'link', 'notes', 'actions'],
+   'actions': {'type': '2-actions', 'secondary_label': 'Mark Submitted', 'content': 'Prepare Submission'}},
+  {'id': 'archived', 'label': 'Archived', 'in_all': true,
+   'columns': ['check', 'save', 'name', 'category', 'due', 'summary', 'type', 'link', 'notes', 'actions'],
+   'actions': {'type': '1-action', 'content': 'Unarchive'}},
+  {'id': 'filtered', 'label': 'Filtered', 'in_all': true,
+   'columns': ['check', 'save', 'name', 'category', 'type', 'reason', 'link', 'actions'],
+   'actions': {'type': '1-action', 'content': 'Move to “For Review”'}},
+  {'id': 'queue', 'label': 'Queue', 'in_all': true,
+   'columns': ['check', 'save', 'name', 'type', 'summary', 'dates', 'status_sort', 'notes', 'updates'],
+   'actions': {'type': '1-action', 'content': 'Open'}},
+  {'id': 'collection', 'label': 'Collection', 'in_all': false,
+   'columns': ['check', 'name', 'type', 'details', 'actions'],
+   'actions': {'type': '2-actions', 'secondary_label': 'Edit', 'content': 'Delete'}},
+  {'id': 'reference', 'label': 'Reference', 'in_all': false,
+   'columns': ['name', 'type', 'actions'],
+   'actions': {'type': '1-action', 'content': 'Add'}},
+  {'id': 'draft', 'label': 'Draft', 'in_all': false,
+   'columns': ['check', 'name', 'type', 'actions'],
+   'actions': {'type': '2-actions', 'secondary_label': 'Edit', 'content': 'Delete'}}
+] %}
+
+{% set status_options = [
+  {'value': 'for_review', 'label': 'For review'},
+  {'value': 'analysed', 'label': 'Analysed'},
+  {'value': 'submitted', 'label': 'Submitted'},
+  {'value': 'approved', 'label': 'Approved'},
+  {'value': 'archived', 'label': 'Archived'},
+  {'value': 'declined', 'label': 'Declined'}
+] %}
+
+{% set records = [
+  {'type': 'for-review', 'status': 'for_review', 'name': 'Login fails on Safari 17', 'category': 'Bug', 'due': '15.03.2026', 'summary': ''},
+  {'type': 'for-review', 'status': 'for_review', 'name': 'Add CSV export to reports', 'category': 'Feature', 'due': '02.04.2026', 'summary': ''},
+  {'type': 'analyzed', 'status': 'analysed', 'name': 'API latency spike on /search', 'category': 'Incident', 'due': '30.04.2026', 'summary': 'p95 latency on the search endpoint rose from 180 ms to 2.4 s after the nightly index rebuild; rolling the index back restores it.', 'notes': 'Check index size'},
+  {'type': 'analyzed', 'status': 'analysed', 'name': 'Rotate expiring TLS certificates', 'category': 'Task', 'due': '01.06.2026', 'summary': 'Three internal services use certificates that expire in June; renewal is automated for two of them, the third needs a manual step.'},
+  {'type': 'archived', 'status': 'declined', 'name': 'Keep the SOAP endpoint', 'category': 'Request', 'due': '10.01.2026', 'summary': 'Asks to keep the legacy SOAP endpoint for one more quarter, with a migration guide and a shutdown notice.'},
+  {'type': 'filtered', 'status': 'for_review', 'name': 'Safari login broken', 'category': 'Bug', 'due': '20.05.2026', 'summary': '', 'reason': 'Duplicate of an existing ticket.'},
+  {'type': 'filtered', 'status': 'for_review', 'name': 'Migrate CI to new runners', 'category': 'Task', 'due': '28.02.2026', 'summary': '', 'reason': 'Due date has already passed.'},
+  {'type': 'queue', 'status': 'submitted', 'name': 'Payment webhook retries', 'category': 'Incident', 'summary': 'Retries fire twice when the provider times out.', 'dates': 'Submitted 12.08.2026', 'updates': '(2) Updates'},
+  {'type': 'queue', 'status': 'for_review', 'name': 'Onboarding email copy', 'category': 'Request', 'summary': 'New welcome sequence for trial users.', 'dates': 'Submitted 01.09.2026', 'updates': '(1) Updates'},
+  {'type': 'queue', 'status': 'approved', 'name': 'Single sign-on for admins', 'category': 'Feature', 'summary': 'SAML login for the admin console.', 'dates': 'Approved 15.09.2026', 'notes': 'Schedule rollout', 'updates': '(3) Updates'},
+  {'type': 'collection', 'name': 'Release 2.4: Collection', 'details': '12 tickets · Q1–Q3 2026'},
+  {'type': 'collection', 'name': 'Security fixes set', 'details': '8 tickets · high priority'},
+  {'type': 'reference', 'name': 'Runbook: restart the ingest worker, then drain the queue.'},
+  {'type': 'reference', 'name': 'Escalation: page on-call after 15 minutes without an update.'},
+  {'type': 'draft', 'name': 'Incident note: API latency spike, 12.08.2026.'},
+  {'type': 'draft', 'name': 'Postmortem: payment webhook retries, 2026.'}
+] %}
+
+{% include "components/table-preview/template.html" %}
+
+<script src="../dropdown-menu/component.js"></script>

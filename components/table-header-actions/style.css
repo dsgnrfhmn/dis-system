@@ -1,0 +1,35 @@
+/*
+  table-header-actions
+  (Penpot component name: "table-header_right-block" — renamed here because
+  meta.schema.json requires ^[a-z][a-z0-9-]*$ and Penpot's name contains an
+  underscore; see meta.json rationale.)
+
+  This component is a layout shell only. It does not define its own button
+  styling — every child in Penpot's real instances is a text-button instance
+  (unfilled, priority + status driven; see components/text-button/style.css),
+  never the filled `button`. Consumers should place real
+  .ds-text-button elements (from components/text-button) inside
+  .ds-table-header-actions; this file only positions them.
+
+  Read directly off Penpot's 4 Action-count instances:
+  - flex row, alignItems:start, justifyContent:start, columnGap: 0.
+    columnGap is genuinely 0 in Penpot's data (not a missing/undocumented
+    value) — adjacent text-buttons already carry their own spacing.3 padding
+    on all sides, which is what visually separates them; an added gap would
+    double that spacing beyond what the source defines.
+  - rightPadding: 16 (not Token-bound in Penpot's own shape.tokens for this
+    board, but the pixel value matches spacing.5 exactly, so the semantic
+    token is used here rather than a magic number, per CLAUDE.md).
+  - Priority/status pattern across the 4 counts (see meta.json rationale):
+    least-emphasis actions first (tertiary/secondary), the one primary
+    action always last/rightmost.
+*/
+
+.ds-table-header-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  column-gap: var(--ds-spacing-0);
+  padding-right: var(--ds-spacing-0);
+}

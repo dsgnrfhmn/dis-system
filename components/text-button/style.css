@@ -1,0 +1,537 @@
+/*
+  text-button (Text-button/Primary + Text-button/Secondary)
+
+  Rules:
+  - Every value below is a var(--ds-*) reference from tokens/output.css.
+  - Color encodes operation status (see meta.json rationale), not decoration.
+
+  priority -> typography (Penpot: Priority axis):
+  - primary:   typography.buttonPrimary (bold)
+  - secondary: typography.buttonSecondary (regular)
+
+  status -> color (Penpot: State axis, plus one addition):
+  - active:    accent-1
+  - loading:   system-warning
+  - confirmed: system-success
+  - disabled:  object-dark-active (all priorities) -- not object-dark-disabled;
+    see filled-button's style.css (component since removed, 2026-09-27; git history) for the token-swap rationale
+    (explicit request, 2026-09-08, "one step darker for light theme, one
+    step lighter for dark theme"), identical here.
+  - error:     system-error -- NOT from Penpot's own State axis (checked,
+    not assumed absent); added for a destructive-action confirmation step
+    (e.g. gallery's own "Reset selection" -> "Yes, reset selection", see
+    that component's own component.js). system-error already exists as a
+    semantic color token (Color-Base-Light/Dark.json's own "error" entry,
+    resolved in tokens/output.css) but wasn't yet consumed by any
+    component before this -- reused here rather than inventing a new red,
+    the same "check tokens first" rule every other color in this file
+    already follows.
+
+  status=active or error are permanently underlined (dotted or solid, per
+  the `underline` prop) as a clickability affordance — gated to those two
+  only, since loading/confirmed/disabled aren't pointer-interactive states,
+  but error (unlike them) still is: the button stays clickable, just now
+  signaling that the next click is destructive. Changed from hover-only to
+  permanent 2026-09-17 to match Figma exactly (explicit request) --
+  see the underline rules below for the full reasoning; this deviates from
+  CLAUDE.md's own documented Interaction conventions, flagged there too.
+
+  Penpot's own instances wrap every label in "[ Label ]" bracket chrome,
+  same as `filled-button`. Removed here at explicit request
+  (2026-09-03) — see components/filled-button/style.css in git history
+  (component removed 2026-09-27).
+
+  Icon variant (explicit request, 2026-09-04): none of Penpot's own
+  Text-button instances carry an icon (every one is a bare "[ Button ]"
+  text layer, no icon slot on either Priority value) -- so this is a new,
+  undocumented-in-Penpot addition, flagged per CLAUDE.md rather than
+  treated as spec, same as nav-bar's own theme-label addition. Markup:
+  `.ds-text-button__icon` (leading, aria-hidden, loaded the same
+  fetch+innerHTML way as nav-bar/table-cell's own [data-icon] elements --
+  see component.js) followed by `.ds-text-button__label`; column-gap:
+  spacing-3 (8px, explicit spec) separates them. Icon is
+  spacing-7 (24px), the same standalone-glyph size table-cell's own
+  checkbox-cell/icon-cell and nav-bar's theme-icon already use. Icon color
+  is NOT hardcoded blue: the icon has no color of its own, so it inherits
+  `color` from `.ds-text-button[data-status="..."]` same as the label
+  text -- "blue like the other buttons" is simply status=active's own
+  accent-1 (this component's existing status-color axis), reused rather
+  than a new one-off icon color. Both `.ds-text-button__icon` and
+  `.ds-text-button__label` are `inline-flex`/atomic inline boxes, so the
+  hover-underline (set on the button itself, below) does not get drawn
+  across the icon glyph — only across the label text, per how
+  text-decoration-line propagation works for atomic inline descendants.
+*/
+
+/*
+  Padding/gap overridden to exact Figma pixel values (explicit
+  request, 2026-09-17, "use exactly the same characteristics as in figma...
+  overwrite tokens and characteristics from the current implementation"):
+  11px horizontal / 10px vertical padding and a 5px icon-label gap are
+  measured directly off Figma's own repeated exports this session (nav
+  links, table-cell's "view"/"Add Description"/"Link to source" buttons,
+  table-header-actions -- the same 11px/10px/5px figures recur identically
+  across dozens of instances, not a one-off). Neither value sits on this
+  system's spacing scale (0/2/4/8/12/16/20/24/32/40) -- previously
+  approximated to spacing-3 (8px uniform), which is what made every button
+  in the consumer-app redesign read visibly smaller/tighter than Figma. Raw pixel
+  values here are a deliberate, requested deviation from CLAUDE.md's
+  normal token-only rule (no --ds-spacing-* value matches; design-update/
+  has no formal spacing-primitives export to alias from), not an oversight
+  -- flagged per CLAUDE.md rather than silently invented.
+*/
+.ds-text-button {
+  display: inline-flex;
+  align-items: center;
+  column-gap: var(--ds-spacing-button-gap);
+  background: none;
+  border: none;
+  border-radius: var(--ds-radius-none);
+  padding: var(--ds-spacing-cell) var(--ds-spacing-button-x);
+  cursor: pointer;
+}
+
+/* display:inline-flex above beats the UA's [hidden]{display:none}; same fix
+   dropdown-menu and popup already carry (2026-09-24: For You's All bulk
+   buttons are shown per selection with the hidden attribute). */
+.ds-text-button[hidden] {
+  display: none;
+}
+
+.ds-text-button__icon {
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.ds-text-button__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ds-text-button[data-priority="primary"] {
+  font-family: var(--ds-font-button-primary-family);
+  font-size: var(--ds-font-button-primary-size);
+  font-weight: var(--ds-font-button-primary-weight);
+  line-height: var(--ds-font-button-primary-line-height);
+  letter-spacing: var(--ds-font-button-primary-letter-spacing);
+}
+
+.ds-text-button[data-priority="secondary"] {
+  font-family: var(--ds-font-button-secondary-family);
+  font-size: var(--ds-font-button-secondary-size);
+  font-weight: var(--ds-font-button-secondary-weight);
+  line-height: var(--ds-font-button-secondary-line-height);
+  letter-spacing: var(--ds-font-button-secondary-letter-spacing);
+}
+
+/*
+  Underline changed from hover-only to permanent (explicit request,
+  2026-09-17, same "match Figma exactly, overwrite" instruction as the
+  padding change above): CLAUDE.md's own documented Interaction
+  conventions state underline should be hover-only for this component
+  ("no permanent underline at rest; the underline confirms interactivity
+  on hover"). Every Figma export pulled this session (nav links, "view",
+  "Link to source", table-header-actions, dozens of instances) carries
+  its underline unconditionally, with no separate hover-only variant --
+  overridden here to match that exactly, at explicit request, superseding
+  the documented convention for this component. Not silently changed:
+  flagged here and CLAUDE.md's own Interaction conventions section should
+  be updated to match if this is meant to apply system-wide, not just
+  reverted quietly if a future session finds this comment and assumes
+  drift.
+*/
+.ds-text-button[data-status="active"] {
+  color: var(--ds-color-accent-1);
+}
+
+/*
+  Underline scoped to .ds-text-button__text/__label, NOT the outer button
+  (bugfix, 2026-09-17, "the lines are still there" -- confirmed via actual browser
+  inspection this session, not guessed: Chromium paints an ancestor's
+  text-decoration-line across that ancestor's FULL content-box width as
+  one continuous decorating box, regardless of any descendant's own
+  color/text-decoration-line/display -- three separate descendant-side
+  attempts (color:transparent alone, +text-decoration-line:none, +
+  display:inline-block) were each verified, via computed-style inspection
+  in a real headless Chromium, to have zero effect on what's actually
+  painted. Since the underline used to live on .ds-text-button itself,
+  whose content box spans the label AND both bracket pseudo-elements, the
+  dotted line kept painting dots across the reserved-but-invisible
+  bracket space no matter what those pseudo-elements' own CSS said --
+  there is no descendant-side property that can shrink an ancestor's own
+  decorating box.
+  Real fix: give the label its own, narrower decorating box instead of
+  fighting the propagation. component.js now wraps every plain button's
+  bare text content in a real `.ds-text-button__text` span at runtime (no
+  markup changes needed at any call site -- see that file's own comment);
+  icon-variant buttons already have an equivalent `.ds-text-button__label`
+  span. The underline now lives on whichever of those two spans is
+  present, whose content-box width is exactly the label text and nothing
+  more -- the brackets, siblings of that span rather than inside it, are
+  structurally excluded from its decorating box, no propagation-blocking
+  trick required.
+*/
+/*
+  Thickness reduced to border-width-thin (1px), not border-width-default
+  (2px) (follow-up, 2026-09-17, "the underline is too thick, it should be thinner"): 2px against 16px body text read visibly heavy once
+  actually screenshotted at high zoom -- especially the solid variant
+  under bold priority=primary labels ("For you"), where bold weight +
+  thick underline compounded into a noticeably blocky bar, and the dotted
+  variant's individual dots became large enough to look like debris
+  rather than a fine dotted line. border-width-thin is this system's
+  other existing hairline token (already used for every table/nav
+  border), reused here rather than inventing a new thickness value.
+*/
+.ds-text-button[data-status="active"] .ds-text-button__text,
+.ds-text-button[data-status="active"] .ds-text-button__label,
+.ds-text-button[data-status="error"] .ds-text-button__text,
+.ds-text-button[data-status="error"] .ds-text-button__label {
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--ds-border-width-thin);
+  text-underline-offset: var(--ds-spacing-1);
+}
+
+/*
+  Dotted thickness bumped back up to border-width-default (2px), not the
+  shared border-width-thin (1px) above (follow-up, 2026-09-
+  18, "make the dotted underline's dots bigger so it is more visible"): a dotted decoration's dot diameter is tied directly to its
+  thickness in every engine (there's no independent "dot size" property),
+  so thin dots at 1px read as faint, hard-to-notice specks once actually
+  screenshotted -- the earlier thinning pass was really about the SOLID
+  variant reading too heavy under bold text (priority=primary, e.g. "For
+  you"), not about the dotted one needing to shrink too. Solid stays at
+  border-width-thin from the shared rule above; only dotted overrides
+  back up.
+*/
+.ds-text-button[data-status="active"][data-underline="dotted"] .ds-text-button__text,
+.ds-text-button[data-status="active"][data-underline="dotted"] .ds-text-button__label,
+.ds-text-button[data-status="error"][data-underline="dotted"] .ds-text-button__text,
+.ds-text-button[data-status="error"][data-underline="dotted"] .ds-text-button__label {
+  text-decoration-style: dotted;
+  text-decoration-thickness: var(--ds-border-width-default);
+}
+
+.ds-text-button[data-status="active"][data-underline="solid"] .ds-text-button__text,
+.ds-text-button[data-status="active"][data-underline="solid"] .ds-text-button__label,
+.ds-text-button[data-status="error"][data-underline="solid"] .ds-text-button__text,
+.ds-text-button[data-status="error"][data-underline="solid"] .ds-text-button__label {
+  text-decoration-style: solid;
+}
+
+.ds-text-button[data-status="loading"] {
+  color: var(--ds-color-system-warning);
+  cursor: progress;
+}
+
+/*
+  error: system-error-strong where a theme defines it (in the consuming app: #AD0000, the
+  "Archive selected" red in Figma's confirmation), else system-error. The
+  plain system-error is a fill color (the consuming app's is a pale pink #F1A2A2), which
+  is unreadable as text on white.
+*/
+.ds-text-button[data-status="error"] {
+  color: var(--ds-color-system-error-strong, var(--ds-color-system-error));
+}
+
+.ds-text-button[data-status="confirmed"] {
+  color: var(--ds-color-system-success);
+}
+
+.ds-text-button:disabled,
+.ds-text-button[data-status="disabled"] {
+  color: var(--ds-color-object-dark-active);
+  cursor: not-allowed;
+}
+
+.ds-text-button:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+/*
+  Hover bracket chrome ("[ Label ]", explicit request, 2026-09-17,
+  "check the button hover (there should be brackets)"): this exact
+  "[\00a0"/"\00a0]" ::before/::after pair (bracket + non-breaking space,
+  so flex/whitespace normalization can't collapse the gap) previously
+  existed on this component permanently (commit fe27e15, "restore button
+  brackets" -- Penpot's own real chrome on every button instance,
+  regardless of label), then was explicitly removed entirely 2026-09-03.
+  Reinstated now, but hover-only rather than permanent: no Figma export
+  pulled this session shows literal bracket characters in any button's
+  resting label text (plain "Search"/"Analyze"/etc.), and the current
+  request specifically names hover. Scoped to status=active/error only,
+  the same interactive-state gating the permanent underline above already
+  uses -- loading/confirmed/disabled aren't pointer-interactive states, so
+  they get no hover affordance either. This second reversal (removed ->
+  permanent -> hover-only) is flagged here rather than silently re-adding
+  the old permanent behavior, since a future session finding only
+  fe27e15's original comment would otherwise assume it should be
+  unconditional again.
+
+  Width genuinely stable, corrected again (follow-up,
+  2026-09-17, "the button width still changes on hover" -- the
+  padding-drop version still wasn't exact): dropping 11px of padding to
+  make room for "[\00a0"/"\00a0]" only works if that bracket+nbsp glyph
+  pair happens to render at exactly 11px -- font metrics/kerning/sub-pixel
+  rounding mean it never lines up exactly, so the button still measurably
+  resized, just by a smaller margin than before. There is no padding
+  value that makes "remove padding, add glyph" pixel-exact across
+  browsers/fonts -- the only way to guarantee the box never changes size
+  is to never change the box: the bracket content is now ALWAYS rendered
+  (present in every state, not just on hover), reserving its own space in
+  the layout permanently, and only its color toggles between transparent
+  (at rest) and currentColor (on hover/focus) -- exactly the same
+  reserved-space + color-swap technique header-block's own search-toggle
+  and table-cell's own checkbox already use elsewhere in this system for
+  "present but not yet visible" UI. Padding is back to the original,
+  unconditional 10px/11px from the rule above, with no hover override --
+  this is the trade-off: the resting button is now permanently ~1-2
+  characters wider than Figma's own bracket-less "Button" text alone
+  (space for "[ " and " ]" is always reserved, just invisible), in
+  exchange for the width being truly, exactly identical in every state,
+  which is what was actually asked for.
+
+  Stray underline under the invisible brackets, real fix (follow-up reports, 2026-09-17, "extra lines at the bottom along the text edges"/"the lines are still there"): two descendant-side attempts (color:
+  transparent alone, then +text-decoration-line:none+display:inline-block)
+  were tried and verified wrong via actual browser inspection -- see the
+  underline rule above, now scoped to .ds-text-button__text/__label
+  instead of the outer button, for the real explanation and fix. Now that
+  the button itself carries no text-decoration at all, the brackets below
+  (its own ::before/::after, siblings of that span) are never at risk of
+  inheriting/receiving a line meant for the label -- no propagation-
+  blocking trick needed on them anymore, only their own color and
+  (on hover) their own directly-applied underline.
+
+  Content simplified from "[\00a0"/"\00a0]" (bracket + baked-in
+  non-breaking space) to plain "["/"]" now that .ds-text-button__text is a
+  real flex sibling: the button's own column-gap:5px (see the base rule
+  above) already spaces every flex child evenly, including these
+  pseudo-elements, matching Figma's own real structure (separate bracket
+  elements plus gap-[5px], not a single glyph run with baked-in spacing).
+  The nbsp workaround was only ever needed because there was no real
+  sibling element for gap to apply between.
+*/
+.ds-text-button[data-status="active"]::before,
+.ds-text-button[data-status="error"]::before {
+  content: "[";
+  color: transparent;
+}
+
+.ds-text-button[data-status="active"]::after,
+.ds-text-button[data-status="error"]::after {
+  content: "]";
+  color: transparent;
+}
+
+/*
+  Brackets get color only on hover, deliberately no underline of their own
+  (bugfix, follow-up, 2026-09-18, "leftovers of that underline... a fraction of a pixel, but visible" -- found via an actual 8x-
+  zoom screenshot of the hover state, not guessed: a lone, disconnected
+  dot rendered just to the left of the "[" glyph, in the character's own
+  leading side-bearing space that sits inside the pseudo-element's content
+  box but outside the glyph's visible ink -- a real sub-pixel rendering
+  artifact of applying a dotted decoration to a single-character box, not
+  a logic bug in this file's own CSS. An earlier version gave the bracket
+  pseudo-elements their own text-decoration-line:underline on hover
+  (matching Figma's own Hover export, whose bracket text nodes also carry
+  the underline class) -- removed here instead of chased further: a
+  single bracket character being underlined adds negligible visual
+  information over it just changing color, and three consecutive
+  attempts at getting a glyph-scoped dotted/solid line artifact-free
+  (see the comments above this component's whole underline history) is
+  the point at which the fix stops being worth its own risk. Brackets now
+  only ever get color:currentColor -- no text-decoration-line at all, in
+  any state.
+*/
+.ds-text-button[data-status="active"]:hover::before,
+.ds-text-button[data-status="active"]:focus-visible::before,
+.ds-text-button[data-status="active"]:hover::after,
+.ds-text-button[data-status="active"]:focus-visible::after,
+.ds-text-button[data-status="error"]:hover::before,
+.ds-text-button[data-status="error"]:focus-visible::before,
+.ds-text-button[data-status="error"]:hover::after,
+.ds-text-button[data-status="error"]:focus-visible::after {
+  color: currentColor;
+}
+
+/* ---- Figma text button in a table row or header row ---------------------
+   The button is exactly its label plus 11px each side (Figma 150:16081), with
+   no reserved space for the hover brackets: they hang inside that 11px
+   padding (5px from the label), so nothing shifts on hover and neighbouring
+   buttons never overlap. Applies to the header-block row and to action /
+   link cells and sidebar set rows; buttons elsewhere (nav bar, popups, inline "view") keep the
+   in-flow brackets above. */
+.ds-header-block__row .ds-text-button,
+.ds-sidebar-item[data-type="set"] .ds-text-button,
+.ds-table-cell[data-type="1-action"] .ds-text-button,
+.ds-table-cell[data-type="2-actions"] .ds-text-button,
+.ds-table-cell[data-type="3-actions"] .ds-text-button,
+.ds-table-cell[data-type="link"] .ds-text-button {
+  position: relative;
+}
+.ds-header-block__row .ds-text-button::before,
+.ds-sidebar-item[data-type="set"] .ds-text-button::before,
+.ds-table-cell[data-type="1-action"] .ds-text-button::before,
+.ds-table-cell[data-type="2-actions"] .ds-text-button::before,
+.ds-table-cell[data-type="3-actions"] .ds-text-button::before,
+.ds-table-cell[data-type="link"] .ds-text-button::before {
+  position: absolute;
+  right: calc(100% - var(--ds-spacing-button-x) + var(--ds-spacing-button-gap));
+}
+.ds-header-block__row .ds-text-button::after,
+.ds-sidebar-item[data-type="set"] .ds-text-button::after,
+.ds-table-cell[data-type="1-action"] .ds-text-button::after,
+.ds-table-cell[data-type="2-actions"] .ds-text-button::after,
+.ds-table-cell[data-type="3-actions"] .ds-text-button::after,
+.ds-table-cell[data-type="link"] .ds-text-button::after {
+  position: absolute;
+  left: calc(100% - var(--ds-spacing-button-x) + var(--ds-spacing-button-gap));
+}
+
+/* Same hug-the-label button in a page head and in a pane head (Collection, Template). */
+.ds-page-head .ds-text-button,
+.ds-pane__head .ds-text-button {
+  position: relative;
+  white-space: nowrap;
+}
+.ds-page-head .ds-text-button::before,
+.ds-pane__head .ds-text-button::before {
+  position: absolute;
+  right: calc(100% - var(--ds-spacing-button-x) + var(--ds-spacing-button-gap));
+}
+.ds-page-head .ds-text-button::after,
+.ds-pane__head .ds-text-button::after {
+  position: absolute;
+  left: calc(100% - var(--ds-spacing-button-x) + var(--ds-spacing-button-gap));
+}
+
+/* Same hug-the-label button in a block row's actions (Template). */
+.ds-block-row__actions .ds-text-button {
+  position: relative;
+  white-space: nowrap;
+}
+.ds-block-row__actions .ds-text-button::before {
+  position: absolute;
+  right: calc(100% - var(--ds-spacing-button-x) + var(--ds-spacing-button-gap));
+}
+.ds-block-row__actions .ds-text-button::after {
+  position: absolute;
+  left: calc(100% - var(--ds-spacing-button-x) + var(--ds-spacing-button-gap));
+}
+
+/* Same hug-the-label button in a popup step's head (Reset the selection). */
+.ds-popup-step__head .ds-text-button {
+  position: relative;
+  white-space: nowrap;
+}
+.ds-popup-step__head .ds-text-button::before {
+  position: absolute;
+  right: calc(100% - var(--ds-spacing-button-x) + var(--ds-spacing-button-gap));
+}
+.ds-popup-step__head .ds-text-button::after {
+  position: absolute;
+  left: calc(100% - var(--ds-spacing-button-x) + var(--ds-spacing-button-gap));
+}
+
+/* data-unread="true": there is something new behind this button (Queue's
+   "(2) Updates"). Drawn in the secondary accent, and one step darker on hover. */
+.ds-text-button[data-status="active"][data-unread="true"] {
+  color: var(--ds-color-accent-2);
+}
+
+.ds-text-button[data-status="active"][data-unread="true"]:hover {
+  color: var(--ds-color-accent-2-hover);
+}
+
+/* ---- Figma D_SYSTEM button set (node 103:4732) ---------------------------
+   Three additions to the variants above, each sized so the button's outer
+   box stays the one the plain text button already has (40px tall, 11px
+   sides for text, 10px for an icon):
+   - icon_position="right" (data-icon-position): label first, icon after,
+     same 5px gap -- order only, set in template.html.
+   - icon_only (data-icon-only): the icon alone, 10px sides / 8px top and
+     bottom (Figma: 24px icon in a 44x40 box). Its name is the button's
+     aria-label/title (required by template.html).
+   - outlined (data-outlined): a 1px object-dark-passive rule around the
+     button (Figma base/300 = object-dark-passive in light), the border
+     taken out of the padding so outlined and plain line up.
+   Icon-only and outlined buttons hang their hover brackets inside the
+   padding (absolute, 5px from the content) instead of reserving space for
+   them -- the same treatment table / page-head buttons already use -- so a
+   bordered box doesn't grow empty gutters and an icon has no label to
+   bracket in flow. */
+.ds-text-button[data-icon-only="true"] {
+  position: relative;
+  padding: var(--ds-spacing-3) var(--ds-spacing-cell);
+}
+
+.ds-text-button[data-outlined="true"] {
+  position: relative;
+  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  padding: calc(var(--ds-spacing-cell) - var(--ds-border-width-thin)) calc(var(--ds-spacing-button-x) - var(--ds-border-width-thin));
+}
+
+.ds-text-button[data-outlined="true"][data-icon-only="true"] {
+  padding: calc(var(--ds-spacing-3) - var(--ds-border-width-thin)) calc(var(--ds-spacing-cell) - var(--ds-border-width-thin));
+}
+
+.ds-text-button[data-icon-only="true"]::before {
+  position: absolute;
+  right: calc(100% - var(--ds-spacing-button-x) + var(--ds-spacing-button-gap));
+}
+
+.ds-text-button[data-icon-only="true"]::after {
+  position: absolute;
+  left: calc(100% - var(--ds-spacing-button-x) + var(--ds-spacing-button-gap));
+}
+
+/* ---- Figma D_SYSTEM button states (node 132:4987) ------------------------
+   Outlined: no brackets at all -- the border itself is the hover
+   affordance, turning accent-1 on hover/focus (Figma State=Hover,
+   text-outlined / icon-outlined). */
+.ds-text-button[data-outlined="true"]::before,
+.ds-text-button[data-outlined="true"]::after {
+  content: none;
+}
+
+.ds-text-button[data-outlined="true"][data-status="active"]:hover,
+.ds-text-button[data-outlined="true"][data-status="active"]:focus-visible,
+.ds-text-button[data-outlined="true"][data-status="active"][data-preview="hover"] {
+  border-color: var(--ds-color-accent-1);
+}
+
+/* Disabled keeps its underline (Figma State=Disabled draws the same solid /
+   dotted line in the disabled color): the line still says what the button
+   would do, the color says it can't right now. Supersedes the older
+   "disabled carries no underline" rule for this state only; loading and
+   confirmed are unchanged. */
+.ds-text-button[data-status="disabled"] .ds-text-button__text,
+.ds-text-button[data-status="disabled"] .ds-text-button__label {
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--ds-border-width-thin);
+  text-underline-offset: var(--ds-spacing-1);
+  text-decoration-style: solid;
+}
+
+.ds-text-button[data-status="disabled"][data-underline="dotted"] .ds-text-button__text,
+.ds-text-button[data-status="disabled"][data-underline="dotted"] .ds-text-button__label {
+  text-decoration-style: dotted;
+  text-decoration-thickness: var(--ds-border-width-default);
+}
+
+/* data-preview="hover": draws the hover look without a pointer, for
+   documentation pages that show every state side by side (the site's
+   "Show all components" list). Not for use in product UI. */
+.ds-text-button[data-status="active"][data-preview="hover"]::before,
+.ds-text-button[data-status="active"][data-preview="hover"]::after {
+  color: currentColor;
+}
+
+/* The notification icon is the alert dot (Figma's Type=notification): it
+   keeps accent-2, the one alert color, instead of inheriting the button's
+   status color like every other icon. */
+.ds-text-button__icon[data-icon="notification"] {
+  color: var(--ds-color-accent-2);
+}

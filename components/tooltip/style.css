@@ -1,0 +1,77 @@
+/*
+  tooltip
+
+  Not from Penpot as its own component -- no MCP access this session to
+  check, and no dedicated "Tooltip" board was found in this repo's
+  earlier survey. Built for exactly one phase-one usage: Undo's
+  disabled-state hover copy (the consumer spec, "There is
+  nothing to undo more, honey").
+
+  Pure CSS, no JS at all: content: attr(data-tooltip) reads the trigger
+  element's own attribute directly, so there is no dynamic text to wire
+  up, no show/hide state to track, and no positioning math to get wrong
+  -- :hover and :focus-visible are the show condition, nothing else.
+  Deliberately not the popup/dropdown-menu pattern (hidden-toggle +
+  JS-driven open/close): a tooltip's content is static per-instance and
+  its dismissal is exactly "stop hovering/focusing," which native CSS
+  pseudo-classes already model perfectly -- adding JS here would be
+  complexity with no functional gain, the opposite of what CLAUDE.md's
+  "no decorative/unnecessary code" principle asks for.
+
+  Known limitation, not fixed here: no viewport-clamping. A trigger near
+  the right edge of its container could overflow off-screen. Flagged
+  rather than solved, since the consuming app's one real usage (Undo, inside a table
+  header's action cluster) is never near an edge in practice.
+*/
+
+[data-tooltip] {
+  position: relative;
+}
+
+/* Look: Figma D_SYSTEM Tooltip (node 103:4777) -- a dark box (tooltip-bg,
+   #2e2e2e) with a 1px black edge and white body text, 10px padding, no
+   shadow: the same in both themes, since it is a layer over any page.
+   Figma's text+icon variant is not drawn: the bubble is this ::after, and a
+   host's ::before is already taken (text-button's hover brackets). */
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + var(--ds-spacing-2));
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: var(--ds-spacing-cell);
+  background-color: var(--ds-color-tooltip-bg);
+  border: var(--ds-border-width-thin) solid var(--ds-color-tooltip-border);
+  color: var(--ds-color-tooltip-text);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  border-radius: var(--ds-radius-none);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+  z-index: 10;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+  opacity: 1;
+}
+
+/* data-preview="visible": shows the tooltip without hover/focus, for
+   documentation pages that lay components out side by side (the site's
+   Toasters and tooltips card). Not for use in product UI. */
+[data-tooltip][data-preview="visible"]::after {
+  opacity: 1;
+}
+
+.ds-tooltip-demo {
+  display: inline-block;
+  cursor: default;
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  color: var(--ds-color-text-active);
+}

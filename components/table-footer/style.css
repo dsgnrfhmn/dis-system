@@ -1,0 +1,34 @@
+/*
+  table-footer
+  The row under a table's last row that loads more of it ("Load 10 more",
+  "Load all 100"). Source: the consumer-app Figma file APPFILEKEY, node 64:7799.
+  A 44px row (+1px hairline) on the pressed surface. Its first button's label
+  starts under the third column's text (two 44px icon columns plus the 10px
+  cell padding), so the button stands in for column text: no left padding and
+  its hover "[" hangs outside the label. Later buttons are ordinary
+  text-buttons.
+*/
+.ds-table-footer {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
+  padding-left: calc(var(--ds-spacing-row) * 2 + var(--ds-spacing-cell));
+  background-color: var(--ds-color-bg-surface-pressed);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-muted, var(--ds-color-object-dark-passive));
+}
+
+.ds-table-footer .ds-text-button {
+  padding: var(--ds-spacing-cell) var(--ds-spacing-button-x);
+}
+
+.ds-table-footer .ds-text-button:first-child {
+  position: relative;
+  padding-left: 0;
+}
+
+.ds-table-footer .ds-text-button:first-child::before {
+  position: absolute;
+  right: 100%;
+  margin-right: var(--ds-spacing-button-gap);
+}

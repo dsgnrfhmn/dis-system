@@ -1,0 +1,792 @@
+/*
+  table-cell (Penpot Variant axes: Type x State)
+
+  This file only styles the .ds-table-cell container and its own text/icon/
+  link primitives. Action-bearing cells (1-action, 2-actions) compose real
+  .ds-text-button instances from components/text-button -- see index.html,
+  which links that stylesheet. No fixed cell height is set anywhere below:
+  Penpot's ~54px row height is a byproduct of spacing.5 padding + bodyText
+  line-height, not an independent token, so letting content + padding
+  determine height reproduces it without inventing a height token that
+  doesn't exist.
+
+  Full-grid cell border (explicit request, 2026-09-03, "make the tables look
+  like https://en.wikipedia.org/wiki/Help:Category"): Penpot's own table-cell
+  instances carry no border at all -- this is a deliberate deviation from the
+  source, not a missed reading of it, flagged per CLAUDE.md rather than
+  silently added. border-width-thin (1px) + object-dark-passive is the same
+  hairline/color pairing this codebase already uses for a bordered divider
+  in a header context (see site.css's .component-card .card-header), reused
+  here rather than inventing a new color to approximate Wikipedia's own
+  #a2a9b1 wikitable border, which isn't a token in this system at all.
+  box-sizing: border-box keeps the added 1px border from growing any cell's
+  already-Token-sourced or pixel-matched width (e.g. the fixed 160px/240px
+  dropdown/input field cells below).
+
+  border-top/border-left only, not all 4 sides (bugfix, 2026-09-11 --
+  see the base rule's own comment below for the full reasoning): the
+  original all-4-sides version above doubled to a visible 2px line at
+  every internal cell boundary, since these are CSS grid items with no
+  border-collapse to merge two adjacent cells' own borders into one.
+  Each table's outer right/bottom edge, previously a free side-effect of
+  every cell having all 4 sides, now needs an explicit border-right/
+  border-bottom on that table's own grid container instead -- see each
+  consumer's own page-local grid CSS.
+
+  State axis note (see meta.json): Penpot's own State values are "Value 1"
+  for 14 of the 15 Types (an unused/placeholder axis value) and Default/
+  Hovered only for "2-Actions", where both sampled instances carry identical
+  tokens. No separate `state` prop is modeled here as a result -- hover on
+  action cells is handled by the composed text-button's own :hover rules.
+
+  Layout groups below are named after their shared Penpot flex signature,
+  each comment cites exactly which Types share it and what was Token-bound
+  (vs. pixel-matched) in Penpot's own shape.tokens data.
+
+  Flex sizing (not from Penpot -- table-row didn't distribute space at all
+  before this, every cell just sat at its own content width): the base
+  rule below defaults every cell to flex: 1 1 0% so a row of them shares
+  its container's full width. Fixed-content types override back to
+  flex: none so they stay sized to their own content instead of
+  stretching -- checkbox-cell, icon-cell (single or multiple small icons),
+  dropdown, input (already fixed-width per the field-width note below;
+  flex: none just stops them from also trying to grow), 1-action,
+  2-actions (button clusters). Every other type -- date, text-active-cell,
+  text-passive-cell, text-subactive-cell, link, empty-state -- keeps the
+  flexible default.
+
+  Icon size: .ds-table-cell__icon is spacing-7 (24px) -- went spacing-5
+  (16px) -> spacing-8 (32px, "2x bigger") -> spacing-7 (24px, "one step
+  smaller"), each an explicit request -- applies uniformly to
+  checkbox-cell and icon-cell, since both share this one class.
+
+  Text clamping (explicit request, not from Penpot -- its own instances
+  are single fixed-size text layers with no overflow behavior at all):
+  .ds-table-cell__text and .ds-table-cell__link both cap at 2 lines
+  (-webkit-line-clamp: 2) with a trailing ellipsis, never grow beyond
+  that regardless of content length. Both also get flex: 1 1 0% +
+  min-width: 0 of their own (not just the cell's) -- line-clamp needs an
+  actual width to wrap and truncate against, and as the sole flex child
+  of a `display:flex` cell a text span otherwise sizes to its own
+  min-content by default and never wraps at all.
+
+  Type renames/merges (explicit request, not from Penpot -- Penpot's own
+  15 Type labels are Icon, Saved, Date, Title, Organisation, Source, Summary,
+  Description, Link, 1-Action, 2-Actions, Dropdown, Input, Empty State,
+  Action-icons):
+  - icon -> checkbox-cell ("might have its own logic" -- it does now, see
+    table-row/component.js and style.css's data-checkbox-state rules).
+  - saved and action-icons -> merged into one type, icon-cell, that holds
+    any number of icons (was: saved = always 1, action-icons = always 2)
+    -- see icon-cell's own comment below for what did and didn't carry
+    over from each.
+  - title, organisation, description -> merged into one type, text-active-cell
+    (all three were already the identical layout + text.active + bodyText
+    -- title's only difference was an extra left inset because it always
+    happened to be the row's leftmost cell, not because "Title" content is
+    special; that inset is now a structural :first-child rule in
+    table-row/style.css instead of baked into a type name, so any cell
+    that ends up first gets it, not just one specific named type).
+  - source -> text-passive-cell (still uses the text.subactive color
+    token -- "passive" is this rename's own word for it, not a new token;
+    no visual change).
+  - summary -> text-subactive-cell (still bodyTextItalic + text.active
+    color, unchanged from Penpot's own Summary instance -- flagging this
+    because the new name reads as if it should be text.subactive colored,
+    and it deliberately isn't: this is a rename of the type identifier
+    only, not a request to recolor it, and Penpot's own instance data
+    doesn't support that color. Flagged per CLAUDE.md rather than silently
+    changed).
+*/
+
+/* Shared min-height (explicit request, 2026-09-03, "all table cells should
+   have the same minimal height"): every cell, of every Type, gets the same
+   floor -- not from Penpot (its own instances carry no height/min-height
+   token at all) and not an invented pixel value either: it's built entirely
+   from tokens already in this file's own header comment as the real source
+   of Penpot's ~54px row height -- two vertical spacing-5 paddings (32px)
+   plus one line of bodyText (font-size 18px x line-height 1.2 = 21.6px) =
+   53.6px, i.e. the same figure, now made explicit and enforced as a floor
+   instead of only arising incidentally from padding + a single text line.
+   A min-height (not height) so cells with genuinely taller content --
+   2-line clamped text, table-row's own align-items:stretch pulling a whole
+   row up to its tallest cell -- still grow past it; this only stops a
+   cell from ever going below one line's worth of content, e.g. an empty
+   icon-only cell sitting shorter than its text-bearing row siblings before
+   stretch is applied. */
+/*
+  border-top/border-left only, not all 4 sides (bugfix, explicit request
+  2026-09-11, "every cell has a 1px border, and when two cells sit next
+  to each other the border comes out 2px, can you make it always 1px?"):
+  these are CSS grid items (table-row's own display:contents makes every
+  cell in every row a direct grid item of one shared container -- see
+  that component's own meta.json), not a native <table>, so there is no
+  border-collapse to merge two adjacent cells' own full 4-side borders
+  into one shared line the way a real <table> would -- each cell was
+  genuinely painting its own independent 1px line right next to its
+  neighbor's, doubling to 2px at every internal boundary (both the
+  vertical lines between columns and the horizontal lines between rows).
+  Only the touching side needs to lose its border, not both: giving
+  every cell just its own top+left means an internal boundary now has
+  exactly one line -- contributed by the cell on the right (its own
+  border-left) or below (its own border-top) -- instead of two competing
+  ones. The table's own outer top and left edges are unaffected (the
+  first row/first column's own border-top/border-left already provide
+  them); the outer right and bottom edges lose their border this way
+  (no cell past the last column/row to contribute one) and are restored
+  explicitly on each table's own grid container instead (border-right/
+  border-bottom, same tokens) -- see each consumer's own page-local grid
+  CSS and this repo's own demo grids for that other half of the fix.
+*/
+.ds-table-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--ds-spacing-cell);
+  flex: 1 1 0%;
+  min-width: 0;
+  box-sizing: border-box;
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
+  background-color: var(--ds-color-bg-surface);
+}
+
+/*
+  align-items: center everywhere (explicit request, 2026-09-10, "all
+  content in the tables should be aligned horizontally, on the same
+  horizontal level"): every text-bearing Type below (date, text-active-
+  cell, text-passive-cell, text-subactive-cell, link) previously read
+  align-items: flex-start directly off Penpot's own per-instance data,
+  a real, verified reading, not a guess -- see each Type's own comment
+  further down, left in place rather than rewritten, since that
+  provenance is still true and still worth keeping. table-row's own
+  align-items:stretch means every cell in a row is already the same
+  height (matching the row's tallest cell); flex-start then pinned
+  short text content to the TOP of that shared box while checkbox-cell/
+  dropdown/input/action cells (already center-aligned, also Penpot-
+  sourced for those Types specifically) sat centered in it -- on any row
+  where cell heights actually differ (a 2-line wrapped description next
+  to a 1-line date), that put row content visibly out of horizontal
+  alignment with itself. This is a deliberate, flagged override of the
+  per-Type Penpot reading above, made because the visual result of
+  combining several individually-correct per-Type readings inside one
+  real row (which Penpot's own isolated per-Type instances don't model
+  at all) didn't hold up once actually assembled -- exactly the kind of
+  thing a browser check catches that reading each Type's source data in
+  isolation can't.
+*/
+
+/* Minimum width for the flexible/growable Types only -- everything that
+   keeps the base flex: 1 1 0% default (date, text-active-cell,
+   text-passive-cell, text-subactive-cell, link), not the fixed-content
+   Types below that opt back to flex: none, and not the bare/untyped filler
+   cell (Checkbox-only row's blank space-holder -- see meta.json), which is
+   deliberately left unbounded since it exists purely to soak up leftover
+   row width.
+
+   Explicit request, 2026-09-03 ("columns should look visually equal,
+   probably via max/min-width"): Penpot defines no width constraint for any
+   of these Types, and no token covers this either -- the spacing scale
+   tops out at spacing-9 (40px), far below a usable column width -- so
+   min-width: 120px is a flagged, non-token, non-Penpot addition, not a
+   reading of the source, chosen to keep a short value (e.g. a date like
+   "16.08.2026") legible instead of being squeezed toward zero when several
+   flexible columns share one row. flex-grow:1 + flex-basis:0 (the base
+   rule) already distributes remaining space equally among these columns
+   within a single row once this floor is respected; it does not by itself
+   align the same column position across different rows of different
+   Types, since e.g. "Analysed" and "Archived" genuinely compose different
+   cell sets, not a shared table schema -- see table-row/meta.json.
+   Alignment across rows holds when rows repeat the same Type (the real
+   usage this component is built for), since identical flex-grow ratios
+   over identical container widths resolve to identical per-column widths
+   automatically.
+
+   No max-width (explicit request, same date, superseding an earlier
+   240px cap tried in this same pass: "each row should be 100% width, so
+   certain cells should resize and the ones with icons or buttons should
+   be fixed"): a ceiling directly fights that -- once every flexible
+   column hit its cap, leftover row width had nowhere to go, so a wide row
+   with few flexible columns stopped actually reaching 100% despite its
+   container being full width. Removed so flex-grow can keep resizing
+   these columns to fill whatever space the fixed-content Types (below)
+   don't claim, exactly as requested; only the floor remains. */
+.ds-table-cell[data-type="date"],
+.ds-table-cell[data-type="text-active-cell"],
+.ds-table-cell[data-type="text-passive-cell"],
+.ds-table-cell[data-type="text-subactive-cell"],
+.ds-table-cell[data-type="link"] {
+  min-width: 120px;
+}
+
+.ds-table-cell__text {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: normal;
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  color: var(--ds-color-text-active);
+  flex: 1 1 0%;
+  min-width: 0;
+  overflow: hidden;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ---- checkbox-cell (Penpot "Icon") ----
+   alignItems:center, padding spacing.5 all sides (pixel-matched, not
+   Token-bound in Penpot's data). Real vector glyphs from icons/*.svg,
+   inlined by component.js (see [data-icon] there) -- SVG fill="currentColor"
+   inherits `color` set below, so one asset works in both themes. */
+.ds-table-cell[data-type="checkbox-cell"] {
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.ds-table-cell__icon {
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  display: inline-flex;
+}
+
+.ds-table-cell__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Checkbox cells (data-type="checkbox-cell") carry two icon spans --
+   unchecked and checked -- so a row-selection toggle can be a pure CSS
+   swap (see table-row/style.css) instead of re-fetching an SVG on every
+   click. Checked hidden by default; table-row overrides this when its own
+   data-selected is true. icon-cell's icons don't set data-checkbox-state
+   and are unaffected. */
+.ds-table-cell__icon[data-checkbox-state="checked"] {
+  display: none;
+}
+
+/* Checkbox and save glyphs (icons/checkbox*.svg, icons/save.svg -- the
+   Figma D_SYSTEM icon set, 103:4711). The ink is currentColor; the box
+   interior is --_icon-fill and the check / dash mark is --_icon-mark, both
+   set here from tokens, so one inline SVG is correct in both themes.
+   Rest: an input-icon outline on an input-fill box (Figma's default
+   state; input-icon rather than Figma's text-inactive so the outline
+   stays visible on the dark surface). Hover: the outline turns accent (Figma's hover state).
+   Selected / semi-select: an accent box with an inverse mark. */
+.ds-table-cell .ds-table-cell__icon[data-icon="checkbox"],
+.ds-table-cell .ds-table-cell__icon[data-icon="save"] {
+  color: var(--ds-color-input-icon);
+  --_icon-fill: var(--ds-color-input-fill);
+}
+
+.ds-table-cell[data-type="checkbox-cell"]:hover .ds-table-cell__icon[data-icon="checkbox"] {
+  color: var(--ds-color-accent-1);
+}
+
+.ds-table-cell .ds-table-cell__icon[data-icon="checkbox-selected"],
+.ds-table-cell .ds-table-cell__icon[data-icon="checkbox-semi-select"] {
+  color: var(--ds-color-accent-1);
+  --_icon-mark: var(--ds-color-text-inverced);
+}
+
+.ds-table-cell .ds-table-cell__icon[data-icon="drag"] {
+  color: var(--ds-color-input-icon);
+}
+
+/* ---- checkbox-cell, select-all header variant (data-checkbox-role=
+   "select-all"): a 3rd state (indeterminate) on top of the 2 a plain row
+   checkbox-cell has, self-scoped via [data-state] set directly on this
+   .ds-table-cell -- unlike a row checkbox, whose visible icon flips off
+   an ancestor row's own data-selected, a select-all header cell has no
+   single row of its own to key off; table-row/component.js computes
+   [data-state] from every real row checkbox in its group instead. Explicit
+   request, mirroring a consuming app's own select-all header
+   checkbox (checked/indeterminate/unchecked from selected-vs-total counts). */
+/*
+  Shaded background removed (explicit request, 2026-09-11, "remove the
+  grey background from header row and leave it only for table header
+  block"): superseded the 2026-09-10 request this rule originally
+  documented -- table-header-cell/style.css's own base rule lost the
+  identical background at the same time, for the same reason (see that
+  file's own comment); this select-all checkbox cell matched it
+  specifically to look consistent with its header-row siblings, so it
+  needs to drop the background too, or it would be the one remaining
+  grey cell in an otherwise transparent row.
+*/
+/*
+  Vertical padding spacing-2, not the shared base rule's spacing-5
+  (explicit request, 2026-09-11, three rounds -- see table-header-cell's
+  own comment for the full wording of each): this select-all cell only
+  ever appears in a table's header row, so it needs to shrink along with
+  table-header-cell's own identical change -- a plain row checkbox-cell
+  keeps its existing spacing-5, unaffected, since this override is
+  scoped to data-checkbox-role="select-all" specifically, not
+  data-type="checkbox-cell" in general.
+*/
+.ds-table-cell[data-checkbox-role="select-all"] {
+  cursor: pointer;
+}
+
+.ds-table-cell[data-checkbox-role="select-all"] .ds-table-cell__icon[data-checkbox-state="checked"],
+.ds-table-cell[data-checkbox-role="select-all"] .ds-table-cell__icon[data-checkbox-state="indeterminate"] {
+  display: none;
+}
+
+.ds-table-cell[data-checkbox-role="select-all"][data-state="checked"] .ds-table-cell__icon[data-checkbox-state="unchecked"],
+.ds-table-cell[data-checkbox-role="select-all"][data-state="indeterminate"] .ds-table-cell__icon[data-checkbox-state="unchecked"] {
+  display: none;
+}
+.ds-table-cell[data-checkbox-role="select-all"][data-state="checked"] .ds-table-cell__icon[data-checkbox-state="checked"] {
+  display: inline-flex;
+}
+.ds-table-cell[data-checkbox-role="select-all"][data-state="indeterminate"] .ds-table-cell__icon[data-checkbox-state="indeterminate"] {
+  display: inline-flex;
+}
+
+/* ---- Left-aligned data cells: date, text-active-cell (Penpot Title,
+   Organisation, Description -- merged, see header comment) ----
+   alignItems:flex-start, padding top/bottom spacing.5, left/right spacing.3
+   (pixel-matched vertical, Token-sourced horizontal -- not from Penpot).
+   text.active, bodyText (not bold).
+   Left padding was originally 0 here (Penpot's own value, pixel-matched --
+   it relied on the previous cell's own right padding for visual gap, and
+   table-cell carried no border of its own to sit flush against). Changed
+   to spacing-3 (8px) on explicit request, 2026-09-03 ("inner paddings in
+   table should be 8px on the left to text ... apply it from tokens"): once
+   every cell got its own border (see the base rule's grid-border comment),
+   0 left padding put text flush against that border on every non-leading
+   cell, which reads as a bug now that the border is visible.
+   Right padding matched to the same 8px on a later explicit request, same
+   date ("add that 8px indent to all cells, left and right") -- was
+   spacing-5 (16px), now spacing-3 to read as one consistent inset on both
+   sides of every cell rather than a leftover asymmetry from the original,
+   left-only fix. That same follow-up request is the reason table-row's
+   :first-child override (previously spacing-5/16px, applied only to
+   whichever cell is leftmost in a row) was removed -- see table-row/
+   style.css -- since "all cells" now explicitly includes the leftmost
+   one, and a surviving 16px special-case there would have put it out of
+   step with this rule again. */
+.ds-table-cell[data-type="date"],
+.ds-table-cell[data-type="text-active-cell"] {
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/*
+  editable (A9, added 2026-09-09, not from Penpot -- static design tools
+  don't model an edit-in-place interaction): for Template's set-table block
+  editing (the consumer spec, "the cell becomes an input,
+  keeping the cell's dimensions"). Renders both .ds-table-cell__text and
+  a .ds-input sibling; component.js toggles the native `hidden` attribute
+  on each (this repo's own established convention for visibility toggling,
+  not inline style.display -- see site.js's initSampleTableSearch comment)
+  rather than swapping DOM nodes, so the cell's own layout never reflows
+  between the two states. The edit trigger lives outside this cell
+  entirely (the row's own Edit button, composed via table-cell's
+  1-action/2-actions extra_attrs passthrough -- see meta.json) -- this
+  cell only owns entering/exiting its own edit state once told to.
+*/
+.ds-table-cell__edit-input {
+  width: 100%;
+  font: inherit;
+}
+
+/*
+  status-label (A13, added 2026-09-09, not from Penpot): For You's
+  Analysed table row, once submitted, replaces its action-button group with
+  a plain, non-interactive success-colored label (the consumer spec,
+  "the group is replaced by a 'Submitted' label"). Uses the existing
+  --ds-color-system-success token directly (already in tokens/output.css,
+  not invented here) -- a label, not a button, so no hover/focus/pressed
+  states apply. text-button's own pending success-status variant (a
+  separate Phase A item) should reuse this same token when it's built,
+  so the two stay visually consistent rather than picking a color twice.
+*/
+.ds-table-cell__status-label {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  color: var(--ds-color-system-success);
+}
+
+/*
+  status-label cell alignment (explicit request, 2026-09-11, "align
+  'Submitted' status and any other statuses to the right, same as the
+  buttons"): this cell replaces the row's own action-button cell once
+  submitted (see A13's own comment above), sitting in that same grid
+  column/position -- 1-action/2-actions/3-actions all right-align via
+  justify-content:flex-end, but this Type never got the matching rule, so
+  a row's status label sat left-aligned against the base .ds-table-cell
+  default while every unsubmitted row's buttons above/below it in the same
+  column read as right-aligned, a visible mismatch down one column.
+  flex:none for the same reason those action Types opt out of the
+  flexible-column default: a short label shouldn't stretch to fill/absorb
+  leftover row width the way a text cell does.
+*/
+.ds-table-cell[data-type="status-label"] {
+  justify-content: flex-start;
+  flex: none;
+  padding: var(--ds-spacing-cell) var(--ds-spacing-5) var(--ds-spacing-cell) var(--ds-spacing-button-x);
+}
+
+/* ---- text-passive-cell (Penpot "Source"): same layout as the data-cell
+   group, but text.subactive -- Penpot's own de-emphasized-secondary-text
+   token (see also table-header's info caption and divider's fill).
+   "Passive" is this rename's own word for it; still the subactive token,
+   not a new one. ---- */
+.ds-table-cell[data-type="text-passive-cell"] {
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.ds-table-cell[data-type="text-passive-cell"] .ds-table-cell__text {
+  color: var(--ds-color-text-active);
+  opacity: 0.5;
+}
+
+/* ---- text-subactive-cell (Penpot "Summary"): same layout again, but
+   typography.bodyTextItalic (Penpot's own italic composite token,
+   distinct from bodyText). Still text.active colored, unchanged from
+   Penpot's own Summary instance -- despite the new name, not recolored
+   to text.subactive; see header comment. ---- */
+.ds-table-cell[data-type="text-subactive-cell"] {
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.ds-table-cell[data-type="text-subactive-cell"] .ds-table-cell__text {
+  font-family: var(--ds-font-body-text-italic-family);
+  font-size: var(--ds-font-body-text-italic-size);
+  font-weight: var(--ds-font-body-text-italic-weight);
+  line-height: var(--ds-font-body-text-italic-line-height);
+  letter-spacing: var(--ds-font-body-text-italic-letter-spacing);
+  font-style: var(--ds-font-body-text-italic-style);
+}
+
+/* ---- link: typography.textLink + accent-1, Penpot's one interactive-color
+   text style, e.g. "open posting". Underline is hover-only (2px,
+   var(--ds-border-width-default)), not the permanent underline
+   typography.textLink's own text-decoration token specifies -- matches
+   text-button's own hover-underline affordance (components/text-button/
+   style.css) so every clickable text control in the system signals
+   "clickable" the same way: color at rest, underline confirms it on
+   hover, rather than baking a decoration into the resting state. ---- */
+.ds-table-cell[data-type="link"] {
+  align-items: center;
+  justify-content: flex-end;
+  padding: var(--ds-spacing-cell) 0;
+}
+
+.ds-table-cell__link {
+  font-family: var(--ds-font-text-link-family);
+  font-size: var(--ds-font-text-link-size);
+  font-weight: var(--ds-font-text-link-weight);
+  line-height: var(--ds-font-text-link-line-height);
+  letter-spacing: var(--ds-font-text-link-letter-spacing);
+  text-decoration-line: none;
+  text-decoration-thickness: var(--ds-border-width-default);
+  text-underline-offset: var(--ds-spacing-1);
+  color: var(--ds-color-accent-1);
+  flex: 1 1 0%;
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ds-table-cell__link:hover {
+  text-decoration-line: underline;
+}
+
+.ds-table-cell__link:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+/* ---- dropdown, input: right-docked interactive fields. alignItems:center,
+   justifyContent:flex-end, padding top/right/bottom spacing.5 left 0
+   (pixel-matched). The field itself is a composed .ds-input-dropdown /
+   .ds-input instance (see components/input-dropdown, components/input) --
+   this component only positions it within the cell, it does not restyle
+   it. Previously table-cell had its own parallel .ds-table-cell__field
+   implementation (a near-duplicate of input/input-dropdown's own box
+   treatment) -- replaced with genuine reuse once those components existed,
+   same reasoning as action cells composing .ds-text-button.
+
+   Field width: Penpot's own table-cell instances carry a fixed field
+   width for the dropdown -- 160px, pixel-matched (not Token-bound),
+   measured directly off the Input_with-icon instance, not derived from
+   input-dropdown's own small/middle/large scale (this system's own
+   invention, not Penpot's -- see that component's meta.json). Without an
+   explicit width, .ds-input-dropdown falls back to its middle default
+   (300px, sized for a standalone field), which broke this cell's layout
+   before this override existed. ---- */
+.ds-table-cell[data-type="dropdown"],
+.ds-table-cell[data-type="input"] {
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 var(--ds-spacing-cell);
+}
+
+.ds-table-cell[data-type="dropdown"] {
+  flex: 1 1 0%;
+}
+
+.ds-table-cell[data-type="dropdown"] .ds-input-dropdown {
+  width: 100%;
+}
+
+/*
+  type="input" width changed to 100% (explicit request, 2026-09-10,
+  "Notes input field should be 100% width of the cell (+paddings)"):
+  previously a fixed 240px, pixel-matched off Penpot's own Input_no-icon
+  table-cell instance -- a real, verified reading, not a guess. That
+  fixed width is what a browser check on the consuming app's own Notes column (a
+  data-type="input" usage Penpot's own sampled instance doesn't
+  necessarily represent) surfaced as a real layout problem: a column
+  narrower than 240px didn't clip the input, it rendered at full width
+  regardless (component composes plain .ds-input, whose own width:100%
+  had nothing to resolve against here before this fix) and visibly
+  overlapped the previous column instead. flex: 1 1 0% (dropped the
+  fixed-content flex:none the shared rule above used to give this Type)
+  so the cell itself grows/shrinks with its grid track like the flexible
+  text Types do, and the input fills whatever width that resolves to.
+  This supersedes the fixed-240px reading for this Type; the dropdown
+  above is unchanged and still fixed at 160px, since that field genuinely
+  is a firm content-driven width via input-dropdown's own size scale, not
+  a "fill the row" field the way Notes needs to be.
+*/
+.ds-table-cell[data-type="input"] {
+  flex: 1 1 0%;
+}
+
+.ds-table-cell[data-type="input"] .ds-input {
+  width: 100%;
+}
+
+/* The notes field stays boxed at rest (Figma table rows draw it with a
+   border), overriding input's borderless transparent default. */
+.ds-table-cell[data-type="input"] .ds-input:not([data-fill="filled"]):not(:hover):not(:focus) {
+  border-color: var(--ds-color-input-border, var(--ds-color-object-dark-passive));
+}
+
+/* ---- 1-action: row-reverse, alignItems:center, justifyContent:flex-end,
+   padding right spacing.5 only (Token-bound zero on top/bottom/left in
+   Penpot's data). Composes one .ds-text-button (priority=primary). ---- */
+/*
+  justify-content:flex-start here, not flex-end (bug found 2026-09-10 via
+  an actual browser measurement, prompted by direct user report "buttons
+  in rows with different counts should align on the right"): with
+  flex-direction:row-reverse, the main-axis start/end are swapped -- the
+  reversed main-end is the LEFT edge, not the right, so flex-end here was
+  pushing the single button flush against the cell's left inset instead
+  of its right one (measured: a 1-action cell's button sat ~250px left of
+  where a 3-actions cell's rightmost button in the same shared grid
+  column landed). flex-start correctly resolves to the visual right edge
+  under the reversed axis -- this is a rendering-correctness fix, not a
+  reversal of the original Penpot-sourced row-reverse/alignItems/padding
+  values themselves, which are unchanged.
+*/
+.ds-table-cell[data-type="1-action"] {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--ds-spacing-cell) var(--ds-spacing-5) var(--ds-spacing-cell) 0;
+  flex: none;
+}
+
+/* ---- 2-actions: row, alignItems:center, justifyContent:flex-end, padding
+   spacing.5 on top/right/bottom, 0 left (pixel-matched). fill: bg.surface
+   is Token-bound in Penpot's own data on this cell specifically (both its
+   Default and Hovered instances) -- it's the one table-cell Type that
+   carries a background, functioning as a visual grouping plate for its
+   2-button action pair. Composes 2 .ds-text-button (secondary + primary). ---- */
+.ds-table-cell[data-type="2-actions"] {
+  align-items: center;
+  justify-content: flex-start;
+  flex: none;
+  padding: var(--ds-spacing-cell) var(--ds-spacing-5) var(--ds-spacing-cell) 0;
+}
+
+/* Row actions, light theme (2026-09-24): grey at rest like an inactive
+   tab title (text-inactive, #93918E), accent blue while their row is hovered,
+   focused or selected (consumer-app Figma 237:31166 draws a selected row's action
+   blue), in every action cell. A disabled, loading or error button keeps its own color, and so does
+   an unread one (Queue's "(N) Updates", accent-2). Light only: dark's
+   text-inactive (#424242) would not read on its background. */
+:root:not([data-theme="dark"]) .ds-table-cell:is([data-type="1-action"], [data-type="2-actions"], [data-type="3-actions"]) .ds-text-button[data-status="active"]:not([data-unread="true"]) {
+  color: var(--ds-color-text-inactive);
+}
+:root:not([data-theme="dark"]) .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell:is([data-type="1-action"], [data-type="2-actions"], [data-type="3-actions"]) .ds-text-button[data-status="active"]:not([data-unread="true"]) {
+  color: var(--ds-color-accent-1);
+}
+
+/* ---- 3-actions (not Penpot-sourced, explicit request 2026-09-10 "action
+   buttons in all tables should be aligned to right" -- found the actual
+   cause: the consuming app's own Analysed-row action cell (the consumer spec's 3-button row
+   action set, Archive/Mark Submitted/Prepare Submission) had no matching
+   Type here -- 2-actions only models 2 buttons -- so it was hand-built
+   locally as a bare untyped .ds-table-cell composing table-header-actions
+   (a page-header layout shell, left-aligned by its own design), instead
+   of this system's own right-aligned row-action convention. Same row/
+   alignItems:center/justifyContent:flex-end/flex:none shape as 2-actions,
+   without its Token-bound background plate -- that fill is specific to
+   2-actions' own verified Penpot instance, not a general "N buttons"
+   rule, and no 3-button instance exists in Penpot to source one from. ---- */
+.ds-table-cell[data-type="3-actions"] {
+  align-items: center;
+  justify-content: flex-start;
+  flex: none;
+  padding: var(--ds-spacing-cell) var(--ds-spacing-5) var(--ds-spacing-cell) 0;
+}
+
+/* ---- empty-state: alignItems:flex-start, justifyContent:center (text
+   centered horizontally, top-aligned vertically), padding top/right/bottom
+   spacing.5 left 0. bodyTextItalic + text.subactive: "Nothing here yet." ---- */
+.ds-table-cell[data-type="empty-state"] {
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+}
+
+.ds-table-cell[data-type="empty-state"] .ds-table-cell__text {
+  font-family: var(--ds-font-body-text-italic-family);
+  font-size: var(--ds-font-body-text-italic-size);
+  font-weight: var(--ds-font-body-text-italic-weight);
+  line-height: var(--ds-font-body-text-italic-line-height);
+  letter-spacing: var(--ds-font-body-text-italic-letter-spacing);
+  font-style: var(--ds-font-body-text-italic-style);
+  color: var(--ds-color-text-subactive);
+}
+
+/* ---- icon-cell: merged, on explicit request, from two previously
+   separate Penpot Types -- "Saved" (a single icon, was its own
+   left-aligned/full-padding rule) and "Action-icons" (2 icons,
+   row-reverse/right-aligned/zero-vertical-padding, real currentColor
+   glyphs) -- into one type that holds any number of icons (1, 2, 3, ...),
+   simply by however many .ds-table-cell__icon children are placed inside
+   it. Layout below is Action-icons' (row-reverse, alignItems:center,
+   justifyContent:flex-end, padding right spacing.5 only, columnGap
+   spacing.5 -- Token-bound in Penpot's data: "columnGap":"spacing.5"),
+   not Saved's -- a real deviation from Saved's own verified Penpot
+   padding (spacing.5 all sides) for any single-icon usage that used to be
+   "saved", flagged per CLAUDE.md rather than silently merged. Direction
+   only matters visually once there's more than one icon; a lone icon is
+   unaffected by row vs row-reverse.
+
+   icon-cell used to carry its own align-self:center here, to counter
+   table-row's alignItems:start (Penpot's real, verified row-level value)
+   making this one zero-vertical-padding cell sit visibly high next to
+   its spacing.5-padded siblings. Superseded: table-row/style.css now
+   centers every cell in the row (explicit request, "align all elements
+   in the table horizontally"), so icon-cell no longer needs its own
+   override -- see table-row/style.css for the current, row-level rule
+   and why alignItems:start was deviated from. ---- */
+.ds-table-cell[data-type="icon-cell"] {
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+  column-gap: var(--ds-spacing-5);
+  flex: none;
+}
+
+.ds-table-cell[data-type="icon-cell"] .ds-table-cell__icon {
+  color: var(--ds-color-object-dark-active);
+}
+
+/* Saved/favourite icon: toggled on click (table-cell/component.js sets
+   data-saved, mirroring a consuming app's own row-favorite
+   is-active toggle -- a real functional gap, not decoration, same
+   category as table-row's checkbox-cell click-to-select). Saved state
+   uses accent-1, this system's existing "active/clickable" color
+   vocabulary, in place of the reference site's own magenta. Deliberately
+   no box-shadow/filter in any state (default/hover/saved) -- the
+   reference applies an inner-shadow filter on hover and a drop-shadow
+   filter when active; both are decorative flourishes with no functional
+   payoff here, so neither was carried over, on explicit request. */
+.ds-table-cell[data-type="icon-cell"] .ds-table-cell__icon[data-icon="save"] {
+  cursor: pointer;
+}
+
+/* Save states (Figma save icon): hover turns the outline to accent-2's
+   hover shade; saved fills the bookmark with accent-2 -- the same glyph,
+   ink and interior both accent-2, so no separate "selected" file. */
+.ds-table-cell .ds-table-cell__icon[data-icon="save"]:hover,
+.ds-table-header-cell__favourite-all-btn:hover .ds-table-cell__icon[data-icon="save"] {
+  color: var(--ds-color-accent-2-hover);
+}
+
+.ds-table-cell .ds-table-cell__icon[data-icon="save"][data-saved="true"],
+.ds-table-header-cell[data-saved="true"] .ds-table-cell__icon[data-icon="save"] {
+  color: var(--ds-color-accent-2);
+  --_icon-fill: currentColor;
+}
+
+/* ---- Figma flat table (consumer-app redesign, nodes 150:16082 / 150:16080) -------
+   Replaces the previous full-grid look. One hairline under every row and
+   under the header row, no vertical rules, every row 44px + 1px with 10px
+   cell padding, one line of text with an ellipsis. See table-row for the
+   hover / selected fills and the hover-only icons. */
+
+/* A text button inside a cell's text stays whole; only the excerpt clips. */
+.ds-table-cell__text:has(> .ds-table-cell__clip) {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  overflow: visible;
+}
+.ds-table-cell__clip {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ds-table-cell__text .ds-text-button {
+  flex: none;
+  padding: var(--ds-spacing-cell) var(--ds-spacing-button-x);
+}
+
+/* A link label is one line, whatever the column. */
+.ds-table-cell[data-type="link"] .ds-text-button {
+  white-space: nowrap;
+}
+
+/* A button standing in for column text ("Add Description"): its label starts
+   at the same x as the text above it. The hover "[" hangs outside, in the
+   cell's own padding, so nothing shifts. */
+.ds-table-cell[data-type="text-active-cell"] > .ds-text-button:only-child {
+  position: relative;
+  padding-left: 0;
+}
+.ds-table-cell[data-type="text-active-cell"] > .ds-text-button:only-child::before {
+  position: absolute;
+  right: 100%;
+  margin-right: var(--ds-spacing-button-gap);
+}
+
+/* A status / notes field fills its cell: the .ds-dropdown wrapper must be a
+   block for the input-dropdown inside it to take the full width. */
+.ds-table-cell[data-type="dropdown"] .ds-dropdown {
+  display: block;
+  width: 100%;
+}
+
+/* Figma 237:30133 (the Status cell of a table row): the Input instance in a cell
+   keeps its text at 50%, like the placeholder it is drawn from, also once a value
+   is chosen. That is this cell's look, not input-dropdown's (a filled dropdown on
+   Collection / Template shows its value at full opacity), so it is set here and does not
+   depend on data-placeholder, which input-dropdown clears on the first choice. While
+   the menu is open the value is at full opacity (Figma's focused variant). */
+.ds-table-cell[data-type="dropdown"] .ds-input-dropdown:not([aria-expanded="true"]) [data-dropdown-value] {
+  opacity: 0.5;
+}
+
+/* An action label is one line, like a link label. */
+.ds-table-cell[data-type="1-action"] .ds-text-button {
+  white-space: nowrap;
+}

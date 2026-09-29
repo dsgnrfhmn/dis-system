@@ -1,0 +1,14 @@
+{#
+  trigger: set true to add data-dropdown-trigger, which components/dropdown-menu's
+  component.js needs to wire this button's click to a real paired menu — only
+  meaningful when this button sits in a .ds-dropdown wrapper alongside one
+  (see demo.html; nav-bar's own workspace-switcher usage omits it, unwired).
+
+  placeholder: set true when `value` is only a prompt ("Select option"), not a
+  real choice — adds data-placeholder, which draws the label at 50% like
+  Figma's placeholder text. component.js clears it when a choice is made.
+#}
+<button type="button" class="ds-input-dropdown" data-size="{{ size | default('middle') }}"{% if fill %} data-fill="{{ fill }}"{% endif %}{% if placeholder %} data-placeholder{% endif %} aria-haspopup="listbox"{% if trigger %} data-dropdown-trigger{% endif %}{% if extra_attrs %} {{ extra_attrs | safe }}{% endif %}>
+  <span data-dropdown-value>{{ value | default('Select option') }}</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>

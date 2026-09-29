@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navigation</title>
+<!-- Navigation card, Figma D_SYSTEM node 103:4801: one full-width nav bar
+     with Figma's page links (For You current, Collection, Template, Queue) and
+     the theme toggle. Rendered with nav-bar as it is: its left slot is the
+     workspace dropdown, where Figma now shows a "Find more Tickets"
+     text link. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/input-dropdown/style.css">
+<link rel="stylesheet" href="../components/text-button/style.css">
+<link rel="stylesheet" href="../components/nav-bar/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>.showcase { display: block; padding: var(--ds-spacing-9) 0; }</style>
+</head>
+<body>
+<div class="showcase">
+{% with nav_links=[
+  {'label': 'For You', 'current': true},
+  {'label': 'Collection', 'current': false},
+  {'label': 'Template', 'current': false},
+  {'label': 'Queue', 'current': false}
+], workspace_label='Tickets', theme_label='Light theme' %}{% include "components/nav-bar/template.html" %}{% endwith %}
+</div>
+<script src="../components/input-dropdown/component.js"></script>
+<script src="../components/text-button/component.js"></script>
+<script src="../components/nav-bar/component.js"></script>
+</body>
+</html>

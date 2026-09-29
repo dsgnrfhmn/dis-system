@@ -1,0 +1,27 @@
+{% if type == 'button' %}
+<div class="ds-sidebar-item" data-type="button">
+  {% with priority='primary', status='active', underline='solid', label=label | default('Add item') %}{% include "components/text-button/template.html" %}{% endwith %}
+</div>
+{% elif type == 'set' %}
+<div class="ds-sidebar-item" data-type="set"{% if active %} data-active="true"{% endif %}>
+  {% if href %}
+  <a href="{{ href | safe_url }}" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted"{% if active %} aria-current="true"{% endif %}><span class="ds-text-button__text">{{ name | default('Set name') }}</span></a>
+  {% else %}
+  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set{% if active %} aria-current="true"{% endif %}><span class="ds-text-button__text">{{ name | default('Set name') }}</span></button>
+  {% endif %}
+  {% if save is not defined or save %}
+  <button type="button" class="ds-sidebar-item__save" data-save-set aria-pressed="{{ 'true' if saved else 'false' }}" aria-label="{{ 'Saved' if saved else 'Save' }}: {{ name | default('Set name') }}"><span class="ds-sidebar-item__save-icon" data-icon="save" aria-hidden="true"></span></button>
+  {% endif %}
+</div>
+{% else %}
+<div class="ds-sidebar-item" data-type="card">
+  <div class="ds-sidebar-item__main">
+    <span class="ds-sidebar-item__subtitle">{{ subtitle | default('Subtitle') }}</span>
+    <span class="ds-sidebar-item__icon" data-icon="save" role="img" aria-label="Saved"></span>
+  </div>
+  <div class="ds-sidebar-item__sub">
+    <span class="ds-sidebar-item__title">{{ title | default('Title') }}</span>
+    <span class="ds-sidebar-item__status">{{ status | default('Status') }}</span>
+  </div>
+</div>
+{% endif %}

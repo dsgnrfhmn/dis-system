@@ -1,0 +1,114 @@
+{#
+  table-preview: every table type of Figma D_SYSTEM's table-row frame
+  (DSYSTEMFILEKEY, node 28:1123) as one table, one type shown at a
+  time. Each type is rendered up front as its own grid (the component
+  scripts wire rows, dropdowns and header cells once, at load), hidden
+  unless it is the active one; the Type column's header is a filter
+  whose choice switches which type is shown (component.js).
+
+  types:   [{ id, label, columns: [column key, ...], actions: {cell}, in_all }]
+           The first type is the one every record can appear in ("All");
+           its rows are every record whose own type has in_all set.
+  records: [{ type, status, name, category, due, summary, reason,
+             details, dates, notes, updates }]
+  status_options: [{ value, label }] for the Status dropdowns and filter.
+  active:  id of the type shown at load (default: the first).
+
+  Column keys are Figma's own column vocabulary (the header labels of the
+  28:1123 variants); COLUMNS below maps each to its header cell and grid
+  track. "type" replaces Figma's Full Description column (explicit
+  request): it names the row's type, and its header filter picks the type.
+#}
+{% set _types = types | default([]) %}
+{% set _active = active | default(_types[0].id if _types else '') %}
+{% set _statuses = status_options | default([]) %}
+{% set _flex = 'minmax(calc(var(--ds-spacing-9) * 4), 1fr)' %}
+{% set COLUMNS = {
+  'drag':        {'header': 'blank', 'track': 'max-content'},
+  'check':       {'header': 'checkbox', 'track': 'max-content'},
+  'save':        {'header': 'save', 'track': 'max-content'},
+  'name':        {'header': 'plain', 'label': 'Name', 'track': _flex},
+  'category': {'header': 'sortable', 'label': 'Category', 'track': 'max-content'},
+  'due':    {'header': 'sortable', 'label': 'Due date', 'track': 'max-content'},
+  'summary':     {'header': 'plain', 'label': 'Summary', 'track': _flex},
+  'type':        {'header': 'type-filter', 'label': 'Type', 'track': 'max-content'},
+  'status':      {'header': 'status-filter', 'label': 'Status', 'track': 'max-content'},
+  'status_sort': {'header': 'sortable', 'label': 'Status', 'track': 'max-content'},
+  'reason':      {'header': 'plain', 'label': 'Reason to filter', 'track': _flex},
+  'details':     {'header': 'plain', 'label': 'Details', 'track': _flex},
+  'dates':       {'header': 'plain', 'label': 'Dates', 'track': _flex},
+  'link':        {'header': 'plain', 'label': 'Link', 'track': 'max-content'},
+  'notes':       {'header': 'plain', 'label': 'Notes', 'track': _flex},
+  'updates':     {'header': 'plain', 'label': 'Updates', 'track': 'max-content'},
+  'actions':     {'header': 'plain', 'label': 'Actions', 'track': 'max-content'}
+} %}
+{% set type_labels = {} %}
+{% set type_by_id = {} %}
+{% for t in _types %}
+{% set _ = type_labels.update({t.id: t.label}) %}
+{% set _ = type_by_id.update({t.id: t}) %}
+{% endfor %}
+{% set status_labels = {} %}
+{% for s in _statuses %}{% set _ = status_labels.update({s.value: s.label}) %}{% endfor %}
+<div class="ds-table-preview" data-active-type="{{ _active }}">
+{% for t in _types %}
+  {% set _tracks = [] %}
+  {% for key in t.columns %}{% set _ = _tracks.append(COLUMNS[key].track) %}{% endfor %}
+  {% if loop.first %}
+  {% set _rows = records | default([]) | selectattr('type', 'in', _types | selectattr('in_all') | map(attribute='id') | list) | list %}
+  {% else %}
+  {% set _rows = records | default([]) | selectattr('type', 'equalto', t.id) | list %}
+  {% endif %}
+  <div class="ds-table-preview__table" data-preview-type="{{ t.id }}" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="{{ t.label }}" style="grid-template-columns: {{ _tracks | join(' ') }};"{% if t.id != _active %} hidden{% endif %}>
+    {% for key in t.columns %}
+    {% set col = COLUMNS[key] %}
+    {% if col.header == 'blank' %}
+    {% with label='', sortable=false, favourite_all=false, filter=false %}{% include "components/table-header-cell/template.html" %}{% endwith %}
+    {% elif col.header == 'checkbox' %}
+    {% with type='checkbox-cell', checkbox_role='select-all' %}{% include "components/table-cell/template.html" %}{% endwith %}
+    {% elif col.header == 'save' %}
+    {% with favourite_all=true, all_saved=false, sortable=false, filter=false %}{% include "components/table-header-cell/template.html" %}{% endwith %}
+    {% elif col.header == 'sortable' %}
+    {% with sortable=true, label=col.label, favourite_all=false, filter=false %}{% include "components/table-header-cell/template.html" %}{% endwith %}
+    {% elif col.header == 'type-filter' %}
+    <div class="ds-table-preview__filter" data-preview-filter="type">
+    {% set _opts = [] %}
+    {% for o in _types[1:] %}{% set _ = _opts.append({'value': o.id, 'label': o.label}) %}{% endfor %}
+    {% with filter=true, label=col.label, filter_icon='filter', filter_all_label=_types[0].label, filter_options=_opts, favourite_all=false, sortable=false %}{% include "components/table-header-cell/template.html" %}{% endwith %}
+    </div>
+    {% elif col.header == 'status-filter' %}
+    <div class="ds-table-preview__filter" data-preview-filter="status">
+    {% with filter=true, label=col.label, filter_icon='filter', filter_all_label='All statuses', filter_options=_statuses, favourite_all=false, sortable=false %}{% include "components/table-header-cell/template.html" %}{% endwith %}
+    </div>
+    {% else %}
+    {% with label=col.label, sortable=false, favourite_all=false, filter=false %}{% include "components/table-header-cell/template.html" %}{% endwith %}
+    {% endif %}
+    {% endfor %}
+    {% for rec in _rows %}
+    {% set own = type_by_id[rec.type] %}
+    {% set spec = {
+      'drag':        {'type': 'checkbox-cell', 'single_icon': 'drag', 'single_icon_label': 'Reorder'},
+      'check':       {'type': 'checkbox-cell'},
+      'save':        {'type': 'icon-cell', 'icons': ['save']},
+      'name':        {'type': 'text-active-cell', 'content': rec.name},
+      'category': {'type': 'text-passive-cell', 'content': rec.category},
+      'due':    {'type': 'date', 'content': rec.due},
+      'summary':     {'type': 'text-active-cell', 'content': rec.summary, 'view_label': 'view' if rec.summary else none},
+      'type':        {'type': 'text-passive-cell', 'content': type_labels[rec.type]},
+      'status':      {'type': 'dropdown', 'content': status_labels.get(rec.status, rec.status), 'options': _statuses, 'dropdown_label': 'Status of ' ~ rec.name},
+      'status_sort': {'type': 'dropdown', 'content': status_labels.get(rec.status, rec.status), 'options': _statuses, 'dropdown_label': 'Status of ' ~ rec.name},
+      'reason':      {'type': 'text-active-cell', 'content': rec.reason, 'view_label': 'view' if rec.reason else none},
+      'details':     {'type': 'text-passive-cell', 'content': rec.details},
+      'dates':       {'type': 'text-active-cell', 'content': rec.dates},
+      'link':        {'type': 'link', 'content': 'Link to source'},
+      'notes':       {'type': 'input', 'content': 'Add a note', 'input_value': rec.notes},
+      'updates':     {'type': '1-action', 'content': rec.updates},
+      'actions':     own.actions
+    } %}
+    {% set _cells = [] %}
+    {% for key in t.columns %}{% set _ = _cells.append(spec[key]) %}{% endfor %}
+    {% with cells=_cells, selected=false, status=rec.status %}{% include "components/table-row/template.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+{% endfor %}
+</div>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sidebar</title>
+<!-- Sidebar card, Figma D_SYSTEM node 103:4809: one 280px set list,
+     centered, with Figma's rows. Rendered with sidebar-list / sidebar-item
+     as they are; Figma's "+" on the Create New Set row has no sidebar-item
+     variant yet, so that row carries no icon. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/sidebar-item/style.css">
+<link rel="stylesheet" href="../components/text-button/style.css">
+<link rel="stylesheet" href="../components/sidebar-list/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>.ds-sidebar-list { border-left: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive); }</style>
+</head>
+<body>
+<div class="showcase">
+{% with title='Title', label='Sets', items=[
+  {'name': 'Create New Set', 'save': false},
+  {'name': 'New proposed set', 'saved': false, 'active': true},
+  {'name': 'Another set', 'saved': false},
+  {'name': 'Saved set', 'saved': true},
+  {'name': 'One more set', 'saved': false},
+  {'name': 'And of course one more', 'saved': false},
+  {'name': 'Another custom set', 'saved': false},
+  {'name': 'And the last one', 'saved': false}
+] %}{% include "components/sidebar-list/template.html" %}{% endwith %}
+</div>
+<script src="../components/sidebar-item/component.js"></script>
+<script src="../components/text-button/component.js"></script>
+<script src="../components/sidebar-list/component.js"></script>
+</body>
+</html>

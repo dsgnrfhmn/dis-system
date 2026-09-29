@@ -1,0 +1,9 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+{% with type='1-tab' %}{% include "components/table-header/template.html" %}{% endwith %}
+{% with type='2-tabs' %}{% include "components/table-header/template.html" %}{% endwith %}
+{% with type='2-tabs', tab1='Archived', tab2='Filtered', info='4 archived  9 filtered' %}{% include "components/table-header/template.html" %}{% endwith %}
+{% with type='title-info' %}{% include "components/table-header/template.html" %}{% endwith %}
+
+<script src="component.js"></script>

@@ -1,0 +1,16 @@
+{% set _images = images | default([
+  {'format': 'landscape'}, {'format': 'portrait'}, {'format': 'square'},
+  {'format': 'landscape'}, {'format': 'portrait'}, {'format': 'square'},
+  {'format': 'landscape'}, {'format': 'portrait'}, {'format': 'square'},
+  {'format': 'landscape'}
+]) %}
+<div class="ds-gallery-wrapper">
+  <div class="ds-gallery"{% if gallery_id is defined %} id="{{ gallery_id }}"{% endif %}>
+    {% for image in _images %}
+    {% with type='image', format=image.format, extra_attrs='role="button" tabindex="0" aria-pressed="false" data-image-id="' ~ loop.index ~ '"' %}{% include "components/gallery-image/template.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+  <div class="ds-gallery__scrollbar" aria-hidden="true">
+    <div class="ds-gallery__scrollbar-thumb"></div>
+  </div>
+</div>

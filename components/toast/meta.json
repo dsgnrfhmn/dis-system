@@ -1,0 +1,51 @@
+{
+  "name": "toast",
+  "description": "A short confirmation or error message, stacked bottom-right, auto-dismissing. May carry one or two action buttons (e.g. links to something just generated). Created at runtime via window.dsToast.show(...), not pre-rendered markup -- see component.js.",
+  "status": "stable",
+  "category": "toasters",
+  "variants": [
+    "default",
+    "success",
+    "warning",
+    "error",
+    "with-actions"
+  ],
+  "props": [
+    {
+      "name": "message",
+      "type": "string",
+      "required": true,
+      "description": "The toast's text."
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "required": false,
+      "default": "default",
+      "description": "\"default\", \"success\", \"warning\" or \"error\". Picks the color family (Figma D_SYSTEM Toster, node 103:4772): its medium color fills the toast, its strong color draws the border and the close square. success and warning are Figma's; error uses signal.error, default the neutral base grays."
+    },
+    {
+      "name": "actions",
+      "type": "array",
+      "required": false,
+      "description": "Optional array of {label, onClick} (onClick is only meaningful through the real window.dsToast.show() call, not this illustrative template -- see component.js). Up to two."
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "default": 5000,
+      "description": "Auto-dismiss delay in ms, only meaningful through window.dsToast.show(). The default (5000) is a judgment call, not a design-source value."
+    }
+  ],
+  "source": "none",
+  "rationale": "Styled to Figma D_SYSTEM's Toster (node 103:4772): a full status fill with a 1px border in the family's strong color, 20px system-message text, and a close button (a 24px square in the strong color with a white X). The fill carries the status at a glance; the X lets a reader drop a toast early instead of waiting out the timer. Figma draws success and warning; default and error follow the same pattern in the neutral and danger families. No shadow: the toast is edged by its border. Status colors are the fixed palette, as everywhere a color states a status, so the text is fixed black in both themes.\n\nBehavior follows the product rule the component was built for: every action that changes stored data produces a short confirmation toast, every failed action an error toast naming the operation and the reason, toasts stack bottom-right and auto-dismiss, and a toast may carry actions. Unlike every other component.js, which wires behavior onto markup a page already rendered, a toast only exists because an action just happened, so it exposes a runtime API (window.dsToast.show(...)). Hover and keyboard focus pause the dismiss timer (it restarts at the full duration afterwards, not the remaining time), so a toast with actions doesn't vanish under a reaching cursor or a focused button. The 5000ms default duration is a judgment call; the rule states that toasts auto-dismiss, not how fast. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [
+    "text-button"
+  ],
+  "a11y_notes": "role=\"status\" (not role=\"alert\") on each toast: a polite announcement, because toasts report routine results rather than interrupting -- anything that must interrupt uses popup. Action buttons are real, focusable <button> elements from text-button's template. Auto-dismiss is mitigated for mouse (hover pause) and keyboard (focusin/focusout on the toast keeps it alive while an action inside it is focused). Remaining gap: a toast without actions offers nothing to focus, so a screen-reader user reading it gets no pause. The close button is a real <button> with aria-label=\"Dismiss\" (the X is a CSS mask, no text)."
+}

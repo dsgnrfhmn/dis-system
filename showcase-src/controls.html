@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Controls</title>
+<!-- Controls card, Figma D_SYSTEM node 122:3789: an 800px column holding a
+     radio choice (Short / Middle / Full description) over a gallery strip
+     of square images, 40px apart, 20px side padding. radio + gallery. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/text-button/style.css">
+<link rel="stylesheet" href="../components/radio/style.css">
+<link rel="stylesheet" href="../components/gallery-image/style.css">
+<link rel="stylesheet" href="../components/gallery/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>
+  .showcase__col { width: calc(var(--ds-spacing-9) * 20); max-width: 100%; gap: var(--ds-spacing-9); padding: 0 var(--ds-spacing-6); box-sizing: border-box; }
+  .showcase { padding-inline: 0; }
+</style>
+</head>
+<body>
+<div class="showcase">
+  <div class="showcase__col">
+    {% with label='Description amount', options=[
+      {'value': 'short', 'label': 'Short description', 'checked': false},
+      {'value': 'middle', 'label': 'Middle description', 'checked': false},
+      {'value': 'full', 'label': 'Full description', 'checked': false}
+    ] %}{% include "components/radio/template.html" %}{% endwith %}
+    {% with images=[{'format': 'square'}, {'format': 'square'}, {'format': 'square'}, {'format': 'square'}, {'format': 'square'}, {'format': 'square'}, {'format': 'square'}] %}{% include "components/gallery/template.html" %}{% endwith %}
+  </div>
+</div>
+<script src="../components/text-button/component.js"></script>
+<script src="../components/radio/component.js"></script>
+<script src="../components/gallery/component.js"></script>
+<script src="../components/gallery-image/component.js"></script>
+</body>
+</html>

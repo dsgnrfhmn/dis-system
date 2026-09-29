@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://design-system/schemas/meta.schema.json",
+  "title": "Component Metadata",
+  "description": "Required metadata for every component in the design system. Machine-readable by agents and humans alike.",
+  "type": "object",
+  "required": [
+    "name",
+    "description",
+    "status",
+    "category",
+    "variants",
+    "props",
+    "source",
+    "rationale",
+    "themes_supported"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Component identifier, matches the folder name under components/.",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this component is and when to use it. One or two sentences."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "stable", "deprecated"],
+      "description": "Lifecycle state. draft = not yet reviewed against principles/tokens. stable = verified. deprecated = do not use in new work."
+    },
+    "category": {
+      "type": "string",
+      "enum": ["buttons", "tags", "inputs", "toasters", "tables", "navigation", "sidebar", "cards-layouts", "controls", "popups"],
+      "description": "Which card of index.html this component's generated preview is listed under, behind that card's 'Show all components' toggle (scripts/build_manifest.py). One id per component card of the Figma D_SYSTEM web-view page (node 103:4593): Buttons, Tags, Inputs, Toasters and tooltips, Tables, Navigation, Sidebar, Cards layouts, Controls, Popups."
+    },
+    "listed": {
+      "type": "boolean",
+      "default": true,
+      "description": "Optional. false keeps the component in components/manifest.json and usable by consumers (e.g. an application embedding this repo) but leaves it out of index.html's galleries -- for building blocks with no card of their own on the Figma web-view page."
+    },
+    "layout": {
+      "type": "string",
+      "enum": ["wide"],
+      "description": "Optional. \"wide\" makes this component's gallery card span both columns of index.html's two-column category grid (scripts/build_manifest.py emits data-layout=\"wide\" on the card). Set it when the component cannot be read at half the grid's width: its demo overflows (a fixed-width row, a full nav bar) or collapses into something unrepresentative (table columns truncated to nothing, text wrapping per letter). Omit for everything else. Chosen by rendering each demo at half width, not by eye from its name."
+    },
+    "variants": {
+      "type": "array",
+      "description": "Named visual/behavioral variants this component supports (e.g. primary, secondary, danger). Empty array if none.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "props": {
+      "type": "array",
+      "description": "Attributes/data this component accepts.",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "required"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "required": { "type": "boolean" },
+          "default": {},
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "source": {
+      "type": "string",
+      "pattern": "^(figma:[A-Za-z0-9]+#[0-9]+:[0-9]+(,[0-9]+:[0-9]+)*|penpot:[0-9a-f-]{36}|none)$",
+      "description": "Where this component's design comes from, for traceability: figma:<fileKey>#<nodeId>[,<nodeId>...] (a Figma file and the node(s) it was read from), penpot:<shapeId> (older components, built from Penpot), or none (no design-source element -- the rationale says why, e.g. a behavior-only addition)."
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Functional justification for how this component looks, per rational brutalism. Must answer 'why does it look this way, functionally' — not aesthetic reasoning."
+    },
+    "themes_supported": {
+      "type": "array",
+      "description": "Themes this component has been verified against.",
+      "items": {
+        "type": "string",
+        "enum": ["light", "dark"]
+      },
+      "minItems": 2
+    },
+    "a11y_notes": {
+      "type": "string",
+      "description": "Optional. Keyboard interaction, ARIA roles, focus behavior — only if non-trivial."
+    },
+    "uses": {
+      "type": "array",
+      "description": "Names of other components this component's template.html composes via Jinja2 {% include %} (real markup reuse, not demo-only staging in demo.html). Checked by scripts/compose.py against template.html's actual includes before every build: an include not listed here, or a name listed here that template.html never includes, fails the build. Default empty array if template.html doesn't include any other component.",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "additionalProperties": false
+}

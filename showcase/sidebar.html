@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sidebar</title>
+<!-- Sidebar card, Figma D_SYSTEM node 103:4809: one 280px set list,
+     centered, with Figma's rows. Rendered with sidebar-list / sidebar-item
+     as they are; Figma's "+" on the Create New Set row has no sidebar-item
+     variant yet, so that row carries no icon. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/sidebar-item/style.css">
+<link rel="stylesheet" href="../components/text-button/style.css">
+<link rel="stylesheet" href="../components/sidebar-list/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>.ds-sidebar-list { border-left: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive); }</style>
+</head>
+<body>
+<div class="showcase">
+<aside class="ds-sidebar-list" aria-label="Sets" data-collapsed="false">
+  <div class="ds-sidebar-list__head">
+    <span class="ds-sidebar-list__title">Title</span>
+    <button type="button" class="ds-sidebar-list__toggle" aria-expanded="true" aria-label="Collapse sidebar"><span class="ds-sidebar-list__toggle-icon" aria-hidden="true"></span></button>
+  </div>
+  <div class="ds-sidebar-list__items">
+<div class="ds-sidebar-item" data-type="set">
+  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set><span class="ds-text-button__text">Create New Set</span></button>
+</div>
+<div class="ds-sidebar-item" data-type="set" data-active="true">
+  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set aria-current="true"><span class="ds-text-button__text">New proposed set</span></button>
+  <button type="button" class="ds-sidebar-item__save" data-save-set aria-pressed="false" aria-label="Save: New proposed set"><span class="ds-sidebar-item__save-icon" data-icon="save" aria-hidden="true"></span></button>
+</div>
+<div class="ds-sidebar-item" data-type="set">
+  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set><span class="ds-text-button__text">Another set</span></button>
+  <button type="button" class="ds-sidebar-item__save" data-save-set aria-pressed="false" aria-label="Save: Another set"><span class="ds-sidebar-item__save-icon" data-icon="save" aria-hidden="true"></span></button>
+</div>
+<div class="ds-sidebar-item" data-type="set">
+  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set><span class="ds-text-button__text">Saved set</span></button>
+  <button type="button" class="ds-sidebar-item__save" data-save-set aria-pressed="true" aria-label="Saved: Saved set"><span class="ds-sidebar-item__save-icon" data-icon="save" aria-hidden="true"></span></button>
+</div>
+<div class="ds-sidebar-item" data-type="set">
+  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set><span class="ds-text-button__text">One more set</span></button>
+  <button type="button" class="ds-sidebar-item__save" data-save-set aria-pressed="false" aria-label="Save: One more set"><span class="ds-sidebar-item__save-icon" data-icon="save" aria-hidden="true"></span></button>
+</div>
+<div class="ds-sidebar-item" data-type="set">
+  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set><span class="ds-text-button__text">And of course one more</span></button>
+  <button type="button" class="ds-sidebar-item__save" data-save-set aria-pressed="false" aria-label="Save: And of course one more"><span class="ds-sidebar-item__save-icon" data-icon="save" aria-hidden="true"></span></button>
+</div>
+<div class="ds-sidebar-item" data-type="set">
+  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set><span class="ds-text-button__text">Another custom set</span></button>
+  <button type="button" class="ds-sidebar-item__save" data-save-set aria-pressed="false" aria-label="Save: Another custom set"><span class="ds-sidebar-item__save-icon" data-icon="save" aria-hidden="true"></span></button>
+</div>
+<div class="ds-sidebar-item" data-type="set">
+  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set><span class="ds-text-button__text">And the last one</span></button>
+  <button type="button" class="ds-sidebar-item__save" data-save-set aria-pressed="false" aria-label="Save: And the last one"><span class="ds-sidebar-item__save-icon" data-icon="save" aria-hidden="true"></span></button>
+</div>
+  </div>
+</aside>
+</div>
+<script src="../components/sidebar-item/component.js"></script>
+<script src="../components/text-button/component.js"></script>
+<script src="../components/sidebar-list/component.js"></script>
+</body>
+</html>

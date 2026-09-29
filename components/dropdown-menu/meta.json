@@ -1,0 +1,28 @@
+{
+  "name": "dropdown-menu",
+  "description": "A floating menu of selectable action items, shown/hidden by a trigger element it's paired with (e.g. components/input-dropdown). Not a standalone widget — wrap a trigger and this menu together in a .ds-dropdown container to get real open/close/select behavior (see index.html). If the trigger uses input-dropdown's size=\"large\" (100% width), mirror data-size=\"large\" onto the .ds-dropdown wrapper too, so it switches to a block-level container the trigger can actually fill — see style.css.",
+  "status": "stable",
+  "category": "inputs",
+  "listed": false,
+  "variants": [
+    "divider"
+  ],
+  "props": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "description": "Each item is a real .ds-dropdown-menu__item <button> child, not a JS-templated list — this component doesn't render from data, the consumer supplies the DOM. data-value on each item is read by component.js and included in the ds-dropdown-select event detail. An item of the form {'divider': true} renders a real divider/template.html <hr> instead of a button, grouping the items around it -- see rationale."
+    }
+  ],
+  "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc60",
+  "rationale": "Styled to Figma's opened dropdown (node 45:6594 of the application file), superseding the earlier Penpot values. The panel is bg.surface with a 1px border in the open trigger's base/750 (--ds-color-input-border-hover) and no shadow: the border is the edge, matching the trigger it belongs to. It sits 10px below the trigger (Figma's column gap, spacing-3 + spacing-1) and is exactly as wide as the trigger (border-box). Items are 44px rows with 10px padding, text on one line, touching edge to edge so the menu reads as one continuous surface; hover and keyboard focus fill bg.surface-pressed; the item matching the current value (aria-selected, kept by component.js) is Medium weight, so the current choice is visible without a checkmark. 10px and 44px have no spacing token and are composed from the scale (8+2, 40+4). A divider item composes the real divider component (declared in `uses`), drawn in object-dark.passive, the table rule color. A wrapper with data-size=\"large\" or \"compact\" is block-level, so a full-width or 200px trigger can fill it. Not sourced from the design: open/close, positioning, outside-click and Escape to close, and aria-expanded toggling -- a static design tool doesn't model a floating layer, and without them this would be a picture of a menu. Items are in plain top-to-bottom DOM order, not the reversed authoring order of the Penpot instance, so the DOM order matches what is seen. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [
+    "divider"
+  ],
+  "a11y_notes": "Menu container has role=\"listbox\"; items have role=\"option\". The trigger (paired via [data-dropdown-trigger] inside a .ds-dropdown wrapper) gets aria-expanded toggled automatically by component.js -- it must already carry aria-haspopup=\"listbox\" itself (input-dropdown does). Escape closes the menu and returns focus to the trigger. Clicking outside the .ds-dropdown wrapper closes it. Arrow-key navigation between items is not implemented -- Tab/Shift+Tab and mouse/Enter/Space activation work via native button semantics, but there's no roving-tabindex or arrow-key listbox behavior yet. A divider item renders role=\"separator\" (divider's own template), not role=\"option\" -- it's not a selectable choice and carries no data-value, so component.js's select-click listener has nothing to attach to it in the first place."
+}

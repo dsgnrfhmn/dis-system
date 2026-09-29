@@ -1,0 +1,230 @@
+/*
+  header-tab (Figma source -- see meta.json rationale for why Penpot isn't
+  the source here)
+
+  One panel in a full-width row of N (For You: 4) equal-width tabs -- For
+  Review / Analysed / Archived / Filtered. Structurally distinct from
+  table-header's own type="2-tabs" (components/table-header/style.css):
+  that variant is a single content-hugging chip holding two plain-text
+  labels side by side, used as one flex child of header-block's row next
+  to table-header-actions. This component's own tabs, by contrast, each
+  carry their own background/border and stretch flex:1 to fill an entire
+  row's width on their own, with a separate table-header/table-header-
+  actions bar rendered *below* the tab row for the active tab's own
+  search/bulk-actions -- two different Figma layouts that happen to share
+  the word "tabs", not two variants of the same one. Extending table-
+  header's own 2-tabs CSS to cover this was considered and rejected: every
+  property below (per-tab background, full-width flex, bottom border on
+  both active/inactive) has no equivalent in that variant's own rules, so
+  extending it would mean gating nearly its whole ruleset behind a new prop
+  rather than actually reusing anything.
+
+  Padding/height corrected to exact Figma pixel values (follow-up, 2026-09-18, "a careful check of fonts, sizes and padding in the tab bar" -- same "match Figma exactly, overwrite tokens" instruction
+  already applied to text-button/nav-bar): py-[10px] is used as-is rather
+  than the spacing-3 (8px) approximation this file originally shipped
+  with. Horizontal padding (20px) already matched spacing-6 exactly, no
+  change needed there. Height is now a fixed 60px, also read directly off
+  Figma (the "header" instance's own parent Frame is h-[60px], same as
+  the nav bar it sits directly below) -- this component previously had no
+  explicit height at all, deriving a shorter ~41px from padding+content,
+  which visibly undersized the tab strip relative to Figma's own
+  spec and made it look disproportionate next to the (correctly 60px)
+  nav bar above it. Content is centered vertically within that fixed
+  height via align-items:center on the outer tab -- Figma's own
+  "nav-links" wrapper inside each tab uses items-center for exactly this
+  -- with the label+count pairing's own items-end (baseline-style)
+  alignment moved to a new nested .ds-header-tab__text wrapper (see
+  below and template.html), matching Figma's real two-level structure
+  (outer centers the whole text block; inner aligns label to caption)
+  instead of conflating both roles into one flex context as before.
+
+  Border: Figma specifies a 0.5px bottom border in both states -- also not
+  a value this system's border-width tokens model (border-width-thin is
+  the only hairline token, rendering at 1px elsewhere) -- reused here
+  rather than inventing a 0.5px-specific token. Color reuses object-dark-
+  passive, the same border-width-thin/object-dark-passive pairing table-
+  cell and table-header already use for their own grid/chip borders (see
+  those components' own meta.json) -- there is no dedicated --ds-color-
+  border-* token in this system at all (checked tokens/output.css directly:
+  none exist), so object-dark-passive is the established convention to
+  reuse, not a new choice.
+
+  Background/text colors read straight off Figma's own two states: active
+  = bg.surface (white) + text.active (black) label; inactive = bg.surface-
+  pressed (Figma's own light-gray tab background) + text.subactive label
+  color -- the exact same active/inactive color vocabulary table-header's
+  own type="2-tabs" variant already uses for its selected/unselected tab
+  text (see that component's own meta.json), reused here rather than
+  introducing a second convention for the same state. The count caption
+  ("N total, N submitted") uses text.subactive in both states, matching
+  Figma's own opacity-50 caption treatment in both the active and inactive
+  tab.
+
+  Underline on the inactive label (decoration:underline, style:dotted) is
+  a permanent affordance in Figma, not hover-only -- a deliberate
+  divergence from this repo's own documented "hover-only underline"
+  interaction convention (CLAUDE.md's Interaction Conventions section),
+  which is scoped specifically to accent-colored interactive text/filled
+  buttons; a structural navigation tab in a neutral gray/black palette is
+  a different kind of control than that convention describes, so this
+  reproduces Figma's own always-on dotted underline for the inactive-tab
+  affordance instead of forcing an unrelated convention onto it.
+
+  Actions-block: every real Figma instance across all 4 For You screens
+  carries an "actions-block" child holding one opacity-0, unpopulated
+  "Button" placeholder -- never given real content anywhere it's used.
+  Same category as WORKFLOW.md's own guidance on a placeholder axis value
+  ("Value 1"/"Value 3" seen elsewhere in this repo): not modeled here,
+  rather than reproducing an always-invisible dead element.
+*/
+
+.ds-header-tab {
+  display: flex;
+  flex: 1 1 0%;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  height: 60px;
+  padding: var(--ds-spacing-cell) var(--ds-spacing-6);
+  background-color: var(--ds-color-bg-surface-pressed);
+  border: none;
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  box-sizing: border-box;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.ds-header-tab[aria-selected="true"] {
+  background-color: var(--ds-color-bg-surface);
+}
+
+/*
+  Label+count pairing: Figma's own "text-block" nests inside "nav-links"
+  (items-center, centering the whole block in the tab's 60px height) with
+  its own items-end + gap-[10px] (baseline-style alignment between the
+  differently-sized label/caption) -- two distinct roles previously
+  conflated onto the outer .ds-header-tab itself (align-items:flex-end +
+  gap, which bottom-anchored the whole tab's content against its border
+  instead of centering it). gap is 10px here (Figma's own measured value,
+  not spacing-3/8px) -- same "exact Figma pixel" precedent as the padding
+  above.
+*/
+.ds-header-tab__text {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--ds-spacing-cell);
+  min-width: 0;
+}
+
+.ds-header-tab__label {
+  font-family: var(--ds-font-heading-4-family);
+  font-size: var(--ds-font-heading-4-size);
+  font-weight: var(--ds-font-heading-4-weight);
+  line-height: var(--ds-font-heading-4-line-height);
+  letter-spacing: var(--ds-font-heading-4-letter-spacing);
+  color: var(--ds-color-text-subactive);
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: var(--ds-border-width-default);
+  text-underline-offset: var(--ds-spacing-1);
+  white-space: nowrap;
+}
+
+.ds-header-tab[aria-selected="true"] .ds-header-tab__label {
+  color: var(--ds-color-text-active);
+  text-decoration-line: none;
+}
+
+/*
+  Hover on an inactive tab (Figma's own "inactive-hover" state on this same
+  component set, node 22:10087 -- checked directly, 2026-09-18, a
+  \"check the link for all states\" follow-up): the resting inactive label
+  color (base/550, aliased above via --ds-color-text-subactive) shifts to
+  accent/primary on hover -- exactly --ds-color-accent-1 already (both
+  equal #0000AD, no new alias needed). Underline, background, border,
+  height and padding are all identical between inactive and inactive-hover
+  in Figma -- this is a label-color-only affordance, not the hover-only-
+  underline convention (CLAUDE.md's Interaction Conventions section):
+  that convention doesn't apply here per this component's own rationale
+  (the dotted underline is already permanent at rest, not gated to
+  hover), so this adds the one real hover signal Figma does define instead
+  of forcing the unrelated underline mechanism onto it. The count caption
+  does not change color on hover in Figma (verified in the same node) --
+  not touched here.
+*/
+.ds-header-tab:not([aria-selected="true"]):hover .ds-header-tab__label {
+  color: var(--ds-color-accent-1);
+}
+
+.ds-header-tab__count {
+  font-family: var(--ds-font-caption-family);
+  font-size: var(--ds-font-caption-size);
+  font-style: var(--ds-font-caption-style);
+  font-weight: var(--ds-font-caption-weight);
+  line-height: var(--ds-font-caption-line-height);
+  letter-spacing: var(--ds-font-caption-letter-spacing);
+  color: var(--ds-color-text-subactive);
+  white-space: nowrap;
+}
+
+/*
+  Light theme, Figma D_SYSTEM 28:1480 header "Inactive" (2026-09-24):
+  an inactive tab is white like the active one (the 0.5px line under both
+  stays), its title base/550 (text-inactive, #93918E) with the dotted
+  underline, blue on hover as before, and the caption black at 50% in both
+  states. Light only: dark has no Figma export, and dark's text-inactive
+  (#424242) would not read on its background, so dark keeps the rules above.
+*/
+:root:not([data-theme="dark"]) .ds-header-tab {
+  background-color: var(--ds-color-bg-surface);
+}
+:root:not([data-theme="dark"]) .ds-header-tab:not([aria-selected="true"]) .ds-header-tab__label {
+  color: var(--ds-color-text-inactive);
+}
+:root:not([data-theme="dark"]) .ds-header-tab:not([aria-selected="true"]):hover .ds-header-tab__label {
+  color: var(--ds-color-accent-1);
+}
+:root:not([data-theme="dark"]) .ds-header-tab__count {
+  color: var(--ds-color-text-active);
+  opacity: 0.5;
+}
+
+.ds-header-tab:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+/* ---- data-size="compact": tabs of a pane head (Template Draft | Preview) ----
+   56px tall like a pane head, 20px side padding, and a hairline on the left of
+   each tab: together they draw the divider between two panes. The label uses
+   the "title" role and the count the caption role; an open tab hides its
+   count. .ds-header-tabs is the row that holds the tabs. */
+.ds-header-tabs {
+  flex: none;
+  display: flex;
+  flex-direction: row;
+}
+
+.ds-header-tab[data-size="compact"] {
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
+  padding: 0 var(--ds-spacing-6);
+  border-left: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+.ds-header-tab[data-size="compact"] .ds-header-tab__label {
+  font-family: var(--ds-font-title-family);
+  font-size: var(--ds-font-title-size);
+  font-weight: var(--ds-font-title-weight);
+  line-height: normal;
+}
+
+.ds-header-tab[data-size="compact"] .ds-header-tab__count {
+  font-family: var(--ds-font-caption-family);
+  font-size: var(--ds-font-caption-size);
+  line-height: normal;
+}
+
+.ds-header-tab[data-size="compact"][aria-selected="true"] .ds-header-tab__count {
+  visibility: hidden;
+}

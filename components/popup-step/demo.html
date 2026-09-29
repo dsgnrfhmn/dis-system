@@ -1,0 +1,9 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="style.css">
+
+{% with number=1, title='Choose your project' %}{% include "components/popup-step/template.html" %}{% endwith %}
+{% with number=2, title='Choose work images', action='Reset the selection' %}{% include "components/popup-step/template.html" %}{% endwith %}
+
+<script src="../text-button/component.js"></script>
+<script src="component.js"></script>

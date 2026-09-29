@@ -1,0 +1,27 @@
+<!--
+  TEMPLATE component: reduced text-button.
+  demo.html is hand-authored (never generated) and compiles to index.html
+  via scripts/compose.py -- free to include this component's own
+  template.html (with different variables per instance) and/or other
+  components' template.html for real composition (declare those in
+  meta.json's "uses" if template.html itself includes them -- demo-only
+  pairings don't need to be declared, see components/dropdown-menu/demo.html
+  for a real example of that distinction). Show every variant x state once,
+  so the gallery card doubles as a visual test of the whole matrix.
+  scripts/compose.py skips TEMPLATE/ itself: once copied, change the
+  include paths below to components/<name>/template.html.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+{% for underline in ['dotted', 'solid'] %}
+{% for priority in ['primary', 'secondary'] %}
+<div>
+  {% for status in ['active', 'loading', 'confirmed', 'disabled'] %}
+  {% include "components/TEMPLATE/template.html" %}
+  {% endfor %}
+</div>
+{% endfor %}
+{% endfor %}
+
+<script src="component.js"></script>

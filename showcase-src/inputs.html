@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inputs</title>
+<!-- Inputs card, Figma D_SYSTEM node 103:4761: transparent inputs on the
+     left, filled on the right; a text field over a dropdown in each, 280px
+     wide, 20px apart, the two columns 40px apart. Each dropdown is paired
+     with a real dropdown-menu (.ds-dropdown wrapper + trigger), as in
+     input-dropdown's own demo: click it to open the menu, pick an option. -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/input/style.css">
+<link rel="stylesheet" href="../components/input-dropdown/style.css">
+<link rel="stylesheet" href="../components/dropdown-menu/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>.showcase__col { width: calc(var(--ds-spacing-9) * 7); }</style>
+</head>
+<body>
+{% set menu_items = [
+  {'value': 'option-a', 'label': 'Option A'},
+  {'value': 'option-b', 'label': 'Option B'},
+  {'value': 'option-c', 'label': 'Option C'}
+] %}
+<div class="showcase">
+  <div class="showcase__col">
+    {% with fill='transparent', placeholder='Input Placeholder' %}{% include "components/input/template.html" %}{% endwith %}
+    <div class="ds-dropdown">
+      {% with fill='transparent', size='large', value='Input Placeholder', placeholder=true, trigger=true %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+      {% with items=menu_items %}{% include "components/dropdown-menu/template.html" %}{% endwith %}
+    </div>
+  </div>
+  <div class="showcase__col">
+    {% with fill='filled', placeholder='Input Placeholder' %}{% include "components/input/template.html" %}{% endwith %}
+    <div class="ds-dropdown">
+      {% with fill='filled', size='large', value='Input Placeholder', placeholder=true, trigger=true %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+      {% with items=menu_items %}{% include "components/dropdown-menu/template.html" %}{% endwith %}
+    </div>
+  </div>
+</div>
+<script src="../components/dropdown-menu/component.js"></script>
+<script src="../components/input-dropdown/component.js"></script>
+<script src="../components/input/component.js"></script>
+</body>
+</html>

@@ -1,0 +1,1524 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tables</title>
+<!-- Tables card, Figma D_SYSTEM node 103:4781: three data-load tabs
+     (header-tab, as on the Popups card), a bulk-actions row (header-block
+     layout='bulk': Archive / Analyze, enabled once rows are selected) and one table (table-preview: real
+     table-row / table-cell / table-header-cell composition). Each tab shows
+     the same four records with more or fewer columns: High data load is
+     Figma's full-featured table; Middle and Minimal are column subsets
+     chosen here (Figma draws only the full one). -->
+<link rel="stylesheet" href="../tokens/output.css">
+<link rel="stylesheet" href="../components/dropdown-menu/style.css">
+<link rel="stylesheet" href="../components/text-button/style.css">
+<link rel="stylesheet" href="../components/input-dropdown/style.css">
+<link rel="stylesheet" href="../components/input/style.css">
+<link rel="stylesheet" href="../components/table-cell/style.css">
+<link rel="stylesheet" href="../components/table-header-cell/style.css">
+<link rel="stylesheet" href="../components/table-row/style.css">
+<link rel="stylesheet" href="../components/table-preview/style.css">
+<link rel="stylesheet" href="../components/header-tab/style.css">
+<link rel="stylesheet" href="../components/table-header-actions/style.css">
+<link rel="stylesheet" href="../components/header-block/style.css">
+<link rel="stylesheet" href="showcase.css">
+<style>
+  .showcase { display: block; padding: 0 0 var(--ds-spacing-9); }
+  .showcase__tabs { display: flex; margin-bottom: var(--ds-spacing-6); }
+  .showcase__tabs > .ds-header-tab { flex: 1 1 0; }
+  [data-density][hidden] { display: none; }
+</style>
+</head>
+<body>
+<div class="showcase">
+  <div class="showcase__tabs" role="tablist" aria-label="Data load" data-density-tabs>
+<!--
+  header-tab: one panel in a full-width row of N equal-width tabs (e.g. For
+  You's For Review / Analysed / Archived / Filtered strip). Unlike
+  table-header's own type="2-tabs" (a content-hugging chip holding both
+  labels itself), each header-tab instance is composed independently by the
+  consumer, who wraps N of them in a shared role="tablist" container -- see
+  meta.json rationale for why this couldn't just be a prop-driven extension
+  of table-header's existing 2-tabs variant.
+-->
+<button type="button" class="ds-header-tab" role="tab" aria-selected="false">
+  <span class="ds-header-tab__text">
+    <span class="ds-header-tab__label">Minimal preview</span>
+  </span>
+</button>
+<!--
+  header-tab: one panel in a full-width row of N equal-width tabs (e.g. For
+  You's For Review / Analysed / Archived / Filtered strip). Unlike
+  table-header's own type="2-tabs" (a content-hugging chip holding both
+  labels itself), each header-tab instance is composed independently by the
+  consumer, who wraps N of them in a shared role="tablist" container -- see
+  meta.json rationale for why this couldn't just be a prop-driven extension
+  of table-header's existing 2-tabs variant.
+-->
+<button type="button" class="ds-header-tab" role="tab" aria-selected="false">
+  <span class="ds-header-tab__text">
+    <span class="ds-header-tab__label">Middle data load</span>
+  </span>
+</button>
+<!--
+  header-tab: one panel in a full-width row of N equal-width tabs (e.g. For
+  You's For Review / Analysed / Archived / Filtered strip). Unlike
+  table-header's own type="2-tabs" (a content-hugging chip holding both
+  labels itself), each header-tab instance is composed independently by the
+  consumer, who wraps N of them in a shared role="tablist" container -- see
+  meta.json rationale for why this couldn't just be a prop-driven extension
+  of table-header's existing 2-tabs variant.
+-->
+<button type="button" class="ds-header-tab" role="tab" aria-selected="true">
+  <span class="ds-header-tab__text">
+    <span class="ds-header-tab__label">High data load</span>
+  </span>
+</button>
+  </div>
+<div class="ds-header-block" data-size="big">
+  <div class="ds-header-block__row" data-has-search="true">
+<div class="ds-table-header-actions">
+<button class="ds-text-button" type="button" data-priority="secondary" data-status="disabled" data-underline="dotted" disabled data-bulk>Archive</button>
+<button class="ds-text-button" type="button" data-priority="primary" data-status="disabled" data-underline="dotted" disabled data-bulk>Analyze</button>
+</div>
+  </div>
+</div>
+  <div data-density="minimal" hidden>
+<div class="ds-table-preview" data-active-type="all">
+  <div class="ds-table-preview__table" data-preview-type="all" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="All" style="grid-template-columns: max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content max-content;">
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="status">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Status" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Status</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All statuses</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed" aria-selected="false">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted" aria-selected="false">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved" aria-selected="false">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined" aria-selected="false">Declined</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Actions</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="declined">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="drag" aria-hidden="true" role="img" aria-label="Reorder"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Login fails on Safari 17</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Login fails on Safari 17">
+  <span data-dropdown-value>Declined</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="2-actions">
+<button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">Archive</button>
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Analyze</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="approved">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="drag" aria-hidden="true" role="img" aria-label="Reorder"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Single sign-on for admins</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Single sign-on for admins">
+  <span data-dropdown-value>Approved</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Open</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="for_review">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="drag" aria-hidden="true" role="img" aria-label="Reorder"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">API latency spike on /search</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of API latency spike on /search">
+  <span data-dropdown-value>For review</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Open</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="archived">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="drag" aria-hidden="true" role="img" aria-label="Reorder"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Keep the SOAP endpoint</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Keep the SOAP endpoint">
+  <span data-dropdown-value>Archived</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Unarchive</button>
+</div>
+</div>
+  </div>
+  <div class="ds-table-preview__table" data-preview-type="for-review" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="For review" style="grid-template-columns: max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content max-content max-content max-content;" hidden>
+<div class="ds-table-cell" data-type="checkbox-cell" data-checkbox-role="select-all">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-semi-select" data-checkbox-state="indeterminate" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell" data-type="icon-cell" data-favourite-all data-saved="false">
+  <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="false" aria-label="Mark all as saved">
+    <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="none" aria-label="Sort by Category">
+<span class="ds-table-cell__text">Category</span>    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="type">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Type" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Type</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for-review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="queue" aria-selected="false">Queue</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Link</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Actions</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="declined">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Login fails on Safari 17</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Bug</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">For review</span>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="2-actions">
+<button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">Archive</button>
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Analyze</button>
+</div>
+</div>
+  </div>
+  <div class="ds-table-preview__table" data-preview-type="queue" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="Queue" style="grid-template-columns: max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content;" hidden>
+<div class="ds-table-cell" data-type="checkbox-cell" data-checkbox-role="select-all">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-semi-select" data-checkbox-state="indeterminate" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell" data-type="icon-cell" data-favourite-all data-saved="false">
+  <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="false" aria-label="Mark all as saved">
+    <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="type">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Type" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Type</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for-review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="queue" aria-selected="false">Queue</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Summary</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Dates</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="none" aria-label="Sort by Status">
+<span class="ds-table-cell__text">Status</span>    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Notes</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Updates</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="approved">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Single sign-on for admins</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Queue</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">SAML login for the admin console.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"></span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Single sign-on for admins">
+  <span data-dropdown-value>Approved</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Confirm</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="for_review">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">API latency spike on /search</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Queue</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">p95 latency up after the index rebuild.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"></span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of API latency spike on /search">
+  <span data-dropdown-value>For review</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Confirm</button>
+</div>
+</div>
+  </div>
+  <div class="ds-table-preview__table" data-preview-type="archived" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="Archived" style="grid-template-columns: max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content;" hidden>
+<div class="ds-table-cell" data-type="checkbox-cell" data-checkbox-role="select-all">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-semi-select" data-checkbox-state="indeterminate" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell" data-type="icon-cell" data-favourite-all data-saved="false">
+  <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="false" aria-label="Mark all as saved">
+    <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="none" aria-label="Sort by Category">
+<span class="ds-table-cell__text">Category</span>    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Summary</span>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="type">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Type" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Type</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for-review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="queue" aria-selected="false">Queue</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Link</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Notes</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Actions</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="archived">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Keep the SOAP endpoint</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Request</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">One more quarter for legacy clients.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Archived</span>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Unarchive</button>
+</div>
+</div>
+  </div>
+</div>
+  </div>
+  <div data-density="middle" hidden>
+<div class="ds-table-preview" data-active-type="all">
+  <div class="ds-table-preview__table" data-preview-type="all" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="All" style="grid-template-columns: max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content max-content max-content max-content;">
+<div class="ds-table-cell" data-type="checkbox-cell" data-checkbox-role="select-all">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-semi-select" data-checkbox-state="indeterminate" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="none" aria-label="Sort by Category">
+<span class="ds-table-cell__text">Category</span>    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="status">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Status" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Status</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All statuses</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed" aria-selected="false">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted" aria-selected="false">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved" aria-selected="false">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined" aria-selected="false">Declined</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Link</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Actions</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="declined">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Login fails on Safari 17</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Bug</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Login fails on Safari 17">
+  <span data-dropdown-value>Declined</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="2-actions">
+<button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">Archive</button>
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Analyze</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="approved">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Single sign-on for admins</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Feature</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Single sign-on for admins">
+  <span data-dropdown-value>Approved</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Open</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="for_review">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">API latency spike on /search</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Incident</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of API latency spike on /search">
+  <span data-dropdown-value>For review</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Open</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="archived">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Keep the SOAP endpoint</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Request</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Keep the SOAP endpoint">
+  <span data-dropdown-value>Archived</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Unarchive</button>
+</div>
+</div>
+  </div>
+  <div class="ds-table-preview__table" data-preview-type="for-review" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="For review" style="grid-template-columns: max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content max-content max-content max-content;" hidden>
+<div class="ds-table-cell" data-type="checkbox-cell" data-checkbox-role="select-all">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-semi-select" data-checkbox-state="indeterminate" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell" data-type="icon-cell" data-favourite-all data-saved="false">
+  <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="false" aria-label="Mark all as saved">
+    <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="none" aria-label="Sort by Category">
+<span class="ds-table-cell__text">Category</span>    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="type">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Type" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Type</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for-review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="queue" aria-selected="false">Queue</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Link</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Actions</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="declined">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Login fails on Safari 17</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Bug</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">For review</span>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="2-actions">
+<button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">Archive</button>
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Analyze</button>
+</div>
+</div>
+  </div>
+  <div class="ds-table-preview__table" data-preview-type="queue" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="Queue" style="grid-template-columns: max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content;" hidden>
+<div class="ds-table-cell" data-type="checkbox-cell" data-checkbox-role="select-all">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-semi-select" data-checkbox-state="indeterminate" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell" data-type="icon-cell" data-favourite-all data-saved="false">
+  <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="false" aria-label="Mark all as saved">
+    <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="type">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Type" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Type</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for-review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="queue" aria-selected="false">Queue</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Summary</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Dates</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="none" aria-label="Sort by Status">
+<span class="ds-table-cell__text">Status</span>    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Notes</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Updates</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="approved">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Single sign-on for admins</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Queue</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">SAML login for the admin console.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"></span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Single sign-on for admins">
+  <span data-dropdown-value>Approved</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Confirm</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="for_review">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">API latency spike on /search</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Queue</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">p95 latency up after the index rebuild.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"></span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of API latency spike on /search">
+  <span data-dropdown-value>For review</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Confirm</button>
+</div>
+</div>
+  </div>
+  <div class="ds-table-preview__table" data-preview-type="archived" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="Archived" style="grid-template-columns: max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content;" hidden>
+<div class="ds-table-cell" data-type="checkbox-cell" data-checkbox-role="select-all">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-semi-select" data-checkbox-state="indeterminate" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell" data-type="icon-cell" data-favourite-all data-saved="false">
+  <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="false" aria-label="Mark all as saved">
+    <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="none" aria-label="Sort by Category">
+<span class="ds-table-cell__text">Category</span>    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Summary</span>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="type">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Type" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Type</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for-review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="queue" aria-selected="false">Queue</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Link</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Notes</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Actions</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="archived">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Keep the SOAP endpoint</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Request</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">One more quarter for legacy clients.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Archived</span>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Unarchive</button>
+</div>
+</div>
+  </div>
+</div>
+  </div>
+  <div data-density="high">
+<div class="ds-table-preview" data-active-type="all">
+  <div class="ds-table-preview__table" data-preview-type="all" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="All" style="grid-template-columns: max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content;">
+<div class="ds-table-cell" data-type="checkbox-cell" data-checkbox-role="select-all">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-semi-select" data-checkbox-state="indeterminate" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell" data-type="icon-cell" data-favourite-all data-saved="false">
+  <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="false" aria-label="Mark all as saved">
+    <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="none" aria-label="Sort by Category">
+<span class="ds-table-cell__text">Category</span>    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Summary</span>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="status">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Status" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Status</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All statuses</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed" aria-selected="false">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted" aria-selected="false">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved" aria-selected="false">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined" aria-selected="false">Declined</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Link</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Notes</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Actions</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="declined">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Login fails on Safari 17</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Bug</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">Session cookie is dropped after redirect.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Login fails on Safari 17">
+  <span data-dropdown-value>Declined</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="2-actions">
+<button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">Archive</button>
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Analyze</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="approved">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Single sign-on for admins</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Feature</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">SAML login for the admin console.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Single sign-on for admins">
+  <span data-dropdown-value>Approved</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Open</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="for_review">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">API latency spike on /search</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Incident</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">p95 latency up after the index rebuild.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of API latency spike on /search">
+  <span data-dropdown-value>For review</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Open</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="archived">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Keep the SOAP endpoint</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Request</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">One more quarter for legacy clients.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Keep the SOAP endpoint">
+  <span data-dropdown-value>Archived</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Unarchive</button>
+</div>
+</div>
+  </div>
+  <div class="ds-table-preview__table" data-preview-type="for-review" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="For review" style="grid-template-columns: max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content max-content max-content max-content;" hidden>
+<div class="ds-table-cell" data-type="checkbox-cell" data-checkbox-role="select-all">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-semi-select" data-checkbox-state="indeterminate" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell" data-type="icon-cell" data-favourite-all data-saved="false">
+  <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="false" aria-label="Mark all as saved">
+    <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="none" aria-label="Sort by Category">
+<span class="ds-table-cell__text">Category</span>    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="type">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Type" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Type</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for-review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="queue" aria-selected="false">Queue</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Link</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Actions</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="declined">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Login fails on Safari 17</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Bug</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">For review</span>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="2-actions">
+<button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">Archive</button>
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Analyze</button>
+</div>
+</div>
+  </div>
+  <div class="ds-table-preview__table" data-preview-type="queue" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="Queue" style="grid-template-columns: max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content;" hidden>
+<div class="ds-table-cell" data-type="checkbox-cell" data-checkbox-role="select-all">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-semi-select" data-checkbox-state="indeterminate" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell" data-type="icon-cell" data-favourite-all data-saved="false">
+  <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="false" aria-label="Mark all as saved">
+    <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="type">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Type" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Type</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for-review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="queue" aria-selected="false">Queue</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Summary</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Dates</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="none" aria-label="Sort by Status">
+<span class="ds-table-cell__text">Status</span>    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Notes</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Updates</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="approved">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Single sign-on for admins</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Queue</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">SAML login for the admin console.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"></span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of Single sign-on for admins">
+  <span data-dropdown-value>Approved</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Confirm</button>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="for_review">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">API latency spike on /search</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Queue</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">p95 latency up after the index rebuild.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"></span>
+</div>
+<div class="ds-table-cell" data-type="dropdown">
+  <div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger aria-label="Status of API latency spike on /search">
+  <span data-dropdown-value>For review</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for_review">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed">Analysed</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="submitted">Submitted</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="approved">Approved</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived">Archived</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="declined">Declined</button>
+    </div>
+  </div>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Confirm</button>
+</div>
+</div>
+  </div>
+  <div class="ds-table-preview__table" data-preview-type="archived" data-checkbox-group data-sort-group data-reveal-actions role="table" aria-label="Archived" style="grid-template-columns: max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content max-content minmax(calc(var(--ds-spacing-9) * 4), 1fr) max-content;" hidden>
+<div class="ds-table-cell" data-type="checkbox-cell" data-checkbox-role="select-all">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-semi-select" data-checkbox-state="indeterminate" aria-hidden="true" role="img" aria-label="Select all rows"></span>
+</div>
+<div class="ds-table-cell ds-table-header-cell" data-type="icon-cell" data-favourite-all data-saved="false">
+  <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="false" aria-label="Mark all as saved">
+    <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Name</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <button type="button" class="ds-table-header-cell__sort-btn" data-sort-dir="none" aria-label="Sort by Category">
+<span class="ds-table-cell__text">Category</span>    <span class="ds-table-header-cell__sort-icon" data-icon="arrow-down" aria-hidden="true"></span>
+  </button>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Summary</span>
+</div>
+    <div class="ds-table-preview__filter" data-preview-filter="type">
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-value="">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Type" data-filter-active="false" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Type</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+    <div class="ds-dropdown-menu" role="listbox" hidden>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="true">All</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="for-review" aria-selected="false">For review</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="queue" aria-selected="false">Queue</button>
+      <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">Archived</button>
+    </div>
+  </div>
+</div>
+    </div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Link</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Notes</span>
+</div>
+<div class="ds-table-cell ds-table-header-cell">
+  <span class="ds-table-cell__text">Actions</span>
+</div>
+<div class="ds-table-row" data-selected="false" data-status="archived">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="icon-cell">
+  <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true" role="img" aria-label="Saved"></span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">Keep the SOAP endpoint</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Request</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text"><span class="ds-table-cell__clip">One more quarter for legacy clients.</span> <button class="ds-text-button" type="button" data-priority="secondary" data-status="active" data-underline="dotted">view</button>
+</span>
+</div>
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Archived</span>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#">Link to source</a>
+</div>
+<div class="ds-table-cell" data-type="input">
+<input class="ds-input" type="text" placeholder="Add a note">
+</div>
+<div class="ds-table-cell" data-type="1-action">
+<button class="ds-text-button" type="button" data-priority="primary" data-status="active" data-underline="dotted">Unarchive</button>
+</div>
+</div>
+  </div>
+</div>
+  </div>
+</div>
+<script src="../components/dropdown-menu/component.js"></script>
+<script src="../components/text-button/component.js"></script>
+<script src="../components/input-dropdown/component.js"></script>
+<script src="../components/input/component.js"></script>
+<script src="../components/table-cell/component.js"></script>
+<script src="../components/table-header-cell/component.js"></script>
+<script src="../components/table-row/component.js"></script>
+<script src="../components/table-preview/component.js"></script>
+<script src="../components/header-tab/component.js"></script>
+<script>
+  // Bulk actions act on the selected rows of the visible table: disabled
+  // (text-button status + native disabled) until at least one is selected,
+  // as on the consuming app's For You. Rechecked on selection and on tab switch.
+  function syncBulk() {
+    const any = !!document.querySelector('[data-density]:not([hidden]) .ds-table-row[data-selected="true"]');
+    document.querySelectorAll('[data-bulk]').forEach((b) => {
+      b.disabled = !any;
+      b.dataset.status = any ? 'active' : 'disabled';
+    });
+  }
+  document.addEventListener('ds-table-row-select', () => setTimeout(syncBulk));
+  document.querySelector('[data-density-tabs]').addEventListener('ds-header-tab-change', () => setTimeout(syncBulk));
+</script>
+<script>
+  // Tab -> the table with that column set (header-tab only switches
+  // aria-selected); same wiring as the Popups card's size tabs.
+  const DENSITIES = { 'Minimal preview': 'minimal', 'Middle data load': 'middle', 'High data load': 'high' };
+  document.querySelector('[data-density-tabs]').addEventListener('ds-header-tab-change', (e) => {
+    const id = DENSITIES[e.detail.selected.textContent.trim()];
+    document.querySelectorAll('[data-density]').forEach((el) => { el.hidden = el.dataset.density !== id; });
+  });
+</script>
+</body>
+</html>

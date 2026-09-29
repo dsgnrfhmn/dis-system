@@ -1,0 +1,55 @@
+{
+  "name": "header-block",
+  "description": "The full header of a table: a title/tabs region (table-header) and an action-button cluster (table-header-actions), with an optional search, forming one header bar whose border-bottom separates it from the table's rows below.",
+  "status": "stable",
+  "category": "tables",
+  "listed": false,
+  "layout": "wide",
+  "variants": [
+    "big",
+    "small"
+  ],
+  "props": [
+    {
+      "name": "size",
+      "type": "string",
+      "required": true,
+      "default": "big",
+      "description": "big or small. Maps to Penpot's Size variant axis; controls the header's own padding scale (spacing.6/spacing.5 vs spacing.0/spacing.3). Does not affect table-header or table-header-actions content."
+    },
+    {
+      "name": "search",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "When true, renders a center search zone (composing input) between table-header and table-header-actions. Not a Penpot-sourced axis -- see rationale."
+    },
+    {
+      "name": "search_placeholder",
+      "type": "string",
+      "required": false,
+      "default": "Search",
+      "description": "Placeholder text for the search input, only rendered when search=true."
+    },
+    {
+      "name": "layout",
+      "type": "string",
+      "required": false,
+      "default": null,
+      "description": "bulk: the bulk-actions row over a table -- table-header-actions flush left (the actions act on selected rows; give them status 'disabled' until something is selected), plus, with search=true, an always-open search docked right. No table-header."
+    }
+  ],
+  "source": "penpot:28cec651-3f14-8022-8008-8c9a0bd9b372",
+  "rationale": "Only Size is modeled as a variant. Penpot's other axis, Type (Archived / Found / Analysed / Queue / Queue-Small), changes only which title table-header renders and how many actions table-header-actions renders -- those components' own variants -- so modeling it here would duplicate their variant surfaces in a shell with no visual opinion about them.\n\ndata-size=\"big\" (Figma header row): a plain 60px bg.surface row with 20px side padding, no gap between actions, no frame and no top padding, and one hairline under it -- the same hairline every table row has, so the header reads as the table's first row. data-size=\"small\" keeps the earlier shaded bar: bg.surface-pressed with the border-width-thin / object-dark-passive border of table-cell's grid, inner padding spacing.3 (8px, Token-bound in Penpot's Queue/Small instance). Nested table-header's own chip background and border are reset inside the row so the two don't form a doubled box. The row is justify-content: space-between, which docks the title left and the actions right regardless of either's width. The divider Penpot draws under the header is not composed: the row's own border-bottom does that job, and a text.subactive divider against it would render as a doubled, two-tone line.\n\nSearch (not sourced from Penpot): one search box per table, filtering its rows. It composes input's template unchanged (no icon; the icon set has no search glyph). With a search, the row switches from space-between to flex-start + gap, because space-between only works for exactly two children. By default a \"Search\" trigger reveals the input and blurring an empty input collapses it back, so an unused field doesn't take header space; a non-empty input stays open. data-open=\"always\" renders the input with no trigger, and data-align=\"end\" docks the zone to the right edge. layout=\"bulk\" is the bulk-actions row: table-header-actions flush left, an optional always-open search right, no title. The search field keeps a visible border through header-block's own rule, although input's transparent fill is borderless at rest. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [
+    "table-header",
+    "table-header-actions",
+    "input",
+    "text-button"
+  ],
+  "a11y_notes": "The search input is input's plain native field; labeling is the host page's responsibility, as input documents. The search trigger and the input both stay in the DOM and component.js only flips which is visible (data-open) -- a show/hide of the same kind as popup and dropdown-menu."
+}

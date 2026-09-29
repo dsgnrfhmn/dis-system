@@ -1,0 +1,21 @@
+{#
+  Illustrative only: real toasts are created at runtime by
+  window.dsToast.show(...) (see component.js), not pre-rendered markup --
+  a toast can't exist in the page before the action that produces it has
+  happened. This fragment shows the same markup that call produces, for
+  the gallery/demo.
+#}
+{% set _status = status | default('default') %}
+<div class="ds-toast" data-status="{{ _status }}" role="status">
+  <div class="ds-toast__body">
+    <span class="ds-toast__message">{{ message | default('Done.') }}</span>
+    {% if actions %}
+    <div class="ds-toast__actions">
+      {% for action in actions %}
+      {% with priority='secondary', status='active', underline='dotted', label=action.label %}{% include "components/text-button/template.html" %}{% endwith %}
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  <button type="button" class="ds-toast__close" aria-label="Dismiss" data-toast-dismiss></button>
+</div>

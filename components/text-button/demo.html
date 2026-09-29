@@ -1,0 +1,52 @@
+<!--
+  text-button demo — every combination of priority x status, once per
+  underline value, plus a third block repeating the same grid with the
+  optional leading `icon`, and a last row with the Figma D_SYSTEM button
+  set (node 103:4732): external, internal, right icon, outlined, left
+  icon, icon-only, outlined icon-only. See meta.json rationale for why color encodes
+  status and underline encodes navigation-vs-in-page behavior.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: flex; flex-direction: column; gap: var(--ds-spacing-6);">
+
+  {% for underline in ['dotted', 'solid'] %}
+  <div style="display: flex; flex-direction: column; gap: var(--ds-spacing-4);">
+    {% for priority in ['primary', 'secondary'] %}
+    <div style="display: flex; align-items: center; gap: var(--ds-spacing-4);">
+      {% for status in ['active', 'loading', 'confirmed', 'disabled'] %}
+      {% include "components/text-button/template.html" %}
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+  {% set underline = 'dotted' %}
+  {% set icon = 'theme-dark' %}
+  <div style="display: flex; flex-direction: column; gap: var(--ds-spacing-4);">
+    {% for priority in ['primary', 'secondary'] %}
+    <div style="display: flex; align-items: center; gap: var(--ds-spacing-4);">
+      {% for status in ['active', 'loading', 'confirmed', 'disabled'] %}
+      {% include "components/text-button/template.html" %}
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% set priority = 'secondary' %}
+  {% set status = 'active' %}
+  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: var(--ds-spacing-6);">
+    {% with icon=none, underline='solid', label='Button' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with icon=none, label='Button' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with icon='notification', icon_position='right', label='Button' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with icon=none, outlined=true, label='Button' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with icon='theme-dark', label='Button' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with icon='theme-dark', icon_only=true, label='Switch to dark theme' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with icon='theme-dark', icon_only=true, outlined=true, label='Switch to dark theme' %}{% include "components/text-button/template.html" %}{% endwith %}
+  </div>
+
+</div>
+
+<script src="component.js"></script>

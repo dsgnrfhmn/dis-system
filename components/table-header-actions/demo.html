@@ -1,0 +1,18 @@
+<!--
+  table-header-actions composes real components/text-button instances --
+  this component only provides the row layout. See meta.json rationale for
+  why the priority/status pattern below (lowest emphasis first, one
+  primary action always last/rightmost) matches Penpot's own 4 sampled
+  instances.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="style.css">
+
+{% with actions=[{'label': 'Add item', 'priority': 'primary'}] %}{% include "components/table-header-actions/template.html" %}{% endwith %}
+{% with actions=[{'label': 'Export', 'priority': 'secondary'}, {'label': 'Add item', 'priority': 'primary'}] %}{% include "components/table-header-actions/template.html" %}{% endwith %}
+{% with actions=[{'label': 'Clear filters', 'priority': 'secondary'}, {'label': 'Export', 'priority': 'secondary'}, {'label': 'Add item', 'priority': 'primary'}] %}{% include "components/table-header-actions/template.html" %}{% endwith %}
+{% with actions=[{'label': 'Clear filters', 'priority': 'secondary'}, {'label': 'Select all', 'priority': 'secondary'}, {'label': 'Export', 'priority': 'secondary'}, {'label': 'Add item', 'priority': 'primary'}] %}{% include "components/table-header-actions/template.html" %}{% endwith %}
+
+<script src="../text-button/component.js"></script>
+<script src="component.js"></script>

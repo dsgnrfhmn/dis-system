@@ -1,0 +1,52 @@
+{
+  "name": "input",
+  "description": "A single-line text field for entering short freeform text. Use for names, search terms, notes — anything that isn't a fixed set of choices (use input-dropdown for that).",
+  "status": "stable",
+  "category": "inputs",
+  "variants": [
+    "text",
+    "textarea"
+  ],
+  "props": [
+    {
+      "name": "type",
+      "type": "string",
+      "required": false,
+      "default": "text",
+      "description": "\"text\" (default, a single-line <input>) or \"textarea\" (a multi-line <textarea>, not from Penpot -- see rationale)."
+    },
+    {
+      "name": "fill",
+      "type": "string",
+      "required": false,
+      "default": "transparent",
+      "description": "\"transparent\" (default) or \"filled\" (base/250 fill). Figma's Input property is literally named Size, but its two values are fills; it is exposed as fill so it cannot be confused with input-dropdown's width `size`. Sets data-fill. Hover fills either one."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false,
+      "description": "Current text content. Maps to Penpot's Filled state when non-empty."
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "Placeholder text shown when empty, drawn as body text at 50% opacity (Figma). Typed text is full opacity."
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false,
+      "default": 8,
+      "description": "Only meaningful when type=\"textarea\". Sets the native rows attribute."
+    }
+  ],
+  "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc59",
+  "rationale": "Styled to Figma's Input (node 33:8199 of the application file): a 40px box with a 1px base/400 border and 10px padding, no shadows. Figma's Size property (transparent | filled) is exposed as `fill`. Hover fills the field (base/250) and darkens the border (base/750); focus is a white fill with an accent border, typed text at full opacity. Figma has exactly three states (default, hover, focused) and no disabled, error or pressed state, so none is styled. State is native CSS (:hover, :focus, ::placeholder), no `state` prop. Colors come from the input tokens (--ds-color-input-fill, -border, -border-hover, -border-focus), defined in both themes. The transparent fill has no visible border at rest (Figma D_SYSTEM Inputs card, node 103:4758): the field sits inside something that already frames it, and shows its border on hover and focus, matching input-dropdown; table-cell's notes cell and header-block's search restore the boxed look in their own CSS. width:100% rather than Figma's 280px: that is the swatch's frame, not a component constraint. Not sourced from Figma: type=\"textarea\", which reuses the same box rules without the fixed height. Replaces an earlier Penpot version; its Penpot `source` is kept for traceability. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "Native <input type=\"text\">, so labeling is the host page's responsibility (a <label> or aria-label). Focus is shown by the fill turning white and the border turning the accent color (Figma draws no separate outline). The placeholder is 50% opacity body text and is not a substitute for a label."
+}

@@ -1,0 +1,390 @@
+{
+  "accent-2": {
+    "default": {
+      "$value": "{accent.tertiary}",
+      "$type": "color",
+      "$description": "Ochre, accent.tertiary (#CA7D25, Figma accent/tertiary): 2026-09-27, chose ochre over the 2026-09-24 magenta when Figma's palette was imported (Figma's accent/secondary is now magenta #C614E1). Dark keeps magenta.700."
+    },
+    "hover": {
+      "$value": "{accent.secondary-strong}",
+      "$type": "color",
+      "$description": ""
+    },
+    "pressed": {
+      "$value": "{accent.secondary-strong}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "reflect": {
+    "default": {
+      "$value": "{neutral.100}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "accent-1": {
+    "default": {
+      "$value": "{accent.primary}",
+      "$type": "color",
+      "$description": ""
+    },
+    "hover": {
+      "$value": "{accent.primary-alt}",
+      "$type": "color",
+      "$description": ""
+    },
+    "pressed": {
+      "$value": "{accent.primary-alt}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "object-dark": {
+    "passive": {
+      "$value": "{base.300}",
+      "$type": "color",
+      "$description": ""
+    },
+    "active": {
+      "$value": "{silver.400}",
+      "$type": "color",
+      "$description": ""
+    },
+    "disabled": {
+      "$value": "{silver.300}",
+      "$type": "color",
+      "$description": ""
+    },
+    "pressed": {
+      "$value": "{silver.500}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "shadow": {
+    "low": {
+      "$value": "{black.900}",
+      "$type": "color",
+      "$description": ""
+    },
+    "middle": {
+      "$value": "{black.600}",
+      "$type": "color",
+      "$description": ""
+    },
+    "high": {
+      "$value": "{black.300}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "text": {
+    "active": {
+      "$value": "{base.1000}",
+      "$type": "color",
+      "$description": ""
+    },
+    "subactive": {
+      "$value": "rgba(0, 0, 0, 0.4)",
+      "$type": "color",
+      "$description": ""
+    },
+    "inactive": {
+      "$value": "{base.550}",
+      "$type": "color",
+      "$description": ""
+    },
+    "inverced": {
+      "$value": "{base.0}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "bg": {
+    "surface": {
+      "$value": "{base.0}",
+      "$type": "color",
+      "$description": ""
+    },
+    "surface-pressed": {
+      "$value": "{base.100}",
+      "$type": "color",
+      "$description": ""
+    },
+    "row-selected": {
+      "$value": "{base.250}",
+      "$type": "color",
+      "$description": "A selected table row's cells (consumer-app Figma 237:31166, base/250, 2026-09-24). Light only: dark has no value, table-row falls back to surface-pressed there."
+    },
+    "overlay": {
+      "$value": "{base.600}",
+      "$type": "color",
+      "$description": ""
+    },
+    "sidebar": {
+      "$value": "{silver.300}",
+      "$type": "color",
+      "$description": "Added 2026-09-12 alongside Color-Base-Dark.json's own bg.sidebar (see that file's comment) so sidebar-list has a token in both themes. Light's own value is unchanged from what sidebar-list already rendered before this token existed (it previously reused surface-pressed directly, same {silver.300})."
+    }
+  },
+  "row-status": {
+    "$description": "The Status dropdown's own value label, by the status of the row's record (Figma nodes 254:19537 Analysed, 254:19577 Submitted, 254:19618 Approved, 254:27048 Pending, 254:27129 Declined, 2026-09-22). A direct report (\"put back the default row background color to white as it was\") corrected the first pass at this (Figma 237:30119), which had tinted every cell in the row; every cell now stays var(--ds-color-bg-surface) regardless of status (table-cell/style.css) and only the pill inside the Status cell carries color (table-row/style.css). -text is the pill's label color (row-status primitives, Base-Primitives.json); -bg is that same color at Figma's own alpha over white (0.1, or 0.05 for declined, which Figma renders paler than the other four) -- not expressible as a token $value reference, so written as a literal rgba() here, same pattern as text.subactive above. No dark value exists yet: build.py emits these under :root:not([data-theme=\"dark\"]) and dark pills stay untinted.",
+    "analysed-text": {
+      "$value": "{row-status.analysed}",
+      "$type": "color",
+      "$description": ""
+    },
+    "analysed-bg": {
+      "$value": "rgba(202, 125, 37, 0.1)",
+      "$type": "color",
+      "$description": ""
+    },
+    "submitted-text": {
+      "$value": "{row-status.submitted}",
+      "$type": "color",
+      "$description": ""
+    },
+    "submitted-bg": {
+      "$value": "rgba(0, 128, 128, 0.1)",
+      "$type": "color",
+      "$description": ""
+    },
+    "archived-text": {
+      "$value": "{row-status.archived}",
+      "$type": "color",
+      "$description": ""
+    },
+    "archived-bg": {
+      "$value": "rgba(128, 128, 128, 0.1)",
+      "$type": "color",
+      "$description": ""
+    },
+    "approved-text": {
+      "$value": "{row-status.approved}",
+      "$type": "color",
+      "$description": ""
+    },
+    "approved-bg": {
+      "$value": "rgba(65, 118, 57, 0.1)",
+      "$type": "color",
+      "$description": ""
+    },
+    "for-review-text": {
+      "$value": "{row-status.for-review}",
+      "$type": "color",
+      "$description": ""
+    },
+    "for-review-bg": {
+      "$value": "rgba(202, 175, 37, 0.1)",
+      "$type": "color",
+      "$description": ""
+    },
+    "declined-text": {
+      "$value": "{row-status.declined}",
+      "$type": "color",
+      "$description": ""
+    },
+    "declined-bg": {
+      "$value": "rgba(162, 29, 29, 0.05)",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "system": {
+    "error": {
+      "$value": "{signal.error}",
+      "$type": "color",
+      "$description": ""
+    },
+    "success": {
+      "$value": "{signal.success}",
+      "$type": "color",
+      "$description": ""
+    },
+    "warning": {
+      "$value": "{signal.warning}",
+      "$type": "color",
+      "$description": ""
+    },
+    "highlight": {
+      "$value": "{yellow.400}",
+      "$type": "color",
+      "$description": ""
+    },
+    "error-strong": {
+      "$value": "{signal.error-strong}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "object-white": {
+    "passive": {
+      "$value": "{silver.100}",
+      "$type": "color",
+      "$description": ""
+    },
+    "active": {
+      "$value": "{silver.50}",
+      "$type": "color",
+      "$description": ""
+    },
+    "disabled": {
+      "$value": "{silver.300}",
+      "$type": "color",
+      "$description": ""
+    },
+    "pressed": {
+      "$value": "{silver.300}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-default": {
+    "default": {
+      "$value": "{base.400}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-subtle": {
+    "default": {
+      "$value": "{base.300}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-muted": {
+    "default": {
+      "$value": "{base.150}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-strong": {
+    "default": {
+      "$value": "{base.1000}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-disabled": {
+    "default": {
+      "$value": "{base.200}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-focus": {
+    "default": {
+      "$value": "{base.750}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-inverse": {
+    "default": {
+      "$value": "{base.950}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-on-accent": {
+    "default": {
+      "$value": "{base.0}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-transparent": {
+    "default": {
+      "$value": "rgba(180, 180, 180, 0)",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "icon-primary": {
+    "default": {
+      "$value": "{base.1000}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "icon-secondary": {
+    "default": {
+      "$value": "{base.750}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "icon-disabled": {
+    "default": {
+      "$value": "{base.600}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "input-fill": {
+    "default": {
+      "$value": "{base.250}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "input-border": {
+    "default": {
+      "$value": "{base.400}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "input-border-hover": {
+    "default": {
+      "$value": "{base.750}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "input-border-focus": {
+    "default": {
+      "$value": "{accent.primary}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "input-icon": {
+    "default": {
+      "$value": "{base.600}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "header-cell-label": {
+    "default": {
+      "$value": "{base.600}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "tooltip-bg": {
+    "default": {
+      "$value": "{silver.900}",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) tooltip, node 103:4777: base/900 #2e2e2e fill (Figma base/900, not neutral/900); the same in both themes -- a tooltip is a dark layer over any page"
+    }
+  },
+  "tooltip-border": {
+    "default": {
+      "$value": "{base.1000}",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) tooltip, node 103:4777: base/1000 border; the same in both themes -- a tooltip is a dark layer over any page"
+    }
+  },
+  "tooltip-text": {
+    "default": {
+      "$value": "{base.0}",
+      "$type": "color",
+      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) tooltip, node 103:4777: base/0 text; the same in both themes -- a tooltip is a dark layer over any page"
+    }
+  }
+}

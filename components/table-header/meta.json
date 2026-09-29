@@ -1,0 +1,27 @@
+{
+  "name": "table-header",
+  "description": "The title region of a table's header-block: either a single section title, a two-tab selector (e.g. switching between status views), or a title paired with a secondary info caption (e.g. page count). Sits to the left of table-header-actions inside header-block. Standalone, it renders as its own shaded/bordered chip (see rationale); nested inside header-block, that chip is reset to plain, since header-block's own row now carries the same shading across its full width instead (see components/header-block/meta.json).",
+  "status": "stable",
+  "category": "tables",
+  "variants": [
+    "1-tab",
+    "2-tabs",
+    "title-info"
+  ],
+  "props": [
+    {
+      "name": "type",
+      "type": "string",
+      "required": true,
+      "default": "1-tab",
+      "description": "1-tab (single title), 2-tabs (two clickable labels, one active/one inactive), or title-info (title + subactive caption). Maps to Penpot's `type` variant axis; Penpot's own values were kebab-cased (\"1 Tab\" -> \"1-tab\", etc.)."
+    }
+  ],
+  "source": "penpot:28cec651-3f14-8022-8008-8c9a0be20faf",
+  "rationale": "All three variants share two Token-bound values from Penpot's instances: a left inset of spacing.6 (20px) and, when there is a second element, a column gap of spacing.5 (16px). Title and tab labels use the heading-4 role; the component never uses bold heading weights. type=\"2-tabs\" encodes selection with color alone: the selected tab is text.active, the other text.inactive -- the system's existing active/inactive vocabulary. Clicking is wired in component.js because an active/inactive pair with no way to switch would be a dead affordance; the static design source doesn't model the click. type=\"title-info\" pairs the title with a bodyText caption in text.subactive, the token for de-emphasized but legible secondary text (e.g. \"3 pages\"). An optional `info` caption on 2-tabs (not sourced from Penpot) reuses the same caption styling, for a count under the tabs; without `info`, 2-tabs renders unchanged.\n\nStandalone, the component is a shaded chip: bg.surface-pressed with the border-width-thin / object-dark-passive border table-cell's grid uses, so it reads as part of the same bordered table. This is a deliberate deviation from Penpot, whose instances carry no background or border, modeled on a wikitable caption. bg.surface-pressed was chosen because it moves in the theme-appropriate emphasis direction in both palettes. Sizing stays content-hugging, because the component is a flex child of header-block's row next to table-header-actions. Inside header-block, the row itself carries the shading across its full width, so header-block/style.css resets this chip's background, border and padding there to avoid a doubled box. Rendering verified in light and dark themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "type=\"2 Tabs\" renders as role=\"tablist\" with role=\"tab\"/aria-selected on each label per WAI-ARIA tabs pattern, since Penpot's design implies exactly that interaction (one selected, one not, click to switch). type=\"1-tab\" and \"title-info\" render as plain text (no tab semantics, since there's nothing to select between). The new optional caption on \"2-tabs\" is a plain <span>, outside the tablist's own role semantics (a caption describing table contents, not a third tab)."
+}
