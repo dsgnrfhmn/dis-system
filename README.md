@@ -1,4 +1,4 @@
-![preview-image](github-prevew.png)
+![preview-image](github-preview.png)
 # dis-system
 
 A design system of vanilla HTML/CSS/JS components driven by design tokens.
