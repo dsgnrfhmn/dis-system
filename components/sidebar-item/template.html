@@ -4,7 +4,7 @@
 </div>
 {% elif type == 'set' %}
 {% set _set_name %}{% if href %}<a href="{{ href | safe_url }}" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted"{% if active %} aria-current="true"{% endif %}><span class="ds-text-button__text">{{ name | default('Set name') }}</span></a>{% else %}<button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set{% if active %} aria-current="true"{% endif %}><span class="ds-text-button__text">{{ name | default('Set name') }}</span></button>{% endif %}{% endset %}
-<div class="ds-sidebar-item" data-type="set"{% if active %} data-active="true"{% endif %}{% if caption %} data-has-caption{% endif %}>
+<div class="ds-sidebar-item" data-type="set"{% if active %} data-active="true"{% endif %}{% if muted %} data-muted="true"{% endif %}{% if caption %} data-has-caption{% endif %}>
   {% if caption %}
   {# caption (2026-09-30): a second, grey line under the name -- e.g. a
      record's status. Name and caption stack in one column; the save

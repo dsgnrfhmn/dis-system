@@ -774,6 +774,13 @@
         "description": "type=\"set\": marks the active set (fill and hairlines above and below)."
       },
       {
+        "name": "muted",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "type=\"set\": a record that needs no more action (e.g. an application already sent). Its name is grey at rest and takes the accent back on hover, focus, or when active."
+      },
+      {
         "name": "href",
         "type": "string",
         "required": false,
