@@ -146,7 +146,9 @@
   flex: 1 1 0%;
   min-width: 0;
   box-sizing: border-box;
-  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  /* border-table (2026-09-30): tables' own line token -- same as
+     object-dark-passive in light, darker in dark (see Color-Base-Dark.json). */
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
   height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
   background-color: var(--ds-color-bg-surface);
 }
@@ -568,11 +570,11 @@
   width: 100%;
 }
 
-/* The notes field stays boxed at rest (Figma table rows draw it with a
-   border), overriding input's borderless transparent default. */
-.ds-table-cell[data-type="input"] .ds-input:not([data-fill="filled"]):not(:hover):not(:focus) {
-  border-color: var(--ds-color-input-border, var(--ds-color-object-dark-passive));
-}
+/* The notes field is borderless at rest, input's own transparent default
+   (explicit request 2026-09-30, "on tables on notes column, remove the
+   border for note-input"; it used to stay boxed at rest, after Figma's
+   table rows). Hover and focus still draw input's own border, so the field
+   remains findable and shows it's being edited. */
 
 /* ---- 1-action: row-reverse, alignItems:center, justifyContent:flex-end,
    padding right spacing.5 only (Token-bound zero on top/bottom/left in
@@ -616,12 +618,25 @@
    tab title (text-inactive, #93918E), accent blue while their row is hovered,
    focused or selected (consumer-app Figma 237:31166 draws a selected row's action
    blue), in every action cell. A disabled, loading or error button keeps its own color, and so does
-   an unread one (Queue's "(N) Updates", accent-2). Light only: dark's
-   text-inactive (#424242) would not read on its background. */
+   an unread one (Queue's "(N) Updates", accent-2). Dark: see the rules
+   below this pair. */
 :root:not([data-theme="dark"]) .ds-table-cell:is([data-type="1-action"], [data-type="2-actions"], [data-type="3-actions"]) .ds-text-button[data-status="active"]:not([data-unread="true"]) {
   color: var(--ds-color-text-inactive);
 }
 :root:not([data-theme="dark"]) .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell:is([data-type="1-action"], [data-type="2-actions"], [data-type="3-actions"]) .ds-text-button[data-status="active"]:not([data-unread="true"]) {
+  color: var(--ds-color-accent-1);
+}
+
+/* Row actions, dark theme (explicit request 2026-09-30, "in dark theme
+   action-buttons in a table row should be grey when not hovered, the same
+   as in light theme"): same rest/hover behavior as light above. Grey at
+   rest is header-cell-label (#808080 in dark), not text-inactive (#424242,
+   unreadable on the dark surface) -- the grey the same table's column
+   labels already use, so the resting actions sit with the header. */
+[data-theme="dark"] .ds-table-cell:is([data-type="1-action"], [data-type="2-actions"], [data-type="3-actions"]) .ds-text-button[data-status="active"]:not([data-unread="true"]) {
+  color: var(--ds-color-header-cell-label);
+}
+[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell:is([data-type="1-action"], [data-type="2-actions"], [data-type="3-actions"]) .ds-text-button[data-status="active"]:not([data-unread="true"]) {
   color: var(--ds-color-accent-1);
 }
 

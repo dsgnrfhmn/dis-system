@@ -50,6 +50,7 @@
   --ds-color-border-default: #B4B4B4;
   --ds-color-border-subtle: #D4D4D4;
   --ds-color-border-muted: #E9E8E6;
+  --ds-color-border-table: #D4D4D4;
   --ds-color-border-strong: #000000;
   --ds-color-border-disabled: #DEDEDE;
   --ds-color-border-focus: #65615B;
@@ -292,8 +293,8 @@
   --ds-color-tooltip-text: #FFFFFF;
   --ds-color-row-status-analysed-text: #E7A474;
   --ds-color-row-status-analysed-bg: rgba(231, 164, 116, 0.2);
-  --ds-color-row-status-submitted-text: #00D6D6;
-  --ds-color-row-status-submitted-bg: rgba(0, 214, 214, 0.2);
+  --ds-color-row-status-submitted-text: #00ADAD;
+  --ds-color-row-status-submitted-bg: rgba(0, 173, 173, 0.2);
   --ds-color-row-status-archived-text: #949494;
   --ds-color-row-status-archived-bg: rgba(148, 148, 148, 0.2);
   --ds-color-row-status-approved-text: #5BCD94;
@@ -305,6 +306,7 @@
   --ds-color-border-default: #6B6B6B;
   --ds-color-border-subtle: #575757;
   --ds-color-border-muted: #424242;
+  --ds-color-border-table: #333333;
   --ds-color-border-strong: #F4F3F1;
   --ds-color-border-disabled: #424242;
   --ds-color-border-focus: #949494;

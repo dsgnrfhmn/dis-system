@@ -79,7 +79,7 @@
   display: flex;
   align-items: center;
   padding: var(--ds-spacing-cell);
-  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
   box-sizing: border-box;
   height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
   background-color: var(--ds-color-bg-surface);

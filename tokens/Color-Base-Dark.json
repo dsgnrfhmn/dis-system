@@ -210,14 +210,14 @@
       "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
     },
     "submitted-text": {
-      "$value": "{cyan.600}",
+      "$value": "{cyan.700}",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface. 2026-09-30, explicit request (\"make color for applied status more compatible on dark theme, a little bit darker\"): cyan.600 -> cyan.700 (#00ADAD)."
     },
     "submitted-bg": {
-      "$value": "rgba(0, 214, 214, 0.2)",
+      "$value": "rgba(0, 173, 173, 0.2)",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface. 2026-09-30: follows submitted-text to cyan.700 (#00ADAD) at the same 20%."
     },
     "archived-text": {
       "$value": "{silver.400}",
@@ -279,6 +279,13 @@
       "$value": "{silver.800}",
       "$type": "color",
       "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): quietest rule, just above the surface"
+    }
+  },
+  "border-table": {
+    "default": {
+      "$value": "{base.800}",
+      "$type": "color",
+      "$description": "Explicit request 2026-09-30, \"make line/border colors across all tables 50% darker for dark theme only\": object-dark.passive (silver.600, #6B6B6B) halved is ~#363636; base.800 (#333333) is the closest existing primitive. Tables only -- object-dark.passive itself is unchanged for the other 19 components."
     }
   },
   "border-strong": {
