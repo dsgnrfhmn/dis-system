@@ -211,7 +211,8 @@
    (rows may be display:contents inside a grid). */
 .ds-table-row:hover > .ds-table-cell,
 .ds-table-row:focus-within > .ds-table-cell {
-  background-color: var(--ds-color-bg-surface-pressed);
+  /* bg-row-hover (2026-09-30): surface-pressed in light, black in dark. */
+  background-color: var(--ds-color-bg-row-hover);
 }
 
 /* Selected is darker than hover (consumer-app Figma 237:31166: base/250, 2026-09-24),
