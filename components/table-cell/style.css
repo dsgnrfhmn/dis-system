@@ -655,11 +655,14 @@
    other orange buttons in the table grey too, orange only while the row is
    hovered"): every active text-button inside a table row -- a view/edit
    button in a text cell, a button composed into an untyped cell -- not only
-   the action cells. */
-[data-theme="dark"] .ds-table-row .ds-table-cell .ds-text-button[data-status="active"]:not([data-unread="true"]) {
+   the action cells; and link cells too (same day, "posting must be grey too
+   until hover"; its underline follows the text color). */
+[data-theme="dark"] .ds-table-row .ds-table-cell .ds-text-button[data-status="active"]:not([data-unread="true"]),
+[data-theme="dark"] .ds-table-row .ds-table-cell .ds-table-cell__link {
   color: var(--ds-color-header-cell-label);
 }
-[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-text-button[data-status="active"]:not([data-unread="true"]) {
+[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-text-button[data-status="active"]:not([data-unread="true"]),
+[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-table-cell__link {
   color: var(--ds-color-accent-1);
 }
 

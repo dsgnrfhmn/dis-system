@@ -163,6 +163,24 @@
   background-color: var(--ds-color-bg-row-hover);
 }
 
+/* Muted set (2026-09-30, explicit request: "items whose status is applied
+   must be grey, not orange -- inactive"): a record that needs no more
+   action. Its name is grey at rest -- text-inactive in light, and in dark
+   header-cell-label (text-inactive is unreadable there), the same greys
+   table-cell's row buttons use -- and takes the accent back while the row
+   is hovered, focused or the active one, like those row buttons. */
+.ds-sidebar-item[data-type="set"][data-muted="true"] .ds-text-button[data-status="active"] {
+  color: var(--ds-color-text-inactive);
+}
+
+[data-theme="dark"] .ds-sidebar-item[data-type="set"][data-muted="true"] .ds-text-button[data-status="active"] {
+  color: var(--ds-color-header-cell-label);
+}
+
+.ds-sidebar-item[data-type="set"][data-muted="true"]:is(:hover, :focus-within, [data-active="true"]) .ds-text-button[data-status="active"] {
+  color: var(--ds-color-accent-1);
+}
+
 /* With a caption (2026-09-30, explicit request: "add the status as a second,
    grey line in each sidebar item"): the row grows to fit two lines; the name
    button keeps its left inset and drops its bottom padding so the caption

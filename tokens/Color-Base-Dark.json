@@ -131,6 +131,11 @@
       "$value": "{black.950}",
       "$type": "color",
       "$description": "Explicit request 2026-09-30, \"make the table row hover color black\" (dark theme only): black.950 (#000000), darker than the dark surface (black.900, #1A1918). Tables only -- bg.surface-pressed itself is unchanged for the other components."
+    },
+    "text-highlight": {
+      "$value": "{yellow.900}",
+      "$type": "color",
+      "$description": "Explicit request 2026-09-30, \"make the CV's yellow highlight even darker, with white text\" (dark theme): yellow.900 (#4E410E, darkest yellow step; first yellow.800, then \"even darker\") under text-active (#F4F3F1) -- a whole page of marked words no longer glares on the dark surface."
     }
   },
   "system": {

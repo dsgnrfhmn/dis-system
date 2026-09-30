@@ -131,6 +131,11 @@
       "$value": "{base.100}",
       "$type": "color",
       "$description": "Table row hover/focus fill (table-row). Same as bg.surface-pressed in light, so light rows are unchanged."
+    },
+    "text-highlight": {
+      "$value": "{yellow.400}",
+      "$type": "color",
+      "$description": "Fill behind marked words in running text (e.g. a host app's adjusted-CV diff). Same as system.highlight in light."
     }
   },
   "row-status": {
