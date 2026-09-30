@@ -27,7 +27,7 @@
       "name": "caption",
       "type": "string",
       "required": false,
-      "description": "Unused by the Figma set row (kept for the earlier Penpot set card)."
+      "description": "type=\"set\": optional second line under the name, in grey (text-active at half opacity, the same grey as table-cell's text-passive-cell) -- e.g. a record's status. The row grows to two lines; without it the set row stays the single 44px line. (Kept from the earlier Penpot set card; shown again since 2026-09-30.)"
     },
     {
       "name": "saved",

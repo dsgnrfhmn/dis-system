@@ -158,7 +158,48 @@
    affordance. The dotted underline stays. */
 .ds-sidebar-item[data-type="set"]:hover,
 .ds-sidebar-item[data-type="set"]:focus-within {
-  background-color: var(--ds-color-bg-surface-pressed);
+  /* bg-row-hover (2026-09-30): the same hover fill as table-row --
+     surface-pressed in light, black in dark. */
+  background-color: var(--ds-color-bg-row-hover);
+}
+
+/* With a caption (2026-09-30, explicit request: "add the status as a second,
+   grey line in each sidebar item"): the row grows to fit two lines; the name
+   button keeps its left inset and drops its bottom padding so the caption
+   sits right under it, aligned with the name's text; the caption is body
+   text in the same grey as table-cell's text-passive-cell (text-active at
+   half opacity -- text-subactive is a light beige in dark, not grey) and
+   truncates like the name. */
+.ds-sidebar-item[data-type="set"][data-has-caption] {
+  height: auto;
+  min-height: var(--ds-spacing-row);
+}
+
+.ds-sidebar-item__set-main {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.ds-sidebar-item[data-type="set"][data-has-caption] .ds-sidebar-item__set-main > .ds-text-button {
+  flex: none;
+  padding-bottom: 0;
+}
+
+.ds-sidebar-item__caption {
+  padding: var(--ds-spacing-1) var(--ds-spacing-button-x) var(--ds-spacing-cell);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  color: var(--ds-color-text-active);
+  opacity: 0.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ds-sidebar-item[data-type="set"] .ds-text-button[data-status]::before,

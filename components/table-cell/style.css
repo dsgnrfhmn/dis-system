@@ -500,8 +500,14 @@
   font-weight: var(--ds-font-text-link-weight);
   line-height: var(--ds-font-text-link-line-height);
   letter-spacing: var(--ds-font-text-link-letter-spacing);
-  text-decoration-line: none;
-  text-decoration-thickness: var(--ds-border-width-default);
+  /* Permanent solid underline (explicit request 2026-09-30, "the posting
+     link must always be underlined, it's an external link"): the link
+     leaves for another URL, so it carries CLAUDE.md's Interaction
+     conventions' navigation mark -- solid, border-width-thin -- at rest,
+     not only on hover (supersedes the hover-only note above). */
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-thickness: var(--ds-border-width-thin);
   text-underline-offset: var(--ds-spacing-1);
   color: var(--ds-color-accent-1);
   flex: 1 1 0%;
@@ -645,10 +651,15 @@
    rest is header-cell-label (#808080 in dark), not text-inactive (#424242,
    unreadable on the dark surface) -- the grey the same table's column
    labels already use, so the resting actions sit with the header. */
-[data-theme="dark"] .ds-table-cell:is([data-type="1-action"], [data-type="2-actions"], [data-type="3-actions"]) .ds-text-button[data-status="active"]:not([data-unread="true"]) {
+/* Extended 2026-09-30 (explicit request, "in the dark theme make all the
+   other orange buttons in the table grey too, orange only while the row is
+   hovered"): every active text-button inside a table row -- a view/edit
+   button in a text cell, a button composed into an untyped cell -- not only
+   the action cells. */
+[data-theme="dark"] .ds-table-row .ds-table-cell .ds-text-button[data-status="active"]:not([data-unread="true"]) {
   color: var(--ds-color-header-cell-label);
 }
-[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell:is([data-type="1-action"], [data-type="2-actions"], [data-type="3-actions"]) .ds-text-button[data-status="active"]:not([data-unread="true"]) {
+[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-text-button[data-status="active"]:not([data-unread="true"]) {
   color: var(--ds-color-accent-1);
 }
 

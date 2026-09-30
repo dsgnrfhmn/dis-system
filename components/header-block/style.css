@@ -230,5 +230,14 @@
 .ds-header-block__row .ds-table-header {
   background: none;
   border: none;
-  padding: 0 0 0 var(--ds-spacing-5);
+  padding: 0;
+  /* Superseded 2026-09-30 (explicit request, "make the table's header title
+     start where the checkbox does, it's crooked now"): the title/tabs start
+     on the same line as the visible checkbox of the table's first column.
+     A checkbox-cell's 24px icon sits spacing-cell in from the row edge and
+     draws its 15px box centered in it, 4.5px further in -- spacing-2 is the
+     nearest scale step, so the title starts at spacing-cell + spacing-2.
+     The row keeps its spacing-6 padding (the right-docked actions keep
+     their inset); the header pulls back left by the difference. */
+  margin-left: calc(var(--ds-spacing-cell) + var(--ds-spacing-2) - var(--ds-spacing-6));
 }

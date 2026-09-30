@@ -126,6 +126,11 @@
       "$value": "{silver.700}",
       "$type": "color",
       "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): one step above surface-pressed (silver.800, the hover fill) so selected stays distinct from hover, as light base.250 vs base.100"
+    },
+    "row-hover": {
+      "$value": "{black.950}",
+      "$type": "color",
+      "$description": "Explicit request 2026-09-30, \"make the table row hover color black\" (dark theme only): black.950 (#000000), darker than the dark surface (black.900, #1A1918). Tables only -- bg.surface-pressed itself is unchanged for the other components."
     }
   },
   "system": {
@@ -286,6 +291,13 @@
       "$value": "{base.800}",
       "$type": "color",
       "$description": "Explicit request 2026-09-30, \"make line/border colors across all tables 50% darker for dark theme only\": object-dark.passive (silver.600, #6B6B6B) halved is ~#363636; base.800 (#333333) is the closest existing primitive. Tables only -- object-dark.passive itself is unchanged for the other 19 components."
+    }
+  },
+  "border-nav": {
+    "default": {
+      "$value": "rgba(180, 180, 180, 0)",
+      "$type": "color",
+      "$description": "Explicit request 2026-09-30, \"remove the nav border in the dark theme\": transparent (the same value as border-transparent), so the hairline keeps its 0.5px and the bar its height."
     }
   },
   "border-strong": {

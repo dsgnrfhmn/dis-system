@@ -26,6 +26,7 @@
   --ds-color-bg-row-selected: #D8D7D4;
   --ds-color-bg-overlay: #909090;
   --ds-color-bg-sidebar: #ADADAD;
+  --ds-color-bg-row-hover: #F3F2F0;
   --ds-color-row-status-analysed-text: #CA7D25;
   --ds-color-row-status-analysed-bg: rgba(202, 125, 37, 0.1);
   --ds-color-row-status-submitted-text: #008080;
@@ -51,6 +52,7 @@
   --ds-color-border-subtle: #D4D4D4;
   --ds-color-border-muted: #E9E8E6;
   --ds-color-border-table: #D4D4D4;
+  --ds-color-border-nav: #D4D4D4;
   --ds-color-border-strong: #000000;
   --ds-color-border-disabled: #DEDEDE;
   --ds-color-border-focus: #65615B;
@@ -279,6 +281,7 @@
   --ds-color-bg-overlay: #2E2E2E;
   --ds-color-bg-sidebar: #000000;
   --ds-color-bg-row-selected: #575757;
+  --ds-color-bg-row-hover: #000000;
   --ds-color-system-error: #B4222E;
   --ds-color-system-success: #32A46B;
   --ds-color-system-warning: #BE9D18;
@@ -307,6 +310,7 @@
   --ds-color-border-subtle: #575757;
   --ds-color-border-muted: #424242;
   --ds-color-border-table: #333333;
+  --ds-color-border-nav: rgba(180, 180, 180, 0);
   --ds-color-border-strong: #F4F3F1;
   --ds-color-border-disabled: #424242;
   --ds-color-border-focus: #949494;

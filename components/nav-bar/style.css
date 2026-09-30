@@ -94,7 +94,9 @@
   position: sticky;
   top: 0;
   background-color: var(--ds-color-bg-surface);
-  border-bottom: 0.5px solid var(--ds-color-object-dark-passive);
+  /* border-nav (2026-09-30): object-dark-passive in light, transparent in
+     dark -- no rule under the nav in the dark theme. */
+  border-bottom: 0.5px solid var(--ds-color-border-nav);
 }
 
 /* ---- left: workspace switcher (.ds-input-dropdown, composed as-is) ----
