@@ -449,6 +449,18 @@
   opacity: 0.5;
 }
 
+/* A passive cell with a view button (view_label: clipped text + a
+   text-button in one .ds-table-cell__text): only the text is dimmed, the
+   button keeps its own full color like every other text-button
+   (2026-09-30, found when a description column went passive). */
+.ds-table-cell[data-type="text-passive-cell"] .ds-table-cell__text:has(> .ds-table-cell__clip) {
+  opacity: 1;
+}
+
+.ds-table-cell[data-type="text-passive-cell"] .ds-table-cell__text > .ds-table-cell__clip {
+  opacity: 0.5;
+}
+
 /* ---- text-subactive-cell (Penpot "Summary"): same layout again, but
    typography.bodyTextItalic (Penpot's own italic composite token,
    distinct from bodyText). Still text.active colored, unchanged from

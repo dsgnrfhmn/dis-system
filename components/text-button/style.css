@@ -91,6 +91,14 @@
   cursor: pointer;
 }
 
+/* A text-button rendered as a link (nav-bar / sidebar-item with an href):
+   drop the UA's own underline on the <a> -- the label's
+   .ds-text-button__text already carries this component's underline, and a
+   second one on the whole box would run under the hover brackets too. */
+a.ds-text-button {
+  text-decoration: none;
+}
+
 /* display:inline-flex above beats the UA's [hidden]{display:none}; same fix
    dropdown-menu and popup already carry (2026-09-24: For You's All bulk
    buttons are shown per selection with the hidden attribute). */
