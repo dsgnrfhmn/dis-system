@@ -94,7 +94,7 @@
   width: 100%;
   box-sizing: border-box;
   background-color: var(--ds-color-bg-surface-pressed);
-  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border: var(--ds-border-width-thin) solid var(--ds-color-border-table);
 }
 
 /*
@@ -117,7 +117,7 @@
   padding: 0 var(--ds-spacing-6);
   gap: 0;
   border: 0;
-  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
   background-color: var(--ds-color-bg-surface);
 }
 
@@ -153,6 +153,14 @@
 .ds-header-block__row[data-has-search="true"] {
   justify-content: flex-start;
   gap: var(--ds-spacing-5);
+}
+
+/* Superseded once more 2026-09-30 (explicit request, "make for all tables
+   bulk actions on the right instead of on the left"): the title/tabs stay
+   left; search and the bulk actions after it dock to the row's right edge
+   again, via the same single auto-margin as the 2026-09-10 version. */
+.ds-header-block__row[data-has-search="true"] > .ds-header-block__search:not([data-align="end"]) {
+  margin-left: auto;
 }
 
 .ds-header-block__search {

@@ -261,6 +261,13 @@
       "$description": ""
     }
   },
+  "border-table": {
+    "default": {
+      "$value": "{base.300}",
+      "$type": "color",
+      "$description": "Table grid lines (table-cell, table-header-cell, header-block, table-footer). Same value as object-dark.passive in light, so light tables are unchanged."
+    }
+  },
   "border-strong": {
     "default": {
       "$value": "{base.1000}",

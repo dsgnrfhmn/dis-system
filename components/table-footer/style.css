@@ -15,7 +15,7 @@
   height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
   padding-left: calc(var(--ds-spacing-row) * 2 + var(--ds-spacing-cell));
   background-color: var(--ds-color-bg-surface-pressed);
-  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-muted, var(--ds-color-object-dark-passive));
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
 }
 
 .ds-table-footer .ds-text-button {
