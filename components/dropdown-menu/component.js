@@ -16,7 +16,31 @@
   -> dispatch ds-dropdown-select and close. If the trigger has a
   [data-dropdown-value] descendant, its text is updated to the selected
   item's label (input-dropdown's index.html does this).
+
+  Multiple (a menu with data-multiple, template prop multiple=true; explicit
+  request 2026-10-01, a status filter that shows several statuses at once):
+  each item is a checkbox. A click toggles that item's aria-selected and
+  leaves the menu open, so several can be ticked in one go; the trigger's
+  text is not touched. ds-dropdown-select then carries { value, label,
+  selected (the item's new state), values (every ticked item's value, in
+  menu order) }. data-mixed="true" on an item draws the third, half-ticked
+  box (a host's "All" over a partial choice); a click clears it.
 */
+
+// The menu's checkbox glyphs (multiple), inlined from icons/ so they take
+// the theme's colors -- same loader pattern as table-header-cell's own, run
+// once on load for the menus in the page.
+(function () {
+  const ICONS_BASE = new URL('../../icons/', document.currentScript.src);
+  document.querySelectorAll('.ds-dropdown-menu__check[data-icon]').forEach(async (el) => {
+    try {
+      const res = await fetch(new URL(`${el.dataset.icon}.svg`, ICONS_BASE));
+      el.innerHTML = await res.text();
+    } catch (err) {
+      // icons/ unreachable (e.g. opened without a server) -- leave empty
+    }
+  });
+})();
 
 function initDropdown(root) {
   const trigger = root.querySelector('[data-dropdown-trigger]');
@@ -25,6 +49,7 @@ function initDropdown(root) {
 
   const valueEl = trigger.querySelector('[data-dropdown-value]');
   const items = Array.from(menu.querySelectorAll('.ds-dropdown-menu__item'));
+  const multiple = menu.hasAttribute('data-multiple');
 
   // The item matching the trigger's current text is the selected one (drawn
   // Medium in Figma, node 45:6594). Kept in sync on every pick.
@@ -33,7 +58,7 @@ function initDropdown(root) {
       item.setAttribute('aria-selected', item.textContent.trim() === label ? 'true' : 'false');
     });
   }
-  if (valueEl) markSelected(valueEl.textContent.trim());
+  if (valueEl && !multiple) markSelected(valueEl.textContent.trim());
 
   function close() {
     menu.hidden = true;
@@ -69,6 +94,23 @@ function initDropdown(root) {
 
   items.forEach((item) => {
     item.addEventListener('click', () => {
+      if (multiple) {
+        const selected = item.getAttribute('aria-selected') !== 'true';
+        item.setAttribute('aria-selected', String(selected));
+        item.removeAttribute('data-mixed');
+        root.dispatchEvent(
+          new CustomEvent('ds-dropdown-select', {
+            bubbles: true,
+            detail: {
+              value: item.dataset.value,
+              label: item.textContent.trim(),
+              selected,
+              values: items.filter((i) => i.getAttribute('aria-selected') === 'true').map((i) => i.dataset.value),
+            },
+          })
+        );
+        return;
+      }
       if (valueEl) valueEl.textContent = item.textContent;
       markSelected(item.textContent.trim());
       close();

@@ -41,6 +41,39 @@
 </div>
 </div>
 
+<div class="ds-dropdown">
+<button type="button" class="ds-input-dropdown" data-size="middle" aria-haspopup="listbox" data-dropdown-trigger>
+  <span data-dropdown-value>Statuses</span>
+  <span class="ds-input-dropdown__icon" data-icon="arrow-down" aria-hidden="true"></span>
+</button>
+<div class="ds-dropdown-menu" role="listbox" data-multiple aria-multiselectable="true">
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="false" data-mixed="true">
+    <span class="ds-dropdown-menu__check" data-icon="checkbox" data-check="unchecked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-selected" data-check="checked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-semi-select" data-check="mixed" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__label">All</span>
+  </button>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="review" aria-selected="true">
+    <span class="ds-dropdown-menu__check" data-icon="checkbox" data-check="unchecked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-selected" data-check="checked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-semi-select" data-check="mixed" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__label">For review</span>
+  </button>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed" aria-selected="true">
+    <span class="ds-dropdown-menu__check" data-icon="checkbox" data-check="unchecked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-selected" data-check="checked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-semi-select" data-check="mixed" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__label">Analysed</span>
+  </button>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">
+    <span class="ds-dropdown-menu__check" data-icon="checkbox" data-check="unchecked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-selected" data-check="checked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-semi-select" data-check="mixed" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__label">Archived</span>
+  </button>
+</div>
+</div>
+
 <script src="../input-dropdown/component.js"></script>
 <script src="component.js"></script>
 <script src="../divider/component.js"></script>

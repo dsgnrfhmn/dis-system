@@ -12,7 +12,7 @@
 <style>
   .ds-table-header-cell-demo-row {
     display: grid;
-    grid-template-columns: max-content max-content max-content max-content max-content 180px;
+    grid-template-columns: max-content max-content max-content max-content max-content 180px 220px;
     /* Closes the outer right/bottom edge lost when table-cell/style.css
        switched to border-top/border-left only (2026-09-11 bugfix) --
        see that component's own comment. */
@@ -21,13 +21,14 @@
   }
 </style>
 
-<div class="ds-table-header-cell-demo-row" data-sort-group data-checkbox-group>
+<div class="ds-table-header-cell-demo-row" data-sort-group data-checkbox-group data-column-resize="table-header-cell-demo">
   {% with label='Checkbox' %}{% include "components/table-header-cell/template.html" %}{% endwith %}
   {% with sortable=true, favourite_all=true, label='Saved' %}{% include "components/table-header-cell/template.html" %}{% endwith %}
   {% with sortable=true, label='Type', sort_dir='asc' %}{% include "components/table-header-cell/template.html" %}{% endwith %}
   {% with sortable=true, label='Due date' %}{% include "components/table-header-cell/template.html" %}{% endwith %}
   {% with sortable=true, label='Status' %}{% include "components/table-header-cell/template.html" %}{% endwith %}
   {% with filter=true, label='Stage', filter_all_label='All stages', filter_options=[{'value': 'review', 'label': 'For Review'}, {'value': 'analysed', 'label': 'Analysed'}, {'value': 'archived', 'label': 'Archived'}] %}{% include "components/table-header-cell/template.html" %}{% endwith %}
+  {% with filter=true, filter_multiple=true, filter_icon='filter', label='Status', filter_options=[{'value': 'review', 'label': 'For Review'}, {'value': 'analysed', 'label': 'Analysed'}, {'value': 'archived', 'label': 'Archived', 'selected': false}] %}{% include "components/table-header-cell/template.html" %}{% endwith %}
 </div>
 
 <script src="../table-cell/component.js"></script>
