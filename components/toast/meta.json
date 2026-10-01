@@ -35,7 +35,7 @@
       "type": "number",
       "required": false,
       "default": 5000,
-      "description": "Auto-dismiss delay in ms, only meaningful through window.dsToast.show(). The default (5000) is a judgment call, not a design-source value."
+      "description": "Auto-dismiss delay in ms, only meaningful through window.dsToast.show(). The default (5000) is a judgment call, not a design-source value. 0 (explicit request 2026-10-01) never auto-dismisses: the toast stays until its close button is clicked."
     }
   ],
   "source": "none",

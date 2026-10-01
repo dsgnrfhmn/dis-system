@@ -3,13 +3,23 @@
   table-header-actions flush left (actions act on the selected rows; pass
   status='disabled' until something is selected), and, with search=true,
   an always-open search docked to the right edge. No table-header.
+  more_actions (explicit request 2026-10-01): a second action group right
+  after the first, set apart by divider's vertical dot (page-wide actions
+  such as Add / Fetch, then the selected rows' bulk actions).
+  search_plain: the search field keeps input's own unboxed rest state
+  (no border at rest; input's hover and focus states as ever) instead of
+  header-block's usual boxed-at-rest search.
 #}
 <div class="ds-header-block" data-size="{{ size | default('big') }}">
   {% if layout == 'bulk' %}
   <div class="ds-header-block__row" data-has-search="true">
     {% with actions=actions | default([{'label': 'Archive', 'priority': 'secondary', 'status': 'disabled'}, {'label': 'Analyze', 'priority': 'primary', 'status': 'disabled'}]) %}{% include "components/table-header-actions/template.html" %}{% endwith %}
+    {% if more_actions %}
+    {% with orientation='vertical' %}{% include "components/divider/template.html" %}{% endwith %}
+    {% with actions=more_actions %}{% include "components/table-header-actions/template.html" %}{% endwith %}
+    {% endif %}
     {% if search %}
-    <div class="ds-header-block__search" data-open="always" data-align="end">
+    <div class="ds-header-block__search" data-open="always" data-align="end"{% if search_plain %} data-plain{% endif %}>
       {% with placeholder=search_placeholder | default('Search') %}{% include "components/input/template.html" %}{% endwith %}
     </div>
     {% endif %}
