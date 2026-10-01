@@ -206,9 +206,18 @@
 }
 
 /* The opened search field stays boxed at rest, overriding input's
-   borderless transparent default (it stands alone in the header row). */
-.ds-header-block__search .ds-input:not([data-fill="filled"]):not(:hover):not(:focus) {
+   borderless transparent default (it stands alone in the header row) --
+   unless search_plain (data-plain, explicit request 2026-10-01): then it
+   is input's own, borderless and transparent at rest, with input's hover
+   fill + border and focus border when pointed at or typed in. */
+.ds-header-block__search:not([data-plain]) .ds-input:not([data-fill="filled"]):not(:hover):not(:focus) {
   border-color: var(--ds-color-input-border, var(--ds-color-object-dark-passive));
+}
+
+/* more_actions (bulk layout, explicit request 2026-10-01): divider's
+   vertical dot between the two action groups, at the row's own gap. */
+.ds-header-block__row > .ds-divider[data-orientation="vertical"] {
+  flex: none;
 }
 
 .ds-header-block__search[data-open="true"] .ds-text-button {
