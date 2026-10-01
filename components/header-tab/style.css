@@ -190,6 +190,25 @@
   opacity: 0.5;
 }
 
+/*
+  Dark theme (consumer dashboard, 2026-10-01): an inactive tab takes the
+  page background like the active one, so the strip reads as one surface
+  and only the text marks the open tab -- the inactive title and caption
+  sit a step below the active tab's text in header-cell-label (#808080, the
+  column-header label grey), still readable on bg-surface where
+  text-inactive (#424242) is not. Hover stays accent-1 as above.
+*/
+[data-theme="dark"] .ds-header-tab {
+  background-color: var(--ds-color-bg-surface);
+}
+[data-theme="dark"] .ds-header-tab:not([aria-selected="true"]) .ds-header-tab__label,
+[data-theme="dark"] .ds-header-tab:not([aria-selected="true"]) .ds-header-tab__count {
+  color: var(--ds-color-header-cell-label);
+}
+[data-theme="dark"] .ds-header-tab:not([aria-selected="true"]):hover .ds-header-tab__label {
+  color: var(--ds-color-accent-1);
+}
+
 .ds-header-tab:focus-visible {
   outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
   outline-offset: var(--ds-spacing-focus-offset);
