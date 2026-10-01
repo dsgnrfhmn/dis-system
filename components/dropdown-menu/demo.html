@@ -30,5 +30,16 @@
   ], open=true %}{% include "components/dropdown-menu/template.html" %}{% endwith %}
 </div>
 
+{# multiple=true: checkbox items, the menu stays open while ticking. #}
+<div class="ds-dropdown">
+  {% with trigger=true, value='Statuses' %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+  {% with items=[
+    {'value': '', 'label': 'All', 'mixed': true},
+    {'value': 'review', 'label': 'For review', 'selected': true},
+    {'value': 'analysed', 'label': 'Analysed', 'selected': true},
+    {'value': 'archived', 'label': 'Archived'}
+  ], multiple=true, open=true %}{% include "components/dropdown-menu/template.html" %}{% endwith %}
+</div>
+
 <script src="../input-dropdown/component.js"></script>
 <script src="component.js"></script>

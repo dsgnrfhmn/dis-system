@@ -3,10 +3,18 @@
   {'value': 'option-b', 'label': 'Option B'},
   {'value': 'option-c', 'label': 'Option C'}
 ]) %}
-<div class="ds-dropdown-menu" role="listbox"{% if not open %} hidden{% endif %}>
+{% set _multiple = multiple | default(false) %}
+<div class="ds-dropdown-menu" role="listbox"{% if _multiple %} data-multiple aria-multiselectable="true"{% endif %}{% if not open %} hidden{% endif %}>
   {% for item in _items %}
   {% if item.divider %}
   {% include "components/divider/template.html" %}
+  {% elif _multiple %}
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="{{ item.value }}" aria-selected="{{ 'true' if item.selected else 'false' }}"{% if item.mixed %} data-mixed="true"{% endif %}>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox" data-check="unchecked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-selected" data-check="checked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-semi-select" data-check="mixed" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__label">{{ item.label }}</span>
+  </button>
   {% else %}
   <button type="button" class="ds-dropdown-menu__item" role="option" data-value="{{ item.value }}">{{ item.label }}</button>
   {% endif %}

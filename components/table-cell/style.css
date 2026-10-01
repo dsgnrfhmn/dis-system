@@ -488,10 +488,14 @@
    style.css) so every clickable text control in the system signals
    "clickable" the same way: color at rest, underline confirms it on
    hover, rather than baking a decoration into the resting state. ---- */
+/* The cell's own padding on both sides and the label at the start, so the
+   link's text starts where its column header's does (explicit request
+   2026-10-01, "every table item's text aligned with the header's text"). It
+   used to sit flush right with no side padding. */
 .ds-table-cell[data-type="link"] {
   align-items: center;
-  justify-content: flex-end;
-  padding: var(--ds-spacing-cell) 0;
+  justify-content: flex-start;
+  padding: var(--ds-spacing-cell);
 }
 
 .ds-table-cell__link {
@@ -549,7 +553,26 @@
 .ds-table-cell[data-type="input"] {
   align-items: center;
   justify-content: flex-end;
-  padding: 0 var(--ds-spacing-cell);
+  padding: 0 var(--ds-spacing-cell) 0 0;
+}
+
+/* Text aligned with the column header's (explicit request 2026-10-01): the
+   header's text starts spacing-cell in, so a field in a cell starts at the
+   column's edge (no left cell padding, above) and its own left padding is
+   whatever brings its text to spacing-cell -- less the field's border, and
+   for a dropdown also less the status pill's own spacing-2 padding, which
+   every value gets (a value without a pill too, so all line up). */
+.ds-table-cell[data-type="input"] .ds-input {
+  padding-left: calc(var(--ds-spacing-cell) - var(--ds-border-width-thin));
+}
+
+.ds-table-cell[data-type="dropdown"] .ds-input-dropdown {
+  padding-left: calc(var(--ds-spacing-cell) - var(--ds-border-width-thin) - var(--ds-spacing-2));
+}
+
+.ds-table-cell[data-type="dropdown"] [data-dropdown-value] {
+  padding-left: var(--ds-spacing-2);
+  padding-right: var(--ds-spacing-2);
 }
 
 .ds-table-cell[data-type="dropdown"] {
@@ -797,17 +820,31 @@
   white-space: nowrap;
 }
 
-/* A button standing in for column text ("Add Description"): its label starts
-   at the same x as the text above it. The hover "[" hangs outside, in the
-   cell's own padding, so nothing shifts. */
-.ds-table-cell[data-type="text-active-cell"] > .ds-text-button:only-child {
+/* A button standing in for column text ("Add Description", or a "summary" /
+   "description" opener in an untyped cell): its label starts at the same x
+   as the text above it and as its column header's text. The hover "[" hangs
+   outside, in the cell's own padding, so nothing shifts. Untyped cells added
+   2026-10-01 (explicit request: every table item's text aligned with the
+   header's text). */
+.ds-table-cell[data-type="text-active-cell"] > .ds-text-button:only-child,
+.ds-table-cell:not([data-type]) > .ds-text-button:only-child {
   position: relative;
   padding-left: 0;
 }
-.ds-table-cell[data-type="text-active-cell"] > .ds-text-button:only-child::before {
+.ds-table-cell[data-type="text-active-cell"] > .ds-text-button:only-child::before,
+.ds-table-cell:not([data-type]) > .ds-text-button:only-child::before {
   position: absolute;
   right: 100%;
   margin-right: var(--ds-spacing-button-gap);
+}
+
+/* Action cells have no left padding of their own (Penpot's pixel-matched
+   values), so their first button carries the cell's: its label starts where
+   the Actions header's text does (explicit request 2026-10-01). */
+.ds-table-cell[data-type="1-action"] > .ds-text-button:first-child,
+.ds-table-cell[data-type="2-actions"] > .ds-text-button:first-child,
+.ds-table-cell[data-type="3-actions"] > .ds-text-button:first-child {
+  padding-left: var(--ds-spacing-cell);
 }
 
 /* A status / notes field fills its cell: the .ds-dropdown wrapper must be a

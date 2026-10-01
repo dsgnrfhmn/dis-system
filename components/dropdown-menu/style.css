@@ -120,3 +120,54 @@
 .ds-dropdown-menu__item:disabled:hover {
   background-color: transparent;
 }
+
+/* ---- multiple (data-multiple): checkbox items ----------------------------
+   Explicit request 2026-10-01 (a status filter that shows several statuses
+   at once). No design source: built from what the system already has -- the
+   Figma checkbox glyphs (icons/checkbox*.svg, D_SYSTEM 103:4711) in exactly
+   table-cell's checkbox colors, so a ticked menu item reads like a ticked
+   row. Each item carries all three glyphs and CSS shows the one matching
+   its state (aria-selected / data-mixed), the same pure-CSS swap as a row
+   checkbox, so a click never re-fetches an icon. The box is the state, so a
+   ticked item keeps regular weight (the single-choice Medium weight would
+   say the same thing twice). */
+.ds-dropdown-menu[data-multiple] .ds-dropdown-menu__item {
+  gap: var(--ds-spacing-3);
+}
+
+.ds-dropdown-menu[data-multiple] .ds-dropdown-menu__item[aria-selected="true"] {
+  font-weight: var(--ds-font-body-text-weight);
+}
+
+.ds-dropdown-menu__check {
+  display: none;
+  flex: none;
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+}
+
+.ds-dropdown-menu__check svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ds-dropdown-menu__item:not([aria-selected="true"]):not([data-mixed="true"]) .ds-dropdown-menu__check[data-check="unchecked"],
+.ds-dropdown-menu__item[aria-selected="true"]:not([data-mixed="true"]) .ds-dropdown-menu__check[data-check="checked"],
+.ds-dropdown-menu__item[data-mixed="true"] .ds-dropdown-menu__check[data-check="mixed"] {
+  display: inline-flex;
+}
+
+.ds-dropdown-menu__check[data-check="unchecked"] {
+  color: var(--ds-color-input-icon);
+  --_icon-fill: var(--ds-color-input-fill);
+}
+
+.ds-dropdown-menu__item:hover .ds-dropdown-menu__check[data-check="unchecked"] {
+  color: var(--ds-color-accent-1);
+}
+
+.ds-dropdown-menu__check[data-check="checked"],
+.ds-dropdown-menu__check[data-check="mixed"] {
+  color: var(--ds-color-accent-1);
+  --_icon-mark: var(--ds-color-text-inverced);
+}
