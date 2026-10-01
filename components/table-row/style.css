@@ -142,10 +142,10 @@
    after table-cell/style.css on every page) rather than needing
    !important -- don't reorder those two <link> tags.
 
-   A status without a rule here (filtered) keeps the cell's
-   plain 50%-opacity label, unstyled, same as before. The tokens are light
-   only (Color-Base-Light, group row-status): with no dark value the var()
-   is invalid in dark and the pill stays plain text, no invented dark tint. */
+   A status without a rule here keeps the cell's plain 50%-opacity label,
+   unstyled, same as before. Filtered got its grey pill on 2026-10-01
+   (explicit request: "filtered = filtered (grey)"). The tokens are in
+   both Color-Base-Light and Color-Base-Dark (group row-status). */
 .ds-table-row[data-status="analysed"] .ds-table-cell[data-type="dropdown"] [data-dropdown-value],
 .ds-table-row[data-status="analysed"] .ds-table-cell[data-type="status-label"] .ds-table-cell__status-label {
   background-color: var(--ds-color-row-status-analysed-bg);
@@ -177,6 +177,15 @@
 .ds-table-row[data-status="archived"] .ds-table-cell[data-type="status-label"] .ds-table-cell__status-label {
   background-color: var(--ds-color-row-status-archived-bg);
   color: var(--ds-color-row-status-archived-text);
+  opacity: 1;
+  display: inline-flex;
+  border-radius: var(--ds-radius-md);
+  padding: var(--ds-spacing-2);
+}
+.ds-table-row[data-status="filtered"] .ds-table-cell[data-type="dropdown"] [data-dropdown-value],
+.ds-table-row[data-status="filtered"] .ds-table-cell[data-type="status-label"] .ds-table-cell__status-label {
+  background-color: var(--ds-color-row-status-filtered-bg);
+  color: var(--ds-color-row-status-filtered-text);
   opacity: 1;
   display: inline-flex;
   border-radius: var(--ds-radius-md);

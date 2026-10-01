@@ -146,7 +146,7 @@
       "$description": ""
     },
     "analysed-bg": {
-      "$value": "rgba(202, 125, 37, 0.1)",
+      "$value": "rgba(198, 20, 225, 0.1)",
       "$type": "color",
       "$description": ""
     },
@@ -186,7 +186,17 @@
       "$description": ""
     },
     "for-review-bg": {
-      "$value": "rgba(202, 175, 37, 0.1)",
+      "$value": "rgba(202, 125, 37, 0.1)",
+      "$type": "color",
+      "$description": ""
+    },
+    "filtered-text": {
+      "$value": "{row-status.filtered}",
+      "$type": "color",
+      "$description": ""
+    },
+    "filtered-bg": {
+      "$value": "rgba(128, 128, 128, 0.1)",
       "$type": "color",
       "$description": ""
     },
