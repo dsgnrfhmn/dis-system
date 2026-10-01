@@ -210,14 +210,14 @@
   },
   "row-status": {
     "analysed-text": {
-      "$value": "{orange.300}",
+      "$value": "{magenta.300}",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+      "$description": "Dark counterpart (no Figma dark source): a lighter step of light's magenta, readable as text on the dark surface. 2026-10-01: follows light Analysed from orange (orange.300) to magenta."
     },
     "analysed-bg": {
-      "$value": "rgba(231, 164, 116, 0.2)",
+      "$value": "rgba(255, 92, 255, 0.2)",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+      "$description": "Dark counterpart (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface. 2026-10-01: follows analysed-text to magenta.300."
     },
     "submitted-text": {
       "$value": "{cyan.700}",
@@ -250,14 +250,24 @@
       "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
     },
     "for-review-text": {
-      "$value": "{yellow.400}",
+      "$value": "{orange.300}",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+      "$description": "Dark counterpart (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface. 2026-10-01: follows light For review from yellow (yellow.400) to orange -- the dark orange Analysed had."
     },
     "for-review-bg": {
-      "$value": "rgba(231, 198, 65, 0.2)",
+      "$value": "rgba(231, 164, 116, 0.2)",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+      "$description": "Dark counterpart (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface. 2026-10-01: follows for-review-text to orange.300."
+    },
+    "filtered-text": {
+      "$value": "{silver.400}",
+      "$type": "color",
+      "$description": "Dark counterpart (no Figma dark source), 2026-10-01: the same grey as archived-text, as in light."
+    },
+    "filtered-bg": {
+      "$value": "rgba(148, 148, 148, 0.2)",
+      "$type": "color",
+      "$description": "Dark counterpart (no Figma dark source), 2026-10-01: the same as archived-bg, as in light."
     },
     "declined-text": {
       "$value": "{red.300}",

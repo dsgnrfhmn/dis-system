@@ -760,9 +760,9 @@
   "row-status": {
     "$description": "Status pill colors, sampled directly from Figma (nodes 254:19537 Analysed, 254:19577 Submitted, 254:19618 Approved, 254:27048 Pending, 254:27129 Declined, 2026-09-22; supersedes 237:30119's paler first pass, which this group also mistakenly routed through accent.primary-tint/secondary-tint and signal.*-tint -- wrong hues entirely, e.g. Submitted rendered blue-tinted instead of grey. Removed those four primitives rather than fix their values in place, since nothing else referenced them (grepped) and accent/signal are the wrong semantic home for statuses that aren't the app's two accent colors or a success/warning/error signal). Each value is the pill's text color at full strength; Color-Base-Light's row-status group also uses it, at Figma's own alpha, as the pill's background tint.",
     "analysed": {
-      "$value": "{accent.tertiary}",
+      "$value": "{accent.secondary}",
       "$type": "color",
-      "$description": "Orange, accent.tertiary (#CA7D25, Figma accent/tertiary): the save icon's orange given to Analysed on 2026-09-24 (#BD7C3B via accent.secondary); repointed 2026-09-27 when accent.secondary became Figma's magenta, to keep Analysed orange. Figma had a literal purple #A32AF3 here (254:19537); replaced off-Figma."
+      "$description": "Magenta, accent.secondary (#C614E1, Figma accent/secondary). Explicit request 2026-10-01 (\"analysed = analysed (magenta)\"): Analysed hands its orange to For review and takes the magenta. Was accent.tertiary's orange (#CA7D25) from 2026-09-24; Figma had a literal purple #A32AF3 here (254:19537)."
     },
     "submitted": {
       "$value": "{cyan.800}",
@@ -774,15 +774,20 @@
       "$type": "color",
       "$description": "Grey, #808080, the Figma fill Submitted had (254:19577) until 2026-09-24. Archived is shown as a status in the consuming app's For You while a record is archived (2026-09-24)."
     },
+    "filtered": {
+      "$value": "{silver.500}",
+      "$type": "color",
+      "$description": "Grey, the same #808080 as archived. Explicit request 2026-10-01 (\"filtered = filtered (grey)\"): a record an intake filter rejected reads as out of the way, like an archived one. Until then Filtered had no pill and stayed plain text."
+    },
     "approved": {
       "$value": "#417639",
       "$type": "color",
       "$description": "Figma variable system/success-strong. Distinct from signal.success-strong (#52754D, already used by text-button's data-status=\"success\" elsewhere) -- kept separate rather than repointing that token, which would silently recolor an unrelated, already-shipped component."
     },
     "for-review": {
-      "$value": "#CAAF25",
+      "$value": "{accent.tertiary}",
       "$type": "color",
-      "$description": "Figma variable system/warning-strong, the yellow Pending had (254:27048) until it was given to For review and removed Pending, 2026-09-24. Distinct from signal.warning-strong (#B09B2D) for the same reason as approved above."
+      "$description": "Orange, accent.tertiary (#CA7D25, Figma accent/tertiary). Explicit request 2026-10-01 (\"Found = for review (orange)\"): takes the orange Analysed had. Was #CAAF25 (Figma system/warning-strong, the yellow Pending had in 254:27048) from 2026-09-24."
     },
     "declined": {
       "$value": "#A21D1D",
