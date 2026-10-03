@@ -25,6 +25,16 @@
   selected (the item's new state), values (every ticked item's value, in
   menu order) }. data-mixed="true" on an item draws the third, half-ticked
   box (a host's "All" over a partial choice); a click clears it.
+
+  Keyboard (explicit request 2026-10-03, the listbox keys the a11y notes
+  listed as missing): ArrowDown / ArrowUp on the closed trigger open the
+  menu; inside the open menu they move focus between the enabled items,
+  Home / End jump to the first / last. Opening from the keyboard (Enter /
+  Space on the trigger, or an arrow) focuses the selected item, else the
+  first. Enter / Space pick the focused item (native button click). Tab
+  closes the menu and lets focus move on. A close while focus is inside
+  the menu (a pick, Escape) hands focus back to the trigger, so it isn't
+  dropped onto the page body.
 */
 
 // The menu's checkbox glyphs (multiple), inlined from icons/ so they take
@@ -60,11 +70,31 @@ function initDropdown(root) {
   }
   if (valueEl && !multiple) markSelected(valueEl.textContent.trim());
 
+  function enabledItems() {
+    return items.filter((item) => !item.disabled);
+  }
+
+  function focusItem(index) {
+    const enabled = enabledItems();
+    if (!enabled.length) return;
+    enabled[(index + enabled.length) % enabled.length].focus();
+  }
+
+  // The item to land on when the menu opens from the keyboard: the current
+  // choice if it's selectable, else the first.
+  function focusInitialItem() {
+    const enabled = enabledItems();
+    const selected = enabled.find((item) => item.getAttribute('aria-selected') === 'true');
+    (selected || enabled[0])?.focus();
+  }
+
   function close() {
+    const hadFocus = menu.contains(document.activeElement);
     menu.hidden = true;
     trigger.setAttribute('aria-expanded', 'false');
     document.removeEventListener('click', onOutsideClick);
     document.removeEventListener('keydown', onKeydown);
+    if (hadFocus) trigger.focus();
   }
 
   function open() {
@@ -82,14 +112,40 @@ function initDropdown(root) {
     if (event.key === 'Escape') {
       close();
       trigger.focus();
+      return;
     }
+    if (event.key === 'Tab') {
+      close();
+      return;
+    }
+    const enabled = enabledItems();
+    const current = enabled.indexOf(document.activeElement);
+    const target = {
+      ArrowDown: current === -1 ? 0 : current + 1,
+      ArrowUp: current === -1 ? enabled.length - 1 : current - 1,
+      Home: 0,
+      End: enabled.length - 1,
+    }[event.key];
+    if (target === undefined) return;
+    event.preventDefault();
+    focusItem(target);
   }
 
   trigger.setAttribute('aria-expanded', 'false');
 
-  trigger.addEventListener('click', () => {
-    if (menu.hidden) open();
-    else close();
+  // detail === 0: the click came from Enter / Space, not a pointer.
+  trigger.addEventListener('click', (event) => {
+    if (menu.hidden) {
+      open();
+      if (event.detail === 0) focusInitialItem();
+    } else close();
+  });
+
+  trigger.addEventListener('keydown', (event) => {
+    if (!menu.hidden || (event.key !== 'ArrowDown' && event.key !== 'ArrowUp')) return;
+    event.preventDefault();
+    open();
+    focusInitialItem();
   });
 
   items.forEach((item) => {

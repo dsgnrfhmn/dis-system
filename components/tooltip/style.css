@@ -68,8 +68,14 @@
   z-index: 10;
 }
 
+/* :has(:focus-visible): a tooltip on a container (a table cell) whose
+   keyboard-focused element is a control inside it (the cell's button)
+   shows too (explicit request 2026-10-03, tooltips on keyboard focus).
+   Keyboard focus only -- a mouse click inside still shows it on hover
+   alone, as before. */
 [data-tooltip]:hover::after,
-[data-tooltip]:focus-visible::after {
+[data-tooltip]:focus-visible::after,
+[data-tooltip]:has(:focus-visible)::after {
   opacity: 1;
 }
 

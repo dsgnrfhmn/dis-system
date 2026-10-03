@@ -31,5 +31,5 @@
     "light",
     "dark"
   ],
-  "a11y_notes": ":focus-visible (not just :hover) shows the tooltip, so keyboard users reach it with Tab. The tooltip text is CSS generated content and is not announced as a description; if it must be announced, the host should add aria-describedby pointing at a real, visually hidden text node. A native <button disabled> can't receive focus, so a tooltip on a disabled button is mouse-only; to make it keyboard-reachable, the host would use aria-disabled on a still-focusable button instead of the disabled attribute."
+  "a11y_notes": ":focus-visible (not just :hover) shows the tooltip, so keyboard users reach it with Tab; so does keyboard focus on a control inside the trigger (:has(:focus-visible), 2026-10-03), for a tooltip set on a container such as a table cell around a button. The tooltip text is CSS generated content and is not announced as a description; if it must be announced, the host should add aria-describedby pointing at a real, visually hidden text node. A native <button disabled> can't receive focus, so a tooltip on a disabled button is mouse-only; to make it keyboard-reachable, the host would use aria-disabled on a still-focusable button instead of the disabled attribute."
 }
