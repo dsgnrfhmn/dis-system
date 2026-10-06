@@ -1,0 +1,24 @@
+<!--
+  figure demo: image with caption, image without caption, empty placeholder
+  with caption. Images are inline SVG data URIs so the demo needs no assets.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: flex; gap: var(--ds-spacing-6); padding: var(--ds-spacing-6); width: 720px;">
+  <div style="flex: 1;">
+    {% set src = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect width='300' height='200' fill='%23999'/%3E%3C/svg%3E" %}
+    {% set alt = "" %}
+    {% set caption = "Jane Roe, Gallery One, 2023" %}
+    {% include "components/figure/template.html" %}
+  </div>
+  <div style="flex: 1;">
+    {% set caption = "" %}
+    {% include "components/figure/template.html" %}
+  </div>
+  <div style="flex: 1;">
+    {% set src = "" %}
+    {% set caption = "not-specified" %}
+    {% include "components/figure/template.html" %}
+  </div>
+</div>

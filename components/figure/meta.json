@@ -1,0 +1,42 @@
+{
+  "name": "figure",
+  "description": "An image with its caption built in: the picture at its own proportions, full width of its container, and under it one grey italic line (who, where, when). Without a caption it is just the image; without an image it is a gray 16:9 placeholder.",
+  "status": "stable",
+  "category": "cards-layouts",
+  "listed": false,
+  "variants": [
+    "image",
+    "placeholder"
+  ],
+  "props": [
+    {
+      "name": "src",
+      "type": "string",
+      "required": false,
+      "default": null,
+      "description": "Image URL. Omit it and the figure renders the gray 16:9 placeholder (data-empty)."
+    },
+    {
+      "name": "alt",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "Text alternative of the image. Empty marks the image decorative, which is right when the caption already says what it shows."
+    },
+    {
+      "name": "caption",
+      "type": "string",
+      "required": false,
+      "default": null,
+      "description": "The line under the image. Omit it and no caption element is rendered."
+    }
+  ],
+  "source": "none",
+  "rationale": "Not drawn in Figma: the Portfolio preview needs a picture with a who / where / when line under it, and no existing component has a caption (paper-preview only has skeleton bars, gallery-image is a 160px thumbnail). Built on the semantic pair <figure> / <figcaption>, so the caption belongs to the image for assistive technology and for anyone reading the markup, with no wrapper logic. Every value is an existing token: the caption role (--ds-font-caption-*, Inter italic) in text-subactive, 4px (spacing-2) below the image, the object-dark-passive gray behind the image as in gallery-image, 16:9 for the empty state as in paper-preview's image placeholder. The image is never cropped (width 100%, height auto): portrait and landscape photos on one document sheet each keep their shape, which a fixed ratio with object-fit would not. Long unbroken captions wrap (overflow-wrap: anywhere) so a long place name cannot widen the sheet. Light and dark both come from the tokens; rendering verified in both themes.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "<figure>/<figcaption> ties the caption to the image. alt defaults to empty (decorative), because in the Portfolio the caption is the description; a host with no caption should pass a real alt. The caption color is text-subactive (black at 40% in light), which is below 4.5:1 on white: acceptable for supplementary credit lines, not for the only statement of anything important.",
+  "uses": []
+}
