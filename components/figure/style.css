@@ -1,0 +1,47 @@
+/*
+  figure: an image with its caption built in. Not in Figma yet (see
+  meta.json rationale), so every value is a token already in use elsewhere.
+
+  Image: full width of the container at its own proportions (height auto),
+  never cropped, so a portrait and a landscape photo each keep their shape
+  on a document sheet. Behind it, the same object-dark-passive gray
+  gallery-image uses as its stand-in, which also shows while the picture
+  loads. With no src the gray box is 16:9, the proportion paper-preview's
+  image placeholder uses.
+
+  Caption: the system's caption role (Inter italic, tight line height) in
+  text-subactive, the de-emphasized grey, 4px (spacing-2) under the image.
+*/
+.ds-figure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-2);
+  min-width: 0;
+  margin: 0;
+}
+
+.ds-figure__image {
+  background-color: var(--ds-color-object-dark-passive);
+}
+
+.ds-figure[data-empty] .ds-figure__image {
+  aspect-ratio: 16 / 9;
+}
+
+.ds-figure__image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ds-figure__caption {
+  margin: 0;
+  font-family: var(--ds-font-caption-family);
+  font-size: var(--ds-font-caption-size);
+  font-style: var(--ds-font-caption-style);
+  font-weight: var(--ds-font-caption-weight);
+  line-height: var(--ds-font-caption-line-height);
+  letter-spacing: var(--ds-font-caption-letter-spacing);
+  color: var(--ds-color-text-subactive);
+  overflow-wrap: anywhere;
+}
