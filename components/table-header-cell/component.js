@@ -347,5 +347,19 @@ document.querySelectorAll('.ds-table-header-cell[data-filter]:not([data-filter-m
     });
   }
 
-  document.querySelectorAll('[data-column-resize]').forEach(initColumnResize);
+  // A table that has no layout yet (a tab panel that is not shown) has no
+  // resolved columns to measure: the remembered widths would not match and the
+  // last column would keep its handle. It is set up when it first gets a box.
+  document.querySelectorAll('[data-column-resize]').forEach((table) => {
+    if (table.getClientRects().length > 0 || typeof ResizeObserver === 'undefined') {
+      initColumnResize(table);
+      return;
+    }
+    const watch = new ResizeObserver(() => {
+      if (table.getClientRects().length === 0) return;
+      watch.disconnect();
+      initColumnResize(table);
+    });
+    watch.observe(table);
+  });
 })();
