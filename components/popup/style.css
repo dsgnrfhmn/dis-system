@@ -38,6 +38,23 @@
   overflow: auto;
 }
 
+/* Scroll lock: component.js sets data-popup-scroll-lock on <html> while any overlay is
+   open. The page behind stops scrolling and the scrollbar's width is put back as
+   padding so nothing shifts; overscroll-behavior keeps a scroll that reaches the end of
+   the popup's own body from chaining into the page. */
+html[data-popup-scroll-lock] {
+  overflow: hidden;
+  padding-right: var(--_popup-scrollbar-width, 0);
+}
+
+.ds-popup-overlay {
+  overscroll-behavior: contain;
+}
+
+.ds-popup__body {
+  overscroll-behavior: contain;
+}
+
 /* display:flex above always beats the UA's [hidden]{display:none} (author
    over UA regardless of specificity), so hidden needs its own rule -- same
    fix dropdown-menu's [hidden] rule applies. */
