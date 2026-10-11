@@ -151,6 +151,25 @@ function onDocumentKeydown(event) {
 }
 document.addEventListener('keydown', onDocumentKeydown);
 
+// Scroll lock (explicit request 2026-10-11): while any overlay is open the page behind
+// it does not scroll, the wheel and touch scroll only the popup's own body. One
+// attribute on <html>, set while the stack is not empty; style.css does the rest.
+// The width the native scrollbar takes away is put back as padding, so the page does
+// not shift sideways (0 when the host hides its scrollbar).
+function syncScrollLock() {
+  const root = document.documentElement;
+  if (openOverlays.length === 0) {
+    delete root.dataset.popupScrollLock;
+    root.style.removeProperty('--_popup-scrollbar-width');
+    return;
+  }
+  if (root.dataset.popupScrollLock === undefined) {
+    const gutter = window.innerWidth - root.clientWidth;
+    root.style.setProperty('--_popup-scrollbar-width', `${Math.max(gutter, 0)}px`);
+    root.dataset.popupScrollLock = '';
+  }
+}
+
 function initPopup(overlay) {
   let opener = null;
 
@@ -159,6 +178,7 @@ function initPopup(overlay) {
     overlay.hidden = false;
     overlay.style.zIndex = String(BASE_Z_INDEX + openOverlays.length * 10);
     openOverlays.push({ overlay, close });
+    syncScrollLock();
     if (overlay.dataset.placement === 'anchored') {
       positionAnchored(overlay, trigger);
     }
@@ -171,6 +191,7 @@ function initPopup(overlay) {
     overlay.hidden = true;
     const index = openOverlays.findIndex((entry) => entry.overlay === overlay);
     if (index !== -1) openOverlays.splice(index, 1);
+    syncScrollLock();
     if (opener) opener.focus();
   }
 
