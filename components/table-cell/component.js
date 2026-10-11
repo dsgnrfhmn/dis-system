@@ -208,7 +208,7 @@ document.querySelectorAll('[data-edit-trigger]').forEach((trigger) => {
 // excerpt (.ds-table-cell__clip, ellipsized) followed by a text button, usually "view". When
 // the column leaves room for COLLAPSE_MAX characters of the excerpt or fewer, the excerpt is
 // not worth showing: it is hidden (style.css, [data-collapsed]) and the button is renamed
-// after the field, taken from its data-collapse-label ("summary", "full description").
+// after the field, taken from its data-collapse-label ("Summary", "Full Description").
 // Opt-in per button; a cell without the attribute is untouched. Re-measured whenever the
 // cell's width changes (column resize, window resize) and for cells added later.
 //
@@ -236,18 +236,26 @@ function visibleCharacters(clip) {
   return lo;
 }
 
+// The node holding a text button's label: text-button wraps the bare text in
+// .ds-text-button__text (the dotted underline lives on that span), so the label is set
+// there. Replacing the button's own textContent would drop the wrapper and the underline.
+function labelNode(button) {
+  return button.querySelector(':scope > .ds-text-button__text, :scope > .ds-text-button__label') || button;
+}
+
 function updateCollapse(button) {
   const wrap = button.parentElement;
   const clip = wrap.querySelector(':scope > .ds-table-cell__clip');
   if (!clip) return;
-  const original = button.dataset.collapseOriginal || button.textContent;
+  const label = labelNode(button);
+  const original = button.dataset.collapseOriginal || label.textContent;
   button.dataset.collapseOriginal = original;
   // Measure the excerpt as it would be shown: visible, with the original label.
   wrap.removeAttribute('data-collapsed');
-  button.textContent = original;
+  label.textContent = original;
   if (visibleCharacters(clip) <= COLLAPSE_MAX) {
     wrap.setAttribute('data-collapsed', '');
-    button.textContent = button.dataset.collapseLabel;
+    label.textContent = button.dataset.collapseLabel;
   }
 }
 
