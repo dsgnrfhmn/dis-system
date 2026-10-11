@@ -1,0 +1,17 @@
+{
+  "name": "cv-sheet",
+  "description": "Real CV content laid onto landscape sheets (842 x 599) in the Figma CV style: serif section headings, light sans body, a year column, a footer with the page number. Preview layout only: greedy fill by measured height, not an export engine.",
+  "status": "draft",
+  "category": "cards-layouts",
+  "listed": false,
+  "layout": "wide",
+  "variants": ["landscape"],
+  "props": [
+    {"name": "blocks", "type": "array", "required": true, "description": "[{kind: \"heading\" | \"text\", text}]. A text block starting with YYYY<TAB> is a dated row."},
+    {"name": "title", "type": "string", "required": false, "default": "", "description": "The big title at the top of the first sheet (Figma: CURRICULUM VITAE)."}
+  ],
+  "source": "figma:APPFILEKEY#328:19147,328:19319",
+  "rationale": "Read off Figma section CV (frames 328:19147 cover, 328:19319 inner): sheet 842 x 599, 50px side margins, 42px top, 50px footer; Bodoni Moda Bold 28/34 and 20, Karla Light 10/12.7 and 12, black on white; year column 24px with a 16px gap. Type roles have no dis-system tokens yet (dis-system is Inter throughout), so they are component custom properties at the top of style.css, ready to move into tokens/*.json. Font files are not in the repo: the stacks fall back to a serif and Inter. Colors use existing tokens (text-active, object-white-passive, base-0 in light). Staged in local-components until the maintainer confirms it goes into dis-system.",
+  "themes_supported": ["light", "dark"],
+  "a11y_notes": "Sheets are a visual preview of the document; headings are real h2/h3 elements and block text is set as text, never as markup. The page footer is decoration of the preview."
+}
