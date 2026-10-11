@@ -1,6 +1,6 @@
 {
   "name": "sidebar-list",
-  "description": "A sets sidebar: a 280px column with a head (title, collapse toggle) over a scrolling list of sidebar-item type=\"set\" rows. Collapses to a 64px strip.",
+  "description": "A sets sidebar: a 280px column with a 60px head (title, collapse toggle) over a scrolling list of sidebar-item type=\"set\" rows, optionally opened by a 56px create row. Collapses to a 64px strip.",
   "status": "stable",
   "category": "sidebar",
   "variants": [],
@@ -11,6 +11,12 @@
       "required": false,
       "default": "Your sets",
       "description": "Head title, shown at half opacity."
+    },
+    {
+      "name": "create",
+      "type": "string",
+      "required": false,
+      "description": "Label of the create row, the first item of the list (a primary text-button in a type=\"set\" sidebar-item with data-role=\"create\"). Omit for none. Its height is the pane heads' (56px), so it lines up with them."
     },
     {
       "name": "label",
@@ -27,7 +33,7 @@
     }
   ],
   "source": "figma:APPFILEKEY#150:16217,150:16475,150:16503",
-  "rationale": "Width is spacing.9 x 7 (280px), collapsed spacing.row + 2 x spacing.cell (64px). The head is 56px (spacing.9 + spacing.5) with 10px padding and one hairline below; the title is the \"title\" role (Inter SemiBold 16px) at half opacity; the toggle is a 44 x 40px bordered button holding the accent-colored arrow (a CSS mask, so it takes the accent color), flipped when collapsed. The list has no rules between rows: only the active set is ruled, inside sidebar-item, so the one row that matters stands out. Surface is bg.surface with a right hairline in object-dark.passive in both themes (the design has no separate dark value yet). Collapse behavior and its ARIA state live in component.js; choosing and saving sets is the host page's concern (sidebar-item exposes data-select-set / data-save-set hooks). Replaces an earlier Penpot card sidebar. Rendering verified in light and dark themes.",
+  "rationale": "Width is spacing.9 x 7 (280px), collapsed spacing.row + 2 x spacing.cell (64px). The head is 60px (spacing.9 + spacing.6, changed from 56px on 2026-10-11 so it lines up with the page head beside it) with 10px padding and one hairline below; the optional create row is 56px (spacing.9 + spacing.5, the pane head's height) and every other row keeps the sidebar-item height; the title is the \"title\" role (Inter SemiBold 16px) at half opacity; the toggle is a 44 x 40px bordered button holding the accent-colored arrow (a CSS mask, so it takes the accent color), flipped when collapsed. The list has no rules between rows: only the active set is ruled, inside sidebar-item, so the one row that matters stands out. Surface is bg.surface with a right hairline in object-dark.passive in both themes (the design has no separate dark value yet). Collapse behavior and its ARIA state live in component.js; choosing and saving sets is the host page's concern (sidebar-item exposes data-select-set / data-save-set hooks). Replaces an earlier Penpot card sidebar. Rendering verified in light and dark themes.",
   "themes_supported": [
     "light",
     "dark"

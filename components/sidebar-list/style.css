@@ -3,7 +3,7 @@
   The sets sidebar of the Collection and Template pages (the consumer-app Figma file
   APPFILEKEY, Collection nodes 150:16217 / 150:16475 / 150:16503,
   Template screens 20-22). A 280px column on the surface color with one hairline on
-  its right edge: a 56px head (title at half opacity, collapse toggle) over a
+  its right edge: a 60px head (title at half opacity, collapse toggle) over a
   scrolling list of sidebar-item type="set" rows. Collapsed (data-collapsed
   = "true") it is a 64px strip holding only the toggle, its arrow flipped.
   Replaces the earlier card sidebar (a stack of cards).
@@ -31,9 +31,18 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  height: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-6));
   padding: var(--ds-spacing-cell);
   border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+/* The head is 60px so it lines up with the page head (page-head) beside the sidebar.
+   The create row (data-role="create" on a type="set" sidebar-item, first in the list)
+   is 56px, the height of the pane heads (pane) on its right, so the two hairlines
+   under them meet. Every other row keeps the sidebar-item height. */
+.ds-sidebar-list .ds-sidebar-item[data-role="create"] {
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
+  justify-content: center;
 }
 
 .ds-sidebar-list__title {
