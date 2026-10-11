@@ -9,6 +9,11 @@
     <button type="button" class="ds-sidebar-list__toggle" aria-expanded="true" aria-label="Collapse sidebar"><span class="ds-sidebar-list__toggle-icon" aria-hidden="true"></span></button>
   </div>
   <div class="ds-sidebar-list__items">
+    {% if create %}
+    <div class="ds-sidebar-item" data-type="set" data-role="create">
+      <button type="button" class="ds-text-button" data-priority="primary" data-status="active" data-underline="dotted"><span class="ds-text-button__text">{{ create }}</span></button>
+    </div>
+    {% endif %}
     {% for item in _items %}
     {% with type='set', name=item.name, saved=item.saved, active=item.active, href=item.href, save=item.save if item.save is defined else true %}{% include "components/sidebar-item/template.html" %}{% endwith %}
     {% endfor %}
