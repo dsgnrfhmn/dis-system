@@ -1,0 +1,260 @@
+/*
+  portfolio-sheet: one 842x599 sheet of a portfolio, as drawn in Figma section
+  328:19053 ("Design template", app file APPFILEKEY). Layouts
+  built here: main (328:19055), work (328:18965), detail (328:18918), multi
+  (328:18971), exhibition (328:18930 / 18909), text (328:18944), more-text
+  (328:18954). Figma draws detail's page number in white, over a full-bleed
+  picture; here the picture may leave the corner empty, so it stays black.
+
+  Pictures are never cropped: each slot shows the whole picture (contain).
+  The layout (work / detail / multi / exhibition) is chosen from the picture's
+  proportions by the server, see layout/sheets.py.
+
+  Geometry: every offset is the Figma pixel value times --u, one 842nd of the
+  sheet's width, so the sheet is the same drawing at any width: dashboard pane
+  or print. The sheet is a size container; --u is evaluated where it is used,
+  so it follows that container. In print the sheet is 842px wide, which makes
+  --u exactly 1px.
+
+  Paper: white and black text in both themes. This is a document, not an app
+  surface, so it does not follow the theme (same reason paper-preview keeps a
+  white page); the surround does.
+
+  Type: Bodoni Moda Bold (title), Karla Light (text, captions), Karla Medium
+  (the label inside a caption). Neither family is a dis-system token yet.
+  The @font-face blocks use local() only; self-hosted .woff2 files are the next
+  step and go on the src lines below. Until then the stacks fall back to a
+  serif / sans-serif of the system, so layout holds and only the glyphs differ.
+
+  The empty cell of a multi sheet is Figma's raw #3E3F36, which has no
+  variable; base-800 is the nearest palette step and is used instead.
+*/
+@font-face {
+  font-family: "Bodoni Moda";
+  font-weight: 700;
+  font-display: swap;
+  src: local("Bodoni Moda Bold"), local("BodoniModa-Bold");
+}
+
+@font-face {
+  font-family: "Karla";
+  font-weight: 300;
+  font-display: swap;
+  src: local("Karla Light"), local("Karla-Light");
+}
+
+@font-face {
+  font-family: "Karla";
+  font-weight: 500;
+  font-display: swap;
+  src: local("Karla Medium"), local("Karla-Medium");
+}
+
+.ds-portfolio-sheet {
+  --u: calc(100cqw / 842);
+  --ds-sheet-title-family: "Bodoni Moda", "Didot", Georgia, serif;
+  --ds-sheet-text-family: "Karla", "Helvetica Neue", Arial, sans-serif;
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: 842 / 599;
+  container-type: inline-size;
+  overflow: hidden;
+  background-color: var(--ds-color-base-0);
+  color: var(--ds-color-base-1000);
+  font-family: var(--ds-sheet-text-family);
+  font-weight: 300;
+  line-height: normal;
+}
+
+/* No font-size on the sheet itself: cqw on the container resolves against
+   its own ancestors, not against the sheet. Every child sets its own. */
+.ds-portfolio-sheet > * {
+  position: absolute;
+  margin: 0;
+  font-size: calc(var(--u) * 12);
+}
+
+/* Pictures: whole picture, never cropped, except the full-bleed exhibition one. */
+.ds-portfolio-sheet__image {
+  display: block;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+/* A picture is never cropped (maintainer, 2026-10-11): every slot shows the whole
+   picture at its own proportions, so a portrait photo in a landscape slot has
+   white either side instead of losing its top and bottom. */
+
+.ds-portfolio-sheet__page-number {
+  left: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: calc(var(--u) * 24);
+  padding: calc(var(--u) * 4) calc(var(--u) * 8);
+  display: flex;
+  align-items: center;
+}
+
+.ds-portfolio-sheet__caption {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-portfolio-sheet__caption p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ds-portfolio-sheet__caption b {
+  font-weight: 500;
+}
+
+/* ---- main: title, year, one picture, caption centered below ---- */
+.ds-portfolio-sheet[data-layout="main"] .ds-portfolio-sheet__title {
+  top: calc(var(--u) * 40);
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-family: var(--ds-sheet-title-family);
+  font-weight: 700;
+  font-size: calc(var(--u) * 28);
+  line-height: calc(var(--u) * 34);
+}
+
+.ds-portfolio-sheet[data-layout="main"] .ds-portfolio-sheet__subtitle {
+  top: calc(var(--u) * 82);
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: calc(var(--u) * 14);
+}
+
+.ds-portfolio-sheet[data-layout="main"] .ds-portfolio-sheet__image {
+  left: calc(var(--u) * 149);
+  top: calc(var(--u) * 162);
+  width: calc(var(--u) * 545);
+  height: calc(var(--u) * 364);
+}
+
+.ds-portfolio-sheet[data-layout="main"] .ds-portfolio-sheet__caption {
+  left: calc(var(--u) * 296);
+  top: calc(var(--u) * 546);
+  width: calc(var(--u) * 250);
+  text-align: center;
+}
+
+/* ---- work: wide picture, caption under it, left ---- */
+.ds-portfolio-sheet[data-layout="work"] .ds-portfolio-sheet__image {
+  left: calc(var(--u) * 50);
+  top: 0;
+  width: calc(var(--u) * 792);
+  height: calc(var(--u) * 494);
+}
+
+.ds-portfolio-sheet[data-layout="work"] .ds-portfolio-sheet__caption,
+.ds-portfolio-sheet[data-layout="exhibition"] .ds-portfolio-sheet__caption {
+  left: calc(var(--u) * 50);
+  top: calc(var(--u) * 510);
+  width: calc(var(--u) * 700);
+}
+
+/* ---- exhibition: wide photo, full sheet width ---- */
+.ds-portfolio-sheet[data-layout="exhibition"] .ds-portfolio-sheet__image {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: calc(var(--u) * 494);
+  object-position: center;
+}
+
+/* ---- detail: portrait or square picture, caption at its side (Figma
+   328:18918). The picture sits against its caption, bottom aligned, so the
+   gap to the caption is the same whatever its proportions. ---- */
+.ds-portfolio-sheet[data-layout="detail"] .ds-portfolio-sheet__image {
+  left: 0;
+  top: 0;
+  width: calc(var(--u) * 637);
+  height: calc(var(--u) * 599);
+  object-position: right bottom;
+}
+
+.ds-portfolio-sheet[data-layout="detail"] .ds-portfolio-sheet__caption {
+  left: calc(var(--u) * 661);
+  top: calc(var(--u) * 482);
+  width: calc(var(--u) * 160);
+}
+
+/* ---- multi: four pictures, 2 x 2, caption to their left ---- */
+.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image {
+  width: calc(var(--u) * 244.484);
+  height: calc(var(--u) * 244.484);
+  background-color: var(--ds-color-base-800);
+  object-position: center;
+}
+
+.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image:nth-of-type(1) {
+  left: calc(var(--u) * 293.395);
+  top: calc(var(--u) * 50);
+}
+
+.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image:nth-of-type(2) {
+  left: calc(var(--u) * 547.913);
+  top: calc(var(--u) * 50);
+}
+
+.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image:nth-of-type(3) {
+  left: calc(var(--u) * 293.395);
+  top: calc(var(--u) * 304.516);
+}
+
+.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image:nth-of-type(4) {
+  left: calc(var(--u) * 547.913);
+  top: calc(var(--u) * 304.516);
+}
+
+.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__caption {
+  left: calc(var(--u) * 50);
+  top: calc(var(--u) * 496);
+  width: calc(var(--u) * 220);
+  text-align: right;
+}
+
+/* ---- text / more-text: one 300px column ---- */
+.ds-portfolio-sheet__text {
+  left: calc(var(--u) * 50);
+  top: calc(var(--u) * 47);
+  width: calc(var(--u) * 300);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 8);
+  font-size: calc(var(--u) * 14);
+  line-height: calc(var(--u) * 16);
+}
+
+.ds-portfolio-sheet[data-layout="more-text"] .ds-portfolio-sheet__text {
+  top: calc(var(--u) * 44);
+}
+
+.ds-portfolio-sheet__text p {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+/* ---- missing: the project behind the entry is gone ---- */
+.ds-portfolio-sheet__note {
+  left: calc(var(--u) * 50);
+  top: calc(var(--u) * 47);
+  width: calc(var(--u) * 300);
+  font-size: calc(var(--u) * 14);
+}
+
+@media print {
+  .ds-portfolio-sheet {
+    width: 842px;
+    break-after: page;
+  }
+}

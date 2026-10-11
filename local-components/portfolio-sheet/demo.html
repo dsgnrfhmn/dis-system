@@ -1,0 +1,38 @@
+<!--
+  portfolio-sheet demo: the layouts the dashboard chooses. Pictures are inline
+  SVG data URIs so the demo needs no assets. Sheets are shown at 400px wide;
+  the drawing scales with its container.
+-->
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+{% set pic = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='545' height='364'%3E%3Crect width='545' height='364' fill='%23999'/%3E%3C/svg%3E" %}
+{% set portrait = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='400'%3E%3Crect width='300' height='400' fill='%23999'/%3E%3C/svg%3E" %}
+<div style="display: grid; grid-template-columns: repeat(2, 400px); gap: var(--ds-spacing-6); padding: var(--ds-spacing-6);">
+  {% set layout = "main" %}{% set title = "Connection" %}{% set subtitle = "2024" %}{% set page = 1 %}
+  {% set images = [{"src": pic, "label": "Connection", "suffix": ", 2024", "lines": ["Annex", "© Jane Roe"]}] %}
+  {% include "local-components/portfolio-sheet/template.html" %}
+
+  {% set layout = "work" %}{% set title = "" %}{% set subtitle = "" %}{% set page = 2 %}
+  {% include "local-components/portfolio-sheet/template.html" %}
+
+  {% set layout = "detail" %}{% set page = 3 %}
+  {% set images = [{"src": portrait, "label": "Connection", "suffix": ", 2024", "lines": ["Annex", "\u00a9 Jane Roe"]}] %}
+  {% include "local-components/portfolio-sheet/template.html" %}
+
+  {% set layout = "multi" %}{% set page = 4 %}
+  {% set images = [{"src": pic, "label": "Connection", "suffix": ", 2024", "lines": ["Annex", "\u00a9 Jane Roe"]}] %}
+  {% set images = [images[0], images[0], images[0], images[0]] %}
+  {% include "local-components/portfolio-sheet/template.html" %}
+
+  {% set layout = "exhibition" %}{% set page = 5 %}
+  {% set images = [{"src": pic, "prefix": "Exhibition view of ", "label": "Connection", "suffix": ", 2023", "lines": ["Example Street 1, Exampletown (XX)", "© Alex Doe"]}] %}
+  {% include "local-components/portfolio-sheet/template.html" %}
+
+  {% set layout = "text" %}{% set page = 6 %}{% set images = [] %}
+  {% set paragraphs = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.", "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo."] %}
+  {% include "local-components/portfolio-sheet/template.html" %}
+
+  {% set layout = "more-text" %}{% set page = 7 %}
+  {% include "local-components/portfolio-sheet/template.html" %}
+</div>
