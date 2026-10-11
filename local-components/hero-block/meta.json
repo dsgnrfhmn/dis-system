@@ -1,0 +1,19 @@
+{
+  "name": "hero-block",
+  "description": "The hero of a dashboard page: the page title in the serif display face, one row of text-button actions and one centred search field, stacked in a centred column.",
+  "status": "draft",
+  "category": "navigation",
+  "listed": false,
+  "layout": "wide",
+  "variants": [],
+  "props": [
+    {"name": "title", "type": "string", "required": false, "default": "Project dashboard", "description": "Page title. The first word is the emphasised run (bold italic), the rest the plain run (italic)."},
+    {"name": "actions", "type": "string", "required": false, "default": "Load new opportunities, Show Analysed, Updates (2 new), Go to the last activity", "description": "Labels of the text-buttons in the row (secondary, dotted)."},
+    {"name": "search_placeholder", "type": "string", "required": false, "default": "Smart search by statuses, deadlines, keywords, context...", "description": "Placeholder of the search field."}
+  ],
+  "source": "figma:APPFILEKEY#330:30584",
+  "rationale": "Fixed 400px high (maintainer, 2026-10-11; Figma is 320px), the search field at the bottom, title and actions centred in the space above it. Otherwise read off Figma auto-layout: 40px top, 10px sides, 20px below the search field (maintainer 2026-10-11; Figma has 40px), 60px between the actions and the field, 20px between rows, the title row 20px above its text and none below (maintainer, 2026-10-11; Figma has 20px), 800px search field. The title uses the new display type roles (Libre Bodoni, Bold Italic then Italic, 40px); the face is self-hosted (fonts/libre-bodoni.css, scripts/fetch_fonts.py, SIL OFL), the stack falls back to Didot / Georgia / serif while it loads. The actions are existing text-buttons (secondary, dotted: they stay on the page) and the search is the transparent input, so no new interactive look is introduced. Figma draws the action row at 50% opacity; that is treated as a Figma artifact and not reproduced (maintainer, 2026-10-11). Staged in local-components until the maintainer confirms it goes into dis-system.",
+  "themes_supported": ["light", "dark"],
+  "uses": ["text-button", "input"],
+  "a11y_notes": "The title is an h1. Actions are real buttons with visible labels. The search input has aria-label 'Smart search' because its placeholder is not a label."
+}

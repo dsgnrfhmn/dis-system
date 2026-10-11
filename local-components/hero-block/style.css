@@ -1,0 +1,87 @@
+/*
+  hero-block (Figma: hero-dashboard-block, node 330:30584 in the consumer-app
+  file, 1920x320)
+
+  STAGED in local-components until the maintainer confirms it goes into dis-system.
+
+  Rules: every value is a var(--ds-*) reference from tokens/output.css.
+
+  A centred column on the surface fill: title, a row of text buttons, one
+  search field. Figma auto-layout: 40px top and bottom, 10px sides, 20px gap
+  between the three rows, the title row 20px above its text and none below
+  (maintainer, 2026-10-11: the title sits closer to the buttons than the buttons
+  to the field; Figma has 20px below the title too).
+
+  The face (Libre Bodoni Italic, variable weight) comes from fonts/libre-bodoni.css;
+  the page links it before this file.
+
+  Height is fixed at 400px (maintainer, 2026-10-11; Figma is 320px). The search
+  field sits at the bottom, title and actions are centred above it.
+
+  The title mixes two runs of the display face (bold italic, then italic),
+  typography.displayTitleStrong and typography.displayTitle.
+
+  The actions row is plain text-buttons (secondary, dotted: every action stays
+  on the page). Figma draws the whole row at 50% opacity; that is read as a
+  Figma artifact (maintainer, 2026-10-11) and not reproduced.
+
+  The search field is the transparent input. Its width is Figma's 800px, a
+  fixed dimension read off the design; text is centred as drawn. The block
+  ends 20px below the field's box (maintainer, 2026-10-11; Figma has 40px).
+*/
+.ds-hero-block {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--ds-spacing-6);
+  width: 100%;
+  height: 400px; /* fixed block height (maintainer, 2026-10-11) */
+  padding: var(--ds-spacing-9) var(--ds-spacing-cell) var(--ds-spacing-6);
+  background-color: var(--ds-color-bg-surface);
+  color: var(--ds-color-text-active);
+}
+
+.ds-hero-block__title {
+  margin: auto 0 0; /* title and actions share the free space above the field */
+  padding: var(--ds-spacing-6) 0 0;
+  font-family: var(--ds-font-display-title-family);
+  font-size: var(--ds-font-display-title-size);
+  font-weight: var(--ds-font-display-title-weight);
+  font-style: var(--ds-font-display-title-style);
+  line-height: var(--ds-font-display-title-line-height);
+  letter-spacing: var(--ds-font-display-title-letter-spacing);
+  white-space: nowrap;
+}
+
+.ds-hero-block__title-strong {
+  font-family: var(--ds-font-display-title-strong-family);
+  font-size: var(--ds-font-display-title-strong-size);
+  font-weight: var(--ds-font-display-title-strong-weight);
+  font-style: var(--ds-font-display-title-strong-style);
+  line-height: var(--ds-font-display-title-strong-line-height);
+  letter-spacing: var(--ds-font-display-title-strong-letter-spacing);
+}
+
+.ds-hero-block__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  /* The block is a fixed 400px with the field at the bottom: the free space
+     is split above the title and below the actions, so title and actions sit
+     centred in the area above the field (maintainer, 2026-10-11). */
+  margin-bottom: auto;
+}
+
+.ds-hero-block__search {
+  width: 100%;
+  max-width: 800px; /* Figma: Input, node 180:4577 */
+}
+
+/* The field keeps the design-system input's own size (40px box, 10px padding);
+   only the text alignment is set here. */
+.ds-hero-block__search .ds-input {
+  text-align: center;
+}

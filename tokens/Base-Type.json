@@ -247,6 +247,32 @@
       },
       "$type": "typography",
       "$description": "Figma D_SYSTEM system-message (toast text, node 103:4772)"
+    },
+    "displayTitle": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.display}"
+        ],
+        "fontSizes": "{font.size.heading1}",
+        "fontWeights": "{font.weight.regular-italic}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": "Figma app file hero-dashboard-block (node 330:30584): Libre Bodoni Italic 40, the plain word of the hero title"
+    },
+    "displayTitleStrong": {
+      "$value": {
+        "fontFamilies": [
+          "{font.family.display}"
+        ],
+        "fontSizes": "{font.size.heading1}",
+        "fontWeights": "{font.weight.bold-italic}",
+        "letterSpacing": "0",
+        "lineHeights": "{font.lineHeight.tight}"
+      },
+      "$type": "typography",
+      "$description": "Figma app file hero-dashboard-block (node 330:30584): Libre Bodoni Bold Italic 40, the emphasised word of the hero title"
     }
   },
   "font": {
@@ -258,6 +284,16 @@
         ],
         "$type": "fontFamilies",
         "$description": ""
+      },
+      "display": {
+        "$value": [
+          "Libre Bodoni",
+          "Didot",
+          "Georgia",
+          "serif"
+        ],
+        "$type": "fontFamilies",
+        "$description": "Serif display face for the hero title only (Figma: Libre Bodoni). Self-hosted through fonts/libre-bodoni.css (scripts/fetch_fonts.py); falls back to Didot / Georgia / serif while it loads."
       }
     },
     "size": {
@@ -382,6 +418,11 @@
       },
       "semibold": {
         "$value": 600,
+        "$type": "fontWeights",
+        "$description": ""
+      },
+      "bold-italic": {
+        "$value": "700 italic",
         "$type": "fontWeights",
         "$description": ""
       }

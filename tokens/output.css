@@ -228,6 +228,18 @@
   --ds-font-system-message-style: normal;
   --ds-font-system-message-line-height: 1.2;
   --ds-font-system-message-letter-spacing: 0;
+  --ds-font-display-title-family: "Libre Bodoni", Didot, Georgia, serif;
+  --ds-font-display-title-size: 40px;
+  --ds-font-display-title-weight: 400;
+  --ds-font-display-title-style: italic;
+  --ds-font-display-title-line-height: 1.2;
+  --ds-font-display-title-letter-spacing: 0;
+  --ds-font-display-title-strong-family: "Libre Bodoni", Didot, Georgia, serif;
+  --ds-font-display-title-strong-size: 40px;
+  --ds-font-display-title-strong-weight: 700;
+  --ds-font-display-title-strong-style: italic;
+  --ds-font-display-title-strong-line-height: 1.2;
+  --ds-font-display-title-strong-letter-spacing: 0;
 
   /* shape (Base-Shapes: borderWidth/radius/spacing) */
   --ds-border-width-thin: 1px;
