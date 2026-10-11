@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="style.css">
 
 <div style="display: flex; height: 260px;">
-{% include "components/sidebar-list/template.html" %}
+{% with create="Create new set" %}{% include "components/sidebar-list/template.html" %}{% endwith %}
 </div>
 
 <script src="../sidebar-item/component.js"></script>
