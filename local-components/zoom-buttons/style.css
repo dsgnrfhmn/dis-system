@@ -1,0 +1,70 @@
+/*
+  zoom-buttons (STAGED in local-components, awaiting the maintainer's confirmation per the consumer's
+  CLAUDE.md "new element" rule).
+
+  Two square buttons, "+" above "-", glued into one 1px-bordered column, in the look
+  of the sidebar toggle (.ds-sidebar-list__toggle): thin dark-passive border, accent-1
+  icon, pressed-surface on hover. The group sits in the bottom right corner of
+  whatever positioned container it is placed in. It only emits ds-zoom-step events
+  (component.js); what is zoomed is the host's business.
+*/
+
+.ds-zoom-buttons {
+  position: absolute;
+  right: var(--ds-spacing-6);
+  bottom: var(--ds-spacing-6);
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-zoom-buttons__button {
+  box-sizing: border-box;
+  width: var(--ds-spacing-row);
+  height: var(--ds-spacing-9);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ds-color-bg-surface);
+  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  cursor: pointer;
+}
+
+/* Glued: the lower button shares the upper one's bottom border. */
+.ds-zoom-buttons__button + .ds-zoom-buttons__button {
+  margin-top: calc(var(--ds-border-width-thin) * -1);
+}
+
+.ds-zoom-buttons__button:hover:not(:disabled) {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-zoom-buttons__button:focus-visible {
+  position: relative;
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+.ds-zoom-buttons__button:disabled {
+  cursor: default;
+}
+
+.ds-zoom-buttons__icon {
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  background-color: var(--ds-color-accent-1);
+}
+
+.ds-zoom-buttons__button:disabled .ds-zoom-buttons__icon {
+  background-color: var(--ds-color-object-dark-passive);
+}
+
+.ds-zoom-buttons__button[data-direction="in"] .ds-zoom-buttons__icon {
+  -webkit-mask: url("../../icons/add.svg") center / 100% 100% no-repeat;
+  mask: url("../../icons/add.svg") center / 100% 100% no-repeat;
+}
+
+.ds-zoom-buttons__button[data-direction="out"] .ds-zoom-buttons__icon {
+  -webkit-mask: url("remove.svg") center / 100% 100% no-repeat;
+  mask: url("remove.svg") center / 100% 100% no-repeat;
+}
