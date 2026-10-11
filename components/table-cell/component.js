@@ -204,4 +204,74 @@ document.querySelectorAll('[data-edit-trigger]').forEach((trigger) => {
   });
 });
 
+// Collapse an excerpt that has no room (explicit request 2026-10-11). A text cell is an
+// excerpt (.ds-table-cell__clip, ellipsized) followed by a text button, usually "view". When
+// the column leaves room for COLLAPSE_MAX characters of the excerpt or fewer, the excerpt is
+// not worth showing: it is hidden (style.css, [data-collapsed]) and the button is renamed
+// after the field, taken from its data-collapse-label ("summary", "full description").
+// Opt-in per button; a cell without the attribute is untouched. Re-measured whenever the
+// cell's width changes (column resize, window resize) and for cells added later.
+//
+// The count is real, not an estimate: the excerpt's own font is measured on a canvas and
+// the longest prefix (plus the ellipsis) that fits the room the excerpt is given is found.
+// The excerpt is measured uncollapsed with the original label, in the same callback and
+// before any paint, so a cell never flickers and the room is the one the excerpt would get.
+const COLLAPSE_MAX = 10;
+const COLLAPSIBLE = '.ds-table-cell__text:has(> .ds-table-cell__clip) > .ds-text-button[data-collapse-label]';
+const measureContext = document.createElement('canvas').getContext('2d');
+
+function visibleCharacters(clip) {
+  const text = clip.textContent;
+  const style = getComputedStyle(clip);
+  measureContext.font = style.font || `${style.fontSize} ${style.fontFamily}`;
+  const room = clip.clientWidth;
+  if (measureContext.measureText(text).width <= room) return text.length;
+  let lo = 0;
+  let hi = text.length;
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    if (measureContext.measureText(`${text.slice(0, mid)}…`).width <= room) lo = mid;
+    else hi = mid - 1;
+  }
+  return lo;
+}
+
+function updateCollapse(button) {
+  const wrap = button.parentElement;
+  const clip = wrap.querySelector(':scope > .ds-table-cell__clip');
+  if (!clip) return;
+  const original = button.dataset.collapseOriginal || button.textContent;
+  button.dataset.collapseOriginal = original;
+  // Measure the excerpt as it would be shown: visible, with the original label.
+  wrap.removeAttribute('data-collapsed');
+  button.textContent = original;
+  if (visibleCharacters(clip) <= COLLAPSE_MAX) {
+    wrap.setAttribute('data-collapsed', '');
+    button.textContent = button.dataset.collapseLabel;
+  }
+}
+
+const collapseObserver = new ResizeObserver((entries) => {
+  entries.forEach((entry) => {
+    entry.target.querySelectorAll(':scope > .ds-text-button[data-collapse-label]').forEach(updateCollapse);
+  });
+});
+const observed = new WeakSet();
+
+function watchCollapsible(root) {
+  root.querySelectorAll(COLLAPSIBLE).forEach((button) => {
+    const wrap = button.parentElement;
+    if (observed.has(wrap)) return;
+    observed.add(wrap);
+    collapseObserver.observe(wrap);
+  });
+}
+
+watchCollapsible(document);
+new MutationObserver((mutations) => {
+  mutations.forEach((m) => m.addedNodes.forEach((node) => {
+    if (node.nodeType === 1) watchCollapsible(node);
+  }));
+}).observe(document.body, { childList: true, subtree: true });
+
 })();

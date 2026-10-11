@@ -815,6 +815,24 @@
   padding: var(--ds-spacing-cell) var(--ds-spacing-button-x);
 }
 
+/* Collapsed excerpt (explicit request 2026-10-11): component.js sets data-collapsed on a
+   .ds-table-cell__text whose column shows ten characters or fewer of its excerpt. The
+   excerpt is hidden and the button, renamed after the field by component.js, stands
+   alone, laid out like a button standing in for column text (below): its label starts
+   where the excerpt did and the hover "[" hangs in the cell's padding. */
+.ds-table-cell__text[data-collapsed] > .ds-table-cell__clip {
+  display: none;
+}
+.ds-table-cell__text[data-collapsed] > .ds-text-button {
+  position: relative;
+  padding-left: 0;
+}
+.ds-table-cell__text[data-collapsed] > .ds-text-button::before {
+  position: absolute;
+  right: 100%;
+  margin-right: var(--ds-spacing-button-gap);
+}
+
 /* A link label is one line, whatever the column. */
 .ds-table-cell[data-type="link"] .ds-text-button {
   white-space: nowrap;
