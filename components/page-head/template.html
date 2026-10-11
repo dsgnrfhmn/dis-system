@@ -1,6 +1,10 @@
 <div class="ds-page-head">
   <div class="ds-page-head__left">
-    <h1 class="ds-page-head__title">{{ title | default('Set name') }}</h1>
+    {% if editing %}
+    <input class="ds-page-head__title-input" type="text" value="{{ title | default('Set name') }}" aria-label="Set name" autocomplete="off">
+    {% else %}
+    <h1 class="ds-page-head__title"{% if editable %} data-editable tabindex="0"{% endif %}>{{ title | default('Set name') }}</h1>
+    {% endif %}
     {% with priority='secondary', status='active', underline='dotted', label=main_action | default('Save set') %}{% include "components/text-button/template.html" %}{% endwith %}
   </div>
   <div class="ds-page-head__right">
