@@ -18,11 +18,11 @@
       "type": "string",
       "required": false,
       "default": "area",
-      "description": "\"page\" makes the veil fixed over the whole viewport (a page's first load); omitted, it covers its positioned parent."
+      "description": "\"page\" makes the veil a page's first-load state: fixed, opaque, only the 40px glyph. With data-loading on <html> (set in <head>, removed when data has loaded) every other child of <body> is hidden, then faded in (data-loading-reveal on <html>). Omitted, the veil covers its positioned parent with a \"Loading\" tooltip."
     }
   ],
   "source": "figma:APPFILEKEY#150:16233,150:16284,150:16299",
-  "rationale": "The veil covers its positioned parent (inset 0) above the content (z-index 5, below popups at 100 and toasts at 200) with the popup overlay color (bg.overlay) at 50% opacity, exactly like a popup's backdrop, so 'this area is busy' reads the same way as 'this area is behind a dialog'. The tooltip is a dark box (Figma base/900 with a base/1000 hairline, white text, 10px padding and gap) holding the spinner glyph (a CSS mask, so it takes the text color) and the label. It is centered horizontally and translated -50% / -50%, so the host places its center by setting style.top (Figma draws it at the middle of the window, not of the area). Not sourced from Figma: the hidden-attribute API and role=\"status\". Rendering verified in light and dark themes. The spinner rotates clockwise, 1.2s linear per turn, and stops under prefers-reduced-motion. scope=\"page\" fixes the veil to the viewport (z-index 50, tooltip at 50%) so any dashboard page can show a first-load state.",
+  "rationale": "The veil covers its positioned parent (inset 0) above the content (z-index 5, below popups at 100 and toasts at 200) with the popup overlay color (bg.overlay) at 50% opacity, exactly like a popup's backdrop, so 'this area is busy' reads the same way as 'this area is behind a dialog'. The tooltip is a dark box (Figma base/900 with a base/1000 hairline, white text, 10px padding and gap) holding the spinner glyph (a CSS mask, so it takes the text color) and the label. It is centered horizontally and translated -50% / -50%, so the host places its center by setting style.top (Figma draws it at the middle of the window, not of the area). Not sourced from Figma: the hidden-attribute API and role=\"status\". Rendering verified in light and dark themes. The spinner rotates clockwise, 1.2s linear per turn, and stops under prefers-reduced-motion. scope=\"page\" is a whole page's first-load state (2026-10-12): opaque veil with the glyph alone at z-index 150, the page's other content hidden through html[data-loading] and faded in on load, with a 10s CSS fail-safe.",
   "themes_supported": [
     "light",
     "dark"
