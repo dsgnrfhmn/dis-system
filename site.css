@@ -14,6 +14,32 @@
   component, so it's styled here rather than in nav-bar/style.css.
 */
 
+/* --- Motion shared by every page that links this file ---
+   Smooth scroll: programmatic and anchor scrolls glide instead of jumping
+   (CSS scroll-behavior does not smooth wheel input -- that is by choice).
+   Theme fade: the page toggle sets data-theme-switching on <html> together
+   with data-theme and removes it ~200ms later (host script), so only the theme
+   switch fades colors (150ms), never hover/focus. !important wins over a
+   component's own transition for that short window only. Neither runs
+   under prefers-reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html[data-theme-switching],
+  html[data-theme-switching] *,
+  html[data-theme-switching] *::before,
+  html[data-theme-switching] *::after {
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      border-color 150ms ease,
+      fill 150ms ease,
+      stroke 150ms ease !important;
+  }
+}
+
 /* --- index.html: long-read layout ---
    Scoped to body.site-longread on purpose: the consuming app links this same file for
    its own pages, and none of this belongs to them. Column layout sized to
