@@ -28,7 +28,7 @@
       "type": "boolean",
       "required": false,
       "default": false,
-      "description": "Bounds the menu height (min of 320px and 45vh, override with --ds-dropdown-menu-max-height) and scrolls the items inside it. For long lists such as a project picker in a popup."
+      "description": "Bounds the menu height (min of 320px and 45vh, override with --_menu-max-height) and scrolls the items inside it. For long lists such as a project picker in a popup."
     }
   ],
   "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc60",
