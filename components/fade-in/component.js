@@ -2,7 +2,8 @@
   fade-in
 
   Make what loads in fade in, element by element. Load this as a plain script
-  early (it has to be watching before the page renders its data), then call
+  in the head (it watches from DOMContentLoaded on, before the page renders its
+  data), then call
   window.dsFadeIn.settle() once the first data is in:
 
     window.dsFadeIn.settle();   // first load is over
@@ -16,8 +17,11 @@
   - After settle(), elements the page re-renders (sort, filter, status change)
     are not animated: only things that were loading fade, never every change.
 
-  Not animated: script/style/link, hidden elements, SVG internals, toasts, and
-  anything inside [data-fade-skip].
+  - An element with display: contents (a table row laid out as a grid) fades
+    through its children, since it has no box of its own.
+
+  Not animated: script/style/link, hidden elements and what is inside them (a
+  closed popup), SVG internals, toasts, and anything inside [data-fade-skip].
 */
 (function () {
   if (window.dsFadeIn) return;
@@ -29,10 +33,18 @@
   function skipped(el) {
     if (SKIP_TAGS[el.tagName] || el.hidden) return true;
     if (el.namespaceURI !== 'http://www.w3.org/1999/xhtml') return true;
-    return !!el.closest('.ds-toast-stack, [data-fade-skip], svg');
+    return !!el.closest('.ds-toast-stack, [data-fade-skip], [hidden], svg');
   }
 
   function fade(el) {
+    // A display: contents element (a grid table's row) has no box of its own to
+    // fade: fade its children, which are the cells.
+    if (window.getComputedStyle(el).display === 'contents') {
+      Array.prototype.forEach.call(el.children, function (child) {
+        if (!skipped(child)) fade(child);
+      });
+      return;
+    }
     el.classList.add('ds-fade-in');
     el.addEventListener('animationend', function done(event) {
       if (event.target !== el) return;
@@ -86,10 +98,17 @@
   }
 
   function settle() {
+    // Mutations the page made just before this call are still queued: fade
+    // them first, then stop fading.
+    if (observer) handle(observer.takeRecords());
     settled = true;
   }
 
-  watch();
+  // Start once the HTML has been parsed: the parser's own insertions are the
+  // static page, which is already there and does not fade. What the page
+  // inserts from here on (its data) does.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch);
+  else watch();
   setTimeout(settle, 10000);
 
   window.dsFadeIn = { watch: watch, settle: settle };
