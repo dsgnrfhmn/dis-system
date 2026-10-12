@@ -43,3 +43,59 @@
   display: block;
   width: 100%;
 }
+
+/* ---- data-collapsible: the step is an accordion section ------------------
+   Added 2026-10-12 (Add project popup: step 1 open first, then 2-4 together
+   once a project is chosen). The head toggles the body right after it, so
+   head and body stay siblings and nothing else in the step markup changes.
+   Collapsed: the body shrinks to zero height and is hidden from focus and
+   screen readers; open and close take 150ms (height animates through
+   interpolate-size where the browser has it, else it just switches). The
+   head shows a pointer; the title keeps its look, only its half opacity
+   lifts to full on the open step. */
+.ds-popup-step__head[data-collapsible] {
+  cursor: pointer;
+  user-select: none;
+}
+
+.ds-popup-step__head[data-collapsible] .ds-popup-step__title {
+  transition: opacity 150ms ease;
+}
+
+.ds-popup-step__head[data-collapsible]:not([data-collapsed]) .ds-popup-step__title,
+.ds-popup-step__head[data-collapsible]:hover .ds-popup-step__title {
+  opacity: 1;
+}
+
+.ds-popup-step__head[data-collapsible] .ds-popup-step__title li:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+.ds-popup-step__head[data-collapsible] + .ds-popup-step__body {
+  interpolate-size: allow-keywords;
+  height: auto;
+  overflow: hidden;
+  transition:
+    height 150ms ease,
+    padding 150ms ease,
+    visibility 0s linear 0s;
+}
+
+.ds-popup-step__head[data-collapsed] + .ds-popup-step__body {
+  height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  visibility: hidden;
+  transition:
+    height 150ms ease,
+    padding 150ms ease,
+    visibility 0s linear 150ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-popup-step__head[data-collapsible] + .ds-popup-step__body,
+  .ds-popup-step__head[data-collapsible] .ds-popup-step__title {
+    transition: none;
+  }
+}
