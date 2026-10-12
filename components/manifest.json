@@ -168,7 +168,7 @@
   },
   {
     "name": "fade-in",
-    "description": "What loads in fades in: elements inserted while a page is loading, and images when their pixels arrive, appear over 250ms instead of popping in. A utility class plus a small observer; no markup of its own.",
+    "description": "What loads in fades in: elements inserted while a page is loading, and images when their pixels arrive, appear over 450ms instead of popping in. A utility class plus a small observer; no markup of its own.",
     "status": "stable",
     "category": "controls",
     "listed": true,
@@ -183,13 +183,13 @@
       }
     ],
     "source": "none",
-    "rationale": "A page that fills tables and sidebars from an API used to show a veil and hide everything until the data was in. Now nothing is hidden: the static page is drawn at once and each element that arrives fades in (opacity 0 to 1, 250ms ease). component.js watches insertions until the page calls dsFadeIn.settle() (or 10s pass), fades the topmost inserted element of each batch, and holds an image that is still downloading invisible until it has loaded, so a thumbnail fades in when it arrives, also after settle. After settle a re-render (sort, filter) is not animated: only what was loading fades. The fill mode is backwards, not both, so the finished fade leaves no stacking context behind. Not sourced from Figma (explicit request 2026-10-12, replacing the page-level loading state). Under prefers-reduced-motion everything appears at once. Rendering verified in light and dark themes.",
+    "rationale": "A page that fills tables and sidebars from an API used to show a veil and hide everything until the data was in. Now nothing is hidden: the static page is drawn at once and each element that arrives fades in (opacity 0 to 1 with a 4px rise, 450ms ease-out, staggered 18ms per item up to 360ms). component.js watches insertions until the page calls dsFadeIn.settle() (or 10s pass), fades the topmost inserted element of each batch, and holds an image that is still downloading invisible until it has loaded, so a thumbnail fades in when it arrives, also after settle. After settle a re-render (sort, filter) is not animated: only what was loading fades. The fill mode is backwards, not both, so the finished fade leaves no stacking context behind. Not sourced from Figma (explicit request 2026-10-12, replacing the page-level loading state). Under prefers-reduced-motion everything appears at once. Rendering verified in light and dark themes.",
     "themes_supported": [
       "light",
       "dark"
     ],
     "uses": [],
-    "a11y_notes": "Opacity only, 250ms, no movement; disabled under prefers-reduced-motion. Content stays in the accessibility tree while it fades."
+    "a11y_notes": "Opacity and a 4px rise, 450ms; disabled under prefers-reduced-motion. Content stays in the accessibility tree while it fades."
   },
   {
     "name": "figure",
