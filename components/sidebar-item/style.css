@@ -163,6 +163,14 @@
   background-color: var(--ds-color-bg-row-hover);
 }
 
+/* Hover also draws the two hairlines (Figma D_SYSTEM 28:1721: base/100 fill,
+   base/300 rules above and below), like the selected row. */
+.ds-sidebar-item[data-type="set"]:hover,
+.ds-sidebar-item[data-type="set"]:focus-within {
+  border-top-color: var(--ds-color-object-dark-passive);
+  border-bottom-color: var(--ds-color-object-dark-passive);
+}
+
 /* Muted set (2026-09-30, explicit request: "items whose status is applied
    must be grey, not orange -- inactive"): a record that needs no more
    action. Its name is grey at rest -- text-inactive in light, and in dark
@@ -284,4 +292,23 @@
 .ds-sidebar-item__save[aria-pressed="true"] .ds-sidebar-item__save-icon {
   color: var(--ds-color-accent-2);
   --_icon-fill: currentColor;
+}
+
+/* Selected set, Figma D_SYSTEM 188:4543: base/150 fill (one step darker than
+   hover's base/100, so the chosen row stays distinct under the pointer), the
+   name in black at Medium weight with no underline, ellipsis, the two
+   base/300 hairlines. The fill is light-theme only: dark has no Figma value
+   and keeps bg-surface-pressed from the rule above. */
+:root:not([data-theme="dark"]) .ds-sidebar-item[data-type="set"][data-active="true"] {
+  background-color: var(--ds-color-base-150);
+}
+
+.ds-sidebar-item[data-type="set"][data-active="true"] .ds-text-button[data-priority][data-status="active"],
+.ds-sidebar-item[data-type="set"][data-active="true"] .ds-text-button[data-priority][data-status="active"]:hover {
+  color: var(--ds-color-text-active);
+  font-weight: var(--ds-font-body-text-medium-weight);
+}
+
+.ds-sidebar-item[data-type="set"][data-active="true"] .ds-text-button[data-underline] .ds-text-button__text {
+  text-decoration: none;
 }
