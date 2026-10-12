@@ -764,7 +764,9 @@
     "description": "One numbered step of a long popup body: a 56px head (numbered title at half opacity, optional text button) over a body that holds the step's control.",
     "status": "stable",
     "category": "popups",
-    "variants": [],
+    "variants": [
+      "collapsible"
+    ],
     "props": [
       {
         "name": "number",
@@ -785,10 +787,24 @@
         "type": "string",
         "required": false,
         "description": "Label of the head's text button (e.g. Reset the selection); omitted when absent."
+      },
+      {
+        "name": "collapsible",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Makes the step an accordion section: clicking the head (or Enter / Space on the title) shows or hides the body."
+      },
+      {
+        "name": "collapsed",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "With collapsible: the step starts closed."
       }
     ],
     "source": "figma:APPFILEKEY#150:16503,150:16475",
-    "rationale": "The head is 56px (spacing.9 + spacing.5) with 20px side padding, no border and no fill: the popup surface shows through, and steps are separated by their own heads, not by rules. The title is an ordered list with start=N and one item, so the number is real list numbering; the 24px inline-start margin (spacing.7) makes room for it, and the title uses the \"title\" role at half opacity, like a pane title. The body is inset spacing.cell (10px) / spacing.6 (20px). A .ds-dropdown directly inside a step fills the width. The head's text button hugs its label (see text-button). Rendering verified in light and dark themes.",
+    "rationale": "The head is 56px (spacing.9 + spacing.5) with 20px side padding, no border and no fill: the popup surface shows through, and steps are separated by their own heads, not by rules. The title is an ordered list with start=N and one item, so the number is real list numbering; the 24px inline-start margin (spacing.7) makes room for it, and the title uses the \"title\" role at half opacity, like a pane title. The body is inset spacing.cell (10px) / spacing.6 (20px). A .ds-dropdown directly inside a step fills the width. The head's text button hugs its label (see text-button). Rendering verified in light and dark themes. Collapsible (2026-10-12): the head toggles the body that follows it (data-collapsed on the head, so markup stays two siblings); the body animates height over 150ms and is hidden from focus and assistive tech when closed; the open step's title goes to full opacity. window.dsPopupStep.setOpen() lets a host open or close steps from code.",
     "themes_supported": [
       "light",
       "dark"
@@ -796,7 +812,7 @@
     "uses": [
       "text-button"
     ],
-    "a11y_notes": "Each title is an <ol> with a single <li> so screen readers announce the step number. The head button is a real text-button.",
+    "a11y_notes": "Each title is an <ol> with a single <li> so screen readers announce the step number. The head button is a real text-button. Collapsible steps: the title's <li> becomes role=button with aria-expanded and aria-controls, reachable by Tab, toggled by Enter / Space; a closed body is visibility:hidden.",
     "listed": false
   },
   {

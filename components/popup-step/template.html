@@ -1,4 +1,4 @@
-<div class="ds-popup-step__head">
+<div class="ds-popup-step__head"{% if collapsible %} data-collapsible{% if collapsed %} data-collapsed{% endif %}{% endif %}>
   <ol class="ds-popup-step__title" start="{{ number | default(1) }}"><li>{{ title | default('Choose your project') }}</li></ol>
   {% if action %}{% with priority='secondary', status='active', underline='dotted', label=action %}{% include "components/text-button/template.html" %}{% endwith %}{% endif %}
 </div>
