@@ -36,19 +36,24 @@
     return !!el.closest('.ds-toast-stack, [data-fade-skip], [hidden], svg');
   }
 
-  function fade(el) {
+  var STEP = 18;    // ms of delay per item of a batch
+  var MAX_DELAY = 360;
+
+  function fade(el, delay) {
     // A display: contents element (a grid table's row) has no box of its own to
-    // fade: fade its children, which are the cells.
+    // fade: fade its children, which are the cells, with the row's delay.
     if (window.getComputedStyle(el).display === 'contents') {
       Array.prototype.forEach.call(el.children, function (child) {
-        if (!skipped(child)) fade(child);
+        if (!skipped(child)) fade(child, delay);
       });
       return;
     }
+    el.style.setProperty('--_fade-delay', delay + 'ms');
     el.classList.add('ds-fade-in');
     el.addEventListener('animationend', function done(event) {
       if (event.target !== el) return;
       el.classList.remove('ds-fade-in');
+      el.style.removeProperty('--_fade-delay');
       el.removeEventListener('animationend', done);
     });
   }
@@ -76,6 +81,7 @@
     });
     if (!added.length) return;
 
+    var order = 0;
     added.forEach(function (node) {
       if (!node.isConnected || skipped(node)) return;
       if (!settled) {
@@ -84,7 +90,10 @@
         var covered = added.some(function (other) {
           return other !== node && other.contains(node);
         });
-        if (!covered) fade(node);
+        if (!covered) {
+          fade(node, Math.min(order * STEP, MAX_DELAY));
+          order += 1;
+        }
       }
       var images = node.tagName === 'IMG' ? [node] : Array.prototype.slice.call(node.querySelectorAll('img'));
       images.forEach(holdImage);
