@@ -176,9 +176,9 @@
    A long list (the Add project popup's project list) scrolls inside the
    menu instead of growing past its container. The height is a bit less than
    half the viewport, capped at 320px (spacing-9 x 8); a host can override
-   --ds-dropdown-menu-max-height. Items keep their row height. */
+   --_menu-max-height. Items keep their row height. */
 .ds-dropdown-menu[data-scroll] {
-  max-height: var(--ds-dropdown-menu-max-height, min(calc(var(--ds-spacing-9) * 8), 45vh));
+  max-height: var(--_menu-max-height, min(calc(var(--ds-spacing-9) * 8), 45vh));
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
