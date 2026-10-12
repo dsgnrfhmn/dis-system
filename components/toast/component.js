@@ -21,9 +21,9 @@
   Returns { dismiss } so a caller can remove it early if needed. Stack
   container (.ds-toast-stack) is created once, lazily, on first use --
   no page has to remember to add it. column-reverse in style.css (not
-  this file) is what keeps new toasts appearing at the bottom of the
-  stack while older ones get pushed up, without this file needing to
-  care about insertion order itself -- plain appendChild always works.
+  this file) is what orders the stack; plain appendChild always works.
+  Since 2026-10-12 the stack is top center and new toasts appear below
+  the older ones.
 
   Hover-pauses the auto-dismiss timer (not spec-required, a small,
   flagged-as-added convenience so a toast with actions doesn't disappear

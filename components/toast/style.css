@@ -7,6 +7,10 @@
   "Toasts stack bottom-right and auto-dismiss," a toast may carry actions,
   and a failed action produces an error toast.
 
+  Position since 2026-10-12: top center, 20px from the top edge, over the nav,
+  as on the Figma app artboard 345:10101 (Toster 315x66 at y=20, centered on
+  the 1920 canvas). The stack hugs its toasts, up to 480px; newest at the bottom.
+
   Look since 2026-09-27: Figma D_SYSTEM's Toster (node 103:4772), see the
   .ds-toast rule below. The stack is 480px (spacing-9 x 12), Figma's toast
   width, capped to the viewport.
@@ -14,13 +18,21 @@
 
 .ds-toast-stack {
   position: fixed;
-  bottom: var(--ds-spacing-6);
-  right: var(--ds-spacing-6);
+  top: var(--ds-spacing-6);
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
+  align-items: center;
   gap: var(--ds-spacing-3);
   z-index: 200;
-  width: min(calc(var(--ds-spacing-9) * 12), calc(100vw - var(--ds-spacing-6) * 2));
+  width: max-content;
+  max-width: min(calc(var(--ds-spacing-9) * 12), calc(100vw - var(--ds-spacing-6) * 2));
+  pointer-events: none;
+}
+
+.ds-toast-stack > .ds-toast {
+  pointer-events: auto;
 }
 
 /*
