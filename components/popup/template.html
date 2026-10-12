@@ -10,8 +10,9 @@
 {% set _popup_id = popup_id | default('popup-overlay-1') %}
 {% set _title_id = _popup_id ~ '-title' %}
 <div class="ds-popup-overlay" id="{{ _popup_id }}" data-placement="{{ placement | default('center') }}"{% if preview == 'inline' %} data-preview="inline"{% else %} hidden{% endif %}>
-  <div class="ds-popup" data-size="{{ size | default('medium') }}" role="dialog" aria-labelledby="{{ _title_id }}" tabindex="-1">
+  <div class="ds-popup" data-size="{{ size | default('medium') }}" role="dialog" aria-labelledby="{{ _title_id }}" tabindex="-1"{% if closable %} data-closable{% endif %}>
     <div class="ds-popup__title" id="{{ _title_id }}">{{ title | default('Title') }}</div>
+    {% if closable %}<button type="button" class="ds-popup__close" aria-label="Close" data-popup-dismiss></button>{% endif %}
     <div class="ds-popup__body" data-type="{{ _type }}">
     {% if _type == 'input' %}
       {% with type='textarea', fill='filled', placeholder=placeholder | default('Paste the description here') %}{% include "components/input/template.html" %}{% endwith %}

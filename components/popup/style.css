@@ -151,6 +151,53 @@ html[data-popup-scroll-lock] {
   color: var(--ds-color-text-active);
 }
 
+/* ---- close icon (optional, data-closable on .ds-popup) ----
+   A 60px-tall strip at the title row's right edge holding a 24px X (icons/
+   close.svg as a mask, so it takes the text color), 20px from the edge like
+   the title text on the left. It is a sibling of the title, not inside it, so
+   the dialog's accessible name stays the title text. Added 2026-10-12 on
+   request (Add project popup); the title gives up room so it never runs under
+   the icon. data-popup-dismiss closes the popup (component.js). */
+.ds-popup[data-closable] .ds-popup__title {
+  padding-right: calc(var(--ds-spacing-6) * 2 + var(--ds-spacing-7));
+}
+
+.ds-popup__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-6));
+  padding: 0 var(--ds-spacing-6);
+  border: none;
+  border-radius: var(--ds-radius-none);
+  background: none;
+  color: var(--ds-color-text-active);
+  cursor: pointer;
+}
+
+.ds-popup__close::before {
+  content: "";
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  background-color: currentColor;
+  -webkit-mask: url("../../icons/close.svg") center / 100% 100% no-repeat;
+  mask: url("../../icons/close.svg") center / 100% 100% no-repeat;
+}
+
+.ds-popup__close:hover,
+.ds-popup__close:focus-visible {
+  color: var(--ds-color-accent-1);
+}
+
+.ds-popup__close:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: calc(-1 * var(--ds-border-width-default));
+}
+
 /* ---- body ---- */
 .ds-popup__body {
   flex: 1 1 auto;
