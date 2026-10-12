@@ -40,18 +40,19 @@
 
 /* The head is 60px so it lines up with the page head (page-head) beside the sidebar.
    The create row (data-role="create" on a type="set" sidebar-item, first in the list)
-   is Figma D_SYSTEM 28:1729 "Create New Set": a 44px set row (bold dotted-underlined
+   follows Figma D_SYSTEM 28:1729 "Create New Set": a 44px set row (bold dotted-underlined
    name on the left, the 44px icon cell on the right) closed by a 1px hairline in
-   base/300, so 45px in all. Its icon is the same save glyph as the set rows (the
-   design uses one asset for all four sidebar-cell states) and does not toggle. */
+   base/300, so 45px in all. Its icon is the plus (icons/add.svg, explicit request
+   2026-10-12, in place of the save glyph the Figma instance carried) in the accent,
+   like the bold name; the cell does not toggle. */
 .ds-sidebar-list .ds-sidebar-item[data-role="create"] {
   height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
   border-bottom-color: var(--ds-color-object-dark-passive);
 }
 
-.ds-sidebar-list .ds-sidebar-item[data-role="create"]:hover .ds-sidebar-item__save-icon,
-.ds-sidebar-list .ds-sidebar-item[data-role="create"]:focus-within .ds-sidebar-item__save-icon {
-  color: var(--ds-color-input-icon);
+.ds-sidebar-list .ds-sidebar-item[data-role="create"] .ds-sidebar-item__save-icon,
+.ds-sidebar-list .ds-sidebar-item[data-role="create"] .ds-sidebar-item__save:hover .ds-sidebar-item__save-icon {
+  color: var(--ds-color-accent-1);
 }
 
 .ds-sidebar-list__title {
