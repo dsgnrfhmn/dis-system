@@ -6,7 +6,8 @@
   "listed": false,
   "variants": [
     "divider",
-    "multiple"
+    "multiple",
+    "scroll"
   ],
   "props": [
     {
@@ -21,6 +22,13 @@
       "required": false,
       "default": false,
       "description": "Checkbox items (explicit request 2026-10-01): the menu gets data-multiple and aria-multiselectable, each item a checkbox glyph before its label. A click toggles the item's aria-selected and keeps the menu open; ds-dropdown-select carries { value, label, selected, values }. The trigger's text is left alone."
+    },
+    {
+      "name": "scroll",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Bounds the menu height (min of 320px and 45vh, override with --ds-dropdown-menu-max-height) and scrolls the items inside it. For long lists such as a project picker in a popup."
     }
   ],
   "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc60",

@@ -4,7 +4,8 @@
   {'value': 'option-c', 'label': 'Option C'}
 ]) %}
 {% set _multiple = multiple | default(false) %}
-<div class="ds-dropdown-menu" role="listbox"{% if _multiple %} data-multiple aria-multiselectable="true"{% endif %}{% if not open %} hidden{% endif %}>
+{% set _scroll = scroll | default(false) %}
+<div class="ds-dropdown-menu" role="listbox"{% if _multiple %} data-multiple aria-multiselectable="true"{% endif %}{% if _scroll %} data-scroll{% endif %}{% if not open %} hidden{% endif %}>
   {% for item in _items %}
   {% if item.divider %}
   {% include "components/divider/template.html" %}
