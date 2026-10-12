@@ -1,0 +1,96 @@
+/*
+  skeleton
+  A placeholder in the shape of what is about to arrive: grey bars where a table
+  row's cells, a sidebar item's name or a block's lines will be. It is drawn
+  while a container waits for its data and is removed when the real content is
+  rendered (component.js), where the real elements fade in.
+
+  Grey is bg.surface-pressed, a token of both themes. The pulse is opacity only
+  (1.4s ease-in-out). Under prefers-reduced-motion it is a still grey shape.
+  grid-column: 1 / -1 lets one placeholder span every column of a grid table.
+
+  data-variant:
+    row    a table row: a small square, then bars of several widths
+    item   a sidebar item: one bar
+    block  a CV block: two lines
+    page   a paper sheet (A4 landscape ratio), for preview panes
+*/
+.ds-skeleton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: var(--ds-spacing-cell);
+  grid-column: 1 / -1;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--ds-spacing-row);
+  padding: 0 var(--ds-spacing-5);
+  list-style: none;
+  pointer-events: none;
+  user-select: none;
+  animation: ds-skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.ds-skeleton__bar {
+  flex: 0 0 auto;
+  height: var(--ds-spacing-4);
+  width: 20%;
+  background-color: var(--ds-color-bg-surface-pressed);
+  border-radius: var(--ds-radius-md);
+}
+
+.ds-skeleton[data-variant="row"] .ds-skeleton__bar:nth-child(1) {
+  width: var(--ds-spacing-5);
+  height: var(--ds-spacing-5);
+}
+.ds-skeleton[data-variant="row"] .ds-skeleton__bar:nth-child(2) { width: 18%; }
+.ds-skeleton[data-variant="row"] .ds-skeleton__bar:nth-child(3) { width: 12%; }
+.ds-skeleton[data-variant="row"] .ds-skeleton__bar:nth-child(4) { width: 36%; }
+.ds-skeleton[data-variant="row"] .ds-skeleton__bar:nth-child(5) { width: 8%; }
+.ds-skeleton[data-variant="row"]:nth-child(even) .ds-skeleton__bar:nth-child(2) { width: 24%; }
+.ds-skeleton[data-variant="row"]:nth-child(even) .ds-skeleton__bar:nth-child(4) { width: 28%; }
+
+.ds-skeleton[data-variant="item"] {
+  min-height: var(--ds-spacing-9);
+}
+.ds-skeleton[data-variant="item"] .ds-skeleton__bar { width: 70%; }
+.ds-skeleton[data-variant="item"]:nth-child(even) .ds-skeleton__bar { width: 50%; }
+
+.ds-skeleton[data-variant="block"] {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  row-gap: var(--ds-spacing-3);
+  min-height: calc(var(--ds-spacing-row) + var(--ds-spacing-5));
+}
+.ds-skeleton[data-variant="block"] .ds-skeleton__bar:nth-child(1) { width: 60%; }
+.ds-skeleton[data-variant="block"] .ds-skeleton__bar:nth-child(2) { width: 85%; }
+
+.ds-skeleton[data-variant="page"] {
+  display: block;
+  padding: var(--ds-spacing-5);
+}
+.ds-skeleton[data-variant="page"] .ds-skeleton__bar {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 297 / 210;
+  /* A sheet is the surface color on the preview's grey, as the real paper is. */
+  background-color: var(--ds-color-bg-surface);
+}
+
+/* The empty state a page shows before any data ("Add a project to see the
+   preview") would be a lie while the data is still on its way. */
+html[data-skeleton] [data-skeleton-hide] {
+  display: none;
+}
+
+@keyframes ds-skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-skeleton {
+    animation: none;
+  }
+}
