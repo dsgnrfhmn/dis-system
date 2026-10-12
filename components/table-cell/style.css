@@ -816,7 +816,7 @@
 }
 
 /* Collapsed excerpt (explicit request 2026-10-11): component.js sets data-collapsed on a
-   .ds-table-cell__text whose column shows ten characters or fewer of its excerpt. The
+   .ds-table-cell__text whose column has less room than the sample text in component.js. The
    excerpt is hidden and the button, renamed after the field by component.js, stands
    alone, laid out like a button standing in for column text (below): its label starts
    where the excerpt did and the hover "[" hangs in the cell's padding. */

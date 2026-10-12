@@ -205,32 +205,26 @@ document.querySelectorAll('[data-edit-trigger]').forEach((trigger) => {
 });
 
 // Collapse an excerpt that has no room (explicit request 2026-10-11). A text cell is an
-// excerpt (.ds-table-cell__clip, ellipsized) followed by a text button, usually "view". When
-// the column leaves room for COLLAPSE_MAX characters of the excerpt or fewer, the excerpt is
-// not worth showing: it is hidden (style.css, [data-collapsed]) and the button is renamed
-// after the field, taken from its data-collapse-label ("Summary", "Full Description").
-// Opt-in per button; a cell without the attribute is untouched. Re-measured whenever the
-// cell's width changes (column resize, window resize) and for cells added later.
+// excerpt (.ds-table-cell__clip, ellipsized) followed by a text button, usually "view". The
+// excerpt is shown only when its column leaves room for MIN_EXCERPT (explicit request
+// 2026-10-12: as much as "Dear Artist, This October, ARRIVAL Gallery will bring artists");
+// with less room the excerpt is hidden (style.css, [data-collapsed]) and the button is
+// renamed after the field, taken from its data-collapse-label ("Summary", "Full
+// Description"). Opt-in per button; a cell without the attribute is untouched. Re-measured
+// whenever the cell's width changes (column resize, window resize) and for cells added later.
 //
-// The decision is the column's, never the text's (explicit request 2026-10-12: every row of
-// one column has the same width, so every row must collapse or none). It is taken from the
-// room the excerpt is given: the cell's text box minus the button, measured the same in every
-// row because the button label is the same. That room is turned into a character count with
-// one reference sentence of ordinary text in the excerpt's own font, not with the row's text: a short text
-// (which fits whole in a wide column) and a long one (which is clipped) used to give different
-// answers in the same column.
-const COLLAPSE_MAX = 10;
+// The decision is the column's, never the text's: it compares the room the excerpt is given
+// (the cell's text box minus the button, the same in every row because the button label is
+// the same) with the width of MIN_EXCERPT in the excerpt's own font. Every row of a column
+// therefore collapses, or none does.
+const MIN_EXCERPT = 'Dear Artist, This October, ARRIVAL Gallery will bring artists';
 const COLLAPSIBLE = '.ds-table-cell__text:has(> .ds-table-cell__clip) > .ds-text-button[data-collapse-label]';
 const measureContext = document.createElement('canvas').getContext('2d');
-const REFERENCE_TEXT = 'Open call for artists working in sculpture and installation';
 
-function visibleCharacters(wrap, clip, button) {
+function excerptFits(wrap, clip, button) {
   const style = getComputedStyle(clip);
   measureContext.font = style.font || `${style.fontSize} ${style.fontFamily}`;
-  const room = wrap.clientWidth - button.offsetWidth;
-  const average = measureContext.measureText(REFERENCE_TEXT).width / REFERENCE_TEXT.length;
-  const ellipsis = measureContext.measureText('\u2026').width;
-  return Math.max(0, Math.floor((room - ellipsis) / average));
+  return wrap.clientWidth - button.offsetWidth >= measureContext.measureText(MIN_EXCERPT).width;
 }
 
 // The node holding a text button's label: text-button wraps the bare text in
@@ -250,7 +244,7 @@ function updateCollapse(button) {
   // Measure the excerpt as it would be shown: visible, with the original label.
   wrap.removeAttribute('data-collapsed');
   label.textContent = original;
-  if (visibleCharacters(wrap, clip, button) <= COLLAPSE_MAX) {
+  if (!excerptFits(wrap, clip, button)) {
     wrap.setAttribute('data-collapsed', '');
     label.textContent = button.dataset.collapseLabel;
   }

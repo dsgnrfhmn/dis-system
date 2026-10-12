@@ -20,11 +20,10 @@
   "start" target respectively). A collapsed target (data-collapsed="true") does
   not resize.
 
-  Remembered: with data-resize-key="name" the target's share of the container's
-  width is kept in localStorage ("ds-split:name") and applied on load. It is a
-  share, not pixels, so a different window width keeps the same proportion.
-  Storage can be missing or throw (private window, blocked site data): the layout
-  then starts as the CSS has it and nothing else changes.
+  Not remembered (explicit request 2026-10-12): a reload starts every split as
+  the CSS has it; data-resize-key only clears a share an earlier version
+  stored ("ds-split:name"). Within a session the size is kept as a share of the
+  container, not pixels, so a different window width keeps the proportion.
 
   Events: `ds-split-resize` on the container (bubbles, detail.size in px) while
   dragging. A `resize` event is also sent to window, because components that
@@ -34,24 +33,18 @@
 (function () {
   const KEY_STEP = 24;
 
+  // Not remembered across a reload; a stored share from an earlier version is cleared.
   function load(key) {
     if (!key) return null;
     try {
-      const value = parseFloat(window.localStorage.getItem(`ds-split:${key}`));
-      return value > 0 && value < 1 ? value : null;
+      window.localStorage.removeItem(`ds-split:${key}`);
     } catch (error) {
-      return null;
+      // storage unavailable: nothing to clear
     }
+    return null;
   }
 
-  function save(key, share) {
-    if (!key) return;
-    try {
-      window.localStorage.setItem(`ds-split:${key}`, String(share));
-    } catch (error) {
-      // not remembered, the split still works
-    }
-  }
+  function save() {}
 
   function initSplit(split) {
     const handle = split.querySelector(':scope > .ds-split__handle');
