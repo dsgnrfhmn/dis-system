@@ -149,35 +149,29 @@ document.querySelectorAll('.ds-table-header-cell[data-filter]:not([data-filter-m
   marked data-resize-min="content" (on its header cell, or a wrapper around
   it) never under what its content needs (explicit request 2026-10-01: a
   column of buttons / a checkbox / a status can't be squeezed until its
-  content no longer fits). Remembered
-  in localStorage as "ds-columns:<key>" when it has a key and the column
-  count still matches; storage can be missing or throw, and the table then
-  just starts as the CSS has it.
+  content no longer fits). Not remembered
+  (explicit request 2026-10-12): a reload starts every table as the CSS has
+  it. A width stored by an earlier version ("ds-columns:<key>") is removed
+  when the table starts.
 
   Not sourced from Figma: the design shows fixed columns only.
 */
 (function () {
   const KEY_STEP = 24;
 
-  function load(key, count) {
+  // Widths are not remembered across a reload. A value an earlier version
+  // stored is cleared, so it cannot come back.
+  function load(key) {
     if (!key) return null;
     try {
-      const sizes = JSON.parse(window.localStorage.getItem(`ds-columns:${key}`));
-      return Array.isArray(sizes) && sizes.length === count && sizes.every((n) => n > 0) ? sizes : null;
+      window.localStorage.removeItem(`ds-columns:${key}`);
     } catch (error) {
-      return null;
+      // storage unavailable: nothing to clear
     }
+    return null;
   }
 
-  function save(key, sizes) {
-    if (!key) return;
-    try {
-      if (sizes) window.localStorage.setItem(`ds-columns:${key}`, JSON.stringify(sizes));
-      else window.localStorage.removeItem(`ds-columns:${key}`);
-    } catch (error) {
-      // not remembered, the columns still resize
-    }
-  }
+  function save() {}
 
   function initColumnResize(table) {
     const key = table.dataset.columnResize;

@@ -98,9 +98,14 @@
    `display: contents` in every real consumer, so it has no box of its
    own for opacity to paint (bugfix, 2026-09-12, see component.js's own
    comment on this same consumer pattern breaking the drag feature). */
-.ds-table-row.ds-table-row--dragging > .ds-table-cell {
+.ds-table-row.ds-table-row--dragging > .ds-table-cell,
+.ds-table-row[data-dragging="true"] > .ds-table-cell {
   opacity: 0.5;
 }
+
+/* data-dragging is set by a host page that reorders live (the host's boot script
+   sortable): the dragged row itself moves through the list as the gap, the
+   rows it passes slide aside. Same feedback as --dragging, on the cells. */
 
 /* The extra left inset Penpot's own "Title" instance had (see
    table-cell/style.css's text-active-cell comment) belonged to it only
