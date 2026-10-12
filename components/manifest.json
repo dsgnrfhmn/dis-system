@@ -735,6 +735,13 @@
         "required": false,
         "default": null,
         "description": "inline: render the popup open, in the page flow (backdrop included), without the hidden attribute -- data-preview=\"inline\". Documentation only (the site's Popups card, Figma D_SYSTEM node 103:4815); never in product UI."
+      },
+      {
+        "name": "closable",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Adds a close icon (an X, 24px) at the right edge of the title row. It carries data-popup-dismiss, so it closes the popup like any dismiss button."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0be0c665",
@@ -750,7 +757,7 @@
       "gallery-image",
       "table-header-actions"
     ],
-    "a11y_notes": "role=\"dialog\" with aria-labelledby pointing at its title (not in the design source). Implemented: showing and hiding, Escape and backdrop click to close, focus onto the dialog on open and back to the opener on close (also when popups are nested), and Escape / Ctrl+Enter acting only on the topmost popup. Ctrl/Cmd+Enter clicks the confirm button directly, so it is exactly as accessible as clicking it. Tab / Shift+Tab are trapped in the topmost open popup (2026-10-03): Tab from the last focusable control wraps to the first, Shift+Tab from the first or from the panel wraps to the last, and focus outside the popup is pulled back in. The panel keeps a keyboard-only focus ring although Figma draws none. type=\"gallery\" inherits gallery's and gallery-image's own semantics (see their notes)."
+    "a11y_notes": "role=\"dialog\" with aria-labelledby pointing at its title (not in the design source). Implemented: showing and hiding, Escape and backdrop click to close, focus onto the dialog on open and back to the opener on close (also when popups are nested), and Escape / Ctrl+Enter acting only on the topmost popup. Ctrl/Cmd+Enter clicks the confirm button directly, so it is exactly as accessible as clicking it. Tab / Shift+Tab are trapped in the topmost open popup (2026-10-03): Tab from the last focusable control wraps to the first, Shift+Tab from the first or from the panel wraps to the last, and focus outside the popup is pulled back in. The panel keeps a keyboard-only focus ring although Figma draws none. type=\"gallery\" inherits gallery's and gallery-image's own semantics (see their notes). The optional close icon is a real <button aria-label=\"Close\"> outside the title element, so the dialog name stays the title."
   },
   {
     "name": "popup-step",
