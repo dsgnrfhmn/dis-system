@@ -212,28 +212,25 @@ document.querySelectorAll('[data-edit-trigger]').forEach((trigger) => {
 // Opt-in per button; a cell without the attribute is untouched. Re-measured whenever the
 // cell's width changes (column resize, window resize) and for cells added later.
 //
-// The count is real, not an estimate: the excerpt's own font is measured on a canvas and
-// the longest prefix (plus the ellipsis) that fits the room the excerpt is given is found.
-// The excerpt is measured uncollapsed with the original label, in the same callback and
-// before any paint, so a cell never flickers and the room is the one the excerpt would get.
+// The decision is the column's, never the text's (explicit request 2026-10-12: every row of
+// one column has the same width, so every row must collapse or none). It is taken from the
+// room the excerpt is given: the cell's text box minus the button, measured the same in every
+// row because the button label is the same. That room is turned into a character count with
+// one reference sentence of ordinary text in the excerpt's own font, not with the row's text: a short text
+// (which fits whole in a wide column) and a long one (which is clipped) used to give different
+// answers in the same column.
 const COLLAPSE_MAX = 10;
 const COLLAPSIBLE = '.ds-table-cell__text:has(> .ds-table-cell__clip) > .ds-text-button[data-collapse-label]';
 const measureContext = document.createElement('canvas').getContext('2d');
+const REFERENCE_TEXT = 'Open call for artists working in sculpture and installation';
 
-function visibleCharacters(clip) {
-  const text = clip.textContent;
+function visibleCharacters(wrap, clip, button) {
   const style = getComputedStyle(clip);
   measureContext.font = style.font || `${style.fontSize} ${style.fontFamily}`;
-  const room = clip.clientWidth;
-  if (measureContext.measureText(text).width <= room) return text.length;
-  let lo = 0;
-  let hi = text.length;
-  while (lo < hi) {
-    const mid = Math.ceil((lo + hi) / 2);
-    if (measureContext.measureText(`${text.slice(0, mid)}…`).width <= room) lo = mid;
-    else hi = mid - 1;
-  }
-  return lo;
+  const room = wrap.clientWidth - button.offsetWidth;
+  const average = measureContext.measureText(REFERENCE_TEXT).width / REFERENCE_TEXT.length;
+  const ellipsis = measureContext.measureText('\u2026').width;
+  return Math.max(0, Math.floor((room - ellipsis) / average));
 }
 
 // The node holding a text button's label: text-button wraps the bare text in
@@ -253,7 +250,7 @@ function updateCollapse(button) {
   // Measure the excerpt as it would be shown: visible, with the original label.
   wrap.removeAttribute('data-collapsed');
   label.textContent = original;
-  if (visibleCharacters(clip) <= COLLAPSE_MAX) {
+  if (visibleCharacters(wrap, clip, button) <= COLLAPSE_MAX) {
     wrap.setAttribute('data-collapsed', '');
     label.textContent = button.dataset.collapseLabel;
   }
