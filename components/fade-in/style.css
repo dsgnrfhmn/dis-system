@@ -1,0 +1,35 @@
+/*
+  fade-in
+  An element that arrives after the page has drawn (rows, cards, sidebar items,
+  thumbnails) fades in over 250ms instead of popping in. component.js adds the
+  class to what the page inserts while it is loading; a page can also add it by
+  hand. Nothing here hides or blocks anything: content that is already there
+  stays as it is.
+
+  backwards fill, not both: when the fade ends the element carries no animation
+  state, so it creates no stacking context afterwards.
+  Under prefers-reduced-motion everything simply appears.
+*/
+.ds-fade-in {
+  animation: ds-fade-in 250ms ease backwards;
+}
+
+/* An image still downloading stays invisible; it fades in when its pixels arrive. */
+img[data-ds-fade-pending] {
+  opacity: 0;
+}
+
+@keyframes ds-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-fade-in {
+    animation: none;
+  }
+}

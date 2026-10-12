@@ -8,9 +8,8 @@
   150:16233. The area must be position: relative (.ds-pane__body is).
 
   The spinner glyph rotates clockwise at mid speed (1.2s per turn, linear). It
-  stands still under prefers-reduced-motion. data-scope="page" turns the veil
-  into a fixed full-viewport one for a page's first load: below popups (100)
-  and toasts (200), above the sticky chrome, tooltip at the middle of the window.
+  stands still under prefers-reduced-motion. A page's own first load does not use
+  this veil: what loads in fades in element by element (see fade-in).
 */
 .ds-loading-veil {
   position: absolute;
@@ -69,93 +68,5 @@
 @media (prefers-reduced-motion: reduce) {
   .ds-loading-veil__icon {
     animation: none;
-  }
-}
-
-/* ---- data-scope="page": the first-load state of a whole page ----------------
-   Explicit request 2026-10-12: while a page's data is still arriving, hide ALL
-   its content and show only the loading icon; then show the content with a
-   quick fade. Only while there is something to load: the host puts
-   data-loading on <html> (an inline <script> in <head>, before first paint) and
-   takes it off when its data calls have settled, error or not.
-   - The veil is fixed over the viewport and opaque (the surface color), above
-     the sticky chrome (150; popups are 100 and hidden then; toasts stay 200).
-     It shows the 40px glyph alone: the "Loading" label stays for screen readers.
-   - html[data-loading] hides every other child of <body> (opacity and
-     visibility, so nothing is focusable behind it). Fail-safe: a CSS animation
-     reveals the page after 10s even if the host script never finishes, so a
-     broken page shows its own error instead of staying blank.
-   - html[data-loading-reveal] (set when loading ends, removed after 400ms)
-     fades the content in, 250ms, while the veil (data-leaving) fades out.
-   Neither fade runs under prefers-reduced-motion. */
-.ds-loading-veil[data-scope="page"] {
-  position: fixed;
-  z-index: 150;
-  transition: opacity 250ms ease;
-}
-
-.ds-loading-veil[data-scope="page"]::before {
-  background-color: var(--ds-color-bg-surface);
-  opacity: 1;
-}
-
-.ds-loading-veil[data-scope="page"][data-leaving] {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.ds-loading-veil[data-scope="page"] .ds-loading-veil__tip {
-  top: 50%;
-  padding: 0;
-  background: none;
-  border: none;
-  color: var(--ds-color-text-active);
-}
-
-.ds-loading-veil[data-scope="page"] .ds-loading-veil__icon {
-  width: var(--ds-spacing-9);
-  height: var(--ds-spacing-9);
-}
-
-.ds-loading-veil[data-scope="page"] .ds-loading-veil__tip > span:last-child {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-html[data-loading] body > :not(.ds-loading-veil) {
-  opacity: 0;
-  visibility: hidden;
-  animation: ds-loading-failsafe 0s linear 10s forwards;
-}
-
-@keyframes ds-loading-failsafe {
-  to {
-    opacity: 1;
-    visibility: visible;
-  }
-}
-
-@keyframes ds-loading-reveal {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html[data-loading-reveal] body > :not(.ds-loading-veil) {
-    animation: ds-loading-reveal 250ms ease both;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ds-loading-veil[data-scope="page"] {
-    transition: none;
   }
 }
