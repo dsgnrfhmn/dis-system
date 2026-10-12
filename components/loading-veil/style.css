@@ -6,6 +6,11 @@
   sets its vertical position (style.top), because Figma draws it at the middle of
   the window, not of the area. The consumer-app Figma file APPFILEKEY, node
   150:16233. The area must be position: relative (.ds-pane__body is).
+
+  The spinner glyph rotates clockwise at mid speed (1.2s per turn, linear). It
+  stands still under prefers-reduced-motion. data-scope="page" turns the veil
+  into a fixed full-viewport one for a page's first load: below popups (100)
+  and toasts (200), above the sticky chrome, tooltip at the middle of the window.
 */
 .ds-loading-veil {
   position: absolute;
@@ -49,4 +54,29 @@
   background-color: currentColor;
   -webkit-mask: url("../../icons/loading.svg") center / 100% 100% no-repeat;
   mask: url("../../icons/loading.svg") center / 100% 100% no-repeat;
+}
+
+.ds-loading-veil__icon {
+  animation: ds-loading-spin 1.2s linear infinite;
+}
+
+@keyframes ds-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-loading-veil__icon {
+    animation: none;
+  }
+}
+
+.ds-loading-veil[data-scope="page"] {
+  position: fixed;
+  z-index: 50;
+}
+
+.ds-loading-veil[data-scope="page"] .ds-loading-veil__tip {
+  top: 50%;
 }
