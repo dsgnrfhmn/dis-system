@@ -262,9 +262,11 @@
   background-color: var(--ds-color-bg-surface);
   background-clip: content-box;
   color: var(--ds-color-accent-1);
-  font-family: var(--ds-font-micro-family);
-  font-size: var(--ds-font-micro-size);
-  font-weight: var(--ds-font-micro-weight);
+  /* data role (13px / 500): the closest token to the requested 14px medium
+     (maintainer, 2026-10-12); micro (10px / 400) was too small to read the order. */
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
   letter-spacing: normal;
   line-height: 1;
 }
