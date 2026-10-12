@@ -21,35 +21,15 @@
   white page); the surround does.
 
   Type: Bodoni Moda Bold (title), Karla Light (text, captions), Karla Medium
-  (the label inside a caption). Neither family is a dis-system token yet.
-  The @font-face blocks use local() only; self-hosted .woff2 files are the next
-  step and go on the src lines below. Until then the stacks fall back to a
-  serif / sans-serif of the system, so layout holds and only the glyphs differ.
+  (the label inside a caption). Neither family is a dis-system token. Both are
+  self-hosted (fonts/bodoni-moda.css, fonts/karla.css, written by
+  scripts/fetch_fonts.py) and the HOST PAGE links those two stylesheets; this
+  file only names the families. A text outside the files' latin / latin-ext
+  range (Cyrillic) falls back to the serif / sans-serif of the stacks below.
 
   The empty cell of a multi sheet is Figma's raw #3E3F36, which has no
   variable; base-800 is the nearest palette step and is used instead.
 */
-@font-face {
-  font-family: "Bodoni Moda";
-  font-weight: 700;
-  font-display: swap;
-  src: local("Bodoni Moda Bold"), local("BodoniModa-Bold");
-}
-
-@font-face {
-  font-family: "Karla";
-  font-weight: 300;
-  font-display: swap;
-  src: local("Karla Light"), local("Karla-Light");
-}
-
-@font-face {
-  font-family: "Karla";
-  font-weight: 500;
-  font-display: swap;
-  src: local("Karla Medium"), local("Karla-Medium");
-}
-
 .ds-portfolio-sheet {
   --u: calc(100cqw / 842);
   --ds-sheet-title-family: "Bodoni Moda", "Didot", Georgia, serif;
