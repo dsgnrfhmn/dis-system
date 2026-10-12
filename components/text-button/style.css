@@ -510,23 +510,16 @@ a.ds-text-button {
   border-color: var(--ds-color-accent-1);
 }
 
-/* Disabled keeps its underline (Figma State=Disabled draws the same solid /
-   dotted line in the disabled color): the line still says what the button
-   would do, the color says it can't right now. Supersedes the older
-   "disabled carries no underline" rule for this state only; loading and
-   confirmed are unchanged. */
+/* Disabled carries no underline, solid or dotted (explicit request
+   2026-10-12, maintainer: "when the button is inactive remove any underline
+   style"). Supersedes the Figma State=Disabled underline: the disabled
+   color alone says the button can't be used right now. Same as loading
+   and confirmed, which never had one. */
 .ds-text-button[data-status="disabled"] .ds-text-button__text,
-.ds-text-button[data-status="disabled"] .ds-text-button__label {
-  text-decoration-line: underline;
-  text-decoration-thickness: var(--ds-border-width-thin);
-  text-underline-offset: var(--ds-spacing-1);
-  text-decoration-style: solid;
-}
-
+.ds-text-button[data-status="disabled"] .ds-text-button__label,
 .ds-text-button[data-status="disabled"][data-underline="dotted"] .ds-text-button__text,
 .ds-text-button[data-status="disabled"][data-underline="dotted"] .ds-text-button__label {
-  text-decoration-style: dotted;
-  text-decoration-thickness: var(--ds-border-width-default);
+  text-decoration: none;
 }
 
 /* data-preview="hover": draws the hover look without a pointer, for
