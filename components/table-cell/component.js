@@ -234,26 +234,42 @@ function labelNode(button) {
   return button.querySelector(':scope > .ds-text-button__text, :scope > .ds-text-button__label') || button;
 }
 
-function updateCollapse(button) {
-  const wrap = button.parentElement;
-  const clip = wrap.querySelector(':scope > .ds-table-cell__clip');
-  if (!clip) return;
-  const label = labelNode(button);
-  const original = button.dataset.collapseOriginal || label.textContent;
-  button.dataset.collapseOriginal = original;
+// A column's buttons are decided in one pass: every button is put back to its shown state
+// (writes), then every one is measured (reads), then the ones without room are collapsed
+// (writes). Deciding them one at a time forced a layout per button, which on a few hundred
+// rows left the "view" labels on screen for seconds before they turned into the field name.
+function updateCollapse(buttons) {
+  const items = [];
+  buttons.forEach((button) => {
+    const wrap = button.parentElement;
+    const clip = wrap.querySelector(':scope > .ds-table-cell__clip');
+    if (!clip) return;
+    const label = labelNode(button);
+    const original = button.dataset.collapseOriginal || label.textContent;
+    button.dataset.collapseOriginal = original;
+    items.push({ button, wrap, clip, label, original });
+  });
   // Measure the excerpt as it would be shown: visible, with the original label.
-  wrap.removeAttribute('data-collapsed');
-  label.textContent = original;
-  if (!excerptFits(wrap, clip, button)) {
-    wrap.setAttribute('data-collapsed', '');
-    label.textContent = button.dataset.collapseLabel;
-  }
+  items.forEach((item) => {
+    item.wrap.removeAttribute('data-collapsed');
+    item.label.textContent = item.original;
+  });
+  items.forEach((item) => { item.fits = excerptFits(item.wrap, item.clip, item.button); });
+  items.forEach((item) => {
+    // Measured: style.css shows the cell from here on, in its final state.
+    item.wrap.setAttribute('data-collapse-ready', '');
+    if (item.fits) return;
+    item.wrap.setAttribute('data-collapsed', '');
+    item.label.textContent = item.button.dataset.collapseLabel;
+  });
 }
 
 const collapseObserver = new ResizeObserver((entries) => {
+  const buttons = [];
   entries.forEach((entry) => {
-    entry.target.querySelectorAll(':scope > .ds-text-button[data-collapse-label]').forEach(updateCollapse);
+    entry.target.querySelectorAll(':scope > .ds-text-button[data-collapse-label]').forEach((b) => buttons.push(b));
   });
+  updateCollapse(buttons);
 });
 const observed = new WeakSet();
 

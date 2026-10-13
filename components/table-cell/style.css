@@ -833,6 +833,13 @@
   margin-right: var(--ds-spacing-button-gap);
 }
 
+/* A cell that can collapse is not shown until component.js has measured it
+   ([data-collapse-ready]). A page that renders rows before this component is wired
+   would otherwise show the excerpt and "view" first and the field name a moment later. */
+.ds-table-cell__text:has(> .ds-text-button[data-collapse-label]):not([data-collapse-ready]) {
+  visibility: hidden;
+}
+
 /* A link label is one line, whatever the column. */
 .ds-table-cell[data-type="link"] .ds-text-button {
   white-space: nowrap;
