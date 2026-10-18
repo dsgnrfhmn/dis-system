@@ -1,0 +1,15 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+<div id="stack" style="padding: var(--ds-spacing-6); background: var(--ds-color-bg-surface);"></div>
+<script src="component.js"></script>
+<script>
+  DsCvSheet.render(document.getElementById('stack'), [
+    { kind: 'heading', text: 'JANE ROE' },
+    { kind: 'text', text: '1990 born in Springfield | XX\nLives and works in Springfield | XX, Exampletown | YY' },
+    { kind: 'heading', text: 'EDUCATION' },
+    { kind: 'text', text: '2021\tMA in Fine Art,\nState Academy of Art, Capital City | XX' },
+    { kind: 'text', text: '2015\tAA in Fine Art,\nExample Art College, Springfield | XX' },
+  ], { title: 'CURRICULUM VITAE' });
+</script>

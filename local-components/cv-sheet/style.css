@@ -1,0 +1,158 @@
+/*
+  cv-sheet (STAGED in local-components, not pushed to dis-system: awaiting the maintainer's
+  confirmation per the consuming app's CLAUDE.md "new element" rule).
+
+  Real CV content on landscape sheets, from Figma section "CV"
+  (file APPFILEKEY, node 328:19487; frames 328:19147 cover and
+  328:19319 inner page). A sheet is 842 x 599 px, margins 50px, text black on white.
+  component.js lays blocks onto sheets and scales each sheet to its container with
+  --ds-cv-sheet-scale; everything below is in the sheet's own 842px coordinate system.
+
+  Type roles come from Figma and have no tokens in dis-system yet (everything there
+  is Inter). They are declared once here as component custom properties so a later
+  move into tokens/*.json is one edit:
+    heading-1   Bodoni Moda Bold 28 / 34       "CURRICULUM VITAE"
+    heading-4   Bodoni Moda Bold 20 / normal   section titles, the name
+    body-small  Karla Light 10 / 12.7          rows, about, contacts
+    caption     Karla Light 12                 page footer
+  The font files are not in the repo yet: the stacks fall back to a serif and to
+  Inter until they are.
+*/
+
+.ds-cv-sheet-stack {
+  --ds-cv-sheet-w: 842px;
+  --ds-cv-sheet-h: 599px;
+  --ds-cv-sheet-margin: 50px;
+  --ds-cv-sheet-top: 42px;
+  --ds-cv-sheet-footer: 50px;
+  --ds-cv-sheet-year-w: 24px;
+  --ds-cv-sheet-year-gap: 16px;
+
+  --ds-cv-sheet-heading-family: "Bodoni Moda", "Playfair Display", Georgia, serif;
+  --ds-cv-sheet-heading-weight: 700;
+  --ds-cv-sheet-heading-1-size: 28px;
+  --ds-cv-sheet-heading-1-line: 34px;
+  --ds-cv-sheet-heading-4-size: 20px;
+  --ds-cv-sheet-body-family: "Karla", Inter, sans-serif;
+  --ds-cv-sheet-body-weight: 300;
+  --ds-cv-sheet-body-size: 10px;
+  --ds-cv-sheet-body-line: 12.7px;
+  --ds-cv-sheet-caption-size: 12px;
+
+  --ds-cv-sheet-scale: 1;
+}
+
+/* Zoomed in, sheets are wider than the pane: scroll sideways. */
+.ds-cv-sheet-stack {
+  overflow-x: auto;
+}
+
+/* One sheet on screen: as tall as the scaled page, the page inside is 842 x 599. */
+.ds-cv-sheet {
+  position: relative;
+  width: calc(var(--ds-cv-sheet-w) * var(--ds-cv-sheet-scale));
+  height: calc(var(--ds-cv-sheet-h) * var(--ds-cv-sheet-scale));
+  margin: 0 auto var(--ds-spacing-6);
+  overflow: hidden;
+}
+
+.ds-cv-sheet__page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: var(--ds-cv-sheet-w);
+  height: var(--ds-cv-sheet-h);
+  transform: scale(var(--ds-cv-sheet-scale));
+  transform-origin: top left;
+  background-color: var(--ds-color-object-white-passive);
+  color: var(--ds-color-text-active);
+  font-family: var(--ds-cv-sheet-body-family);
+  font-weight: var(--ds-cv-sheet-body-weight);
+  font-size: var(--ds-cv-sheet-body-size);
+  line-height: var(--ds-cv-sheet-body-line);
+}
+
+:root:not([data-theme="dark"]) .ds-cv-sheet__page {
+  background-color: var(--ds-color-base-0);
+}
+
+.ds-cv-sheet__content {
+  box-sizing: border-box;
+  height: calc(var(--ds-cv-sheet-h) - var(--ds-cv-sheet-top) - var(--ds-cv-sheet-footer));
+  margin: var(--ds-cv-sheet-top) var(--ds-cv-sheet-margin) 0;
+  overflow: hidden;
+}
+
+.ds-cv-sheet__title {
+  margin: 0 0 var(--ds-spacing-6);
+  font-family: var(--ds-cv-sheet-heading-family);
+  font-weight: var(--ds-cv-sheet-heading-weight);
+  font-size: var(--ds-cv-sheet-heading-1-size);
+  line-height: var(--ds-cv-sheet-heading-1-line);
+}
+
+.ds-cv-sheet__heading {
+  margin: 28px 0 12px;
+  font-family: var(--ds-cv-sheet-heading-family);
+  font-weight: var(--ds-cv-sheet-heading-weight);
+  font-size: var(--ds-cv-sheet-heading-4-size);
+  line-height: normal;
+}
+
+.ds-cv-sheet__content > :first-child {
+  margin-top: 0;
+}
+
+.ds-cv-sheet__row {
+  display: flex;
+  column-gap: var(--ds-cv-sheet-year-gap);
+  margin: 0 0 4px;
+}
+
+.ds-cv-sheet__year {
+  flex: none;
+  width: var(--ds-cv-sheet-year-w);
+}
+
+.ds-cv-sheet__text {
+  flex: 1;
+  min-width: 0;
+  max-width: 560px;
+  overflow-wrap: anywhere;
+}
+
+.ds-cv-sheet__plain {
+  margin: 0 0 4px;
+  max-width: 331px;
+  overflow-wrap: anywhere;
+}
+
+/* Footer: "N / CV" at the left on odd sheets, "CV / N" at the right on even ones. */
+.ds-cv-sheet__footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--ds-cv-sheet-footer);
+  box-sizing: border-box;
+  padding: 4px var(--ds-cv-sheet-margin);
+  display: flex;
+  align-items: center;
+  column-gap: var(--ds-spacing-3);
+  font-size: var(--ds-cv-sheet-caption-size);
+  line-height: normal;
+}
+
+.ds-cv-sheet__footer[data-side="right"] {
+  justify-content: flex-end;
+}
+
+/* Off-screen host used only to measure block heights. Same rules, never visible. */
+.ds-cv-sheet-measure {
+  position: absolute;
+  left: -10000px;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+}

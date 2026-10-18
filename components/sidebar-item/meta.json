@@ -27,7 +27,7 @@
       "name": "caption",
       "type": "string",
       "required": false,
-      "description": "Unused by the Figma set row (kept for the earlier Penpot set card)."
+      "description": "type=\"set\": optional second line under the name, in grey (text-active at half opacity, the same grey as table-cell's text-passive-cell) -- e.g. a record's status. The row grows to two lines; without it the set row stays the single 44px line. (Kept from the earlier Penpot set card; shown again since 2026-09-30.)"
     },
     {
       "name": "saved",
@@ -44,6 +44,13 @@
       "description": "type=\"set\": marks the active set (fill and hairlines above and below)."
     },
     {
+      "name": "muted",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "type=\"set\": a record that needs no more action (e.g. an application already sent). Its name is grey at rest and takes the accent back on hover, focus, or when active."
+    },
+    {
       "name": "href",
       "type": "string",
       "required": false,
@@ -58,7 +65,7 @@
     }
   ],
   "source": "penpot:7cfc6f3b-95fe-808f-8008-8d9825fb44db",
-  "rationale": "type=\"set\" (Figma sets sidebar): a 44px row with the set's name as a text button and a 44px save button with Figma's bookmark icons (aria-pressed toggles them); the active set (data-active) is filled and ruled above and below, and its name uses the body-text medium weight, so the current set stands out without a new type scale. The saved icon is accent-1, the same as table-cell's row-level favourite: one save flag, one color, wherever it renders. With `href`, the name renders as an <a> (navigation, e.g. an in-page section index) instead of a <button>, and save=false omits the save button; one row layout serves both uses. Rows deviate from text-button's hover brackets: on hover and focus the whole row takes bg.surface-pressed, as table-row does, and the name gets no brackets -- the full-width fill already marks the click target. The dotted underline stays. A long name truncates with an ellipsis (the composed text button can shrink: flex 1 1 auto, min-width 0).\n\ntype=\"card\" and type=\"button\" (Penpot \"Sidebar\" states Default, PDF Downloaded, Submitted, Button): the main section is a space-between row and the sub section a column with rowGap spacing-3, both Token-bound in Penpot. Card padding is spacing-2 / spacing-5. Colors are read off the text layers: subtitle accent-1 (the one colored identifier a reader scans the list for), title text-active, status text-subactive. The saved icon is object-dark-active at spacing-7 (24px), like every other icon-only glyph. Width is 100%, because a sidebar's width comes from its container, not from Penpot's 340px demo board. type=\"button\" is shorter (70px vs 84px) and centered, holding one primary text-button, as Penpot's own instance is. Selecting, linking or adding records is the host application's concern. Rendering verified in light and dark themes.",
+  "rationale": "type=\"set\" (Figma sets sidebar): a 44px row with the set's name as a text button and a 44px save button with Figma's bookmark icons (aria-pressed toggles them); the active set (data-active) is filled and ruled above and below, and its name uses the body-text medium weight, so the current set stands out without a new type scale. The saved icon is accent-1, the same as table-cell's row-level favourite: one save flag, one color, wherever it renders. With `href`, the name renders as an <a> (navigation, e.g. an in-page section index) instead of a <button>, and save=false omits the save button; one row layout serves both uses. Rows deviate from text-button's hover brackets: on hover and focus the whole row takes bg.surface-pressed, as table-row does, and the name gets no brackets -- the full-width fill already marks the click target. The dotted underline stays. A long name truncates with an ellipsis (the composed text button can shrink: flex 1 1 auto, min-width 0).\n\ntype=\"card\" and type=\"button\" (Penpot \"Sidebar\" states Default, PDF Downloaded, Submitted, Button): the main section is a space-between row and the sub section a column with rowGap spacing-3, both Token-bound in Penpot. Card padding is spacing-2 / spacing-5. Colors are read off the text layers: subtitle accent-1 (the one colored identifier a reader scans the list for), title text-active, status text-subactive. The saved icon is object-dark-active at spacing-7 (24px), like every other icon-only glyph. Width is 100%, because a sidebar's width comes from its container, not from Penpot's 340px demo board. type=\"button\" is shorter (70px vs 84px) and centered, holding one primary text-button, as Penpot's own instance is. Selecting, linking or adding records is the host application's concern. Rendering verified in light and dark themes. Set rows follow Figma D_SYSTEM 28:1718 (default), 28:1721 (hover: base/100 fill with base/300 hairlines) and 188:4543 (selected: base/150 fill in light, black Medium name without underline, hairlines). Added 2026-10-12.",
   "themes_supported": [
     "light",
     "dark"

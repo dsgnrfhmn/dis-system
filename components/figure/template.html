@@ -1,0 +1,10 @@
+{#
+  figure: an image with its caption built in (HTML <figure> / <figcaption>).
+  src: image URL; omit for the empty placeholder
+  alt: text alternative for the image; "" (default) marks it decorative
+  caption: the grey line under the image; omit and no caption is rendered
+#}
+<figure class="ds-figure"{% if not src %} data-empty{% endif %}>
+  <div class="ds-figure__image">{% if src %}<img src="{{ src }}" alt="{{ alt | default('') }}">{% endif %}</div>
+  {% if caption %}<figcaption class="ds-figure__caption">{{ caption }}</figcaption>{% endif %}
+</figure>

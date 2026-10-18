@@ -79,7 +79,7 @@
   display: flex;
   align-items: center;
   padding: var(--ds-spacing-cell);
-  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
   box-sizing: border-box;
   height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
   background-color: var(--ds-color-bg-surface);
@@ -330,4 +330,71 @@
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/*
+  Column resize (data-column-resize on the grid container, component.js;
+  explicit request 2026-10-01). The handle is pane's split handle laid on a
+  header cell's right edge: an 8px (spacing.3) grab area inside the cell,
+  against the column border, with a 2px accent line on that border on hover,
+  focus and while dragging. Inside rather than centred on the border (pane's
+  way): header cells are often sticky with their own stacking, so a half
+  reaching into the next cell would sit under it.
+  A host that makes its header cells sticky keeps them positioned, so the
+  handle still has its cell to sit in; otherwise the cell is made relative.
+  Once dragged, the container's columns come from --_column-sizes (set by
+  component.js) instead of the host's grid-template-columns, and its cells
+  give up their min-width so a column can be narrower than its content
+  (text cells clip with an ellipsis already).
+*/
+.ds-table-header-cell:has(> .ds-table-header-cell__resize) {
+  position: relative;
+}
+
+.ds-table-header-cell__resize {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: var(--ds-spacing-3);
+  z-index: 1;
+  cursor: col-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.ds-table-header-cell__resize[hidden] {
+  display: none;
+}
+
+.ds-table-header-cell__resize::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: calc(var(--ds-border-width-thin) * 2);
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.ds-table-header-cell__resize:hover::after,
+.ds-table-header-cell__resize:focus-visible::after,
+.ds-table-header-cell__resize:active::after {
+  background-color: var(--ds-color-accent-1);
+}
+
+[data-column-resize][data-columns-resized] {
+  grid-template-columns: var(--_column-sizes);
+}
+
+[data-column-resize][data-columns-resized] .ds-table-cell {
+  min-width: 0;
+}
+
+/* While dragging: no text selection, and the resize cursor wherever the
+   pointer is. */
+[data-column-resize][data-column-dragging="true"] {
+  user-select: none;
+  cursor: col-resize;
 }

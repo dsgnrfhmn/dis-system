@@ -14,6 +14,27 @@
   component, so it's styled here rather than in nav-bar/style.css.
 */
 
+/* --- Motion shared by every page that links this file ---
+   Smooth scroll: programmatic and anchor scrolls glide instead of jumping
+   (CSS scroll-behavior does not smooth wheel input -- that is by choice).
+   Theme fade: the page toggle switches data-theme inside
+   document.startViewTransition (host script), so the browser cross-fades two
+   snapshots of the page, 180ms, in one compositor animation. (An earlier
+   version transitioned color on every element for 150ms; on a page with a
+   thousand cells that stuttered.) Without startViewTransition the theme
+   simply switches. Neither runs under prefers-reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 180ms;
+    animation-timing-function: ease;
+  }
+}
+
 /* --- index.html: long-read layout ---
    Scoped to body.site-longread on purpose: the consuming app links this same file for
    its own pages, and none of this belongs to them. Column layout sized to

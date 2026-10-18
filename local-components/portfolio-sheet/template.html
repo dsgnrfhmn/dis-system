@@ -1,0 +1,32 @@
+{#
+  portfolio-sheet: one sheet of a portfolio (842 x 599, Figma 328:19053).
+  layout: main | work | multi | exhibition | text | more-text | missing
+  title: main only, the project name
+  subtitle: main only, the year line under the title
+  images: list of {src, alt, prefix, label, suffix, lines}; main / work /
+          exhibition take one, multi four. The caption is the first image's.
+  paragraphs: text and more-text, list of strings
+  page: the number printed bottom left
+  note: missing only
+#}
+<div class="ds-portfolio-sheet" data-layout="{{ layout | default('main') }}">
+  {% if layout | default('main') == 'main' %}
+    <h3 class="ds-portfolio-sheet__title">{{ title }}</h3>
+    {% if subtitle %}<p class="ds-portfolio-sheet__subtitle">{{ subtitle }}</p>{% endif %}
+  {% endif %}
+  {% for image in images | default([]) %}
+    <img class="ds-portfolio-sheet__image" src="{{ image.src }}" alt="{{ image.alt | default('') }}">
+  {% endfor %}
+  {% if images | default([]) | length and layout != 'text' and layout != 'more-text' %}
+    {% set cap = images[0] %}
+    <div class="ds-portfolio-sheet__caption">
+      <p>{{ cap.prefix }}<b>{{ cap.label }}</b>{{ cap.suffix }}</p>
+      {% for line in cap.lines | default([]) %}<p>{{ line }}</p>{% endfor %}
+    </div>
+  {% endif %}
+  {% if paragraphs %}
+    <div class="ds-portfolio-sheet__text">{% for p in paragraphs %}<p>{{ p }}</p>{% endfor %}</div>
+  {% endif %}
+  {% if layout == 'missing' %}<p class="ds-portfolio-sheet__note">{{ note }}</p>{% endif %}
+  {% if page %}<p class="ds-portfolio-sheet__page-number">page {{ page }}</p>{% endif %}
+</div>

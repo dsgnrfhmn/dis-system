@@ -14,15 +14,16 @@
       duration: 5000,                    // ms, default 5000 -- not
                                           // spec-given (the consumer spec doesn't
                                           // state a number), flagged as
-                                          // an invented default
+                                          // an invented default; 0 = never
+                                          // auto-dismissed, only the close button
     });
 
   Returns { dismiss } so a caller can remove it early if needed. Stack
   container (.ds-toast-stack) is created once, lazily, on first use --
   no page has to remember to add it. column-reverse in style.css (not
-  this file) is what keeps new toasts appearing at the bottom of the
-  stack while older ones get pushed up, without this file needing to
-  care about insertion order itself -- plain appendChild always works.
+  this file) is what orders the stack; plain appendChild always works.
+  Since 2026-10-12 the stack is top center and new toasts appear below
+  the older ones.
 
   Hover-pauses the auto-dismiss timer (not spec-required, a small,
   flagged-as-added convenience so a toast with actions doesn't disappear
@@ -85,14 +86,19 @@
 
     stack.appendChild(toast);
 
-    let timer = setTimeout(dismiss, duration);
+    // duration 0 (or less): no auto-dismiss at all, only the close button
+    // (explicit request 2026-10-01: a fetch's per-source result stays until
+    // it is read and closed by hand).
+    const sticky = !(duration > 0);
+    const arm = () => (sticky ? null : setTimeout(dismiss, duration));
+    let timer = arm();
     function dismiss() {
       clearTimeout(timer);
       toast.remove();
     }
     toast.addEventListener('mouseenter', () => clearTimeout(timer));
     toast.addEventListener('mouseleave', () => {
-      timer = setTimeout(dismiss, duration);
+      timer = arm();
     });
     // Keyboard/screen-reader users get the same pause via focus, not just
     // mouse hover -- a Tab-reachable action button inside the toast (see
@@ -100,7 +106,7 @@
     // mouse case, added so this isn't a mouse-only mitigation.
     toast.addEventListener('focusin', () => clearTimeout(timer));
     toast.addEventListener('focusout', () => {
-      timer = setTimeout(dismiss, duration);
+      timer = arm();
     });
 
     return { dismiss };

@@ -1,13 +1,29 @@
 {% set _sortable = sortable | default(false) %}
 {% set _favourite_all = favourite_all | default(false) %}
 {% set _filter = filter | default(false) %}
-<div class="ds-table-cell ds-table-header-cell"{% if _filter %} data-filter data-filter-value=""{% endif %}{% if _favourite_all %} data-type="icon-cell" data-favourite-all data-saved="{{ 'true' if all_saved else 'false' }}"{% endif %}>
+{% set _filter_multiple = _filter and (filter_multiple | default(false)) %}
+{#- Multiple: every option is ticked unless it says selected=false; the first
+    item ("All", value "") is ticked when all are, half-ticked when some are. -#}
+{% set _options = filter_options | default([]) %}
+{% set _ticked = _options | rejectattr('selected', 'sameas', false) | map(attribute='value') | list %}
+<div class="ds-table-cell ds-table-header-cell"{% if _filter_multiple %} data-filter data-filter-multiple data-filter-values="{{ _ticked | join(' ') }}"{% elif _filter %} data-filter data-filter-value=""{% endif %}{% if _favourite_all %} data-type="icon-cell" data-favourite-all data-saved="{{ 'true' if all_saved else 'false' }}"{% endif %}>
 {% if _favourite_all %}
   <button type="button" class="ds-table-header-cell__favourite-all-btn" aria-pressed="{{ 'true' if all_saved else 'false' }}" aria-label="Mark all as saved">
     <span class="ds-table-cell__icon" data-icon="save" aria-hidden="true"></span>
   </button>
 {% endif %}
-{% if _filter %}
+{% if _filter_multiple %}
+  {% set _all_ticked = _ticked | length == _options | length %}
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by {{ label | default('Column') }}" data-filter-active="{{ 'false' if _all_ticked else 'true' }}" data-dropdown-trigger>
+      <span class="ds-table-cell__text">{{ label | default('Column') }}</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="{{ filter_icon | default('arrow-down') }}" aria-hidden="true"></span>
+    </button>
+    {% set _menu_items = [{'value': '', 'label': filter_all_label | default('All'), 'selected': _all_ticked, 'mixed': (_ticked | length > 0 and not _all_ticked)}] %}
+    {% for option in _options %}{% set _ = _menu_items.append({'value': option.value, 'label': option.label, 'selected': option.value in _ticked}) %}{% endfor %}
+    {% with items=_menu_items, multiple=true, open=false %}{% include "components/dropdown-menu/template.html" %}{% endwith %}
+  </div>
+{% elif _filter %}
   <div class="ds-dropdown">
     <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by {{ label | default('Column') }}" data-filter-active="false" data-dropdown-trigger>
       <span class="ds-table-cell__text">{{ label | default('Column') }}</span>

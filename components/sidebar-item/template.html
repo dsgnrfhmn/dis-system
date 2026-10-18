@@ -3,11 +3,18 @@
   {% with priority='primary', status='active', underline='solid', label=label | default('Add item') %}{% include "components/text-button/template.html" %}{% endwith %}
 </div>
 {% elif type == 'set' %}
-<div class="ds-sidebar-item" data-type="set"{% if active %} data-active="true"{% endif %}>
-  {% if href %}
-  <a href="{{ href | safe_url }}" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted"{% if active %} aria-current="true"{% endif %}><span class="ds-text-button__text">{{ name | default('Set name') }}</span></a>
+{% set _set_name %}{% if href %}<a href="{{ href | safe_url }}" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted"{% if active %} aria-current="true"{% endif %}><span class="ds-text-button__text">{{ name | default('Set name') }}</span></a>{% else %}<button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set{% if active %} aria-current="true"{% endif %}><span class="ds-text-button__text">{{ name | default('Set name') }}</span></button>{% endif %}{% endset %}
+<div class="ds-sidebar-item" data-type="set"{% if active %} data-active="true"{% endif %}{% if muted %} data-muted="true"{% endif %}{% if caption %} data-has-caption{% endif %}>
+  {% if caption %}
+  {# caption (2026-09-30): a second, grey line under the name -- e.g. a
+     record's status. Name and caption stack in one column; the save
+     button stays on the right. #}
+  <div class="ds-sidebar-item__set-main">
+    {{ _set_name }}
+    <span class="ds-sidebar-item__caption">{{ caption }}</span>
+  </div>
   {% else %}
-  <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-select-set{% if active %} aria-current="true"{% endif %}><span class="ds-text-button__text">{{ name | default('Set name') }}</span></button>
+  {{ _set_name }}
   {% endif %}
   {% if save is not defined or save %}
   <button type="button" class="ds-sidebar-item__save" data-save-set aria-pressed="{{ 'true' if saved else 'false' }}" aria-label="{{ 'Saved' if saved else 'Save' }}: {{ name | default('Set name') }}"><span class="ds-sidebar-item__save-icon" data-icon="save" aria-hidden="true"></span></button>

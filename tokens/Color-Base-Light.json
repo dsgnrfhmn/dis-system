@@ -126,6 +126,16 @@
       "$value": "{silver.300}",
       "$type": "color",
       "$description": "Added 2026-09-12 alongside Color-Base-Dark.json's own bg.sidebar (see that file's comment) so sidebar-list has a token in both themes. Light's own value is unchanged from what sidebar-list already rendered before this token existed (it previously reused surface-pressed directly, same {silver.300})."
+    },
+    "row-hover": {
+      "$value": "{base.100}",
+      "$type": "color",
+      "$description": "Table row hover/focus fill (table-row). Same as bg.surface-pressed in light, so light rows are unchanged."
+    },
+    "text-highlight": {
+      "$value": "{yellow.400}",
+      "$type": "color",
+      "$description": "Fill behind marked words in running text (e.g. a host app's adjusted-CV diff). Same as system.highlight in light."
     }
   },
   "row-status": {
@@ -136,7 +146,7 @@
       "$description": ""
     },
     "analysed-bg": {
-      "$value": "rgba(202, 125, 37, 0.1)",
+      "$value": "rgba(198, 20, 225, 0.1)",
       "$type": "color",
       "$description": ""
     },
@@ -176,7 +186,17 @@
       "$description": ""
     },
     "for-review-bg": {
-      "$value": "rgba(202, 175, 37, 0.1)",
+      "$value": "rgba(202, 125, 37, 0.1)",
+      "$type": "color",
+      "$description": ""
+    },
+    "filtered-text": {
+      "$value": "{row-status.filtered}",
+      "$type": "color",
+      "$description": ""
+    },
+    "filtered-bg": {
+      "$value": "rgba(128, 128, 128, 0.1)",
       "$type": "color",
       "$description": ""
     },
@@ -259,6 +279,20 @@
       "$value": "{base.150}",
       "$type": "color",
       "$description": ""
+    }
+  },
+  "border-table": {
+    "default": {
+      "$value": "{base.300}",
+      "$type": "color",
+      "$description": "Table grid lines (table-cell, table-header-cell, header-block, table-footer). Same value as object-dark.passive in light, so light tables are unchanged."
+    }
+  },
+  "border-nav": {
+    "default": {
+      "$value": "{base.300}",
+      "$type": "color",
+      "$description": "nav-bar bottom hairline. Same as object-dark.passive in light, so the light nav is unchanged."
     }
   },
   "border-strong": {

@@ -126,6 +126,16 @@
       "$value": "{silver.700}",
       "$type": "color",
       "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): one step above surface-pressed (silver.800, the hover fill) so selected stays distinct from hover, as light base.250 vs base.100"
+    },
+    "row-hover": {
+      "$value": "{black.950}",
+      "$type": "color",
+      "$description": "Explicit request 2026-09-30, \"make the table row hover color black\" (dark theme only): black.950 (#000000), darker than the dark surface (black.900, #1A1918). Tables only -- bg.surface-pressed itself is unchanged for the other components."
+    },
+    "text-highlight": {
+      "$value": "{yellow.900}",
+      "$type": "color",
+      "$description": "Explicit request 2026-09-30, \"make the CV's yellow highlight even darker, with white text\" (dark theme): yellow.900 (#4E410E, darkest yellow step; first yellow.800, then \"even darker\") under text-active (#F4F3F1) -- a whole page of marked words no longer glares on the dark surface."
     }
   },
   "system": {
@@ -200,24 +210,24 @@
   },
   "row-status": {
     "analysed-text": {
-      "$value": "{orange.300}",
+      "$value": "{magenta.300}",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+      "$description": "Dark counterpart (no Figma dark source): a lighter step of light's magenta, readable as text on the dark surface. 2026-10-01: follows light Analysed from orange (orange.300) to magenta."
     },
     "analysed-bg": {
-      "$value": "rgba(231, 164, 116, 0.2)",
+      "$value": "rgba(255, 92, 255, 0.2)",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+      "$description": "Dark counterpart (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface. 2026-10-01: follows analysed-text to magenta.300."
     },
     "submitted-text": {
-      "$value": "{cyan.600}",
+      "$value": "{cyan.700}",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface. 2026-09-30, explicit request (\"make color for applied status more compatible on dark theme, a little bit darker\"): cyan.600 -> cyan.700 (#00ADAD)."
     },
     "submitted-bg": {
-      "$value": "rgba(0, 214, 214, 0.2)",
+      "$value": "rgba(0, 173, 173, 0.2)",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface. 2026-09-30: follows submitted-text to cyan.700 (#00ADAD) at the same 20%."
     },
     "archived-text": {
       "$value": "{silver.400}",
@@ -240,14 +250,24 @@
       "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
     },
     "for-review-text": {
-      "$value": "{yellow.400}",
+      "$value": "{orange.300}",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface"
+      "$description": "Dark counterpart (no Figma dark source): a lighter step of the same hue, readable as text on the dark surface. 2026-10-01: follows light For review from yellow (yellow.400) to orange -- the dark orange Analysed had."
     },
     "for-review-bg": {
-      "$value": "rgba(231, 198, 65, 0.2)",
+      "$value": "rgba(231, 164, 116, 0.2)",
       "$type": "color",
-      "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface"
+      "$description": "Dark counterpart (no Figma dark source): the text color at 20% (light uses ~10% of a darker step) so the pill shows on the dark surface. 2026-10-01: follows for-review-text to orange.300."
+    },
+    "filtered-text": {
+      "$value": "{silver.400}",
+      "$type": "color",
+      "$description": "Dark counterpart (no Figma dark source), 2026-10-01: the same grey as archived-text, as in light."
+    },
+    "filtered-bg": {
+      "$value": "rgba(148, 148, 148, 0.2)",
+      "$type": "color",
+      "$description": "Dark counterpart (no Figma dark source), 2026-10-01: the same as archived-bg, as in light."
     },
     "declined-text": {
       "$value": "{red.300}",
@@ -279,6 +299,20 @@
       "$value": "{silver.800}",
       "$type": "color",
       "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): quietest rule, just above the surface"
+    }
+  },
+  "border-table": {
+    "default": {
+      "$value": "{base.800}",
+      "$type": "color",
+      "$description": "Explicit request 2026-09-30, \"make line/border colors across all tables 50% darker for dark theme only\": object-dark.passive (silver.600, #6B6B6B) halved is ~#363636; base.800 (#333333) is the closest existing primitive. Tables only -- object-dark.passive itself is unchanged for the other 19 components."
+    }
+  },
+  "border-nav": {
+    "default": {
+      "$value": "rgba(180, 180, 180, 0)",
+      "$type": "color",
+      "$description": "Explicit request 2026-09-30, \"remove the nav border in the dark theme\": transparent (the same value as border-transparent), so the hairline keeps its 0.5px and the bar its height."
     }
   },
   "border-strong": {

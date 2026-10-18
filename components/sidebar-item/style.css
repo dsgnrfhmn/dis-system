@@ -158,7 +158,74 @@
    affordance. The dotted underline stays. */
 .ds-sidebar-item[data-type="set"]:hover,
 .ds-sidebar-item[data-type="set"]:focus-within {
-  background-color: var(--ds-color-bg-surface-pressed);
+  /* bg-row-hover (2026-09-30): the same hover fill as table-row --
+     surface-pressed in light, black in dark. */
+  background-color: var(--ds-color-bg-row-hover);
+}
+
+/* Hover also draws the two hairlines (Figma D_SYSTEM 28:1721: base/100 fill,
+   base/300 rules above and below), like the selected row. */
+.ds-sidebar-item[data-type="set"]:hover,
+.ds-sidebar-item[data-type="set"]:focus-within {
+  border-top-color: var(--ds-color-object-dark-passive);
+  border-bottom-color: var(--ds-color-object-dark-passive);
+}
+
+/* Muted set (2026-09-30, explicit request: "items whose status is applied
+   must be grey, not orange -- inactive"): a record that needs no more
+   action. Its name is grey at rest -- text-inactive in light, and in dark
+   header-cell-label (text-inactive is unreadable there), the same greys
+   table-cell's row buttons use -- and takes the accent back while the row
+   is hovered, focused or the active one, like those row buttons. */
+.ds-sidebar-item[data-type="set"][data-muted="true"] .ds-text-button[data-status="active"] {
+  color: var(--ds-color-text-inactive);
+}
+
+[data-theme="dark"] .ds-sidebar-item[data-type="set"][data-muted="true"] .ds-text-button[data-status="active"] {
+  color: var(--ds-color-header-cell-label);
+}
+
+.ds-sidebar-item[data-type="set"][data-muted="true"]:is(:hover, :focus-within, [data-active="true"]) .ds-text-button[data-status="active"] {
+  color: var(--ds-color-accent-1);
+}
+
+/* With a caption (2026-09-30, explicit request: "add the status as a second,
+   grey line in each sidebar item"): the row grows to fit two lines; the name
+   button keeps its left inset and drops its bottom padding so the caption
+   sits right under it, aligned with the name's text; the caption is body
+   text in the same grey as table-cell's text-passive-cell (text-active at
+   half opacity -- text-subactive is a light beige in dark, not grey) and
+   truncates like the name. */
+.ds-sidebar-item[data-type="set"][data-has-caption] {
+  height: auto;
+  min-height: var(--ds-spacing-row);
+}
+
+.ds-sidebar-item__set-main {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.ds-sidebar-item[data-type="set"][data-has-caption] .ds-sidebar-item__set-main > .ds-text-button {
+  flex: none;
+  padding-bottom: 0;
+}
+
+.ds-sidebar-item__caption {
+  padding: var(--ds-spacing-1) var(--ds-spacing-button-x) var(--ds-spacing-cell);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  color: var(--ds-color-text-active);
+  opacity: 0.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ds-sidebar-item[data-type="set"] .ds-text-button[data-status]::before,
@@ -225,4 +292,23 @@
 .ds-sidebar-item__save[aria-pressed="true"] .ds-sidebar-item__save-icon {
   color: var(--ds-color-accent-2);
   --_icon-fill: currentColor;
+}
+
+/* Selected set, Figma D_SYSTEM 188:4543: base/150 fill (one step darker than
+   hover's base/100, so the chosen row stays distinct under the pointer), the
+   name in black at Medium weight with no underline, ellipsis, the two
+   base/300 hairlines. The fill is light-theme only: dark has no Figma value
+   and keeps bg-surface-pressed from the rule above. */
+:root:not([data-theme="dark"]) .ds-sidebar-item[data-type="set"][data-active="true"] {
+  background-color: var(--ds-color-base-150);
+}
+
+.ds-sidebar-item[data-type="set"][data-active="true"] .ds-text-button[data-priority][data-status="active"],
+.ds-sidebar-item[data-type="set"][data-active="true"] .ds-text-button[data-priority][data-status="active"]:hover {
+  color: var(--ds-color-text-active);
+  font-weight: var(--ds-font-body-text-medium-weight);
+}
+
+.ds-sidebar-item[data-type="set"][data-active="true"] .ds-text-button[data-underline] .ds-text-button__text {
+  text-decoration: none;
 }

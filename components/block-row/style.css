@@ -122,7 +122,9 @@
   outline: none;
 }
 
-/* Drag and drop, driven by the host page. */
+/* Drag and drop, driven by the host page: the dragged row is the placeholder
+   that moves through the list while the others slide aside; data-drop (a line
+   at the target edge) is for a host that does not move rows live. */
 .ds-block-row[data-dragging="true"] {
   opacity: 0.5;
 }

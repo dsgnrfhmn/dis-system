@@ -27,11 +27,11 @@
   the consumer spec -- not from Penpot, ADDED 2026-09-09,
   same functional-gap category as the rest of this file). Focus moves
   onto the panel on open (tabindex="-1", see index.html) and returns to
-  whichever trigger opened it on close -- basic dialog-focus hygiene, not
-  a full focus trap: Tab still cycles out of the dialog into the rest of
-  the page, which is a real, explicitly-noted gap (see meta.json's
-  a11y_notes), the same category of gap already flagged for table-row's
-  keyboard-drag reordering.
+  whichever trigger opened it on close. Tab / Shift+Tab are trapped in the
+  topmost open popup (explicit request 2026-10-03, closing the gap this
+  comment used to note): from its last focusable control Tab wraps to the
+  first, Shift+Tab from the first (or from the panel itself) wraps to the
+  last, and focus that has somehow left the popup is pulled back in.
 
   Overlay stacking (A10c, added 2026-09-09, not from Penpot -- a static
   design tool has no notion of one dialog opening from inside another):
@@ -110,11 +110,36 @@ function positionAnchored(overlay, trigger) {
 const openOverlays = [];
 const BASE_Z_INDEX = 100;
 
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
+
+function trapTab(event, overlay) {
+  const focusable = Array.from(overlay.querySelectorAll(FOCUSABLE)).filter(
+    (el) => !el.closest('[hidden]') && el.getClientRects().length > 0
+  );
+  if (!focusable.length) {
+    event.preventDefault();
+    return;
+  }
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const active = document.activeElement;
+  const inside = overlay.contains(active);
+  if (event.shiftKey && (!inside || active === first || !focusable.includes(active))) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && (!inside || active === last)) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
 function onDocumentKeydown(event) {
   const topmost = openOverlays[openOverlays.length - 1];
   if (!topmost) return;
   if (event.key === 'Escape') {
     topmost.close();
+  } else if (event.key === 'Tab') {
+    trapTab(event, topmost.overlay);
   } else if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
     // The action marked data-popup-confirm; else a priority="primary" one
     // (Figma draws every popup action the same weight, so a consumer that
@@ -126,6 +151,25 @@ function onDocumentKeydown(event) {
 }
 document.addEventListener('keydown', onDocumentKeydown);
 
+// Scroll lock (explicit request 2026-10-11): while any overlay is open the page behind
+// it does not scroll, the wheel and touch scroll only the popup's own body. One
+// attribute on <html>, set while the stack is not empty; style.css does the rest.
+// The width the native scrollbar takes away is put back as padding, so the page does
+// not shift sideways (0 when the host hides its scrollbar).
+function syncScrollLock() {
+  const root = document.documentElement;
+  if (openOverlays.length === 0) {
+    delete root.dataset.popupScrollLock;
+    root.style.removeProperty('--_popup-scrollbar-width');
+    return;
+  }
+  if (root.dataset.popupScrollLock === undefined) {
+    const gutter = window.innerWidth - root.clientWidth;
+    root.style.setProperty('--_popup-scrollbar-width', `${Math.max(gutter, 0)}px`);
+    root.dataset.popupScrollLock = '';
+  }
+}
+
 function initPopup(overlay) {
   let opener = null;
 
@@ -134,6 +178,7 @@ function initPopup(overlay) {
     overlay.hidden = false;
     overlay.style.zIndex = String(BASE_Z_INDEX + openOverlays.length * 10);
     openOverlays.push({ overlay, close });
+    syncScrollLock();
     if (overlay.dataset.placement === 'anchored') {
       positionAnchored(overlay, trigger);
     }
@@ -146,6 +191,7 @@ function initPopup(overlay) {
     overlay.hidden = true;
     const index = openOverlays.findIndex((entry) => entry.overlay === overlay);
     if (index !== -1) openOverlays.splice(index, 1);
+    syncScrollLock();
     if (opener) opener.focus();
   }
 

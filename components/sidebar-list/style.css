@@ -3,14 +3,16 @@
   The sets sidebar of the Collection and Template pages (the consumer-app Figma file
   APPFILEKEY, Collection nodes 150:16217 / 150:16475 / 150:16503,
   Template screens 20-22). A 280px column on the surface color with one hairline on
-  its right edge: a 56px head (title at half opacity, collapse toggle) over a
+  its right edge: a 60px head (title at half opacity, collapse toggle) over a
   scrolling list of sidebar-item type="set" rows. Collapsed (data-collapsed
   = "true") it is a 64px strip holding only the toggle, its arrow flipped.
   Replaces the earlier card sidebar (a stack of cards).
 */
 .ds-sidebar-list {
-  flex: 0 0 calc(var(--ds-spacing-9) * 7);
-  width: calc(var(--ds-spacing-9) * 7);
+  --_sb-full: calc(var(--ds-spacing-9) * 7);
+  --_sb-strip: calc(var(--ds-spacing-row) + var(--ds-spacing-cell) * 2);
+  flex: 0 0 var(--_sb-full);
+  width: var(--_sb-full);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -31,9 +33,26 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  height: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-6));
   padding: var(--ds-spacing-cell);
   border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+/* The head is 60px so it lines up with the page head (page-head) beside the sidebar.
+   The create row (data-role="create" on a type="set" sidebar-item, first in the list)
+   follows Figma D_SYSTEM 28:1729 "Create New Set": a 44px set row (bold dotted-underlined
+   name on the left, the 44px icon cell on the right) closed by a 1px hairline in
+   base/300, so 45px in all. Its icon is the plus (icons/add.svg, explicit request
+   2026-10-12, in place of the save glyph the Figma instance carried) in the accent,
+   like the bold name; the cell does not toggle. */
+.ds-sidebar-list .ds-sidebar-item[data-role="create"] {
+  height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
+  border-bottom-color: var(--ds-color-object-dark-passive);
+}
+
+.ds-sidebar-list .ds-sidebar-item[data-role="create"] .ds-sidebar-item__save-icon,
+.ds-sidebar-list .ds-sidebar-item[data-role="create"] .ds-sidebar-item__save:hover .ds-sidebar-item__save-icon {
+  color: var(--ds-color-accent-1);
 }
 
 .ds-sidebar-list__title {
@@ -76,17 +95,47 @@
   mask: url("../../icons/arrow-left.svg") center / 100% 100% no-repeat;
 }
 
+/* Collapsed: the sidebar keeps a 64px strip in the page flow, holding only the
+   toggle. It is still its full width (negative margin gives back the rest of
+   the flow footprint) and clipped to the strip, so opening it (data-peek) is a
+   slide: the clip opens to the right OVER the page, 200ms, and nothing in the
+   page layout moves. Escape, a click outside and the toggle close it again;
+   component.js sets data-peek. The strip's own right hairline is a background
+   line because the clip would cut a border. */
 .ds-sidebar-list[data-collapsed="true"] {
-  flex-basis: calc(var(--ds-spacing-row) + var(--ds-spacing-cell) * 2);
-  width: calc(var(--ds-spacing-row) + var(--ds-spacing-cell) * 2);
+  position: relative;
+  z-index: 30;
+  margin-right: calc(var(--_sb-strip) - var(--_sb-full));
+  border-right: none;
+  background-image: linear-gradient(
+    to right,
+    transparent calc(var(--_sb-strip) - var(--ds-border-width-thin)),
+    var(--ds-color-object-dark-passive) calc(var(--_sb-strip) - var(--ds-border-width-thin)),
+    var(--ds-color-object-dark-passive) var(--_sb-strip),
+    transparent var(--_sb-strip)
+  );
+  clip-path: inset(0 calc(var(--_sb-full) - var(--_sb-strip)) 0 0);
+  transition: clip-path 200ms ease;
 }
 
-.ds-sidebar-list[data-collapsed="true"] .ds-sidebar-list__title,
-.ds-sidebar-list[data-collapsed="true"] .ds-sidebar-list__items {
+.ds-sidebar-list[data-collapsed="true"][data-peek="true"] {
+  background-image: none;
+  border-right: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  clip-path: inset(0 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-sidebar-list[data-collapsed="true"] {
+    transition: none;
+  }
+}
+
+.ds-sidebar-list[data-collapsed="true"]:not([data-peek="true"]) .ds-sidebar-list__title,
+.ds-sidebar-list[data-collapsed="true"]:not([data-peek="true"]) .ds-sidebar-list__items {
   display: none;
 }
 
-.ds-sidebar-list[data-collapsed="true"] .ds-sidebar-list__toggle-icon {
+.ds-sidebar-list[data-collapsed="true"]:not([data-peek="true"]) .ds-sidebar-list__toggle-icon {
   -webkit-mask-image: url("../../icons/arrow-right.svg");
   mask-image: url("../../icons/arrow-right.svg");
 }
@@ -94,10 +143,10 @@
 /* Resizable (pane's data-resizable container, its component.js): once dragged the
    sidebar carries data-resized and --_resize-size. The collapsed rule above is
    more specific, so a collapsed sidebar keeps its collapsed width whatever was set,
-   and the handle beside a collapsed sidebar is not offered. */
-.ds-sidebar-list[data-resized]:not([data-collapsed="true"]) {
-  flex-basis: var(--_resize-size);
-  width: var(--_resize-size);
+   and the handle beside a collapsed sidebar is not offered. The dragged size is
+   also the width the sidebar slides open to over the page. */
+.ds-sidebar-list[data-resized] {
+  --_sb-full: var(--_resize-size);
 }
 .ds-sidebar-list[data-collapsed="true"] + .ds-split__handle {
   display: none;

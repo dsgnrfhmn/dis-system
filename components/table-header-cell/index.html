@@ -10,10 +10,11 @@
 <link rel="stylesheet" href="../table-cell/style.css">
 <link rel="stylesheet" href="../dropdown-menu/style.css">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../divider/style.css">
 <style>
   .ds-table-header-cell-demo-row {
     display: grid;
-    grid-template-columns: max-content max-content max-content max-content max-content 180px;
+    grid-template-columns: max-content max-content max-content max-content max-content 180px 220px;
     /* Closes the outer right/bottom edge lost when table-cell/style.css
        switched to border-top/border-left only (2026-09-11 bugfix) --
        see that component's own comment. */
@@ -22,7 +23,7 @@
   }
 </style>
 
-<div class="ds-table-header-cell-demo-row" data-sort-group data-checkbox-group>
+<div class="ds-table-header-cell-demo-row" data-sort-group data-checkbox-group data-column-resize="table-header-cell-demo">
 <div class="ds-table-cell ds-table-header-cell">
   <span class="ds-table-cell__text">Checkbox</span>
 </div>
@@ -63,9 +64,44 @@
     </div>
   </div>
 </div>
+<div class="ds-table-cell ds-table-header-cell" data-filter data-filter-multiple data-filter-values="review analysed">
+  <div class="ds-dropdown">
+    <button type="button" class="ds-table-header-cell__filter-btn" aria-haspopup="listbox" aria-label="Filter by Status" data-filter-active="true" data-dropdown-trigger>
+      <span class="ds-table-cell__text">Status</span>
+      <span class="ds-table-header-cell__sort-icon" data-icon="filter" aria-hidden="true"></span>
+    </button>
+<div class="ds-dropdown-menu" role="listbox" data-multiple aria-multiselectable="true" hidden>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="" aria-selected="false" data-mixed="true">
+    <span class="ds-dropdown-menu__check" data-icon="checkbox" data-check="unchecked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-selected" data-check="checked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-semi-select" data-check="mixed" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__label">All</span>
+  </button>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="review" aria-selected="true">
+    <span class="ds-dropdown-menu__check" data-icon="checkbox" data-check="unchecked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-selected" data-check="checked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-semi-select" data-check="mixed" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__label">For Review</span>
+  </button>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="analysed" aria-selected="true">
+    <span class="ds-dropdown-menu__check" data-icon="checkbox" data-check="unchecked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-selected" data-check="checked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-semi-select" data-check="mixed" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__label">Analysed</span>
+  </button>
+  <button type="button" class="ds-dropdown-menu__item" role="option" data-value="archived" aria-selected="false">
+    <span class="ds-dropdown-menu__check" data-icon="checkbox" data-check="unchecked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-selected" data-check="checked" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__check" data-icon="checkbox-semi-select" data-check="mixed" aria-hidden="true"></span>
+    <span class="ds-dropdown-menu__label">Archived</span>
+  </button>
+</div>
+  </div>
+</div>
 </div>
 
 <script src="../table-cell/component.js"></script>
 <script src="../table-row/component.js"></script>
 <script src="../dropdown-menu/component.js"></script>
 <script src="component.js"></script>
+<script src="../divider/component.js"></script>

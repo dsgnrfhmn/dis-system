@@ -1,6 +1,6 @@
 {
   "name": "toast",
-  "description": "A short confirmation or error message, stacked bottom-right, auto-dismissing. May carry one or two action buttons (e.g. links to something just generated). Created at runtime via window.dsToast.show(...), not pre-rendered markup -- see component.js.",
+  "description": "A short confirmation or error message, stacked top center (20px from the top edge), auto-dismissing. May carry one or two action buttons (e.g. links to something just generated). Created at runtime via window.dsToast.show(...), not pre-rendered markup -- see component.js.",
   "status": "stable",
   "category": "toasters",
   "variants": [
@@ -35,11 +35,11 @@
       "type": "number",
       "required": false,
       "default": 5000,
-      "description": "Auto-dismiss delay in ms, only meaningful through window.dsToast.show(). The default (5000) is a judgment call, not a design-source value."
+      "description": "Auto-dismiss delay in ms, only meaningful through window.dsToast.show(). The default (5000) is a judgment call, not a design-source value. 0 (explicit request 2026-10-01) never auto-dismisses: the toast stays until its close button is clicked."
     }
   ],
   "source": "none",
-  "rationale": "Styled to Figma D_SYSTEM's Toster (node 103:4772): a full status fill with a 1px border in the family's strong color, 20px system-message text, and a close button (a 24px square in the strong color with a white X). The fill carries the status at a glance; the X lets a reader drop a toast early instead of waiting out the timer. Figma draws success and warning; default and error follow the same pattern in the neutral and danger families. No shadow: the toast is edged by its border. Status colors are the fixed palette, as everywhere a color states a status, so the text is fixed black in both themes.\n\nBehavior follows the product rule the component was built for: every action that changes stored data produces a short confirmation toast, every failed action an error toast naming the operation and the reason, toasts stack bottom-right and auto-dismiss, and a toast may carry actions. Unlike every other component.js, which wires behavior onto markup a page already rendered, a toast only exists because an action just happened, so it exposes a runtime API (window.dsToast.show(...)). Hover and keyboard focus pause the dismiss timer (it restarts at the full duration afterwards, not the remaining time), so a toast with actions doesn't vanish under a reaching cursor or a focused button. The 5000ms default duration is a judgment call; the rule states that toasts auto-dismiss, not how fast. Rendering verified in light and dark themes.",
+  "rationale": "Styled to Figma D_SYSTEM's Toster (node 103:4772): a full status fill with a 1px border in the family's strong color, 20px system-message text, and a close button (a 24px square in the strong color with a white X). The fill carries the status at a glance; the X lets a reader drop a toast early instead of waiting out the timer. Figma draws success and warning; default and error follow the same pattern in the neutral and danger families. No shadow: the toast is edged by its border. Status colors are the fixed palette, as everywhere a color states a status, so the text is fixed black in both themes.\n\nBehavior follows the product rule the component was built for: every action that changes stored data produces a short confirmation toast, every failed action an error toast naming the operation and the reason, toasts stack top center, 20px from the top edge (Figma app-file artboard 345:10101), and auto-dismiss, and a toast may carry actions. Unlike every other component.js, which wires behavior onto markup a page already rendered, a toast only exists because an action just happened, so it exposes a runtime API (window.dsToast.show(...)). Hover and keyboard focus pause the dismiss timer (it restarts at the full duration afterwards, not the remaining time), so a toast with actions doesn't vanish under a reaching cursor or a focused button. The 5000ms default duration is a judgment call; the rule states that toasts auto-dismiss, not how fast. Rendering verified in light and dark themes.",
   "themes_supported": [
     "light",
     "dark"

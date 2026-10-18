@@ -196,6 +196,19 @@ sibling already solved.
   invent it here.
 - `status: "stable"` requires verified rendering in both Light and Dark.
 
+## Branches and contributing
+`main` is only changed through a pull request. Nobody commits to it directly.
+- Work on your own branch, named `<github-username>/<topic>` (e.g.
+  `dsgnrfhmn/isolated`, `dsgnrfhmn/table-cell-collapse`), created from the
+  current `main`. One branch per piece of work; the username prefix says whose
+  isolated work it is.
+- Open a pull request into `main` when the work is done. It is merged only
+  when `python -m pytest tests` passes and the checks in "Hard rules" hold
+  (both themes verified for anything marked `stable`).
+- Nothing private goes into a branch that is pushed: no names or data of real
+  people, no real Figma file keys (use the `*FILEKEY` placeholders), no names of
+  consuming applications. Commit authorship uses your GitHub noreply address.
+
 ## If something is ambiguous
 Stop and ask rather than guessing a default. Note the ambiguity in the
 commit or PR description so it is visible, not silently resolved.

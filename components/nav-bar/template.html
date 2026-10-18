@@ -11,7 +11,16 @@
 
   <div class="ds-nav-bar__center">
     {% for link in _links %}
+    {% if link.href %}
+    {# A real link when the item has an href (2026-09-30, explicit request:
+       a page link must open in a new tab on middle-click / from the context
+       menu, which a <button> navigating from JS can't). Same text-button
+       look as the <button> branch below, the way sidebar-item's own href
+       variant renders it. #}
+    <a href="{{ link.href | safe_url }}" class="ds-text-button" data-priority="{{ 'primary' if link.current else 'secondary' }}" data-status="active" data-underline="solid"{% if link.current %} aria-current="page"{% endif %}><span class="ds-text-button__text">{{ link.label }}</span></a>
+    {% else %}
     {% with priority=('primary' if link.current else 'secondary'), status='active', underline='solid', label=link.label, current=link.current %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% endif %}
     {% endfor %}
   </div>
 
