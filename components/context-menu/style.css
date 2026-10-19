@@ -1,0 +1,30 @@
+/*
+  context-menu
+  The menu a right click opens on an element that carries data-context-menu="<menu id>".
+  Not a new look: the panel, the 44px items, the hover fill, the divider and the disabled
+  state are dropdown-menu's own classes (.ds-dropdown-menu, .ds-dropdown-menu__item,
+  .ds-divider), so load dropdown-menu/style.css beside this file. What this file adds is
+  where the panel sits: fixed to the viewport, at the pointer (component.js sets left and
+  top and keeps it on screen), above the sidebar and the page, below popups.
+*/
+.ds-dropdown-menu.ds-context-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  /* 200px: spacing.9 x 5. dropdown-menu's own min-width is 100% of its trigger, and a
+     fixed panel has none. */
+  min-width: calc(var(--ds-spacing-9) * 5);
+}
+
+/* Demo and docs: the panel drawn in the flow instead of at a pointer. */
+.ds-dropdown-menu.ds-context-menu[data-inline] {
+  position: static;
+}
+
+/* The element the menu belongs to keeps the hover fill while its menu is open, so it is
+   clear which one a click on the menu will act on (the pointer is on the menu, not the
+   element). A host's own selected state, being more specific, keeps its fill. */
+[data-context-open="true"] {
+  background-color: var(--ds-color-bg-row-hover);
+}

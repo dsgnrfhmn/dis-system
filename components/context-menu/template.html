@@ -1,0 +1,15 @@
+{% set _items = items | default([
+  {'value': 'rename', 'label': 'Rename'},
+  {'value': 'duplicate', 'label': 'Duplicate'},
+  {'divider': true},
+  {'value': 'delete', 'label': 'Delete'}
+]) %}
+<div class="ds-dropdown-menu ds-context-menu"{% if id %} id="{{ id }}"{% endif %} role="menu" aria-label="{{ label | default('Actions') }}"{% if inline %} data-inline{% endif %}{% if not open %} hidden{% endif %}>
+  {% for item in _items %}
+  {% if item.divider %}
+  {% include "components/divider/template.html" %}
+  {% else %}
+  <button type="button" class="ds-dropdown-menu__item" role="menuitem" data-value="{{ item.value }}"{% if item.disabled %} disabled{% endif %}>{{ item.label }}</button>
+  {% endif %}
+  {% endfor %}
+</div>

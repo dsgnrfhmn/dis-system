@@ -6,13 +6,16 @@
   file APPFILEKEY, Template nodes 150:16233 and 150:16275.
   Two kinds (data-type):
   - "source": a block to pick from. Its Add action shows on hover; once the
-    block is already used (data-included="true") the row is shaded and the
-    action hidden.
+    block is already used (data-included="true") the row is shaded and Remove
+    takes Add's place.
   - "editable": a block of the document being built. A drag handle on the left
     (its icon shows on hover), Edit / Delete on the right on hover, and an
     in-place edit mode (data-editing="true": the text becomes a textarea).
   Drag and drop is driven by the host page through data-dragging and data-drop,
   like table-row.
+  Actions as an overlay (data-actions="overlay", kind "source"): the actions
+  cell takes no column. It floats over the right end of the text cell on hover
+  or focus, as wide as its one visible button, so the text keeps the whole row.
 */
 .ds-block-list {
   list-style: none;
@@ -46,6 +49,13 @@
   overflow-wrap: anywhere;
 }
 
+/* A section heading of the document (data-kind="heading", kind "source"): bold. The system
+   has no bold body-text role, so the weight is buttonPrimary's 700, the same bold the
+   primary text buttons carry. */
+.ds-block-row[data-kind="heading"] .ds-block-row__text {
+  font-weight: var(--ds-font-button-primary-weight);
+}
+
 .ds-block-row__actions {
   flex: none;
   display: flex;
@@ -68,8 +78,52 @@
   background-color: var(--ds-color-base-warm-100);
 }
 
-.ds-block-row[data-type="source"][data-included="true"] .ds-block-row__actions .ds-text-button {
+/* Add and Remove sit in one grid cell, so the actions column is as wide as the wider of
+   the two and the row does not change size when a block goes in or out of the document.
+   The one that does not apply is visibility:hidden, not removed (2026-10-18). */
+.ds-block-row[data-type="source"] .ds-block-row__actions {
+  display: grid;
+}
+.ds-block-row[data-type="source"] .ds-block-row__actions > .ds-text-button {
+  grid-area: 1 / 1;
+}
+.ds-block-row[data-type="source"][data-included="true"] [data-action="add-block"],
+.ds-block-row[data-type="source"][data-included="false"] [data-action="remove-block"] {
   visibility: hidden;
+}
+
+/* Overlay variant: the row is the positioning box, the actions hang over the text
+   cell's right end. Only the button that applies is laid out (Add or Remove), so the
+   cell is exactly one button wide and its hover brackets hug the label. The cell wears
+   the row's own fill (inherited, so hover and the "included" shade carry over) only while
+   it is shown; at rest it is transparent and lets no click through to nothing. */
+.ds-block-row[data-actions="overlay"] {
+  position: relative;
+}
+.ds-block-row[data-actions="overlay"] .ds-block-row__actions {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  pointer-events: none;
+}
+.ds-block-row[data-actions="overlay"]:is(:hover, :focus-within) .ds-block-row__actions {
+  background-color: inherit;
+  pointer-events: auto;
+}
+.ds-block-row[data-actions="overlay"][data-included="true"] [data-action="add-block"],
+.ds-block-row[data-actions="overlay"][data-included="false"] [data-action="remove-block"] {
+  display: none;
+}
+
+/* Compact (data-density="compact", kind "source"): the row is its text and an 8px above
+   and below, one line of text 35px instead of the 60px of "a text plus a trailing blank
+   line". Its actions are size="small" text buttons, one line tall, so the floating cell
+   fits on the line of text. */
+.ds-block-row[data-density="compact"] .ds-block-row__text {
+  min-height: 0;
+  padding: var(--ds-spacing-3) var(--ds-spacing-cell);
 }
 
 .ds-block-row__drag {

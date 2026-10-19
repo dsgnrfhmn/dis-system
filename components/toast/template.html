@@ -6,16 +6,17 @@
   the gallery/demo.
 #}
 {% set _status = status | default('default') %}
-<div class="ds-toast" data-status="{{ _status }}" role="status">
+<div class="ds-toast" data-status="{{ _status }}" role="status"{% if actions %} data-actions{% endif %}>
   <div class="ds-toast__body">
     <span class="ds-toast__message">{{ message | default('Done.') }}</span>
-    {% if actions %}
-    <div class="ds-toast__actions">
-      {% for action in actions %}
-      {% with priority='secondary', status='active', underline='dotted', label=action.label %}{% include "components/text-button/template.html" %}{% endwith %}
-      {% endfor %}
-    </div>
-    {% endif %}
   </div>
+  {% if actions %}
+  <div class="ds-toast__actions">
+    {% for action in actions %}
+    {% with priority='secondary', status='active', underline='dotted', label=action.label %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+  {% else %}
   <button type="button" class="ds-toast__close" aria-label="Dismiss" data-toast-dismiss></button>
+  {% endif %}
 </div>

@@ -4,7 +4,8 @@
   APPFILEKEY, Collection nodes 150:16217 / 150:16475 / 150:16503,
   Template screens 20-22). A 280px column on the surface color with one hairline on
   its right edge: a 60px head (title at half opacity, collapse toggle) over a
-  scrolling list of sidebar-item type="set" rows. Collapsed (data-collapsed
+  scrolling list of sidebar-item type="set" rows. Only the list scrolls: the head and
+  the create row (first in the list, sticky) stay where they are. Collapsed (data-collapsed
   = "true") it is a 64px strip holding only the toggle, its arrow flipped.
   Replaces the earlier card sidebar (a stack of cards).
 */
@@ -18,11 +19,19 @@
   flex-direction: column;
   background-color: var(--ds-color-bg-surface);
   border-right: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  overflow: hidden;
+}
+
+/* The scrolling region: everything under the head. The scrollbar is hidden, like the
+   panes'. */
+.ds-sidebar-list__items {
+  flex: 1 1 0;
+  min-height: 0;
   overflow-y: auto;
   scrollbar-width: none;
 }
 
-.ds-sidebar-list::-webkit-scrollbar {
+.ds-sidebar-list__items::-webkit-scrollbar {
   display: none;
 }
 
@@ -48,6 +57,17 @@
 .ds-sidebar-list .ds-sidebar-item[data-role="create"] {
   height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
   border-bottom-color: var(--ds-color-object-dark-passive);
+  /* Sticky at the top of the scrolling list, on the sidebar's own fill so the sets
+     passing under it do not show through. */
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--ds-color-bg-surface);
+}
+
+.ds-sidebar-list .ds-sidebar-item[data-role="create"]:hover,
+.ds-sidebar-list .ds-sidebar-item[data-role="create"]:focus-within {
+  background-color: var(--ds-color-bg-row-hover);
 }
 
 .ds-sidebar-list .ds-sidebar-item[data-role="create"] .ds-sidebar-item__save-icon,
@@ -100,28 +120,45 @@
    the flow footprint) and clipped to the strip, so opening it (data-peek) is a
    slide: the clip opens to the right OVER the page, 200ms, and nothing in the
    page layout moves. Escape, a click outside and the toggle close it again;
-   component.js sets data-peek. The strip's own right hairline is a background
-   line because the clip would cut a border. */
+   component.js sets data-peek.
+   The right hairline is not a border: a border sits on the full box's edge, which the
+   clip hides until the slide is over. It is the ::after at --_sb-edge, the one length
+   that both the clip and the line are drawn from, and that length is what the
+   transition animates (registered below so it can be), so the line travels with the
+   edge of the panel. Outside the collapsed state --_sb-edge rests at the strip, so
+   collapsing and pinning open are as instant as before. */
+@property --_sb-edge {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+.ds-sidebar-list {
+  --_sb-edge: var(--_sb-strip);
+}
+
 .ds-sidebar-list[data-collapsed="true"] {
   position: relative;
   z-index: 30;
   margin-right: calc(var(--_sb-strip) - var(--_sb-full));
   border-right: none;
-  background-image: linear-gradient(
-    to right,
-    transparent calc(var(--_sb-strip) - var(--ds-border-width-thin)),
-    var(--ds-color-object-dark-passive) calc(var(--_sb-strip) - var(--ds-border-width-thin)),
-    var(--ds-color-object-dark-passive) var(--_sb-strip),
-    transparent var(--_sb-strip)
-  );
-  clip-path: inset(0 calc(var(--_sb-full) - var(--_sb-strip)) 0 0);
-  transition: clip-path 200ms ease;
+  clip-path: inset(0 calc(var(--_sb-full) - var(--_sb-edge)) 0 0);
+  transition: --_sb-edge 200ms ease;
+}
+
+.ds-sidebar-list[data-collapsed="true"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--_sb-edge) - var(--ds-border-width-thin));
+  width: var(--ds-border-width-thin);
+  background-color: var(--ds-color-object-dark-passive);
+  pointer-events: none;
 }
 
 .ds-sidebar-list[data-collapsed="true"][data-peek="true"] {
-  background-image: none;
-  border-right: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
-  clip-path: inset(0 0 0 0);
+  --_sb-edge: var(--_sb-full);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -135,7 +172,9 @@
   display: none;
 }
 
-.ds-sidebar-list[data-collapsed="true"]:not([data-peek="true"]) .ds-sidebar-list__toggle-icon {
+/* A collapsed sidebar's toggle always points right: it pins the sidebar open, also while
+   the panel is slid open over the page by hover. */
+.ds-sidebar-list[data-collapsed="true"] .ds-sidebar-list__toggle-icon {
   -webkit-mask-image: url("../../icons/arrow-right.svg");
   mask-image: url("../../icons/arrow-right.svg");
 }

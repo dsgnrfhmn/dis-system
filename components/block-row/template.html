@@ -8,10 +8,11 @@
   </div>
 </li>
 {% else %}
-<li class="ds-block-row" data-type="source" data-included="{{ 'true' if included else 'false' }}">
+<li class="ds-block-row" data-type="source" data-included="{{ 'true' if included else 'false' }}"{% if overlay %} data-actions="overlay"{% endif %}{% if compact %} data-density="compact"{% endif %}{% if heading %} data-kind="heading"{% endif %}>
   <div class="ds-block-row__text">{{ text | default('Block text') }}</div>
   <div class="ds-block-row__actions">
-    {% with priority='secondary', status='active', underline='dotted', label='Add' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='secondary', status='active', underline='dotted', label='Add', size='small' if compact else none %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='secondary', status='active', underline='dotted', label='Remove', size='small' if compact else none %}{% include "components/text-button/template.html" %}{% endwith %}
   </div>
 </li>
 {% endif %}

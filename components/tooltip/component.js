@@ -31,8 +31,25 @@ const VIEWPORT_MARGIN = token('--ds-spacing-6', 20);
 const GAP = token('--ds-spacing-2', 4);
 
 // The bubble's full border-box size, as currently rendered.
+// A text button's bubble is the ::after of its label span (its own ::before and
+// ::after are the hover brackets), so that is what gets measured.
+function bubbleHost(trigger) {
+  if (!trigger.classList.contains('ds-text-button')) return trigger;
+  return trigger.querySelector(':scope > .ds-text-button__text, :scope > .ds-text-button__label') || trigger;
+}
+
+// content: attr() on the span's ::after reads the span's own attributes, so the
+// text (and its cut) is mirrored onto the span.
+function mirror(trigger) {
+  const host = bubbleHost(trigger);
+  if (host === trigger) return;
+  host.dataset.tooltipText = trigger.dataset.tooltip || '';
+  if (trigger.dataset.tooltipClamped) host.dataset.tooltipTextClamped = trigger.dataset.tooltipClamped;
+  else delete host.dataset.tooltipTextClamped;
+}
+
 function measure(trigger) {
-  const b = getComputedStyle(trigger, '::after');
+  const b = getComputedStyle(bubbleHost(trigger), '::after');
   const px = (v) => parseFloat(v) || 0;
   return {
     width: px(b.width) + px(b.paddingLeft) + px(b.paddingRight) + px(b.borderLeftWidth) + px(b.borderRightWidth),
@@ -52,6 +69,7 @@ function clampText(trigger, text, maxHeight) {
     const mid = Math.floor((lo + hi) / 2);
     const candidate = `${words.slice(0, mid).join('').trimEnd()}…`;
     trigger.dataset.tooltipClamped = candidate;
+    mirror(trigger);
     if (measure(trigger).height <= maxHeight) {
       best = candidate;
       lo = mid + 1;
@@ -60,6 +78,7 @@ function clampText(trigger, text, maxHeight) {
     }
   }
   trigger.dataset.tooltipClamped = best;
+  mirror(trigger);
 }
 
 function fit(trigger) {
@@ -69,6 +88,7 @@ function fit(trigger) {
   trigger.style.removeProperty('--_tooltip-shift');
   delete trigger.dataset.tooltipPlacement;
   delete trigger.dataset.tooltipClamped;
+  mirror(trigger);
 
   const rect = trigger.getBoundingClientRect();
   const vw = document.documentElement.clientWidth;
@@ -94,6 +114,32 @@ function fit(trigger) {
   const shift = clampedLeft - centeredLeft;
   if (Math.abs(shift) >= 0.5) trigger.style.setProperty('--_tooltip-shift', `${shift}px`);
 }
+
+// A disabled button gets no mouse events, so the text must already be on the
+// label span before any hover: mirror when data-tooltip is set or the button
+// appears, not only on hover.
+function mirrorAll(root) {
+  if (root.matches && root.matches('.ds-text-button[data-tooltip]')) mirror(root);
+  if (root.querySelectorAll) root.querySelectorAll('.ds-text-button[data-tooltip]').forEach(mirror);
+}
+
+function watchTexts() {
+  mirrorAll(document);
+  new MutationObserver((records) => {
+    records.forEach((record) => {
+      if (record.type === 'attributes') mirrorAll(record.target);
+      else record.addedNodes.forEach((node) => {
+        if (node.nodeType !== 1) return;
+        mirrorAll(node);
+        const host = node.closest && node.closest('.ds-text-button[data-tooltip]');
+        if (host) mirror(host);   // the label span the text-button wrapped in
+      });
+    });
+  }).observe(document.documentElement, {
+    subtree: true, childList: true, attributes: true, attributeFilter: ['data-tooltip'],
+  });
+}
+watchTexts();
 
 function onEnter(event) {
   const target = event.target;

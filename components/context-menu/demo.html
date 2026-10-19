@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../divider/style.css">
+<link rel="stylesheet" href="../dropdown-menu/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: flex; gap: var(--ds-spacing-6); align-items: flex-start;">
+  <div data-context-menu="demo-context-menu" style="box-sizing: border-box; width: calc(var(--ds-spacing-9) * 6); padding: calc(var(--ds-spacing-3) + var(--ds-spacing-1)); border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive); color: var(--ds-color-text-active); font-family: var(--ds-font-body-text-family);">
+    Right-click here
+  </div>
+  {% with id='demo-context-menu', label='Row actions', items=[{'value': 'rename', 'label': 'Rename'}, {'value': 'duplicate', 'label': 'Duplicate'}, {'value': 'download', 'label': 'Download PDF', 'disabled': true}, {'divider': true}, {'value': 'delete', 'label': 'Delete'}] %}{% include "components/context-menu/template.html" %}{% endwith %}
+  {% with inline=true, open=true, label='Open, drawn in the flow' %}{% include "components/context-menu/template.html" %}{% endwith %}
+</div>
+
+<script src="component.js"></script>

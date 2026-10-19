@@ -44,6 +44,24 @@
   listening independently (the previous version of this file), two open
   overlays would BOTH close on one Escape press, which is wrong.
 
+  Static backdrop (requested 2026-10-13, Add project popup): an overlay carrying
+  data-backdrop="static" ignores a click on the backdrop and Escape; only its
+  own [data-popup-dismiss] buttons (and Ctrl+Enter's confirm) close it. Opt-in,
+  per overlay: every other popup keeps closing on a click outside and Escape.
+
+  Close request (requested 2026-10-13, Add project popup): a dismissal the user
+  starts (a [data-popup-dismiss] button, the backdrop, Escape) first dispatches a
+  cancelable ds-popup-before-close on the overlay (bubbles; detail: { source:
+  "button" | "backdrop" | "escape", button }). A host that calls preventDefault()
+  keeps the popup open, e.g. to ask "discard the changes?" first; the same click
+  then reaches the document, so a data-popup-open set on the button during the
+  event opens that confirmation anchored to it. Without a listener nothing changes.
+
+  Since 2026-10-13 placement="anchored" no longer anchors: confirmations open
+  centered over the 50% backdrop like every popup (positionAnchored below is kept,
+  unused, until a consumer asks for anchoring again). The text that follows
+  describes what it used to do.
+
   Anchored placement (A10b, added 2026-09-09, not from Penpot): when the
   overlay carries data-placement="anchored" (the consumer spec's
    Confirmation kind, "anchored near the triggering button,
@@ -137,7 +155,7 @@ function onDocumentKeydown(event) {
   const topmost = openOverlays[openOverlays.length - 1];
   if (!topmost) return;
   if (event.key === 'Escape') {
-    topmost.close();
+    if (topmost.overlay.dataset.backdrop !== 'static') topmost.request('escape');
   } else if (event.key === 'Tab') {
     trapTab(event, topmost.overlay);
   } else if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
@@ -177,13 +195,20 @@ function initPopup(overlay) {
     opener = trigger || null;
     overlay.hidden = false;
     overlay.style.zIndex = String(BASE_Z_INDEX + openOverlays.length * 10);
-    openOverlays.push({ overlay, close });
+    openOverlays.push({ overlay, close, request });
     syncScrollLock();
-    if (overlay.dataset.placement === 'anchored') {
-      positionAnchored(overlay, trigger);
-    }
+    // Confirmations (placement="anchored") are centered like every other popup since
+    // 2026-10-13 (maintainer): the panel is no longer placed next to its trigger.
     const panel = overlay.querySelector(':scope > .ds-popup');
     if (panel) panel.focus();
+  }
+
+  // A user-started dismissal: the host may veto it (see "Close request" above).
+  function request(source, button) {
+    const event = new CustomEvent('ds-popup-before-close', {
+      bubbles: true, cancelable: true, detail: { source, button: button || null },
+    });
+    if (overlay.dispatchEvent(event)) close();
   }
 
   function close() {
@@ -197,7 +222,7 @@ function initPopup(overlay) {
 
   overlay.addEventListener('click', (event) => {
     if (event.target === overlay) {
-      close();
+      if (overlay.dataset.backdrop !== 'static') request('backdrop');
       return;
     }
     // Delegated (not a one-time querySelectorAll('[data-popup-dismiss]')
@@ -207,7 +232,8 @@ function initPopup(overlay) {
     // it) -- a dismiss button added after this overlay was first scanned
     // needs to work exactly like one that was always there. Found while
     // wiring the consuming app's own For You page (2026-09-10).
-    if (event.target.closest('[data-popup-dismiss]')) close();
+    const dismiss = event.target.closest('[data-popup-dismiss]');
+    if (dismiss) request('button', dismiss);
   });
 
   return { open, close };

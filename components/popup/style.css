@@ -83,25 +83,11 @@ html[data-popup-scroll-lock] {
 }
 
 /*
-  placement="anchored" (the confirmation kind, the consumer spec):
-  the overlay stays a full-viewport click-catching layer -- outside click
-  still closes -- but no longer centers its panel; component.js's
-  positionAnchored() places the panel next to the trigger by inline style.
-  It is dimmed too, lighter (30%) than a modal (50%), as in Figma's
-  confirmation screens.
-  :not([hidden]) so this rule does not match while hidden is present: it has
-  the same specificity as .ds-popup-overlay[hidden] above and comes later, so
-  without it display:block beat display:none and an anchored popup sat
-  unstyled in the viewport corner on every load.
+  placement="anchored" (the confirmation kind, the consumer spec) is centered
+  since 2026-10-13 (maintainer, every confirmation): no rule of its own, so the base
+  overlay centers the panel over the same 50% backdrop. The attribute stays
+  as the marker of a confirmation.
 */
-.ds-popup-overlay[data-placement="anchored"]:not([hidden]) {
-  display: block;
-  padding: 0;
-}
-
-.ds-popup-overlay[data-placement="anchored"]::before {
-  opacity: 0.3;
-}
 
 .ds-popup-overlay > .ds-popup {
   position: relative;
@@ -232,6 +218,27 @@ html[data-popup-scroll-lock] {
 }
 
 /*
+  A heading inside a text body (.ds-popup__heading, an h3): the heading-5 role
+  (18px, a little over the 16px body text; explicit request 2026-10-14, the
+  Summary popup). A blank line above it, like between paragraphs, and none
+  between it and the paragraph it names.
+*/
+.ds-popup__body[data-type="text"] .ds-popup__heading {
+  margin: 0;
+  font-family: var(--ds-font-heading-5-family);
+  font-size: var(--ds-font-heading-5-size);
+  font-weight: var(--ds-font-heading-5-weight);
+  font-style: var(--ds-font-heading-5-style);
+  line-height: var(--ds-font-heading-5-line-height);
+  letter-spacing: var(--ds-font-heading-5-letter-spacing);
+  color: var(--ds-color-text-active);
+}
+
+.ds-popup__body[data-type="text"] * + .ds-popup__heading {
+  margin-top: 1lh;
+}
+
+/*
   type="input": a real .ds-input (components/input) -- in Figma the filled
   one, 300px tall inside a 320px row (so 10px above and below it, which the
   body's own padding provides). 7 x 40px + 20px composes 300px from the
@@ -283,4 +290,12 @@ html[data-popup-scroll-lock] {
 /* A body made of stacked popup-step sections carries its own insets. */
 .ds-popup__body[data-type="steps"] {
   padding: 0;
+}
+
+/* An open dropdown menu inside the steps (the Add project popup's project list)
+   is not clipped by the body's scroll box (requested 2026-10-13): while a menu is
+   open the body stops clipping, so the list can hang past the panel's bottom edge
+   over the backdrop. It closes again on a choice, and the body scrolls as before. */
+.ds-popup__body[data-type="steps"]:has(.ds-dropdown-menu:not([hidden])) {
+  overflow: visible;
 }

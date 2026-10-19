@@ -77,6 +77,21 @@
   background-color: var(--ds-color-base-0);
 }
 
+/* Dark theme: the sheet is paper, so it stays paper: a muted white (base-100, not the
+   pure white of the light theme) with black text (base-1000), both from the palette
+   primitives, which are the same in both themes. The sheet's hover tint follows (base-150). */
+[data-theme="dark"] .ds-cv-sheet__page {
+  background-color: var(--ds-color-base-100);
+  color: var(--ds-color-base-1000);
+}
+
+[data-theme="dark"] .ds-cv-sheet__block:hover,
+[data-theme="dark"] .ds-cv-sheet__block:focus-within,
+[data-theme="dark"] .ds-cv-sheet__block[data-editing="true"] {
+  background-color: var(--ds-color-base-150);
+  box-shadow: 0 0 0 4px var(--ds-color-base-150);
+}
+
 .ds-cv-sheet__content {
   box-sizing: border-box;
   height: calc(var(--ds-cv-sheet-h) - var(--ds-cv-sheet-top) - var(--ds-cv-sheet-footer));
@@ -113,6 +128,11 @@
 .ds-cv-sheet__year {
   flex: none;
   width: var(--ds-cv-sheet-year-w);
+}
+
+/* The same year as the row above: kept in the row, not drawn. */
+.ds-cv-sheet__year[data-repeat="true"] {
+  visibility: hidden;
 }
 
 .ds-cv-sheet__text {
@@ -155,4 +175,91 @@
   top: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+/* ---- Editable preview (opts.editable) ----
+   A block is the positioning box of its actions. On hover or focus the block is tinted
+   (a spread shadow, so the layout never moves) and Edit / Delete float over its right end,
+   wearing the block's own fill so the text under them is covered. The actions are drawn
+   against the sheet's scale (1 / scale) so they stay the size of the page's other buttons
+   at any zoom. */
+.ds-cv-sheet__block {
+  position: relative;
+  cursor: grab;
+}
+
+/* A block with no other block of its year to trade places with is not draggable. */
+.ds-cv-sheet__block[data-fixed="true"] {
+  cursor: default;
+}
+
+.ds-cv-sheet__block:hover,
+.ds-cv-sheet__block:focus-within,
+.ds-cv-sheet__block[data-editing="true"] {
+  background-color: var(--ds-color-bg-surface-pressed);
+  box-shadow: 0 0 0 4px var(--ds-color-bg-surface-pressed);
+}
+
+.ds-cv-sheet__actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  background-color: inherit;
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: normal;
+  transform: scale(calc(1 / var(--ds-cv-sheet-scale)));
+  transform-origin: top right;
+}
+
+.ds-cv-sheet__block:hover > .ds-cv-sheet__actions,
+.ds-cv-sheet__block:focus-within > .ds-cv-sheet__actions,
+.ds-cv-sheet__block[data-editing="true"] > .ds-cv-sheet__actions {
+  display: flex;
+}
+
+/* Edit mode: the textarea sits where the text was, accent line like block-row's. The
+   actions drop below it, so the text being written is never under them. */
+.ds-cv-sheet__block[data-editing="true"] {
+  cursor: auto;
+}
+
+.ds-cv-sheet__block[data-editing="true"] > .ds-cv-sheet__actions {
+  top: 100%;
+  z-index: 1;
+}
+
+.ds-cv-sheet__edit {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: inset 0 calc(-1 * var(--ds-border-width-thin)) 0 var(--ds-color-accent-1);
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  resize: none;
+  overflow: hidden;
+  outline: none;
+}
+
+/* Drag and drop: the dragged block dims, an accent line marks the place it would take. */
+.ds-cv-sheet__block[data-dragging="true"] {
+  opacity: 0.4;
+}
+
+.ds-cv-sheet__block[data-drop="before"] {
+  box-shadow: 0 -2px 0 var(--ds-color-accent-1);
+}
+
+.ds-cv-sheet__block[data-drop="after"] {
+  box-shadow: 0 2px 0 var(--ds-color-accent-1);
 }

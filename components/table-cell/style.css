@@ -583,6 +583,24 @@
   width: 100%;
 }
 
+/* The field fills the whole cell, and keeps the cell's right inset as its own
+   padding (maintainer, 2026-10-14). The cell has no right padding here; the field's
+   padding-right (less its border) is the spacing-cell the cell used to have, so
+   the arrow lands on the same x as the sort icon of the column header: both end
+   spacing-cell in from the cell edge. */
+.ds-table-cell[data-type="dropdown"] {
+  padding-right: 0;
+}
+
+.ds-table-cell[data-type="dropdown"] .ds-input-dropdown {
+  padding-right: calc(var(--ds-spacing-cell) - var(--ds-border-width-thin));
+}
+
+/* A button after the field (Filtered: "view") keeps the inset the cell had. */
+.ds-table-cell[data-type="dropdown"] > .ds-text-button {
+  margin-right: var(--ds-spacing-cell);
+}
+
 /*
   type="input" width changed to 100% (explicit request, 2026-09-10,
   "Notes input field should be 100% width of the cell (+paddings)"):
