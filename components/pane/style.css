@@ -32,7 +32,7 @@
   height: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
   padding: 0 var(--ds-spacing-6);
   background-color: var(--ds-color-bg-surface);
-  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
 }
 
 .ds-pane__heading {
@@ -97,7 +97,7 @@
    between two panes. Put it on the head and on the body. */
 .ds-pane__head[data-divider="start"],
 .ds-pane__body[data-divider="start"] {
-  border-left: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border-left: var(--ds-border-width-thin) solid var(--ds-color-border-table);
 }
 
 /* data-emphasis="true": the title at full opacity (Reference). */

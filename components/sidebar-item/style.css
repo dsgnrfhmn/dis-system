@@ -147,8 +147,8 @@
 
 .ds-sidebar-item[data-type="set"][data-active="true"] {
   background-color: var(--ds-color-bg-surface-pressed);
-  border-top-color: var(--ds-color-object-dark-passive);
-  border-bottom-color: var(--ds-color-object-dark-passive);
+  border-top-color: var(--ds-color-border-table);
+  border-bottom-color: var(--ds-color-border-table);
 }
 
 /* Hover / keyboard focus: the whole row takes the selected fill, as in
@@ -167,8 +167,8 @@
    base/300 rules above and below), like the selected row. */
 .ds-sidebar-item[data-type="set"]:hover,
 .ds-sidebar-item[data-type="set"]:focus-within {
-  border-top-color: var(--ds-color-object-dark-passive);
-  border-bottom-color: var(--ds-color-object-dark-passive);
+  border-top-color: var(--ds-color-border-table);
+  border-bottom-color: var(--ds-color-border-table);
 }
 
 /* Muted set (2026-09-30, explicit request: "items whose status is applied

@@ -635,6 +635,13 @@
    table rows). Hover and focus still draw input's own border, so the field
    remains findable and shows it's being edited. */
 
+/* The "Add a note" placeholder of an empty notes field shows only while the row is hovered
+   or the field has focus (explicit request, 2026-10-19): a column of empty fields would
+   otherwise repeat the same hint on every row. A filled field is not affected. */
+.ds-table-row:not(:hover):not(:focus-within) .ds-table-cell[data-type="input"] .ds-input::placeholder {
+  opacity: 0;
+}
+
 /* ---- 1-action: row-reverse, alignItems:center, justifyContent:flex-end,
    padding right spacing.5 only (Token-bound zero on top/bottom/left in
    Penpot's data). Composes one .ds-text-button (priority=primary). ---- */

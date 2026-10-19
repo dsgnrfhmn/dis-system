@@ -18,7 +18,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--ds-color-bg-surface);
-  border-right: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border-right: var(--ds-border-width-thin) solid var(--ds-color-border-table);
   overflow: hidden;
 }
 
@@ -44,7 +44,7 @@
   box-sizing: border-box;
   height: calc(var(--ds-spacing-9) + var(--ds-spacing-6));
   padding: var(--ds-spacing-cell);
-  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
 }
 
 /* The head is 60px so it lines up with the page head (page-head) beside the sidebar.
@@ -56,7 +56,7 @@
    like the bold name; the cell does not toggle. */
 .ds-sidebar-list .ds-sidebar-item[data-role="create"] {
   height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
-  border-bottom-color: var(--ds-color-object-dark-passive);
+  border-bottom-color: var(--ds-color-border-table);
   /* Sticky at the top of the scrolling list, on the sidebar's own fill so the sets
      passing under it do not show through. */
   position: sticky;
@@ -153,7 +153,7 @@
   bottom: 0;
   left: calc(var(--_sb-edge) - var(--ds-border-width-thin));
   width: var(--ds-border-width-thin);
-  background-color: var(--ds-color-object-dark-passive);
+  background-color: var(--ds-color-border-table);
   pointer-events: none;
 }
 
