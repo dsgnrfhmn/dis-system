@@ -1585,6 +1585,12 @@
         "required": false,
         "default": false,
         "description": "Renders type=\"submit\" so the button submits its enclosing form; otherwise type=\"button\"."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "description": "Renders an <a href> (through safe_url) instead of a <button>, for navigation. A disabled link has no href and carries aria-disabled."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc55",
