@@ -1,5 +1,12 @@
+{#
+  type 'password' renders <input type="password"> (any other value except
+  'textarea' is a text field). autocomplete: native autocomplete token.
+  name / id / label / disabled / required: native form wiring. label becomes
+  aria-label (use a visible <label for=id> instead where the page has one).
+#}
+{% set _attrs %}{% if name %} name="{{ name }}"{% endif %}{% if id %} id="{{ id }}"{% endif %}{% if label %} aria-label="{{ label }}"{% endif %}{% if disabled %} disabled{% endif %}{% if required %} required{% endif %}{% if autocomplete %} autocomplete="{{ autocomplete }}"{% endif %}{% endset %}
 {% if type == 'textarea' %}
-<textarea class="ds-input" data-type="textarea"{% if fill %} data-fill="{{ fill }}"{% endif %} rows="{{ rows | default(8) }}"{% if not value %} placeholder="{{ placeholder | default('Placeholder text') }}"{% endif %}>{{ value | default('') }}</textarea>
+<textarea class="ds-input" data-type="textarea"{% if fill %} data-fill="{{ fill }}"{% endif %} rows="{{ rows | default(8) }}"{{ _attrs }}{% if not value %} placeholder="{{ placeholder | default('Placeholder text') }}"{% endif %}>{{ value | default('') }}</textarea>
 {% else %}
-<input class="ds-input" type="text"{% if fill %} data-fill="{{ fill }}"{% endif %}{% if value %} value="{{ value }}"{% else %} placeholder="{{ placeholder | default('Placeholder text') }}"{% endif %}>
+<input class="ds-input" type="{{ 'password' if type == 'password' else 'text' }}"{% if fill %} data-fill="{{ fill }}"{% endif %}{{ _attrs }}{% if value %} value="{{ value }}"{% else %} placeholder="{{ placeholder | default('Placeholder text') }}"{% endif %}>
 {% endif %}

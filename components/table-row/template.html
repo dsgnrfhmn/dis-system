@@ -10,7 +10,7 @@
   {'type': 'input', 'input_value': 'Status'},
   {'type': '1-action', 'content': 'Archive'}
 ]) %}
-<div class="ds-table-row" data-selected="{{ 'true' if selected else 'false' }}"{% if status %} data-status="{{ status }}"{% endif %}>
+<div class="ds-table-row" data-selected="{{ 'true' if selected else 'false' }}"{% if status %} data-status="{{ status }}"{% endif %}{% if extra_attrs %} {{ extra_attrs | safe }}{% endif %}>
   {% for cell in _cells %}
   {% with type=cell.get('type'), content=cell.get('content'), icons=cell.get('icons'), secondary_label=cell.get('secondary_label'), input_value=cell.get('input_value'), href=cell.get('href'), single_icon=cell.get('single_icon'), single_icon_label=cell.get('single_icon_label'), priority=cell.get('priority'), checkbox_role=cell.get('checkbox_role'), options=cell.get('options'), dropdown_label=cell.get('dropdown_label'), view_label=cell.get('view_label') %}{% include "components/table-cell/template.html" %}{% endwith %}
   {% endfor %}

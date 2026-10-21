@@ -441,6 +441,7 @@
     "category": "inputs",
     "variants": [
       "text",
+      "password",
       "textarea"
     ],
     "props": [
@@ -449,7 +450,7 @@
         "type": "string",
         "required": false,
         "default": "text",
-        "description": "\"text\" (default, a single-line <input>) or \"textarea\" (a multi-line <textarea>, not from Penpot -- see rationale)."
+        "description": "\"text\" (default, a single-line <input>), \"password\" (a single-line <input type=\"password\">) or \"textarea\" (a multi-line <textarea>, not from Penpot -- see rationale)."
       },
       {
         "name": "fill",
@@ -476,6 +477,44 @@
         "required": false,
         "default": 8,
         "description": "Only meaningful when type=\"textarea\". Sets the native rows attribute."
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "description": "Native name attribute, so the field is submitted with its form."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "description": "Native id attribute, for a visible <label for>."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "Accessible name (aria-label) for a field without a visible <label>."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Native disabled attribute. Not a Figma state; the browser's disabled styling applies."
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Native required attribute."
+      },
+      {
+        "name": "autocomplete",
+        "type": "string",
+        "required": false,
+        "description": "Native autocomplete token, e.g. \"username\" or \"current-password\"."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc59",
@@ -1107,6 +1146,13 @@
         "type": "string",
         "required": false,
         "description": "Text-bearing types only. Renders Figma's \"Single-active-t+button\" cell (D_SYSTEM node 28:949): the text clipped to one line with an ellipsis, followed by a secondary dotted text-button with this label (e.g. \"view\") that stays whole. The host page wires the button (e.g. to a popup showing the full text)."
+      },
+      {
+        "name": "submit",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Only for type \"1-action\": the action button is a submit button of the enclosing form."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bca088c",
@@ -1209,7 +1255,7 @@
     ],
     "props": [],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bdb9ea8",
-    "rationale": "Renamed from Penpot's \"table-header_right-block\": the schema's name pattern rejects the underscore. Penpot's Actions axis values (\"1 Action\" ... \"3 Actions\", and inconsistently \"4\") are normalized to \"1-action\" ... \"4-actions\". The component is only a flex-row shell: column gap 0 (Token-confirmed in Penpot -- the buttons' own padding separates them) and right padding 0, because header-block's row already carries the 20px side padding and the buttons hug their labels. It composes real text-button instances rather than restyling buttons, because Penpot's source is itself composition: every child in every sampled instance is a text-button (no fill token, only a label). The emphasis pattern read off the instances: each extra action is lower emphasis, and the single primary action is always last, rightmost. Every sampled action (Add item, Export, Clear filters, Select all) acts within the current table view, so all use the dotted underline (CLAUDE.md, Interaction conventions). Each action may carry a `status` (text-button's, default 'active'), so bulk actions can render disabled until rows are selected. It sets no background, so header-block's shaded row shows through behind its buttons. Rendering verified in light and dark themes.",
+    "rationale": "Renamed from Penpot's \"table-header_right-block\": the schema's name pattern rejects the underscore. Penpot's Actions axis values (\"1 Action\" ... \"3 Actions\", and inconsistently \"4\") are normalized to \"1-action\" ... \"4-actions\". The component is only a flex-row shell: column gap 0 (Token-confirmed in Penpot -- the buttons' own padding separates them) and right padding 0, because header-block's row already carries the 20px side padding and the buttons hug their labels. It composes real text-button instances rather than restyling buttons, because Penpot's source is itself composition: every child in every sampled instance is a text-button (no fill token, only a label). The emphasis pattern read off the instances: each extra action is lower emphasis, and the single primary action is always last, rightmost. Every sampled action (Add item, Export, Clear filters, Select all) acts within the current table view, so all use the dotted underline (CLAUDE.md, Interaction conventions). Each action may carry a `status` (text-button's, default 'active'), so bulk actions can render disabled until rows are selected, `submit` (true: a form submit button) and `extra_attrs` (raw attribute passthrough, e.g. form=\"id\"). It sets no background, so header-block's shaded row shows through behind its buttons. Rendering verified in light and dark themes.",
     "themes_supported": [
       "light",
       "dark"
@@ -1395,6 +1441,12 @@
         "type": "string",
         "required": false,
         "description": "Optional data-status on the row (analysed / submitted / approved / pending / declined): style.css colors the value of the row's dropdown-type cell as a status pill from the row-status tokens. Other values, or none, leave it plain."
+      },
+      {
+        "name": "extra_attrs",
+        "type": "string",
+        "required": false,
+        "description": "Raw attribute passthrough on the row element (e.g. a data-* identifier the host page reads back). Same contract as text-button's extra_attrs: the host passes only trusted, pre-escaped markup."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bd68c76",
@@ -1526,6 +1578,19 @@
         "required": false,
         "default": null,
         "description": "hover: render the hover look (brackets, outlined accent border) without a pointer, via data-preview=\"hover\". Documentation only -- for pages that lay every state side by side (Figma D_SYSTEM node 132:4987); never set it in product UI."
+      },
+      {
+        "name": "submit",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Renders type=\"submit\" so the button submits its enclosing form; otherwise type=\"button\"."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "description": "Renders an <a href> (through safe_url) instead of a <button>, for navigation. A disabled link has no href and carries aria-disabled."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc55",

@@ -70,6 +70,19 @@
       "required": false,
       "default": null,
       "description": "hover: render the hover look (brackets, outlined accent border) without a pointer, via data-preview=\"hover\". Documentation only -- for pages that lay every state side by side (Figma D_SYSTEM node 132:4987); never set it in product UI."
+    },
+    {
+      "name": "submit",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Renders type=\"submit\" so the button submits its enclosing form; otherwise type=\"button\"."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "Renders an <a href> (through safe_url) instead of a <button>, for navigation. A disabled link has no href and carries aria-disabled."
     }
   ],
   "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc55",
