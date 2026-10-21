@@ -1441,6 +1441,12 @@
         "type": "string",
         "required": false,
         "description": "Optional data-status on the row (analysed / submitted / approved / pending / declined): style.css colors the value of the row's dropdown-type cell as a status pill from the row-status tokens. Other values, or none, leave it plain."
+      },
+      {
+        "name": "extra_attrs",
+        "type": "string",
+        "required": false,
+        "description": "Raw attribute passthrough on the row element (e.g. a data-* identifier the host page reads back). Same contract as text-button's extra_attrs: the host passes only trusted, pre-escaped markup."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bd68c76",
