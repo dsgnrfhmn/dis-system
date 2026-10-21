@@ -441,6 +441,7 @@
     "category": "inputs",
     "variants": [
       "text",
+      "password",
       "textarea"
     ],
     "props": [
@@ -449,7 +450,7 @@
         "type": "string",
         "required": false,
         "default": "text",
-        "description": "\"text\" (default, a single-line <input>) or \"textarea\" (a multi-line <textarea>, not from Penpot -- see rationale)."
+        "description": "\"text\" (default, a single-line <input>), \"password\" (a single-line <input type=\"password\">) or \"textarea\" (a multi-line <textarea>, not from Penpot -- see rationale)."
       },
       {
         "name": "fill",
@@ -508,6 +509,12 @@
         "required": false,
         "default": false,
         "description": "Native required attribute."
+      },
+      {
+        "name": "autocomplete",
+        "type": "string",
+        "required": false,
+        "description": "Native autocomplete token, e.g. \"username\" or \"current-password\"."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc59",
