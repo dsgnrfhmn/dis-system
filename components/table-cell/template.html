@@ -25,7 +25,7 @@
   <span class="ds-table-cell__icon" data-icon="{{ icon }}" aria-hidden="true" role="img" aria-label="{{ _icon_labels.get(icon, icon | capitalize) }}"></span>
   {% endfor %}
 {% elif _type == '1-action' %}
-  {% with priority=priority | default('primary', true), status='active', underline='dotted', label=content | default('Confirm', true), extra_attrs=extra_attrs %}{% include "components/text-button/template.html" %}{% endwith %}
+  {% with priority=priority | default('primary', true), status='active', underline='dotted', label=content | default('Confirm', true), extra_attrs=extra_attrs, submit=submit %}{% include "components/text-button/template.html" %}{% endwith %}
 {% elif _type == '2-actions' %}
   {% with priority='secondary', status='active', underline='dotted', label=secondary_label | default('Dismiss', true), extra_attrs=secondary_extra_attrs %}{% include "components/text-button/template.html" %}{% endwith %}
   {% with priority='primary', status='active', underline='dotted', label=content | default('Confirm', true), extra_attrs=extra_attrs %}{% include "components/text-button/template.html" %}{% endwith %}

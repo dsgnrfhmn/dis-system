@@ -40,6 +40,38 @@
       "required": false,
       "default": 8,
       "description": "Only meaningful when type=\"textarea\". Sets the native rows attribute."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "Native name attribute, so the field is submitted with its form."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "Native id attribute, for a visible <label for>."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "Accessible name (aria-label) for a field without a visible <label>."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Native disabled attribute. Not a Figma state; the browser's disabled styling applies."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Native required attribute."
     }
   ],
   "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc59",

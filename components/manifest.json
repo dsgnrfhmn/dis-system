@@ -476,6 +476,38 @@
         "required": false,
         "default": 8,
         "description": "Only meaningful when type=\"textarea\". Sets the native rows attribute."
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "description": "Native name attribute, so the field is submitted with its form."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "description": "Native id attribute, for a visible <label for>."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "Accessible name (aria-label) for a field without a visible <label>."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Native disabled attribute. Not a Figma state; the browser's disabled styling applies."
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Native required attribute."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc59",
@@ -1107,6 +1139,13 @@
         "type": "string",
         "required": false,
         "description": "Text-bearing types only. Renders Figma's \"Single-active-t+button\" cell (D_SYSTEM node 28:949): the text clipped to one line with an ellipsis, followed by a secondary dotted text-button with this label (e.g. \"view\") that stays whole. The host page wires the button (e.g. to a popup showing the full text)."
+      },
+      {
+        "name": "submit",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Only for type \"1-action\": the action button is a submit button of the enclosing form."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bca088c",
@@ -1526,6 +1565,13 @@
         "required": false,
         "default": null,
         "description": "hover: render the hover look (brackets, outlined accent border) without a pointer, via data-preview=\"hover\". Documentation only -- for pages that lay every state side by side (Figma D_SYSTEM node 132:4987); never set it in product UI."
+      },
+      {
+        "name": "submit",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Renders type=\"submit\" so the button submits its enclosing form; otherwise type=\"button\"."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc55",
