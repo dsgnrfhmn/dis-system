@@ -1,0 +1,46 @@
+{
+  "name": "disclosure",
+  "description": "A section the reader opens and closes: a summary row with a chevron, a title and a passive caption, and a body. Native details element, no script.",
+  "status": "draft",
+  "category": "controls",
+  "variants": [
+    "closed",
+    "open"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "default": "Section",
+      "description": "The summary text."
+    },
+    {
+      "name": "caption",
+      "type": "string",
+      "required": false,
+      "description": "Passive text beside the title, for example a count."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Render the section open."
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "required": false,
+      "description": "Plain text body. A host with richer content writes the same markup around its own content."
+    }
+  ],
+  "source": "none",
+  "rationale": "Long pages of secondary content (examples, past mistakes) stay scannable when each part can be folded to one row. The native details and summary elements already give the toggle, the keyboard handling (Enter, Space) and the open state to assistive technology, so the component adds no script. The row shows state twice, by the chevron's turn and by the platform's own open state; the caption carries a count in the passive text color so the title stays the main thing. The chevron is the system's arrow-down icon used as a mask in currentColor, rotated a quarter turn when closed. A hairline under the section follows the other lists. Focus uses the accent outline of the system's other focusable text. No Figma node: taken from the application's design canvas of 2026-10-21.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "Native <details>/<summary>: the summary is a focusable button with expanded state, toggled by Enter and Space. The chevron is aria-hidden. Visible focus ring on the summary. Content inside a closed section is not rendered, so it is skipped by assistive technology until opened.",
+  "uses": []
+}
