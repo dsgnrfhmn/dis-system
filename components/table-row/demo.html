@@ -272,6 +272,13 @@
   {'type': 'text-active-cell', 'content': 'Placeholder long-form text content for this cell type.'}
 ] %}{% include "components/table-row/template.html" %}{% endwith %}
 
+<div class="ds-table-cell__text" style="color: var(--ds-color-text-subactive); margin: var(--ds-spacing-4) 0 var(--ds-spacing-1);">Cells with tag_type / tag_subtype and article</div>
+{% with cells=[
+  {'type': 'link', 'content': 'der Tisch', 'article': 'der', 'href': '#'},
+  {'type': 'text-active-cell', 'content': 'table'},
+  {'type': 'tag', 'content': '7', 'tag_type': 'success'}
+] %}{% include "components/table-row/template.html" %}{% endwith %}
+
 </div>
 
 <script src="../text-button/component.js"></script>
