@@ -441,6 +441,46 @@
     "uses": []
   },
   {
+    "name": "inline-mark",
+    "description": "A run of text inside a sentence that marks a correction: struck-through text to remove, or filled text to add, with an optional tooltip.",
+    "status": "draft",
+    "category": "tags",
+    "variants": [
+      "remove",
+      "add"
+    ],
+    "props": [
+      {
+        "name": "kind",
+        "type": "string",
+        "required": true,
+        "default": "remove",
+        "description": "remove (struck through, system-error-strong) or add (signal-success-light fill, signal-success-strong text, medium weight, dotted underline). Other values fall back to remove."
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "required": true,
+        "default": "word",
+        "description": "The run's text. Plain text."
+      },
+      {
+        "name": "tooltip",
+        "type": "string",
+        "required": false,
+        "description": "Optional explanation; set as data-tooltip, so the tooltip component shows it on hover and focus. Makes the mark focusable (tabindex 0)."
+      }
+    ],
+    "source": "none",
+    "rationale": "Shows a correction in the sentence itself, so a learner sees what changed and where. Two kinds: remove is struck through in the error color; add has a light success fill, the strong success color, medium weight and a dotted underline, so it is distinguishable without color (a struck-through run versus an underlined one). Colors are existing tokens (system-error-strong follows the theme; the signal pair is the palette's own light/strong, like the tag, so the add fill keeps its contrast in both themes). The mark inherits the surrounding font and size and only changes weight for add, so it can sit in any line of text. The tooltip is the existing data-tooltip mechanism; a marked run with a tooltip is focusable so it is reachable by keyboard. No source in Figma: drawn from the application's design canvas of 2026-10-21; no Figma node exists.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Plain inline span. Strike-through and fill are visual only: a screen reader reads the text without saying it was removed or added, so a host should state the change in text nearby (for example a visually hidden 'removed' / 'added', or the corrected sentence in full). The tooltip text is only reachable by hover and focus.",
+    "uses": []
+  },
+  {
     "name": "input",
     "description": "A single-line text field for entering short freeform text. Use for names, search terms, notes \u2014 anything that isn't a fixed set of choices (use input-dropdown for that).",
     "status": "stable",

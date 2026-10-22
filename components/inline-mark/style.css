@@ -1,0 +1,35 @@
+/*
+  inline-mark
+  A run of text inside a sentence that shows a correction: what to remove
+  (struck through, in the error color) and what to add (a light success fill,
+  the strong success color as text, medium weight, a dotted underline so the
+  mark is not told apart by color alone). Sized by the surrounding text.
+  Application design canvas, 2026-10-21; no Figma node.
+*/
+.ds-inline-mark {
+  font: inherit;
+  white-space: pre-wrap;
+}
+
+.ds-inline-mark[data-kind="remove"] {
+  color: var(--ds-color-system-error-strong);
+  text-decoration-line: line-through;
+  text-decoration-thickness: var(--ds-border-width-default);
+}
+
+.ds-inline-mark[data-kind="add"] {
+  padding: 0 var(--ds-spacing-1);
+  background-color: var(--ds-color-signal-success-light);
+  color: var(--ds-color-signal-success-strong);
+  font-family: var(--ds-font-body-text-medium-family);
+  font-weight: var(--ds-font-body-text-medium-weight);
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: var(--ds-border-width-thin);
+  text-underline-offset: var(--ds-spacing-1);
+}
+
+.ds-inline-mark[data-tooltip]:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-border-width-default);
+}
