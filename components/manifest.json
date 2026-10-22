@@ -1721,7 +1721,7 @@
         "name": "text",
         "type": "string",
         "required": true,
-        "description": "The tooltip's text. In real usage this is the data-tooltip attribute value on the actual trigger element (a button, an icon span, etc.) -- not a separate component instance."
+        "description": "The tooltip's text. In real usage this is the data-tooltip attribute value on the actual trigger element (a button, an icon span, etc.) -- not a separate component instance. A line break in the text (a newline in the attribute value) starts a new line in the bubble, so one tooltip can carry a label, a text and a translation."
       },
       {
         "name": "label",
