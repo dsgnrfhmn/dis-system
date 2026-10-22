@@ -34,6 +34,24 @@
       "required": false,
       "default": false,
       "description": "Render the rename field (.ds-page-head__title-input) in place of the title. Same type tokens, no padding or border, so the bar does not change size."
+    },
+    {
+      "name": "actions_left",
+      "type": "array",
+      "required": false,
+      "description": "List of {label, href?, submit?, underline?} rendered as text buttons next to the title, replacing main_action. An empty list renders none. Unset: the single main_action button, as before."
+    },
+    {
+      "name": "actions_right",
+      "type": "array",
+      "required": false,
+      "description": "Same item shape, rendered on the right, replacing the fixed Undo / Download PDF buttons. An empty list renders none. Unset: those two buttons, as before."
+    },
+    {
+      "name": "meta_text",
+      "type": "string",
+      "required": false,
+      "description": "A passive line of text after the left-hand actions (counts, a note). Plain text, not interactive."
     }
   ],
   "source": "figma:APPFILEKEY#150:16217,150:16233,150:16362",

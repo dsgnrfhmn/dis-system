@@ -6,6 +6,8 @@
 {% with title='Editable title', editable=true %}{% include "components/page-head/template.html" %}{% endwith %}
 {% with title='Editing the title', editing=true %}{% include "components/page-head/template.html" %}{% endwith %}
 {% with title='A much longer set name that will be cut with an ellipsis before it pushes the actions off the bar', main_action='Save Template Set' %}{% include "components/page-head/template.html" %}{% endwith %}
+{% with title='Words', actions_left=[{'label': 'Synchronise', 'href': '#sync'}], meta_text='248 words · 31 this week', actions_right=[{'label': 'Export', 'href': '#export'}] %}{% include "components/page-head/template.html" %}{% endwith %}
+{% with title='No actions', actions_left=[], actions_right=[] %}{% include "components/page-head/template.html" %}{% endwith %}
 
 <script src="../text-button/component.js"></script>
 <script src="component.js"></script>
