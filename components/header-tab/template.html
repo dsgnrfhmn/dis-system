@@ -7,11 +7,12 @@
   meta.json rationale for why this couldn't just be a prop-driven extension
   of table-header's existing 2-tabs variant.
 -->
-<button type="button" class="ds-header-tab" role="tab" aria-selected="{{ 'true' if active else 'false' }}">
+{% set _tag = 'a' if href else 'button' %}
+<{{ _tag }}{% if href %} href="{{ href | safe_url }}"{% else %} type="button"{% endif %} class="ds-header-tab" role="tab" aria-selected="{{ 'true' if active else 'false' }}">
   <span class="ds-header-tab__text">
     <span class="ds-header-tab__label">{{ label | default('Tab') }}</span>
     {% if count %}
     <span class="ds-header-tab__count">{{ count }}</span>
     {% endif %}
   </span>
-</button>
+</{{ _tag }}>

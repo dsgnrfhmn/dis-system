@@ -8,4 +8,9 @@
 {% with active=false, label='Filtered', count='4 total, 5 submitted' %}{% include "components/header-tab/template.html" %}{% endwith %}
 </div>
 
+<div style="display: flex; width: 100%; margin-top: var(--ds-spacing-6);" role="tablist">
+{% with active=true, label='Compose', href='#compose' %}{% include "components/header-tab/template.html" %}{% endwith %}
+{% with active=false, label='Quiz', href='#quiz' %}{% include "components/header-tab/template.html" %}{% endwith %}
+</div>
+
 <script src="component.js"></script>

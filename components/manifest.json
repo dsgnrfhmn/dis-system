@@ -423,6 +423,12 @@
         "type": "string",
         "required": false,
         "description": "\"compact\": 56px tabs for a pane head (see rationale); default is the 60px full-width strip."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "description": "Render the tab as an <a href> (through safe_url) so it navigates, e.g. between pages, instead of a button that switches a panel. Keeps role=\"tab\" and aria-selected."
       }
     ],
     "source": "figma:APPFILEKEY#150:16076,150:16077",
@@ -431,7 +437,7 @@
       "light",
       "dark"
     ],
-    "a11y_notes": "A real role=\"tab\" <button>, per the WAI-ARIA tabs pattern. The host wraps the tabs in a role=\"tablist\" container (this component doesn't own that wrapper) and pairs each tab with its role=\"tabpanel\". aria-selected reflects the active prop and is kept in sync on click by component.js. The focus-visible outline (accent-1, 2px, matching table-header's tabs) has no Figma equivalent: static design tools don't model keyboard focus.",
+    "a11y_notes": "A real role=\"tab\" <button>, per the WAI-ARIA tabs pattern. The host wraps the tabs in a role=\"tablist\" container (this component doesn't own that wrapper) and pairs each tab with its role=\"tabpanel\". aria-selected reflects the active prop and is kept in sync on click by component.js. The focus-visible outline (accent-1, 2px, matching table-header's tabs) has no Figma equivalent: static design tools don't model keyboard focus. With href the tab is an <a role=\"tab\">: the WAI-ARIA tabs pattern expects tabs to switch panels in place, so use href only when each tab is a separate page and mark the current one with active.",
     "uses": []
   },
   {
