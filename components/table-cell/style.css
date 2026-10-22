@@ -703,6 +703,23 @@
   color: var(--ds-color-accent-1);
 }
 
+/* Article links keep their gender color in the dark theme, at rest and while
+   the row is hovered: the color carries the word's gender, so the grey-until-
+   hover rule above does not apply to them (der keeps the accent). Same
+   selectors plus the attribute, so they win by specificity. */
+[data-theme="dark"] .ds-table-row .ds-table-cell .ds-table-cell__link[data-article="der"],
+[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-table-cell__link[data-article="der"] {
+  color: var(--ds-color-accent-1);
+}
+[data-theme="dark"] .ds-table-row .ds-table-cell .ds-table-cell__link[data-article="die"],
+[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-table-cell__link[data-article="die"] {
+  color: var(--ds-color-row-status-declined-text);
+}
+[data-theme="dark"] .ds-table-row .ds-table-cell .ds-table-cell__link[data-article="das"],
+[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-table-cell__link[data-article="das"] {
+  color: var(--ds-color-row-status-approved-text);
+}
+
 /* ---- 3-actions (not Penpot-sourced, explicit request 2026-09-10 "action
    buttons in all tables should be aligned to right" -- found the actual
    cause: the consuming app's own Analysed-row action cell (the consumer spec's 3-button row
