@@ -35,6 +35,8 @@
   {% with priority='primary', status='active', underline='dotted', label=content | default('Confirm', true), extra_attrs=extra_attrs %}{% include "components/text-button/template.html" %}{% endwith %}
 {% elif _type == 'status-label' %}
   <span class="ds-table-cell__status-label">{{ content | default('Status', true) }}</span>
+{% elif _type == 'tag' %}
+  {% with label=content | default('Tag', true), type=tag_type | default('neutral', true), subtype=tag_subtype | default('passive', true) %}{% include "components/tag/template.html" %}{% endwith %}
 {% elif _type == 'dropdown' %}
   {% if options %}
   <div class="ds-dropdown">

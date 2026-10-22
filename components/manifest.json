@@ -1074,7 +1074,8 @@
       "dropdown",
       "input",
       "empty-state",
-      "status-label"
+      "status-label",
+      "tag"
     ],
     "props": [
       {
@@ -1082,13 +1083,27 @@
         "type": "string",
         "required": true,
         "default": "text-active-cell",
-        "description": "Which cell kind this renders: checkbox-cell (was Penpot's \"icon\"), icon-cell (was \"saved\" and \"action-icons\", merged into one type that holds any number of icons), date, text-active-cell (was \"title\", \"organisation\" and \"description\", already identical), text-passive-cell (was \"source\"), text-subactive-cell (was \"summary\"), link, 1-action, 2-actions, 3-actions, dropdown, input, empty-state, status-label. See rationale."
+        "description": "Which cell kind this renders: checkbox-cell (was Penpot's \"icon\"), icon-cell (was \"saved\" and \"action-icons\", merged into one type that holds any number of icons), date, text-active-cell (was \"title\", \"organisation\" and \"description\", already identical), text-passive-cell (was \"source\"), text-subactive-cell (was \"summary\"), link, 1-action, 2-actions, 3-actions, dropdown, input, empty-state, status-label, tag. See rationale."
       },
       {
         "name": "content",
         "type": "string",
         "required": false,
-        "description": "The cell's text content, for text-bearing types (date, text-active-cell, text-passive-cell, text-subactive-cell, link, dropdown, input). Not applicable to checkbox-cell, icon-cell, 1-action, 2-actions, 3-actions, or empty-state, which have fixed or composed content. For 1-action/2-actions/3-actions, doubles as the primary (rightmost) button's label."
+        "description": "The cell's text content, for text-bearing types (date, text-active-cell, text-passive-cell, text-subactive-cell, link, dropdown, input, tag). Not applicable to checkbox-cell, icon-cell, 1-action, 2-actions, 3-actions, or empty-state, which have fixed or composed content. For 1-action/2-actions/3-actions, doubles as the primary (rightmost) button's label."
+      },
+      {
+        "name": "tag_type",
+        "type": "string",
+        "required": false,
+        "default": "neutral",
+        "description": "Only for type=\"tag\": the tag's type (accent-1 | accent-2 | accent-3 | success | warning | danger | neutral), passed to the composed tag."
+      },
+      {
+        "name": "tag_subtype",
+        "type": "string",
+        "required": false,
+        "default": "passive",
+        "description": "Only for type=\"tag\": active or passive, passed to the composed tag."
       },
       {
         "name": "checkbox_role",
@@ -1164,9 +1179,10 @@
     "uses": [
       "text-button",
       "input-dropdown",
-      "input"
+      "input",
+      "tag"
     ],
-    "a11y_notes": "type=\"dropdown\" renders a real .ds-input-dropdown <button> (listen for its ds-input-dropdown-open event); type=\"input\" a real <input type=\"text\">; type=\"link\" a real <a href>. Icon cells use role=\"img\" with an aria-label per icon, since each icon is its own unit; the inlined SVGs carry no separate text. Icons are fetched at runtime relative to the script's own URL (so they work wherever the system is vendored), and need http(s): from file:// the icon slots stay empty. Known gaps: the Save icon toggles on click but stays role=\"img\" with no aria-pressed and no keyboard handler, so its state isn't announced and it is pointer-only, as is Shift+click range saving; `editable`'s switch to the input moves focus but isn't announced, and the input has no label. status-label is plain text."
+    "a11y_notes": "type=\"dropdown\" renders a real .ds-input-dropdown <button> (listen for its ds-input-dropdown-open event); type=\"input\" a real <input type=\"text\">; type=\"link\" a real <a href>. Icon cells use role=\"img\" with an aria-label per icon, since each icon is its own unit; the inlined SVGs carry no separate text. Icons are fetched at runtime relative to the script's own URL (so they work wherever the system is vendored), and need http(s): from file:// the icon slots stay empty. Known gaps: the Save icon toggles on click but stays role=\"img\" with no aria-pressed and no keyboard handler, so its state isn't announced and it is pointer-only, as is Shift+click range saving; `editable`'s switch to the input moves focus but isn't announced, and the input has no label. status-label is plain text. type=\"tag\" is plain inline text (see tag): the label carries the meaning, color only reinforces it."
   },
   {
     "name": "table-footer",

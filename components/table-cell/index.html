@@ -31,6 +31,7 @@
 <link rel="stylesheet" href="../input/style.css">
 <link rel="stylesheet" href="../input-dropdown/style.css">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../tag/style.css">
 
 <div style="display: grid; grid-template-columns: max-content max-content; align-items: center; column-gap: var(--ds-spacing-4); row-gap: var(--ds-spacing-3);">
 
@@ -118,6 +119,11 @@
 </div>
   <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">status-label</span>
 
+<div class="ds-table-cell" data-type="tag">
+<span class="ds-tag" data-type="success" data-subtype="passive">Passed</span>
+</div>
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">tag (tag_type success, passive by default)</span>
+
   <div class="ds-table-row" style="display: contents;">
 <div class="ds-table-cell" data-type="text-active-cell" data-editable>
   <span class="ds-table-cell__text">Editable block text</span>
@@ -135,3 +141,4 @@
 <script src="../input-dropdown/component.js"></script>
 <script src="component.js"></script>
 <script src="../input/component.js"></script>
+<script src="../tag/component.js"></script>
