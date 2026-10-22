@@ -32,7 +32,13 @@
       "name": "content",
       "type": "string",
       "required": false,
-      "description": "Plain text body. A host with richer content writes the same markup around its own content."
+      "description": "Plain text body (used when `items` is not given)."
+    },
+    {
+      "name": "items",
+      "type": "array",
+      "required": false,
+      "description": "Optional list of strings, each rendered as its own paragraph in the body; replaces `content`."
     }
   ],
   "source": "none",
