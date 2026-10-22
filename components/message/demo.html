@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="../inline-mark/style.css">
 <link rel="stylesheet" href="style.css">
 
-<div style="display: flex; flex-direction: column; gap: var(--ds-spacing-5); padding: var(--ds-spacing-6); max-width: 480px;">
+<div style="display: flex; flex-direction: column; gap: var(--ds-spacing-5); padding: var(--ds-spacing-6); max-width: 480px; background-color: var(--ds-color-bg-surface);">
   {% with variant='prompt', label='Task', text='Write a sentence in the past tense with "gehen".' %}{% include "components/message/template.html" %}{% endwith %}
   {% with variant='answer', text='Ich gehe gestern in die Schule.' %}{% include "components/message/template.html" %}{% endwith %}
   {% with variant='prompt', label='Correction', segments=[{'text': 'Ich '}, {'text': 'gehe', 'kind': 'remove'}, {'text': ' '}, {'text': 'ging', 'kind': 'add', 'tooltip': 'Past tense'}, {'text': ' gestern in die Schule.'}] %}{% include "components/message/template.html" %}{% endwith %}
