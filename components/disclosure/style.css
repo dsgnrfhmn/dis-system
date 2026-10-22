@@ -1,0 +1,65 @@
+/*
+  disclosure
+  A native <details>/<summary>: opening, closing, keyboard (Enter, Space)
+  and screen-reader state come from the platform, so there is no script. The
+  summary is a text row with a chevron that turns when open, the title, and a
+  passive caption (for example a count). The chevron is the arrow-down icon as
+  a mask in currentColor. A hairline separates it from what follows.
+  Application design canvas, 2026-10-21; no Figma node.
+*/
+.ds-disclosure {
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+.ds-disclosure__summary {
+  display: flex;
+  align-items: center;
+  column-gap: var(--ds-spacing-3);
+  padding: var(--ds-spacing-cell) 0;
+  cursor: pointer;
+  list-style: none;
+  color: var(--ds-color-text-active);
+  font-family: var(--ds-font-body-text-medium-family);
+  font-size: var(--ds-font-body-text-medium-size);
+  font-weight: var(--ds-font-body-text-medium-weight);
+  line-height: var(--ds-font-body-text-line-height);
+}
+
+.ds-disclosure__summary::-webkit-details-marker {
+  display: none;
+}
+
+.ds-disclosure__summary:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-border-width-default);
+}
+
+.ds-disclosure__chevron {
+  flex: none;
+  width: var(--ds-spacing-5);
+  height: var(--ds-spacing-5);
+  background-color: currentColor;
+  -webkit-mask: url("../../icons/arrow-down.svg") center / 100% 100% no-repeat;
+  mask: url("../../icons/arrow-down.svg") center / 100% 100% no-repeat;
+  transform: rotate(-90deg);
+}
+
+.ds-disclosure[open] > .ds-disclosure__summary > .ds-disclosure__chevron {
+  transform: none;
+}
+
+.ds-disclosure__caption {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  color: var(--ds-color-text-subactive);
+}
+
+.ds-disclosure__body {
+  padding: 0 0 var(--ds-spacing-cell) calc(var(--ds-spacing-5) + var(--ds-spacing-3));
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  color: var(--ds-color-text-active);
+}

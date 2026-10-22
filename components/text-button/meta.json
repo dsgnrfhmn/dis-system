@@ -83,6 +83,12 @@
       "type": "string",
       "required": false,
       "description": "Renders an <a href> (through safe_url) instead of a <button>, for navigation. A disabled link has no href and carries aria-disabled."
+    },
+    {
+      "name": "article",
+      "type": "string",
+      "required": false,
+      "description": "der | die | das: tints an active label by grammatical gender (der keeps accent-1, die row-status-declined-text, das row-status-approved-text). Other values are ignored; only the active status is affected."
     }
   ],
   "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc55",

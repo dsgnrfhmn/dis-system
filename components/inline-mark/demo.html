@@ -1,0 +1,11 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../tooltip/style.css">
+<link rel="stylesheet" href="style.css">
+
+<p style="margin: 0; padding: var(--ds-spacing-8); background-color: var(--ds-color-bg-surface); font-family: var(--ds-font-body-text-family); font-size: var(--ds-font-body-text-size); color: var(--ds-color-text-active);">
+  Ich {% with kind='remove', text='gehe' %}{% include "components/inline-mark/template.html" %}{% endwith %}
+  {% with kind='add', text='ging', tooltip='Präteritum of gehen' %}{% include "components/inline-mark/template.html" %}{% endwith %}
+  gestern in die Schule.
+</p>
+
+<script src="../tooltip/component.js"></script>

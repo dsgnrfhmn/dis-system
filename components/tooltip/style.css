@@ -50,7 +50,9 @@
      scale value. */
   width: max-content;
   max-width: 33vw;
-  white-space: normal;
+  /* pre-line: a line break in data-tooltip starts a new line (label,
+     text, translation); other whitespace still collapses. */
+  white-space: pre-line;
   overflow-wrap: anywhere;
   padding: var(--ds-spacing-cell);
   background-color: var(--ds-color-tooltip-bg);

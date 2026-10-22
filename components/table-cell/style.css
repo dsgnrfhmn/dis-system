@@ -434,6 +434,17 @@
   padding: var(--ds-spacing-cell) var(--ds-spacing-5) var(--ds-spacing-cell) var(--ds-spacing-button-x);
 }
 
+/*
+  tag (not from Penpot): a tag in a row, for a status or a score band. Sized
+  to its content like status-label, so a short chip does not stretch to the
+  column; the tag itself is the unchanged tag component.
+*/
+.ds-table-cell[data-type="tag"] {
+  justify-content: flex-start;
+  flex: none;
+  padding: var(--ds-spacing-cell) var(--ds-spacing-5) var(--ds-spacing-cell) var(--ds-spacing-button-x);
+}
+
 /* ---- text-passive-cell (Penpot "Source"): same layout as the data-cell
    group, but text.subactive -- Penpot's own de-emphasized-secondary-text
    token (see also table-header's info caption and divider's fill).
@@ -521,6 +532,9 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.ds-table-cell__link[data-article="die"] { color: var(--ds-color-row-status-declined-text); }
+.ds-table-cell__link[data-article="das"] { color: var(--ds-color-row-status-approved-text); }
 
 .ds-table-cell__link:hover {
   text-decoration-line: underline;

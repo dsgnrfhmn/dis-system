@@ -35,6 +35,8 @@
   {% with priority='primary', status='active', underline='dotted', label=content | default('Confirm', true), extra_attrs=extra_attrs %}{% include "components/text-button/template.html" %}{% endwith %}
 {% elif _type == 'status-label' %}
   <span class="ds-table-cell__status-label">{{ content | default('Status', true) }}</span>
+{% elif _type == 'tag' %}
+  {% with label=content | default('Tag', true), type=tag_type | default('neutral', true), subtype=tag_subtype | default('passive', true) %}{% include "components/tag/template.html" %}{% endwith %}
 {% elif _type == 'dropdown' %}
   {% if options %}
   <div class="ds-dropdown">
@@ -51,7 +53,7 @@
 {% elif _type == 'input' %}
   {% with value=input_value, placeholder=content | default('Add a note', true) %}{% include "components/input/template.html" %}{% endwith %}
 {% elif _type == 'link' %}
-  <a class="ds-table-cell__link" href="{{ href | default('#', true) | safe_url }}">{{ content | default('open link', true) }}</a>
+  <a class="ds-table-cell__link" href="{{ href | default('#', true) | safe_url }}"{% if article in ['der', 'die', 'das'] %} data-article="{{ article }}"{% endif %}>{{ content | default('open link', true) }}</a>
 {% elif _type == 'empty-state' %}
   <span class="ds-table-cell__text">{{ content | default('Nothing here yet.', true) }}</span>
 {% elif view_label %}

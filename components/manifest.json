@@ -45,6 +45,52 @@
     "a11y_notes": "Rows are <li> inside a <ul class=\"ds-block-list\">; give the list an aria-label. Actions are real buttons; the drag handle is a plain element with a labelled icon (drag and drop has no keyboard equivalent here, the host page must offer one if it matters)."
   },
   {
+    "name": "disclosure",
+    "description": "A section the reader opens and closes: a summary row with a chevron, a title and a passive caption, and a body. Native details element, no script.",
+    "status": "draft",
+    "category": "controls",
+    "variants": [
+      "closed",
+      "open"
+    ],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "default": "Section",
+        "description": "The summary text."
+      },
+      {
+        "name": "caption",
+        "type": "string",
+        "required": false,
+        "description": "Passive text beside the title, for example a count."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Render the section open."
+      },
+      {
+        "name": "content",
+        "type": "string",
+        "required": false,
+        "description": "Plain text body. A host with richer content writes the same markup around its own content."
+      }
+    ],
+    "source": "none",
+    "rationale": "Long pages of secondary content (examples, past mistakes) stay scannable when each part can be folded to one row. The native details and summary elements already give the toggle, the keyboard handling (Enter, Space) and the open state to assistive technology, so the component adds no script. The row shows state twice, by the chevron's turn and by the platform's own open state; the caption carries a count in the passive text color so the title stays the main thing. The chevron is the system's arrow-down icon used as a mask in currentColor, rotated a quarter turn when closed. A hairline under the section follows the other lists. Focus uses the accent outline of the system's other focusable text. No Figma node: taken from the application's design canvas of 2026-10-21.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Native <details>/<summary>: the summary is a focusable button with expanded state, toggled by Enter and Space. The chevron is aria-hidden. Visible focus ring on the summary. Content inside a closed section is not rendered, so it is skipped by assistive technology until opened.",
+    "uses": []
+  },
+  {
     "name": "divider",
     "description": "A single 1px rule for separating two stacked sections (horizontal, Penpot's own instance) or two items in a row, e.g. grouped buttons in a table-header-actions bar (vertical, not from Penpot).",
     "status": "stable",
@@ -423,6 +469,12 @@
         "type": "string",
         "required": false,
         "description": "\"compact\": 56px tabs for a pane head (see rationale); default is the 60px full-width strip."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "description": "Render the tab as an <a href> (through safe_url) so it navigates, e.g. between pages, instead of a button that switches a panel. Keeps role=\"tab\" and aria-selected."
       }
     ],
     "source": "figma:APPFILEKEY#150:16076,150:16077",
@@ -431,7 +483,47 @@
       "light",
       "dark"
     ],
-    "a11y_notes": "A real role=\"tab\" <button>, per the WAI-ARIA tabs pattern. The host wraps the tabs in a role=\"tablist\" container (this component doesn't own that wrapper) and pairs each tab with its role=\"tabpanel\". aria-selected reflects the active prop and is kept in sync on click by component.js. The focus-visible outline (accent-1, 2px, matching table-header's tabs) has no Figma equivalent: static design tools don't model keyboard focus.",
+    "a11y_notes": "A real role=\"tab\" <button>, per the WAI-ARIA tabs pattern. The host wraps the tabs in a role=\"tablist\" container (this component doesn't own that wrapper) and pairs each tab with its role=\"tabpanel\". aria-selected reflects the active prop and is kept in sync on click by component.js. The focus-visible outline (accent-1, 2px, matching table-header's tabs) has no Figma equivalent: static design tools don't model keyboard focus. With href the tab is an <a role=\"tab\">: the WAI-ARIA tabs pattern expects tabs to switch panels in place, so use href only when each tab is a separate page and mark the current one with active.",
+    "uses": []
+  },
+  {
+    "name": "inline-mark",
+    "description": "A run of text inside a sentence that marks a correction: struck-through text to remove, or filled text to add, with an optional tooltip.",
+    "status": "draft",
+    "category": "tags",
+    "variants": [
+      "remove",
+      "add"
+    ],
+    "props": [
+      {
+        "name": "kind",
+        "type": "string",
+        "required": true,
+        "default": "remove",
+        "description": "remove (struck through, system-error-strong) or add (signal-success-light fill, signal-success-strong text, medium weight, dotted underline). Other values fall back to remove."
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "required": true,
+        "default": "word",
+        "description": "The run's text. Plain text."
+      },
+      {
+        "name": "tooltip",
+        "type": "string",
+        "required": false,
+        "description": "Optional explanation; set as data-tooltip, so the tooltip component shows it on hover and focus. Makes the mark focusable (tabindex 0)."
+      }
+    ],
+    "source": "none",
+    "rationale": "Shows a correction in the sentence itself, so a learner sees what changed and where. Two kinds: remove is struck through in the error color; add has a light success fill, the strong success color, medium weight and a dotted underline, so it is distinguishable without color (a struck-through run versus an underlined one). Colors are existing tokens (system-error-strong follows the theme; the signal pair is the palette's own light/strong, like the tag, so the add fill keeps its contrast in both themes). The mark inherits the surrounding font and size and only changes weight for add, so it can sit in any line of text. The tooltip is the existing data-tooltip mechanism; a marked run with a tooltip is focusable so it is reachable by keyboard. No source in Figma: drawn from the application's design canvas of 2026-10-21; no Figma node exists.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Plain inline span. Strike-through and fill are visual only: a screen reader reads the text without saying it was removed or added, so a host should state the change in text nearby (for example a visually hidden 'removed' / 'added', or the corrected sentence in full). The tooltip text is only reachable by hover and focus.",
     "uses": []
   },
   {
@@ -600,6 +692,54 @@
     "a11y_notes": "role=\"status\" so the loading message is announced when the veil is shown; the spinner is aria-hidden. The veil does not trap focus: the host should also mark the area inert while loading if it must not be used."
   },
   {
+    "name": "message",
+    "description": "One turn of a task and answer exchange: a filled prompt panel or an outlined, right-aligned answer, with an optional label and optional inline corrections.",
+    "status": "draft",
+    "category": "cards-layouts",
+    "variants": [
+      "prompt",
+      "answer"
+    ],
+    "props": [
+      {
+        "name": "variant",
+        "type": "string",
+        "required": true,
+        "default": "prompt",
+        "description": "prompt (filled bg-surface-pressed panel) or answer (outlined, right-aligned). Other values fall back to prompt."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "Optional small uppercase caption above the text."
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "required": false,
+        "default": "Message",
+        "description": "The message text. Plain text."
+      },
+      {
+        "name": "segments",
+        "type": "array",
+        "required": false,
+        "description": "Optional list of {text, kind?, tooltip?} replacing `text`. A segment with kind remove or add renders as an inline-mark (with its tooltip); others are plain text."
+      }
+    ],
+    "source": "none",
+    "rationale": "A task and the learner's reply are two voices, so they differ by shape, not only by color: the prompt is a filled panel (bg-surface-pressed), the answer is outlined with the hairline token and aligned to the right. Padding is spacing-5 for both; the text uses the body type, the label the data role in uppercase and text-subactive, so the label reads as a caption. Segments let the same box show a corrected sentence by composing inline-mark; the plain-text path covers every other case. Arrangement of messages in a column (gaps, a pinned input) is the host's layout, not part of this component. No Figma node: taken from the application's design canvas of 2026-10-21.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Plain divs of text; no role. A host that shows a conversation should put the messages in a list or a log region and say who speaks (the label can carry it). Corrections come from inline-mark; see its notes on conveying removed and added text to assistive technology.",
+    "uses": [
+      "inline-mark"
+    ]
+  },
+  {
     "name": "nav-bar",
     "description": "The primary top navigation bar: a workspace switcher (left), the page / section links (center), and a theme toggle (right). A composition shell, like table-row -- it composes real input-dropdown and text-button instances rather than restyling them. It stays pinned to the top of the viewport while the page scrolls (position:sticky, top:0), with an opaque background and a bottom hairline so it stays legible over scrolling content; this is part of the component, so every page that uses it gets the same behavior.",
     "status": "stable",
@@ -655,6 +795,24 @@
         "required": false,
         "default": false,
         "description": "Render the rename field (.ds-page-head__title-input) in place of the title. Same type tokens, no padding or border, so the bar does not change size."
+      },
+      {
+        "name": "actions_left",
+        "type": "array",
+        "required": false,
+        "description": "List of {label, href?, submit?, underline?} rendered as text buttons next to the title, replacing main_action. An empty list renders none. Unset: the single main_action button, as before."
+      },
+      {
+        "name": "actions_right",
+        "type": "array",
+        "required": false,
+        "description": "Same item shape, rendered on the right, replacing the fixed Undo / Download PDF buttons. An empty list renders none. Unset: those two buttons, as before."
+      },
+      {
+        "name": "meta_text",
+        "type": "string",
+        "required": false,
+        "description": "A passive line of text after the left-hand actions (counts, a note). Plain text, not interactive."
       }
     ],
     "source": "figma:APPFILEKEY#150:16217,150:16233,150:16362",
@@ -1074,7 +1232,8 @@
       "dropdown",
       "input",
       "empty-state",
-      "status-label"
+      "status-label",
+      "tag"
     ],
     "props": [
       {
@@ -1082,13 +1241,33 @@
         "type": "string",
         "required": true,
         "default": "text-active-cell",
-        "description": "Which cell kind this renders: checkbox-cell (was Penpot's \"icon\"), icon-cell (was \"saved\" and \"action-icons\", merged into one type that holds any number of icons), date, text-active-cell (was \"title\", \"organisation\" and \"description\", already identical), text-passive-cell (was \"source\"), text-subactive-cell (was \"summary\"), link, 1-action, 2-actions, 3-actions, dropdown, input, empty-state, status-label. See rationale."
+        "description": "Which cell kind this renders: checkbox-cell (was Penpot's \"icon\"), icon-cell (was \"saved\" and \"action-icons\", merged into one type that holds any number of icons), date, text-active-cell (was \"title\", \"organisation\" and \"description\", already identical), text-passive-cell (was \"source\"), text-subactive-cell (was \"summary\"), link, 1-action, 2-actions, 3-actions, dropdown, input, empty-state, status-label, tag. See rationale."
       },
       {
         "name": "content",
         "type": "string",
         "required": false,
-        "description": "The cell's text content, for text-bearing types (date, text-active-cell, text-passive-cell, text-subactive-cell, link, dropdown, input). Not applicable to checkbox-cell, icon-cell, 1-action, 2-actions, 3-actions, or empty-state, which have fixed or composed content. For 1-action/2-actions/3-actions, doubles as the primary (rightmost) button's label."
+        "description": "The cell's text content, for text-bearing types (date, text-active-cell, text-passive-cell, text-subactive-cell, link, dropdown, input, tag). Not applicable to checkbox-cell, icon-cell, 1-action, 2-actions, 3-actions, or empty-state, which have fixed or composed content. For 1-action/2-actions/3-actions, doubles as the primary (rightmost) button's label."
+      },
+      {
+        "name": "tag_type",
+        "type": "string",
+        "required": false,
+        "default": "neutral",
+        "description": "Only for type=\"tag\": the tag's type (accent-1 | accent-2 | accent-3 | success | warning | danger | neutral), passed to the composed tag."
+      },
+      {
+        "name": "tag_subtype",
+        "type": "string",
+        "required": false,
+        "default": "passive",
+        "description": "Only for type=\"tag\": active or passive, passed to the composed tag."
+      },
+      {
+        "name": "article",
+        "type": "string",
+        "required": false,
+        "description": "Only for type=\"link\": der | die | das colors the link by grammatical gender (der keeps accent-1, die row-status-declined-text, das row-status-approved-text). Other values are ignored."
       },
       {
         "name": "checkbox_role",
@@ -1164,9 +1343,10 @@
     "uses": [
       "text-button",
       "input-dropdown",
-      "input"
+      "input",
+      "tag"
     ],
-    "a11y_notes": "type=\"dropdown\" renders a real .ds-input-dropdown <button> (listen for its ds-input-dropdown-open event); type=\"input\" a real <input type=\"text\">; type=\"link\" a real <a href>. Icon cells use role=\"img\" with an aria-label per icon, since each icon is its own unit; the inlined SVGs carry no separate text. Icons are fetched at runtime relative to the script's own URL (so they work wherever the system is vendored), and need http(s): from file:// the icon slots stay empty. Known gaps: the Save icon toggles on click but stays role=\"img\" with no aria-pressed and no keyboard handler, so its state isn't announced and it is pointer-only, as is Shift+click range saving; `editable`'s switch to the input moves focus but isn't announced, and the input has no label. status-label is plain text."
+    "a11y_notes": "type=\"dropdown\" renders a real .ds-input-dropdown <button> (listen for its ds-input-dropdown-open event); type=\"input\" a real <input type=\"text\">; type=\"link\" a real <a href>. Icon cells use role=\"img\" with an aria-label per icon, since each icon is its own unit; the inlined SVGs carry no separate text. Icons are fetched at runtime relative to the script's own URL (so they work wherever the system is vendored), and need http(s): from file:// the icon slots stay empty. Known gaps: the Save icon toggles on click but stays role=\"img\" with no aria-pressed and no keyboard handler, so its state isn't announced and it is pointer-only, as is Shift+click range saving; `editable`'s switch to the input moves focus but isn't announced, and the input has no label. status-label is plain text. type=\"tag\" is plain inline text (see tag): the label carries the meaning, color only reinforces it."
   },
   {
     "name": "table-footer",
@@ -1495,6 +1675,12 @@
         "required": false,
         "default": "tag",
         "description": "The tag's text."
+      },
+      {
+        "name": "article",
+        "type": "string",
+        "required": false,
+        "description": "der | die | das: chooses the type by grammatical gender (der accent-1, die danger, das success) when `type` is not set. Other values fall back to accent-1."
       }
     ],
     "source": "figma:DSYSTEMFILEKEY#103:4746",
@@ -1591,6 +1777,12 @@
         "type": "string",
         "required": false,
         "description": "Renders an <a href> (through safe_url) instead of a <button>, for navigation. A disabled link has no href and carries aria-disabled."
+      },
+      {
+        "name": "article",
+        "type": "string",
+        "required": false,
+        "description": "der | die | das: tints an active label by grammatical gender (der keeps accent-1, die row-status-declined-text, das row-status-approved-text). Other values are ignored; only the active status is affected."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc55",
@@ -1663,7 +1855,7 @@
         "name": "text",
         "type": "string",
         "required": true,
-        "description": "The tooltip's text. In real usage this is the data-tooltip attribute value on the actual trigger element (a button, an icon span, etc.) -- not a separate component instance."
+        "description": "The tooltip's text. In real usage this is the data-tooltip attribute value on the actual trigger element (a button, an icon span, etc.) -- not a separate component instance. A line break in the text (a newline in the attribute value) starts a new line in the bubble, so one tooltip can carry a label, a text and a translation."
       },
       {
         "name": "label",

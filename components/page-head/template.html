@@ -5,10 +5,23 @@
     {% else %}
     <h1 class="ds-page-head__title"{% if editable %} data-editable tabindex="0"{% endif %}>{{ title | default('Set name') }}</h1>
     {% endif %}
+    {% if actions_left is defined %}
+    {% for a in actions_left %}
+    {% with priority='secondary', status='active', underline=a.underline | default('dotted'), label=a.label, href=a.href, submit=a.submit %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% endfor %}
+    {% else %}
     {% with priority='secondary', status='active', underline='dotted', label=main_action | default('Save set') %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% endif %}
+    {% if meta_text %}<span class="ds-page-head__meta">{{ meta_text }}</span>{% endif %}
   </div>
   <div class="ds-page-head__right">
+    {% if actions_right is defined %}
+    {% for a in actions_right %}
+    {% with priority='secondary', status='active', underline=a.underline | default('dotted'), label=a.label, href=a.href, submit=a.submit %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% endfor %}
+    {% else %}
     {% with priority='secondary', status='active', underline='dotted', label='Undo' %}{% include "components/text-button/template.html" %}{% endwith %}
     {% with priority='secondary', status='active', underline='dotted', label='Download PDF' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% endif %}
   </div>
 </div>

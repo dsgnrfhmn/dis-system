@@ -1,0 +1,21 @@
+{#
+  message: one turn in a task / answer exchange.
+  variant: prompt (filled, left; the task) | answer (outlined, right-aligned)
+  label: optional small uppercase caption above the text (e.g. "Task").
+  text: plain text. segments: optional list of {text, kind?, tooltip?}; when
+  given it replaces `text`, and a segment with kind remove | add renders as
+  an inline-mark.
+#}
+{% set _variant = variant if variant in ['prompt', 'answer'] else 'prompt' %}
+<div class="ds-message" data-variant="{{ _variant }}">
+  {% if label %}<div class="ds-message__label">{{ label }}</div>{% endif %}
+  <div class="ds-message__text">
+  {%- if segments -%}
+    {%- for seg in segments -%}
+      {%- if seg.kind in ['remove', 'add'] -%}
+        {%- with kind=seg.kind, text=seg.text, tooltip=seg.tooltip -%}{%- include "components/inline-mark/template.html" -%}{%- endwith -%}
+      {%- else -%}{{ seg.text }}{%- endif -%}
+    {%- endfor -%}
+  {%- else -%}{{ text | default('Message', true) }}{%- endif -%}
+  </div>
+</div>

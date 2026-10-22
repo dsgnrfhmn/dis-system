@@ -65,4 +65,35 @@
 </button>
 </div>
 
+<div style="display: flex; width: 100%; margin-top: var(--ds-spacing-6);" role="tablist">
+<!--
+  header-tab: one panel in a full-width row of N equal-width tabs (e.g. For
+  You's For Review / Analysed / Archived / Filtered strip). Unlike
+  table-header's own type="2-tabs" (a content-hugging chip holding both
+  labels itself), each header-tab instance is composed independently by the
+  consumer, who wraps N of them in a shared role="tablist" container -- see
+  meta.json rationale for why this couldn't just be a prop-driven extension
+  of table-header's existing 2-tabs variant.
+-->
+<a href="#compose" class="ds-header-tab" role="tab" aria-selected="true">
+  <span class="ds-header-tab__text">
+    <span class="ds-header-tab__label">Compose</span>
+  </span>
+</a>
+<!--
+  header-tab: one panel in a full-width row of N equal-width tabs (e.g. For
+  You's For Review / Analysed / Archived / Filtered strip). Unlike
+  table-header's own type="2-tabs" (a content-hugging chip holding both
+  labels itself), each header-tab instance is composed independently by the
+  consumer, who wraps N of them in a shared role="tablist" container -- see
+  meta.json rationale for why this couldn't just be a prop-driven extension
+  of table-header's existing 2-tabs variant.
+-->
+<a href="#quiz" class="ds-header-tab" role="tab" aria-selected="false">
+  <span class="ds-header-tab__text">
+    <span class="ds-header-tab__label">Quiz</span>
+  </span>
+</a>
+</div>
+
 <script src="component.js"></script>
