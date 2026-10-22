@@ -1106,6 +1106,12 @@
         "description": "Only for type=\"tag\": active or passive, passed to the composed tag."
       },
       {
+        "name": "article",
+        "type": "string",
+        "required": false,
+        "description": "Only for type=\"link\": der | die | das colors the link by grammatical gender (der keeps accent-1, die row-status-declined-text, das row-status-approved-text). Other values are ignored."
+      },
+      {
         "name": "checkbox_role",
         "type": "string",
         "required": false,
@@ -1511,6 +1517,12 @@
         "required": false,
         "default": "tag",
         "description": "The tag's text."
+      },
+      {
+        "name": "article",
+        "type": "string",
+        "required": false,
+        "description": "der | die | das: chooses the type by grammatical gender (der accent-1, die danger, das success) when `type` is not set. Other values fall back to accent-1."
       }
     ],
     "source": "figma:DSYSTEMFILEKEY#103:4746",
@@ -1607,6 +1619,12 @@
         "type": "string",
         "required": false,
         "description": "Renders an <a href> (through safe_url) instead of a <button>, for navigation. A disabled link has no href and carries aria-disabled."
+      },
+      {
+        "name": "article",
+        "type": "string",
+        "required": false,
+        "description": "der | die | das: tints an active label by grammatical gender (der keeps accent-1, die row-status-declined-text, das row-status-approved-text). Other values are ignored; only the active status is affected."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc55",

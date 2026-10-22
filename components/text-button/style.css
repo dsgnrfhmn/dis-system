@@ -228,6 +228,11 @@ a.ds-text-button {
   text-decoration-style: solid;
 }
 
+/* article: der | die | das tint an active label by grammatical gender, with
+   the existing accent / row-status tokens (der keeps the accent). */
+.ds-text-button[data-status="active"][data-article="die"] { color: var(--ds-color-row-status-declined-text); }
+.ds-text-button[data-status="active"][data-article="das"] { color: var(--ds-color-row-status-approved-text); }
+
 .ds-text-button[data-status="loading"] {
   color: var(--ds-color-system-warning);
   cursor: progress;

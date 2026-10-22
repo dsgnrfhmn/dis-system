@@ -82,6 +82,11 @@
   {% with type='status-label', content='Submitted' %}{% include "components/table-cell/template.html" %}{% endwith %}
   <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">status-label</span>
 
+  {% for art in ['der', 'die', 'das'] %}
+  {% with type='link', content=art ~ ' Haus', article=art, href='#' %}{% include "components/table-cell/template.html" %}{% endwith %}
+  <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">link article={{ art }}</span>
+  {% endfor %}
+
   {% with type='tag', content='Passed', tag_type='success' %}{% include "components/table-cell/template.html" %}{% endwith %}
   <span class="ds-table-cell__text" style="color: var(--ds-color-text-subactive);">tag (tag_type success, passive by default)</span>
 

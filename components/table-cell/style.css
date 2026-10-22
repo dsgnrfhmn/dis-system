@@ -533,6 +533,9 @@
   overflow: hidden;
 }
 
+.ds-table-cell__link[data-article="die"] { color: var(--ds-color-row-status-declined-text); }
+.ds-table-cell__link[data-article="das"] { color: var(--ds-color-row-status-approved-text); }
+
 .ds-table-cell__link:hover {
   text-decoration-line: underline;
 }

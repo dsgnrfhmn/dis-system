@@ -50,6 +50,12 @@
       "description": "Only for type=\"tag\": active or passive, passed to the composed tag."
     },
     {
+      "name": "article",
+      "type": "string",
+      "required": false,
+      "description": "Only for type=\"link\": der | die | das colors the link by grammatical gender (der keeps accent-1, die row-status-declined-text, das row-status-approved-text). Other values are ignored."
+    },
+    {
       "name": "checkbox_role",
       "type": "string",
       "required": false,

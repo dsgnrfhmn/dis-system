@@ -53,7 +53,7 @@
 {% elif _type == 'input' %}
   {% with value=input_value, placeholder=content | default('Add a note', true) %}{% include "components/input/template.html" %}{% endwith %}
 {% elif _type == 'link' %}
-  <a class="ds-table-cell__link" href="{{ href | default('#', true) | safe_url }}">{{ content | default('open link', true) }}</a>
+  <a class="ds-table-cell__link" href="{{ href | default('#', true) | safe_url }}"{% if article in ['der', 'die', 'das'] %} data-article="{{ article }}"{% endif %}>{{ content | default('open link', true) }}</a>
 {% elif _type == 'empty-state' %}
   <span class="ds-table-cell__text">{{ content | default('Nothing here yet.', true) }}</span>
 {% elif view_label %}
