@@ -1,0 +1,45 @@
+/*
+  message
+  One turn of an exchange: a prompt (filled panel, the task given) or an
+  answer (outlined, aligned to the right, the learner's reply). Shared
+  shape: padding spacing-5, a label line in the data role, text in body type.
+  The filled panel uses bg-surface-pressed and the outline the hairline
+  token, so the two are told apart without color. Application design
+  canvas, 2026-10-21; no Figma node.
+*/
+.ds-message {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: var(--ds-spacing-5);
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--ds-spacing-2);
+  color: var(--ds-color-text-active);
+  overflow-wrap: anywhere;
+}
+
+.ds-message[data-variant="prompt"] {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-message[data-variant="answer"] {
+  align-self: flex-end;
+  text-align: right;
+  background-color: var(--ds-color-bg-surface);
+  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+.ds-message__label {
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+  text-transform: uppercase;
+  color: var(--ds-color-text-subactive);
+}
+
+.ds-message__text {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+}

@@ -1,0 +1,48 @@
+{
+  "name": "message",
+  "description": "One turn of a task and answer exchange: a filled prompt panel or an outlined, right-aligned answer, with an optional label and optional inline corrections.",
+  "status": "draft",
+  "category": "cards-layouts",
+  "variants": [
+    "prompt",
+    "answer"
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "string",
+      "required": true,
+      "default": "prompt",
+      "description": "prompt (filled bg-surface-pressed panel) or answer (outlined, right-aligned). Other values fall back to prompt."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "Optional small uppercase caption above the text."
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "default": "Message",
+      "description": "The message text. Plain text."
+    },
+    {
+      "name": "segments",
+      "type": "array",
+      "required": false,
+      "description": "Optional list of {text, kind?, tooltip?} replacing `text`. A segment with kind remove or add renders as an inline-mark (with its tooltip); others are plain text."
+    }
+  ],
+  "source": "none",
+  "rationale": "A task and the learner's reply are two voices, so they differ by shape, not only by color: the prompt is a filled panel (bg-surface-pressed), the answer is outlined with the hairline token and aligned to the right. Padding is spacing-5 for both; the text uses the body type, the label the data role in uppercase and text-subactive, so the label reads as a caption. Segments let the same box show a corrected sentence by composing inline-mark; the plain-text path covers every other case. Arrangement of messages in a column (gaps, a pinned input) is the host's layout, not part of this component. No Figma node: taken from the application's design canvas of 2026-10-21.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "Plain divs of text; no role. A host that shows a conversation should put the messages in a list or a log region and say who speaks (the label can carry it). Corrections come from inline-mark; see its notes on conveying removed and added text to assistive technology.",
+  "uses": [
+    "inline-mark"
+  ]
+}
