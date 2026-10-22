@@ -163,3 +163,10 @@
   overflow-x: auto;
   scrollbar-width: thin;
 }
+
+/* An empty picker is as tall as one with pictures (maintainer, 2026-10-22): the block that says
+   "No images here" takes the height of a card (160px, gallery-image), so the step does not
+   jump when pictures appear. */
+.ds-gallery-picker .ds-empty-state[data-size="block"] {
+  min-height: calc(var(--ds-spacing-9) * 4);
+}

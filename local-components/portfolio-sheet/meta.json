@@ -1,6 +1,6 @@
 {
   "name": "portfolio-sheet",
-  "description": "One 842x599 sheet of a portfolio document, drawn to Figma's 'Design template' section: main (title, year, one picture), work, detail (portrait picture, caption at its side), multi (2x2), exhibition (wide photo), text and more-text (one 300px column). The same markup is the dashboard preview and, later, the PDF page.",
+  "description": "One 842x599 sheet of a portfolio document, drawn to Figma's 'Design template' section: main (title, year, one picture), work, detail (portrait picture, caption at its side), multi (a 2x2 grid of the works after the first, a caption per picture), exhibition (two photos side by side, a caption under each), text and more-text (one 300px column). The same markup is the dashboard preview and, later, the PDF page.",
   "status": "draft",
   "category": "cards-layouts",
   "listed": false,
@@ -41,7 +41,13 @@
       "type": "array",
       "required": false,
       "default": [],
-      "description": "Pictures as {src, alt, prefix, label, suffix, lines}. One for main, work and exhibition, four for multi. The caption block is built from the first one: prefix + label (medium weight) + suffix, then one line each."
+      "description": "Pictures as {src, alt, prefix, label, suffix, lines}. One for main, work, detail and exhibition. The caption block is built from the first one: prefix + label (medium weight) + suffix, then one line each. Not used by multi, see slots."
+    },
+    {
+      "name": "slots",
+      "type": "array",
+      "required": false,
+      "description": "multi (cells 0..3) and exhibition (cells 0..1) only: {cell, image}, image as in images or null for an empty cell. Left to right, top to bottom. Each filled cell is an <img data-cell>, each empty one a .ds-portfolio-sheet__slot in the same box. multi: one caption per filled cell, stacked in cell order; exhibition: a caption under each picture (data-cell). A cell can be addressed by its number (drag and drop later)."
     },
     {
       "name": "paragraphs",
@@ -59,7 +65,7 @@
     }
   ],
   "source": "figma:APPFILEKEY/328:19053",
-  "rationale": "Read off the Figma section 'Design template' (node 328:19053, one frame per layout, all 842x599). Every offset is the Figma value as a multiple of one 842nd of the sheet's width (--u, a container-query unit), so the sheet is the identical drawing in a 400px pane and at 842px in print, and the preview can never drift from the exported page. Paper is white with black text in both themes: it is a document, and print must not depend on the app theme. Pictures are never cropped (object-fit: contain, maintainer 2026-10-11), the exhibition photo included, so portrait and landscape pictures of any proportion fit a slot; the host chooses work, detail, multi or exhibition from the picture's proportions. In detail (328:18918) the picture sits against its caption and the page number stays black, since Figma's white number assumes a full-bleed picture. Type is Bodoni Moda Bold for the title and Karla Light / Medium for text and captions, as in Figma; neither is a dis-system token yet, so the stacks live in this component with local() @font-face and fall back to a system serif / sans-serif until the files are self-hosted. The multi sheet's empty-cell fill is Figma's raw #3E3F36, which has no variable: base-800 is used.",
+  "rationale": "Read off the Figma section 'Design template' (node 328:19053, one frame per layout, all 842x599). Every offset is the Figma value as a multiple of one 842nd of the sheet's width (--u, a container-query unit), so the sheet is the identical drawing in a 400px pane and at 842px in print, and the preview can never drift from the exported page. Paper is white with black text in both themes: it is a document, and print must not depend on the app theme. Pictures are never cropped (object-fit: contain, maintainer 2026-10-11), the exhibition photo included, so portrait and landscape pictures of any proportion fit a slot; the host chooses work, detail, multi or exhibition from the picture's proportions. In detail (328:18918) the picture sits against its caption and the page number stays black, since Figma's white number assumes a full-bleed picture. Type is Bodoni Moda Bold for the title and Karla Light / Medium for text and captions, as in Figma; neither is a dis-system token yet, so the stacks live in this component with local() @font-face and fall back to a system serif / sans-serif until the files are self-hosted. The multi sheet's empty-cell fill is Figma's raw #3E3F36, which has no variable: base-800 is used. Multi cells are addressed by data-cell, not by sibling order, so an empty cell leaves the others in place (maintainer, 2026-10-22: first work on main, the rest in a 2x2 grid whatever their shape, a manual placement later). Exhibition photos: two to a sheet, side by side, 361 x 440 cells with a caption under each (maintainer, 2026-10-22); not in Figma's template, so the 50px margins and 20px gap are the page's own.",
   "themes_supported": [
     "light",
     "dark"

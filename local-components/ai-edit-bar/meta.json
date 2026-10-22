@@ -1,0 +1,16 @@
+{
+  "name": "ai-edit-bar",
+  "description": "A row right under a pane's head with a text input and a button to its right that sends what was typed. Emits ds-ai-edit-submit with the prompt, ds-ai-edit-close on Escape; the host does the work.",
+  "status": "draft",
+  "category": "controls",
+  "listed": false,
+  "variants": ["edit", "regenerate"],
+  "props": [
+    {"name": "label", "type": "string", "required": true, "description": "The button's label: \"Edit\" first, \"Regenerate\" when pressing it runs the last request again."},
+    {"name": "placeholder", "type": "string", "required": false, "description": "Hint in the empty input."}
+  ],
+  "source": "none",
+  "rationale": "Requested by the maintainer (2026-10-22) for Edit with AI on the Portfolio page: a block as high as the pane head (Header Preview, Included projects), holding an Input and a button to its right. No Figma node exists for it, so source is none. It reuses the input (filled) and text-button (secondary, regular weight, dotted underline: it acts within the page) as they are; only the row is new: head height (spacing-9 + spacing-5), head side padding (spacing-6), bg-surface, and the table hairline at the bottom. [data-busy] disables sending twice. Staged in local-components until the maintainer confirms it goes into dis-system.",
+  "themes_supported": ["light", "dark"],
+  "a11y_notes": "The input needs an aria-label from the host (no visible label); the button is a native button. Enter sends, Escape closes. Busy state is also set on the controls with disabled, so it is announced."
+}

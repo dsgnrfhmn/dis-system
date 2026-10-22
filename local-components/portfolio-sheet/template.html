@@ -4,7 +4,10 @@
   title: main only, the project name
   subtitle: main only, the year line under the title
   images: list of {src, alt, prefix, label, suffix, lines}; main / work /
-          exhibition take one, multi four. The caption is the first image's.
+          exhibition take one. The caption is the first image's.
+  slots: multi (cells 0..3) and exhibition (cells 0..1) only, list of {cell, image},
+         image as above or none for an empty cell. multi: one caption per filled cell,
+         stacked in cell order. exhibition: a caption under each picture.
   paragraphs: text and more-text, list of strings
   page: the number printed bottom left
   note: missing only
@@ -14,10 +17,34 @@
     <h3 class="ds-portfolio-sheet__title">{{ title }}</h3>
     {% if subtitle %}<p class="ds-portfolio-sheet__subtitle">{{ subtitle }}</p>{% endif %}
   {% endif %}
+  {% if layout == 'multi' or layout == 'exhibition' %}
+    {% for slot in slots | default([]) %}
+      {% if slot.image %}<img class="ds-portfolio-sheet__image" data-cell="{{ slot.cell }}" src="{{ slot.image.src }}" alt="{{ slot.image.alt | default('') }}">
+      {% else %}<div class="ds-portfolio-sheet__slot" data-cell="{{ slot.cell }}"></div>{% endif %}
+    {% endfor %}
+    {% if layout == 'multi' %}
+    <div class="ds-portfolio-sheet__caption">
+      {% for slot in slots | default([]) if slot.image %}
+        <div class="ds-portfolio-sheet__caption-item">
+          <p>{{ slot.image.prefix }}<b>{{ slot.image.label }}</b>{{ slot.image.suffix }}</p>
+          {% for line in slot.image.lines | default([]) %}<p>{{ line }}</p>{% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      {% for slot in slots | default([]) if slot.image %}
+        <div class="ds-portfolio-sheet__caption" data-cell="{{ slot.cell }}">
+          <p>{{ slot.image.prefix }}<b>{{ slot.image.label }}</b>{{ slot.image.suffix }}</p>
+          {% for line in slot.image.lines | default([]) %}<p>{{ line }}</p>{% endfor %}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% else %}
   {% for image in images | default([]) %}
     <img class="ds-portfolio-sheet__image" src="{{ image.src }}" alt="{{ image.alt | default('') }}">
   {% endfor %}
-  {% if images | default([]) | length and layout != 'text' and layout != 'more-text' %}
+  {% endif %}
+  {% if layout != 'multi' and layout != 'exhibition' and images | default([]) | length and layout != 'text' and layout != 'more-text' %}
     {% set cap = images[0] %}
     <div class="ds-portfolio-sheet__caption">
       <p>{{ cap.prefix }}<b>{{ cap.label }}</b>{{ cap.suffix }}</p>

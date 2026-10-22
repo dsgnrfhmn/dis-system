@@ -1,0 +1,45 @@
+/*
+  ai-edit-bar (STAGED in local-components, awaiting the maintainer's confirmation per the consumer's
+  CLAUDE.md "new element" rule).
+
+  One row for a prompt right under a pane's head: an input that takes the text, a text button
+  to its right that sends it. Same height as the pane head above it
+  (spacing-9 + spacing-5, Figma 56px), same side padding and surface, closed off
+  from what follows by the same hairline. It is `hidden` until the host opens it.
+  It only emits ds-ai-edit-submit and ds-ai-edit-close (component.js); what a
+  prompt does is the host's business. While the host works, [data-busy] disables
+  both controls so the same prompt cannot be sent twice.
+*/
+
+.ds-ai-edit-bar {
+  flex: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: var(--ds-spacing-6);
+  box-sizing: border-box;
+  height: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
+  padding: 0 var(--ds-spacing-6);
+  background-color: var(--ds-color-bg-surface);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
+}
+
+.ds-ai-edit-bar[hidden] {
+  display: none;
+}
+
+.ds-ai-edit-bar__input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ds-ai-edit-bar__button {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* The header button that opens the bar (class ds-ai-edit-bar__toggle, a text-button) is
+   magenta while the bar is open (aria-expanded). Underline and hover brackets follow it. */
+.ds-ai-edit-bar__toggle[data-status="active"][aria-expanded="true"] {
+  color: var(--ds-color-accent-secondary);
+}

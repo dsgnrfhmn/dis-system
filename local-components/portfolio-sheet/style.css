@@ -134,20 +134,36 @@
   height: calc(var(--u) * 494);
 }
 
-.ds-portfolio-sheet[data-layout="work"] .ds-portfolio-sheet__caption,
-.ds-portfolio-sheet[data-layout="exhibition"] .ds-portfolio-sheet__caption {
+.ds-portfolio-sheet[data-layout="work"] .ds-portfolio-sheet__caption {
   left: calc(var(--u) * 50);
   top: calc(var(--u) * 510);
   width: calc(var(--u) * 700);
 }
 
-/* ---- exhibition: wide photo, full sheet width ---- */
-.ds-portfolio-sheet[data-layout="exhibition"] .ds-portfolio-sheet__image {
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: calc(var(--u) * 494);
-  object-position: center;
+/* ---- exhibition: two photos side by side, a caption under each (maintainer, 2026-10-22) ----
+   Cells are addressed by data-cell like multi (0 left, 1 right); the caption carries the
+   same data-cell as its picture. Not in Figma's template: a 20px gap, 50px margins, the
+   page's own. */
+.ds-portfolio-sheet[data-layout="exhibition"] .ds-portfolio-sheet__image,
+.ds-portfolio-sheet[data-layout="exhibition"] .ds-portfolio-sheet__slot {
+  top: calc(var(--u) * 50);
+  width: calc(var(--u) * 361);
+  height: calc(var(--u) * 440);
+  background-color: var(--ds-color-base-800);
+  object-position: center bottom;
+}
+
+.ds-portfolio-sheet[data-layout="exhibition"] .ds-portfolio-sheet__caption {
+  top: calc(var(--u) * 506);
+  width: calc(var(--u) * 361);
+}
+
+.ds-portfolio-sheet[data-layout="exhibition"] [data-cell="0"] {
+  left: calc(var(--u) * 50);
+}
+
+.ds-portfolio-sheet[data-layout="exhibition"] [data-cell="1"] {
+  left: calc(var(--u) * 431);
 }
 
 /* ---- detail: portrait or square picture, caption at its side (Figma
@@ -167,38 +183,46 @@
   width: calc(var(--u) * 160);
 }
 
-/* ---- multi: four pictures, 2 x 2, caption to their left ---- */
-.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image {
+/* ---- multi: four cells, 2 x 2, a caption per picture to their left ----
+   Cells are addressed by data-cell (0..3, left to right, top to bottom), not by
+   position among the siblings, so an empty cell never shifts the others and a cell
+   can be moved to by its number later. A filled cell is an <img>, an empty one a
+   .ds-portfolio-sheet__slot: the same box in the same fill. */
+.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image,
+.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__slot {
   width: calc(var(--u) * 244.484);
   height: calc(var(--u) * 244.484);
   background-color: var(--ds-color-base-800);
   object-position: center;
 }
 
-.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image:nth-of-type(1) {
+.ds-portfolio-sheet[data-layout="multi"] [data-cell="0"] {
   left: calc(var(--u) * 293.395);
   top: calc(var(--u) * 50);
 }
 
-.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image:nth-of-type(2) {
+.ds-portfolio-sheet[data-layout="multi"] [data-cell="1"] {
   left: calc(var(--u) * 547.913);
   top: calc(var(--u) * 50);
 }
 
-.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image:nth-of-type(3) {
+.ds-portfolio-sheet[data-layout="multi"] [data-cell="2"] {
   left: calc(var(--u) * 293.395);
   top: calc(var(--u) * 304.516);
 }
 
-.ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image:nth-of-type(4) {
+.ds-portfolio-sheet[data-layout="multi"] [data-cell="3"] {
   left: calc(var(--u) * 547.913);
   top: calc(var(--u) * 304.516);
 }
 
+/* One caption per picture, stacked in cell order, bottom of the left column, above the
+   page number. */
 .ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__caption {
   left: calc(var(--u) * 50);
-  top: calc(var(--u) * 496);
+  bottom: calc(var(--u) * 40);
   width: calc(var(--u) * 220);
+  gap: calc(var(--u) * 8);
   text-align: right;
 }
 

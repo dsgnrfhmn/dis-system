@@ -22,11 +22,12 @@
 
   {% set layout = "multi" %}{% set page = 4 %}
   {% set images = [{"src": pic, "label": "Untitled Series", "suffix": ", 2024", "lines": ["Annex", "\u00a9 Jane Roe"]}] %}
-  {% set images = [images[0], images[0], images[0], images[0]] %}
+  {% set slots = [{"cell": 0, "image": images[0]}, {"cell": 1, "image": images[0]}, {"cell": 2, "image": images[0]}, {"cell": 3, "image": none}] %}
   {% include "local-components/portfolio-sheet/template.html" %}
 
   {% set layout = "exhibition" %}{% set page = 5 %}
-  {% set images = [{"src": pic, "prefix": "Exhibition view of ", "label": "Untitled Series", "suffix": ", 2023", "lines": ["Gallery One, Springfield (XX)", "© John Doe"]}] %}
+  {% set show = {"src": pic, "prefix": "Exhibition view of ", "label": "Untitled Series", "suffix": ", 2023", "lines": ["Gallery One, Springfield (XX)", "© John Doe"]} %}
+  {% set slots = [{"cell": 0, "image": show}, {"cell": 1, "image": show}] %}
   {% include "local-components/portfolio-sheet/template.html" %}
 
   {% set layout = "text" %}{% set page = 6 %}{% set images = [] %}
