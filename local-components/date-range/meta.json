@@ -1,0 +1,23 @@
+{
+  "name": "date-range",
+  "description": "Pick a span of days on a one-month calendar (Monday first), or with a quick preset (Today, This week, This weekend, Next 7 / 30 days). Inline, or as a popover under a trigger. Emits ds-date-range-change with start / end (YYYY-MM-DD, inclusive) or null.",
+  "status": "draft",
+  "category": "inputs",
+  "listed": false,
+  "variants": ["inline", "popover"],
+  "props": [
+    {"name": "id", "type": "string", "required": false, "description": "The panel's id; a popover trigger's aria-controls points at it."},
+    {"name": "start", "type": "string", "required": false, "description": "First day of the current range, YYYY-MM-DD."},
+    {"name": "end", "type": "string", "required": false, "description": "Last day of the current range, YYYY-MM-DD (defaults to start)."},
+    {"name": "min", "type": "string", "required": false, "description": "First day that can be picked, YYYY-MM-DD; earlier days are disabled and the previous-month arrow stops at its month."},
+    {"name": "max", "type": "string", "required": false, "description": "Last day that can be picked, YYYY-MM-DD."},
+    {"name": "presets", "type": "boolean", "required": false, "default": true, "description": "false hides the preset column."},
+    {"name": "popover", "type": "boolean", "required": false, "default": false, "description": "true renders the panel hidden, floating under its trigger (a button with data-date-range-trigger and aria-controls); a click outside, Escape or a finished range closes it."},
+    {"name": "label", "type": "string", "required": false, "default": "Date range", "description": "The panel's accessible name."}
+  ],
+  "source": "none",
+  "rationale": "Requested by the maintainer (2026-10-23) to filter a consumer's EVENTS table by date: no Figma node exists, so source is none and every value is composed from existing tokens. The panel takes dropdown-menu's look (bg-surface, 1px input-border-hover edge, no shadow, no radius, 10px off its trigger), since it opens the same way from a table header. Presets are text-buttons (secondary, dotted: they change the view, they don't navigate), the current one on bg-surface-pressed, table-header-cell's active-filter fill (a bolder weight would widen the panel). Days are 40px squares (spacing-9), an icon-only button's box, so the grid is a regular pointer target and never reflows; state is fill, as in tables: in range bg-row-selected, start / end accent-1 with text-inverced (the gallery-image badge's pair), hover bg-surface-pressed, today a thin dark-passive inset ring so it is findable without reading as selected, days of the neighbouring months and days outside min / max in text-inactive (the latter disabled). Two clicks make a range in either order; while only the start is set, hovering previews the range, so the second click is aimed. One month is shown with arrows: the EVENTS horizon is 60 days, so two months side by side would double the panel for little. An unfinished pick is dropped when the panel closes. Staged in local-components until the maintainer confirms it goes into dis-system.",
+  "themes_supported": ["light", "dark"],
+  "uses": ["text-button"],
+  "a11y_notes": "The panel is a labelled group; the days are a grid of buttons with roving tabindex (one Tab stop), each labelled with its full date, aria-selected inside the range and aria-current=date for today. Arrow keys move a day / a week, Home / End to the week's ends, PageUp / PageDown a month; Enter / Space pick. The month label is aria-live. A popover trigger gets aria-haspopup and aria-expanded; Escape closes the popover and returns focus to the trigger."
+}

@@ -1,0 +1,15 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../../components/text-button/style.css">
+<link rel="stylesheet" href="style.css">
+<!-- Inline: the panel as it shows open. Popover: a trigger opening a hidden panel under it. -->
+<div style="display: flex; flex-wrap: wrap; gap: var(--ds-spacing-8); align-items: flex-start; padding: var(--ds-spacing-6); background: var(--ds-color-bg-surface);">
+  {% with id='date-range-demo' %}{% include "local-components/date-range/template.html" %}{% endwith %}
+  <div style="position: relative;">
+    <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-date-range-trigger aria-controls="date-range-demo-popover">Dates</button>
+    {% with id='date-range-demo-popover', popover=true %}{% include "local-components/date-range/template.html" %}{% endwith %}
+  </div>
+</div>
+<script src="../../components/text-button/component.js"></script>
+<script src="component.js"></script>

@@ -1,0 +1,39 @@
+{#
+  date-range: pick a span of days (start and end, both inclusive) on a
+  one-month calendar, or with a quick preset. STAGED in local-components.
+
+  Props (all optional):
+  - id: the panel's id (a trigger's aria-controls points at it).
+  - start, end: the current range, YYYY-MM-DD; none = no range.
+  - min, max: the first / last day that can be picked, YYYY-MM-DD.
+  - presets: false hides the preset column (default true).
+  - popover: true renders the panel hidden and floating under its trigger;
+    a host button with data-date-range-trigger and aria-controls="<id>"
+    opens and closes it (component.js).
+
+  The day grid, the month label and the range summary are drawn by
+  component.js from the data-* attributes, so the markup here is the frame
+  only: presets, the month head, an empty grid, the footer.
+#}
+{% set _presets = presets if presets is defined else true %}
+<div class="ds-date-range"{% if id %} id="{{ id }}"{% endif %} role="group" aria-label="{{ label | default('Date range') }}"{% if start %} data-start="{{ start }}"{% endif %}{% if end %} data-end="{{ end }}"{% endif %}{% if min %} data-min="{{ min }}"{% endif %}{% if max %} data-max="{{ max }}"{% endif %}{% if popover %} data-popover hidden{% endif %}>
+  {% if _presets %}
+  <div class="ds-date-range__presets" role="group" aria-label="Quick ranges">
+    {% for preset in [('today', 'Today'), ('week', 'This week'), ('weekend', 'This weekend'), ('next7', 'Next 7 days'), ('next30', 'Next 30 days')] %}
+    {% with priority='secondary', status='active', underline='dotted', label=preset[1], extra_attrs='data-preset="' ~ preset[0] ~ '"' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="ds-date-range__calendar">
+    <div class="ds-date-range__head">
+      <button type="button" class="ds-date-range__step" data-step="-1" aria-label="Previous month"><span class="ds-date-range__step-icon" aria-hidden="true"></span></button>
+      <span class="ds-date-range__month" aria-live="polite"></span>
+      <button type="button" class="ds-date-range__step" data-step="1" aria-label="Next month"><span class="ds-date-range__step-icon" aria-hidden="true"></span></button>
+    </div>
+    <div class="ds-date-range__grid" role="grid"></div>
+    <div class="ds-date-range__foot">
+      <span class="ds-date-range__summary">Any date</span>
+      {% with priority='secondary', status='active', underline='dotted', label='Clear', extra_attrs='data-date-range-clear' %}{% include "components/text-button/template.html" %}{% endwith %}
+    </div>
+  </div>
+</div>
