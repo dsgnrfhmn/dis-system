@@ -1,28 +1,33 @@
 {#
-  portfolio-sheet: one sheet of a portfolio (842 x 599, Figma 328:19053).
-  layout: main | work | multi | exhibition | text | more-text | missing
-  title: main only, the project name
-  subtitle: main only, the year line under the title
-  images: list of {src, alt, prefix, label, suffix, lines}; main / work /
-          exhibition take one. The caption is the first image's.
-  slots: multi (cells 0..3) and exhibition (cells 0..1) only, list of {cell, image},
-         image as above or none for an empty cell. multi: one caption per filled cell,
-         stacked in cell order. exhibition: a caption under each picture.
-  paragraphs: text and more-text, list of strings
-  page: the number printed bottom left
+  portfolio-sheet: one sheet of a portfolio (842 x 599), the page types of the
+  artist's own portfolio PDF.
+  layout: band | side | figure-side | grid-side | grid | full | figure | text | missing
+  title, subtitle: band, side, figure-side, grid-side: the project name and its year
+  paragraphs: side, figure-side, grid-side (under the title) and text, list of strings
+  images: list of {src, alt, prefix, label, suffix, lines}; band, side,
+          figure-side, full and figure take one, captioned under or over it
+  slots: grid-side and grid only (cells 0..3), list of {cell, image}, image as
+         above or none for an empty cell. grid stacks one caption per filled cell
+         on the left; grid-side has none.
   note: missing only
 #}
-<div class="ds-portfolio-sheet" data-layout="{{ layout | default('main') }}">
-  {% if layout | default('main') == 'main' %}
-    <h3 class="ds-portfolio-sheet__title">{{ title }}</h3>
-    {% if subtitle %}<p class="ds-portfolio-sheet__subtitle">{{ subtitle }}</p>{% endif %}
+{% set layout = layout | default('band') %}
+<div class="ds-portfolio-sheet" data-layout="{{ layout }}">
+  {% if layout in ['band', 'side', 'figure-side', 'grid-side'] %}
+    <div class="ds-portfolio-sheet__column">
+      <h3 class="ds-portfolio-sheet__title">{{ title }}</h3>
+      {% if subtitle %}<p class="ds-portfolio-sheet__subtitle">{{ subtitle }}</p>{% endif %}
+      {% if paragraphs %}<div class="ds-portfolio-sheet__text">{% for p in paragraphs %}<p>{{ p }}</p>{% endfor %}</div>{% endif %}
+    </div>
+  {% elif paragraphs %}
+    <div class="ds-portfolio-sheet__text">{% for p in paragraphs %}<p>{{ p }}</p>{% endfor %}</div>
   {% endif %}
-  {% if layout == 'multi' or layout == 'exhibition' %}
+  {% if layout in ['grid-side', 'grid'] %}
     {% for slot in slots | default([]) %}
       {% if slot.image %}<img class="ds-portfolio-sheet__image" data-cell="{{ slot.cell }}" src="{{ slot.image.src }}" alt="{{ slot.image.alt | default('') }}">
       {% else %}<div class="ds-portfolio-sheet__slot" data-cell="{{ slot.cell }}"></div>{% endif %}
     {% endfor %}
-    {% if layout == 'multi' %}
+    {% if layout == 'grid' %}
     <div class="ds-portfolio-sheet__caption">
       {% for slot in slots | default([]) if slot.image %}
         <div class="ds-portfolio-sheet__caption-item">
@@ -31,29 +36,14 @@
         </div>
       {% endfor %}
     </div>
-    {% else %}
-      {% for slot in slots | default([]) if slot.image %}
-        <div class="ds-portfolio-sheet__caption" data-cell="{{ slot.cell }}">
-          <p>{{ slot.image.prefix }}<b>{{ slot.image.label }}</b>{{ slot.image.suffix }}</p>
-          {% for line in slot.image.lines | default([]) %}<p>{{ line }}</p>{% endfor %}
-        </div>
-      {% endfor %}
     {% endif %}
-  {% else %}
-  {% for image in images | default([]) %}
-    <img class="ds-portfolio-sheet__image" src="{{ image.src }}" alt="{{ image.alt | default('') }}">
-  {% endfor %}
-  {% endif %}
-  {% if layout != 'multi' and layout != 'exhibition' and images | default([]) | length and layout != 'text' and layout != 'more-text' %}
+  {% elif images | default([]) | length %}
     {% set cap = images[0] %}
-    <div class="ds-portfolio-sheet__caption">
+    <img class="ds-portfolio-sheet__image" src="{{ cap.src }}" alt="{{ cap.alt | default('') }}">
+    <div class="ds-portfolio-sheet__caption"{% if layout in ['band', 'side', 'full'] %} data-on="image"{% endif %}>
       <p>{{ cap.prefix }}<b>{{ cap.label }}</b>{{ cap.suffix }}</p>
       {% for line in cap.lines | default([]) %}<p>{{ line }}</p>{% endfor %}
     </div>
   {% endif %}
-  {% if paragraphs %}
-    <div class="ds-portfolio-sheet__text">{% for p in paragraphs %}<p>{{ p }}</p>{% endfor %}</div>
-  {% endif %}
   {% if layout == 'missing' %}<p class="ds-portfolio-sheet__note">{{ note }}</p>{% endif %}
-  {% if page %}<p class="ds-portfolio-sheet__page-number">page {{ page }}</p>{% endif %}
 </div>

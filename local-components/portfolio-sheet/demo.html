@@ -1,39 +1,51 @@
 <!--
-  portfolio-sheet demo: the layouts the dashboard chooses. Pictures are inline
-  SVG data URIs so the demo needs no assets. Sheets are shown at 400px wide;
-  the drawing scales with its container.
+  portfolio-sheet demo: every layout once, with made-up content. Pictures are
+  inline SVG data URIs so the demo needs no assets. Sheets are shown at 420px
+  wide; the drawing scales with its container.
 -->
 <link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../../fonts/karla.css">
 <link rel="stylesheet" href="style.css">
 
-{% set pic = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='545' height='364'%3E%3Crect width='545' height='364' fill='%23999'/%3E%3C/svg%3E" %}
-{% set portrait = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='400'%3E%3Crect width='300' height='400' fill='%23999'/%3E%3C/svg%3E" %}
-<div style="display: grid; grid-template-columns: repeat(2, 400px); gap: var(--ds-spacing-6); padding: var(--ds-spacing-6);">
-  {% set layout = "main" %}{% set title = "Untitled Series" %}{% set subtitle = "2024" %}{% set page = 1 %}
-  {% set images = [{"src": pic, "label": "Untitled Series", "suffix": ", 2024", "lines": ["Annex", "© Jane Roe"]}] %}
+{% set wide = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1500' height='1000'%3E%3Crect width='1500' height='1000' fill='%23889'/%3E%3C/svg%3E" %}
+{% set tall = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='1400'%3E%3Crect width='1000' height='1400' fill='%23998'/%3E%3C/svg%3E" %}
+{% set light = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1500' height='1000'%3E%3Crect width='1500' height='1000' fill='%23eee'/%3E%3C/svg%3E" %}
+{% set work = {"src": wide, "label": "Untitled Series", "suffix": ", 2024", "lines": ["Oil on canvas, 80 x 60 cm © Jane Roe"]} %}
+{% set show = {"src": wide, "prefix": "Exhibition view, ", "label": "Untitled Series", "suffix": " (solo exhibition), 2023", "lines": ["Gallery One, Springfield (XX) © John Doe"]} %}
+{% set text = ["A made-up project, used as demo text for the sheet layout. It runs over a few lines so the column can be seen.", "Nothing in this paragraph describes real work."] %}
+<div style="display: grid; grid-template-columns: repeat(2, 420px); gap: var(--ds-spacing-6); padding: var(--ds-spacing-6);">
+  {% set layout = "band" %}{% set title = "Untitled Series" %}{% set subtitle = "2024" %}{% set paragraphs = [] %}
+  {% set images = [show] %}
   {% include "local-components/portfolio-sheet/template.html" %}
 
-  {% set layout = "work" %}{% set title = "" %}{% set subtitle = "" %}{% set page = 2 %}
+  {% set layout = "side" %}{% set paragraphs = text %}
+  {% set images = [{"src": tall, "label": "Untitled Series", "suffix": ", 2024", "lines": ["© Jane Roe"]}] %}
   {% include "local-components/portfolio-sheet/template.html" %}
 
-  {% set layout = "detail" %}{% set page = 3 %}
-  {% set images = [{"src": portrait, "label": "Untitled Series", "suffix": ", 2024", "lines": ["Annex", "\u00a9 Jane Roe"]}] %}
+  {% set layout = "figure-side" %}{% set images = [work] %}
   {% include "local-components/portfolio-sheet/template.html" %}
 
-  {% set layout = "multi" %}{% set page = 4 %}
-  {% set images = [{"src": pic, "label": "Untitled Series", "suffix": ", 2024", "lines": ["Annex", "\u00a9 Jane Roe"]}] %}
-  {% set slots = [{"cell": 0, "image": images[0]}, {"cell": 1, "image": images[0]}, {"cell": 2, "image": images[0]}, {"cell": 3, "image": none}] %}
+  {% set layout = "grid-side" %}
+  {% set slots = [{"cell": 0, "image": work}, {"cell": 1, "image": work}, {"cell": 2, "image": work}, {"cell": 3, "image": work}] %}
   {% include "local-components/portfolio-sheet/template.html" %}
 
-  {% set layout = "exhibition" %}{% set page = 5 %}
-  {% set show = {"src": pic, "prefix": "Exhibition view of ", "label": "Untitled Series", "suffix": ", 2023", "lines": ["Gallery One, Springfield (XX)", "© John Doe"]} %}
-  {% set slots = [{"cell": 0, "image": show}, {"cell": 1, "image": show}] %}
+  {% set layout = "grid" %}{% set title = "" %}{% set subtitle = "" %}{% set paragraphs = [] %}
+  {% set slots = [{"cell": 0, "image": work}, {"cell": 1, "image": work}, {"cell": 2, "image": none}, {"cell": 3, "image": none}] %}
   {% include "local-components/portfolio-sheet/template.html" %}
 
-  {% set layout = "text" %}{% set page = 6 %}{% set images = [] %}
-  {% set paragraphs = ["A made-up project, used as demo text for the sheet layout.", "Nothing in this paragraph describes real work."] %}
+  {% set layout = "full" %}{% set images = [show] %}
   {% include "local-components/portfolio-sheet/template.html" %}
 
-  {% set layout = "more-text" %}{% set page = 7 %}
+  {% set layout = "full" %}{% set images = [{"src": light, "prefix": "Exhibition view, ", "label": "Untitled Series", "suffix": ", 2023", "lines": ["A bright picture: the caption turns black"]}] %}
+  {% include "local-components/portfolio-sheet/template.html" %}
+
+  {% set layout = "figure" %}{% set images = [{"src": tall, "prefix": "Documentation of ", "label": "Untitled Series", "suffix": ", 2022", "lines": ["© John Doe"]}] %}
+  {% include "local-components/portfolio-sheet/template.html" %}
+
+  {% set layout = "text" %}{% set images = [] %}{% set paragraphs = text %}
+  {% include "local-components/portfolio-sheet/template.html" %}
+
+  {% set layout = "missing" %}{% set paragraphs = [] %}{% set note = "Untitled Series: this project could not be read." %}
   {% include "local-components/portfolio-sheet/template.html" %}
 </div>
+<script src="component.js"></script>
