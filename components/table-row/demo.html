@@ -279,6 +279,23 @@
   {'type': 'tag', 'content': '7', 'tag_type': 'success'}
 ] %}{% include "components/table-row/template.html" %}{% endwith %}
 
+<div class="ds-table-cell__text" style="color: var(--ds-color-text-subactive); margin: var(--ds-spacing-4) 0 var(--ds-spacing-1);">Row href (the whole row opens the word), plain links, a mark and a highlighted cell</div>
+{% with href='#word-haus', cells=[
+  {'type': 'checkbox-cell'},
+  {'type': 'link', 'content': 'das Haus', 'article': 'das', 'href': '#word-haus', 'plain': true},
+  {'type': 'text-active-cell', 'content': 'house'}
+] %}{% include "components/table-row/template.html" %}{% endwith %}
+{% with href='#word-gehen', cells=[
+  {'type': 'checkbox-cell'},
+  {'type': 'link', 'content': 'gehen', 'href': '#word-gehen', 'plain': true},
+  {'type': 'text-active-cell', 'content': 'to go'}
+] %}{% include "components/table-row/template.html" %}{% endwith %}
+{% with cells=[
+  {'type': 'text-passive-cell', 'content': 'Dat.'},
+  {'type': 'text-active-cell', 'content': 'der Wohnung', 'mark': 'x1', 'mark_label': 'wrong once'},
+  {'type': 'text-active-cell', 'content': 'einen', 'highlight': 'success'}
+] %}{% include "components/table-row/template.html" %}{% endwith %}
+
 </div>
 
 <script src="../text-button/component.js"></script>

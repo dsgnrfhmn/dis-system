@@ -1,0 +1,47 @@
+/*
+  correction-row
+  One proposed correction, read left to right as "this -> that": the found
+  text struck through in the subdued color (it is being replaced, not wrong
+  in the reader's own writing, so not the error color), an arrow, the
+  proposal in medium weight, the meta line in the data role, and the
+  decision at the row's end. A hairline under each row, like table rows; the
+  row height is the canvas's 45px, the system's row with spacing-4 padding.
+  Application design canvas, 2026-10-23; no Figma node.
+*/
+.ds-correction-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--ds-spacing-4);
+  row-gap: var(--ds-spacing-2);
+  /* 45px: the canvas's row height. */
+  min-height: 45px;
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  line-height: var(--ds-font-body-text-line-height);
+  color: var(--ds-color-text-active);
+}
+
+.ds-correction-row__found {
+  color: var(--ds-color-text-subactive);
+  text-decoration-line: line-through;
+}
+
+.ds-correction-row__proposal {
+  font-family: var(--ds-font-body-text-medium-family);
+  font-weight: var(--ds-font-body-text-medium-weight);
+}
+
+.ds-correction-row__meta {
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+  color: var(--ds-color-text-subactive);
+}
+
+.ds-correction-row__end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}

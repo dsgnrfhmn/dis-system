@@ -1,0 +1,43 @@
+/*
+  note-item
+  One noted word in a side list: three lines -- the word (gender color, the
+  same der / die / das mapping table-cell's article links use), the
+  translation, the form it had in the text in the data role -- and the state
+  at the end. Padded like a pane's content (spacing-4 / spacing-6), a
+  border-table hairline under each item.
+  Application design canvas, 2026-10-23; no Figma node.
+*/
+.ds-note-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  column-gap: var(--ds-spacing-3);
+  padding: var(--ds-spacing-4) var(--ds-spacing-6);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  line-height: var(--ds-font-body-text-line-height);
+  color: var(--ds-color-text-active);
+}
+
+.ds-note-item__text {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--ds-spacing-2);
+  min-width: 0;
+}
+
+.ds-note-item__label { overflow-wrap: anywhere; }
+.ds-note-item__label[data-article="der"] { color: var(--ds-color-accent-1); }
+.ds-note-item__label[data-article="die"] { color: var(--ds-color-row-status-declined-text); }
+.ds-note-item__label[data-article="das"] { color: var(--ds-color-row-status-approved-text); }
+
+.ds-note-item__form {
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+  color: var(--ds-color-text-subactive);
+}
+
+/* The action sits on the first line, flush right, like the canvas. */
+.ds-note-item > .ds-text-button { padding-top: 0; padding-right: 0; }

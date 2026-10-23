@@ -23,10 +23,31 @@
       "required": false,
       "default": null,
       "description": "visible: data-preview=\"visible\" on the [data-tooltip] element shows the tooltip without hover/focus. Documentation only (the site's Toasters and tooltips card); never in product UI."
+    },
+    {
+      "name": "data-tooltip-mode",
+      "type": "string",
+      "required": false,
+      "default": null,
+      "description": "On <html> or <body>, not on a trigger: 'layer' shows every tooltip on one fixed layer in <body> after a delay instead of the trigger's own ::after, so no overflow ancestor cuts it."
+    },
+    {
+      "name": "data-tooltip-delay",
+      "type": "number",
+      "required": false,
+      "default": 500,
+      "description": "With layer mode: milliseconds before a tooltip shows."
+    },
+    {
+      "name": "window.dsTooltip",
+      "type": "object",
+      "required": false,
+      "default": null,
+      "description": "Layer mode only: show(box, text) shows host text at a box ({getBoundingClientRect}), e.g. a word inside a text; hide(); isTrigger(element); delay (ms)."
     }
   ],
   "source": "none",
-  "rationale": "Styled to Figma D_SYSTEM's Tooltip (node 103:4777): a dark fill (tooltip-bg, Figma base/900), a 1px tooltip-border, white body text, 10px padding, no shadow -- dark so it reads as a layer above the page in either theme. Pure CSS, no JavaScript: content: attr(data-tooltip) reads the trigger's own attribute, and :hover / :focus-visible are the whole show condition, because a tooltip's dismissal is exactly 'stop hovering or focusing'. Adding JS (as popup and dropdown-menu need for their open state) would be complexity with no functional gain. Figma's text+icon variant is not implemented: the bubble is the host's ::after, and a host's ::before is already taken (text-button's hover brackets), so there is no free box for an icon. Known limitation: no viewport clamping, so a trigger near a container edge can render the bubble partly off-screen. Rendering verified in light and dark themes. Update 2026-09-30 (explicit request): the bubble is at most a third of the viewport wide and wraps, and a small component.js keeps it on screen -- shifted inside the viewport edges, flipped below when it only fits there, and its text cut at the last word that fits, with an ellipsis, when it fits on neither side. Show/hide stays pure CSS; the script only measures and sets --_tooltip-shift, data-tooltip-placement and data-tooltip-clamped on the trigger.",
+  "rationale": "Styled to Figma D_SYSTEM's Tooltip (node 103:4777): a dark fill (tooltip-bg, Figma base/900), a 1px tooltip-border, white body text, 10px padding, no shadow -- dark so it reads as a layer above the page in either theme. Pure CSS, no JavaScript: content: attr(data-tooltip) reads the trigger's own attribute, and :hover / :focus-visible are the whole show condition, because a tooltip's dismissal is exactly 'stop hovering or focusing'. Adding JS (as popup and dropdown-menu need for their open state) would be complexity with no functional gain. Figma's text+icon variant is not implemented: the bubble is the host's ::after, and a host's ::before is already taken (text-button's hover brackets), so there is no free box for an icon. Known limitation: no viewport clamping, so a trigger near a container edge can render the bubble partly off-screen. Rendering verified in light and dark themes. Update 2026-09-30 (explicit request): the bubble is at most a third of the viewport wide and wraps, and a small component.js keeps it on screen -- shifted inside the viewport edges, flipped below when it only fits there, and its text cut at the last word that fits, with an ellipsis, when it fits on neither side. Show/hide stays pure CSS; the script only measures and sets --_tooltip-shift, data-tooltip-placement and data-tooltip-clamped on the trigger. Layer mode, 2026-10-23 (opt-in, so existing pages keep the immediate CSS bubble): the bubble drawn as the trigger's ::after is cut by any overflow ancestor (a scrolling table, a clamped cell) and covered by a sticky bar; one fixed layer sized to the trigger shows the same bubble above everything, with the same placement and shift logic. The delay keeps a page full of labelled buttons from flashing tooltips while the pointer crosses it. A text-button, header-tab or sort button whose label carries data-tooltip shows it for the whole button. window.dsTooltip (2026-10-23): a host that explains words inside running text (no element per word) shows its text on the same layer, so there is one tooltip mechanism and one look on the page.",
   "themes_supported": [
     "light",
     "dark"

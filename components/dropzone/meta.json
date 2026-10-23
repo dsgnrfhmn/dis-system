@@ -1,0 +1,22 @@
+{
+  "name": "dropzone",
+  "description": "A file field that takes one file by drag and drop or the file picker, then shows that file as a row (thumbnail, name, size) with Remove. A real file input, so the form submits it without script.",
+  "status": "draft",
+  "category": "inputs",
+  "variants": [],
+  "props": [
+    {"name": "id", "type": "string", "required": false, "default": "ds-dropzone-demo", "description": "The file input's id (the drop area is its <label>)."},
+    {"name": "name", "type": "string", "required": false, "default": "file", "description": "The file input's form name."},
+    {"name": "accept", "type": "string", "required": false, "default": null, "description": "The input's accept list (e.g. image/jpeg,image/png). A hint for the picker only; the server still checks the file."},
+    {"name": "required", "type": "boolean", "required": false, "default": false, "description": "The input is required."},
+    {"name": "prompt", "type": "string", "required": false, "default": "Drop a photo here or", "description": "Text before the choose link."},
+    {"name": "choose_label", "type": "string", "required": false, "default": "choose a file", "description": "The inline text-button-styled label that opens the picker."},
+    {"name": "hint", "type": "string", "required": false, "default": "JPG or PNG, up to 20 MB", "description": "Formats and size limit, in the data role. '' renders none."},
+    {"name": "remove_label", "type": "string", "required": false, "default": "Remove", "description": "Label of the file row's button."}
+  ],
+  "source": "none",
+  "rationale": "From the application design canvas (2026-10-23), no Figma node. The dashed border-width-default edge in object-dark-passive is the drop-target sign (a solid edge would read as a panel); it and the add icon turn accent-1 while a file is dragged over, the only feedback a drag has. The fill is bg-surface-pressed: the canvas used the base-50 primitive, which has no themed token (it would stay light in the dark theme); flagged and replaced. The whole area is the input's <label>, so a click anywhere opens the picker and the input stays the single real control (keyboard focus shows the accent outline on the area). The choose text uses text-button's look (secondary, dotted: it stays on the page) without being a second button. Subdued texts use text-subactive (the canvas used the base-750 primitive, not themed). After a choice the area gives way to one file row so the reader sees what will be sent: thumbnail 64x84 (the canvas's size, a portrait page), name, size, pixel size, Remove. The thumbnail is a local object URL; nothing is uploaded by this component. Rendering verified in light and dark themes.",
+  "themes_supported": ["light", "dark"],
+  "a11y_notes": "The control is a native <input type=file> labelled by the whole area, so it is focusable and announced with the prompt text. Remove returns focus to the input. Drag and drop is an addition, never the only way.",
+  "uses": ["text-button"]
+}

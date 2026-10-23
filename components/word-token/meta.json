@@ -1,0 +1,23 @@
+{
+  "name": "word-token",
+  "description": "A word inside a running text that the reader can look up: its state (in notes, already in the word list, open) shows as fill or underline, a hover or focus opens a card with lemma, translation and a grammar note, and a click is reported to the host. Also renders the legend of the states.",
+  "status": "draft",
+  "category": "controls",
+  "variants": ["none", "noted", "known", "active", "legend"],
+  "props": [
+    {"name": "text", "type": "string", "required": true, "default": "word", "description": "The word as it stands in the text. Plain text."},
+    {"name": "state", "type": "string", "required": false, "default": "none", "description": "none | noted (bg-text-highlight fill) | known (dotted accent underline) | active (pressed fill and hairline outline: the word whose card is shown)."},
+    {"name": "id", "type": "string", "required": false, "default": "ds-word-token-demo", "description": "Unique per page; the card gets <id>-card and the word aria-describedby it."},
+    {"name": "card", "type": "object", "required": false, "default": null, "description": "{kicker, title, text, gloss, note, hint}, each optional plain text: kicker (lemma and part of speech, data role, uppercase), title (translation, heading-5), text (an explanation, body), gloss (second language, italic, subdued), note (grammar note for this occurrence, under a rule), hint (what a click does). No card: no popup."},
+    {"name": "interactive", "type": "boolean", "required": false, "default": true, "description": "true: a <button> that emits ds-word-token-click { text }. false: a focusable span whose card only explains (a marked run in a corrected sentence)."},
+    {"name": "extra_attrs", "type": "string", "required": false, "default": null, "description": "Raw attributes on the word element (data-* ids the host reads back). Page-author markup only, never end-user data."},
+    {"name": "mode", "type": "string", "required": false, "default": null, "description": "'legend' renders the legend instead of a word."},
+    {"name": "legend", "type": "array", "required": false, "default": null, "description": "With mode='legend': list of {state, sample, label}."},
+    {"name": "legend_hint", "type": "string", "required": false, "default": null, "description": "With mode='legend': a last item explaining hover and click."}
+  ],
+  "source": "none",
+  "rationale": "From the application design canvas (2026-10-23), no Figma node. A word must stay part of its sentence, so it keeps the text's font, size and color; its relation to the reader's lists is shown by fill or line, never by color alone: noted is the bg-text-highlight fill (a marker pen over picked words), known is the dotted accent-1 underline (the system's 'clickable, stays on this view' line, CLAUDE.md Interaction conventions), active is bg-surface-pressed with a border-default hairline (the word the open card belongs to). Hover adds the pressed fill, the same hover the system's rows use, instead of brackets, which would push the sentence's words apart; that is the stated reason this control does not reuse text-button's bracket affordance. The card is tooltip's dark layer (tooltip-bg / -border / -text) so it reads as above the page in both themes, structured into the roles the content has (kicker in the data role at 60% opacity, translation in heading-5, gloss italic, note under a shadow-high rule, hint), because a plain tooltip's single text cannot carry them. Width 380px is the canvas's card width, clamped to the viewport. component.js places the card at fixed coordinates under the word (above when there is no room) so no scrolling container cuts it; without script it opens under the word by CSS. The 300 ms hover delay keeps cards from flashing while the pointer crosses a text; keyboard focus opens at once. Rendering verified in light and dark themes.",
+  "themes_supported": ["light", "dark"],
+  "a11y_notes": "An interactive word is a native <button> (Tab, Enter, Space); a non-interactive one is a focusable span. The card is role=tooltip and linked by aria-describedby, so a screen reader reads it after the word. Escape closes the card. The card never takes the pointer, so it cannot cover the next word's hover.",
+  "uses": []
+}

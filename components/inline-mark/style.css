@@ -29,6 +29,17 @@
   text-underline-offset: var(--ds-spacing-1);
 }
 
+/* uncertain (2026-10-23): a run that text recognition was unsure of, to be
+   checked by the reader -- the for-review row-status pair (themed: the
+   signal-warning primitives stay light in the dark theme, under light text)
+   as a fill plus an outline, so it reads as "look here" in both themes and is told apart from
+   a correction (add/remove) by shape, not color alone. */
+.ds-inline-mark[data-kind="uncertain"] {
+  padding: 0 var(--ds-spacing-1);
+  background-color: var(--ds-color-row-status-for-review-bg);
+  outline: var(--ds-border-width-default) solid var(--ds-color-row-status-for-review-text);
+}
+
 .ds-inline-mark[data-tooltip]:focus-visible {
   outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
   outline-offset: var(--ds-border-width-default);

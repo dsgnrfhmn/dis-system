@@ -1,0 +1,36 @@
+/*
+  progress-bar
+  A 4px line (spacing-1) under a flow's header: the track in the hairline
+  color, the filled part accent-1. Width comes from data-value through
+  component.js (a host passes data, never a style value). Indeterminate
+  (no value): the fill is a third of the track and moves across it, the only
+  sign a long local task is still running; no motion with reduced motion.
+  Application design canvas, 2026-10-23; no Figma node.
+*/
+.ds-progress-bar {
+  position: relative;
+  height: var(--ds-spacing-1);
+  background-color: var(--ds-color-border-table);
+  overflow: hidden;
+}
+
+.ds-progress-bar__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--_progress, 0%);
+  background-color: var(--ds-color-accent-1);
+}
+
+.ds-progress-bar[data-indeterminate] .ds-progress-bar__fill {
+  width: 33%;
+  animation: ds-progress-bar-run 1.2s linear infinite;
+}
+
+@keyframes ds-progress-bar-run {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(300%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-progress-bar[data-indeterminate] .ds-progress-bar__fill { animation: none; width: 100%; opacity: 0.4; }
+}

@@ -1,0 +1,27 @@
+{#
+  correction-row: one proposed correction in a list (a word text recognition
+  was unsure of): the found text struck through, an arrow, the proposal, a
+  meta line (where, how sure), then either two actions (ignore / accept) or,
+  once decided, a tag with the outcome.
+  found / proposal / meta: plain text. state: open | accepted | ignored.
+  ignore_label / accept_label: the actions; accepted_label / ignored_label:
+  the outcome tag. extra_attrs: page-author attributes on the accept button
+  (e.g. name/value of a form submit); ignore_extra_attrs likewise.
+#}
+{% set _state = state if state in ['accepted', 'ignored'] else 'open' %}
+<div class="ds-correction-row" data-state="{{ _state }}">
+  <span class="ds-correction-row__found">{{ found | default('Unterlaqen') }}</span>
+  <span class="ds-correction-row__arrow" aria-hidden="true">&rarr;</span>
+  <span class="ds-correction-row__proposal">{{ proposal | default('Unterlagen') }}</span>
+  {% if meta %}<span class="ds-correction-row__meta">{{ meta }}</span>{% endif %}
+  <span class="ds-correction-row__end">
+    {% if _state == 'open' %}
+    {% with priority='secondary', status='active', underline='dotted', label=ignore_label | default('Ignore'), extra_attrs=ignore_extra_attrs %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with priority='primary', status='active', underline='dotted', label=accept_label | default('Accept'), extra_attrs=extra_attrs %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% elif _state == 'accepted' %}
+    {% with label=accepted_label | default('accepted'), type='success', subtype='passive' %}{% include "components/tag/template.html" %}{% endwith %}
+    {% else %}
+    {% with label=ignored_label | default('ignored'), type='neutral', subtype='passive' %}{% include "components/tag/template.html" %}{% endwith %}
+    {% endif %}
+  </span>
+</div>

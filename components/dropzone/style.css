@@ -1,0 +1,103 @@
+/*
+  dropzone
+  A file field as a drop target: a dashed box (the dashed edge is the "you can
+  drop here" sign, a solid one would read as a panel) on the pressed surface,
+  the add icon, the prompt with an inline "choose a file" text-button look
+  (the whole box is the <label>, so a click anywhere opens the picker), and a
+  hint in the data role. While a file is dragged over it the edge and icon
+  turn accent-1. After a choice the box gives way to one file row: a
+  thumbnail (image files), the name, size and pixel size, and Remove.
+  Application design canvas, 2026-10-23; no Figma node.
+*/
+.ds-dropzone {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  line-height: var(--ds-font-body-text-line-height);
+  color: var(--ds-color-text-active);
+}
+
+.ds-dropzone__area {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: var(--ds-spacing-3);
+  /* 200px: the canvas's drop area height, the component's own dimension. */
+  min-height: 200px;
+  padding: var(--ds-spacing-6);
+  box-sizing: border-box;
+  border: var(--ds-border-width-default) dashed var(--ds-color-object-dark-passive);
+  background-color: var(--ds-color-bg-surface-pressed);
+  text-align: center;
+  cursor: pointer;
+}
+
+.ds-dropzone[data-dragover] .ds-dropzone__area { border-color: var(--ds-color-accent-1); }
+.ds-dropzone[data-dragover] .ds-dropzone__icon { color: var(--ds-color-accent-1); }
+.ds-dropzone__area:has(.ds-dropzone__input:focus-visible) {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+.ds-dropzone__icon {
+  display: inline-flex;
+  width: var(--ds-spacing-8);
+  height: var(--ds-spacing-8);
+  color: var(--ds-color-text-subactive);
+}
+.ds-dropzone__icon svg { width: 100%; height: 100%; }
+
+.ds-dropzone__choose { padding: 0 var(--ds-spacing-1); }
+
+.ds-dropzone__hint,
+.ds-dropzone__meta {
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+  color: var(--ds-color-text-subactive);
+}
+
+/* The real input covers nothing and takes no space, but stays focusable and
+   in the form (not display:none, which some browsers skip in validation). */
+.ds-dropzone__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ds-dropzone__file {
+  display: flex;
+  align-items: center;
+  column-gap: var(--ds-spacing-5);
+  padding: var(--ds-spacing-4) 0;
+  border-top: var(--ds-border-width-thin) solid var(--ds-color-border-table);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
+}
+.ds-dropzone__file[hidden] { display: none; }
+.ds-dropzone[data-has-file] .ds-dropzone__area { display: none; }
+
+/* 64 x 84: the canvas's thumbnail, a portrait page at a glance. */
+.ds-dropzone__thumb {
+  flex: none;
+  width: 64px;
+  height: 84px;
+  box-sizing: border-box;
+  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  background-color: var(--ds-color-bg-surface-pressed);
+  overflow: hidden;
+}
+.ds-dropzone__thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.ds-dropzone__file-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--ds-spacing-2);
+}
+.ds-dropzone__name { overflow-wrap: anywhere; }

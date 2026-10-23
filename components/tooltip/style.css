@@ -103,6 +103,20 @@
   opacity: 1;
 }
 
+/* Layer mode (component.js, data-tooltip-mode="layer" on html/body): the
+   triggers' own bubbles are off and one fixed layer shows the text; it never
+   takes the pointer, and is shown at once (the delay is the script's). */
+:is(html, body)[data-tooltip-mode="layer"] [data-tooltip]:not(.ds-tooltip-layer)::after { display: none; }
+.ds-tooltip-layer {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+}
+.ds-tooltip-layer[data-tooltip]::after {
+  opacity: 1;
+  transition: none;
+}
+
 .ds-tooltip-demo {
   display: inline-block;
   cursor: default;

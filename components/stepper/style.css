@@ -1,0 +1,42 @@
+/*
+  stepper
+  Where the reader is in a short flow: the steps in a row, in the data role
+  (uppercase, the size tables use for labels) so it reads as orientation, not
+  as content. The current step is in the text color and underlined -- the
+  same underline weight as a dotted text-button, but solid and not accent, so
+  it reads as "you are here", not as a link; the others are subactive; a done
+  step carries a check mark drawn in CSS (no check icon in the set).
+  Application design canvas, 2026-10-23; no Figma node.
+*/
+.ds-stepper {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--ds-spacing-6);
+  row-gap: var(--ds-spacing-3);
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+  text-transform: uppercase;
+  color: var(--ds-color-text-subactive);
+}
+
+.ds-stepper__step[data-state="current"] {
+  color: var(--ds-color-text-active);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--ds-border-width-default);
+  text-underline-offset: var(--ds-spacing-2);
+}
+
+/* A check mark: two borders of a rotated box, in the text's own color. */
+.ds-stepper__done {
+  display: inline-block;
+  width: var(--ds-spacing-2);
+  height: var(--ds-spacing-3);
+  margin-left: var(--ds-spacing-2);
+  border-right: var(--ds-border-width-default) solid currentColor;
+  border-bottom: var(--ds-border-width-default) solid currentColor;
+  transform: translateY(calc(var(--ds-spacing-1) * -1)) rotate(45deg);
+}

@@ -112,10 +112,14 @@
   rather than touching "small"'s own value, since neither request was
   about the size-variant relationship.
 */
+/* min-height and wrapping (2026-10-23): a narrow window wraps the row's
+   groups (actions, search) onto further rows instead of widening the page. */
 .ds-header-block[data-size="big"] .ds-header-block__row {
-  height: calc(var(--ds-spacing-9) + var(--ds-spacing-6) + var(--ds-border-width-thin));
+  min-height: calc(var(--ds-spacing-9) + var(--ds-spacing-6) + var(--ds-border-width-thin));
+  flex-wrap: wrap;
   padding: 0 var(--ds-spacing-6);
   gap: 0;
+  row-gap: var(--ds-spacing-3);
   border: 0;
   border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
   background-color: var(--ds-color-bg-surface);

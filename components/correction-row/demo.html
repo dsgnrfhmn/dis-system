@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="../tag/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="max-width: 640px; padding: var(--ds-spacing-8); background-color: var(--ds-color-bg-surface);">
+  {% with found='Unterlaqen', proposal='Unterlagen', meta='Line 4 - 61 % sure' %}{% include "components/correction-row/template.html" %}{% endwith %}
+  {% with found='Mietbescheiniqung', proposal='Mietbescheinigung', meta='Line 6', state='accepted' %}{% include "components/correction-row/template.html" %}{% endwith %}
+  {% with found='Antraq', proposal='Antrag', meta='Line 9', state='ignored' %}{% include "components/correction-row/template.html" %}{% endwith %}
+</div>
+
+<script src="../text-button/component.js"></script>
