@@ -420,5 +420,68 @@
       "$type": "color",
       "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) tooltip, node 103:4777: base/0 text; the same in both themes -- a tooltip is a dark layer over any page"
     }
+  },
+  "tag": {
+    "$description": "Passive tag fill / text per type (components/tag). Light keeps the fixed palette's tints with the strong color as text, as before 2026-10-23.",
+    "accent-1-bg": {
+      "$value": "{accent.primary-light}",
+      "$type": "color",
+      "$description": ""
+    },
+    "accent-1-text": {
+      "$value": "{accent.primary}",
+      "$type": "color",
+      "$description": ""
+    },
+    "accent-2-bg": {
+      "$value": "{accent.secondary-light}",
+      "$type": "color",
+      "$description": ""
+    },
+    "accent-2-text": {
+      "$value": "{accent.secondary}",
+      "$type": "color",
+      "$description": ""
+    },
+    "accent-3-bg": {
+      "$value": "{accent.tertiary-light}",
+      "$type": "color",
+      "$description": ""
+    },
+    "accent-3-text": {
+      "$value": "{accent.tertiary}",
+      "$type": "color",
+      "$description": ""
+    },
+    "success-bg": {
+      "$value": "{signal.success-light}",
+      "$type": "color",
+      "$description": ""
+    },
+    "success-text": {
+      "$value": "{signal.success-strong}",
+      "$type": "color",
+      "$description": ""
+    },
+    "warning-bg": {
+      "$value": "{signal.warning-light}",
+      "$type": "color",
+      "$description": ""
+    },
+    "warning-text": {
+      "$value": "{signal.warning-strong}",
+      "$type": "color",
+      "$description": ""
+    },
+    "danger-bg": {
+      "$value": "{signal.error-light}",
+      "$type": "color",
+      "$description": ""
+    },
+    "danger-text": {
+      "$value": "{signal.error-strong}",
+      "$type": "color",
+      "$description": ""
+    }
   }
 }

@@ -4,12 +4,14 @@
   Active = the type's strong color as fill, white text. Passive = the
   type's light tint as fill, the strong color as text.
 
-  Colors are the raw palette (--ds-color-accent-* / --ds-color-signal-*),
-  exactly Figma's: these are category/status colors whose meaning must not
-  change with the theme, same as the color strips on the site's Colors
-  card. Neutral is the exception: black-on-white would vanish on the dark
-  surface, so neutral uses the theme's text/surface tokens (identical to
-  Figma's neutral/1000, neutral/0 and neutral/100 in light).
+  Active colors are the raw palette (--ds-color-accent-* /
+  --ds-color-signal-*), exactly Figma's: category/status colors whose
+  meaning must not change with the theme. Passive colors are the tag.*
+  tokens: the same hue in both themes, light tints in light and the hue's
+  darkest step in dark (see the passive rules below). Neutral uses the
+  theme's text/surface tokens, since black-on-white would vanish on the
+  dark surface (identical to Figma's neutral/1000, neutral/0 and
+  neutral/100 in light).
 */
 .ds-tag {
   display: inline-flex;
@@ -35,20 +37,18 @@
   color: var(--ds-color-text-inverced);
 }
 
-.ds-tag[data-subtype="passive"][data-type="accent-1"] { background-color: var(--ds-color-accent-primary-light); color: var(--ds-color-accent-primary); }
-.ds-tag[data-subtype="passive"][data-type="accent-2"] { background-color: var(--ds-color-accent-secondary-light); color: var(--ds-color-accent-secondary); }
-/* Dark theme, passive accent-2 (explicit request 2026-09-30, "make the New
-   tag darker for the dark theme"): the raw light tint (#F4ECF5) reads as a
-   glaring light block on the dark surface. Same hue, inverted weight:
-   accent-2-pressed as the fill (magenta.800, #850085 in dark) and the
-   light tint as the text. A deliberate exception to the raw-palette rule
-   in the header comment, like neutral's; the other passive types are
-   unchanged until they get the same request. */
-[data-theme="dark"] .ds-tag[data-subtype="passive"][data-type="accent-2"] { background-color: var(--ds-color-accent-2-pressed); color: var(--ds-color-accent-secondary-light); }
-.ds-tag[data-subtype="passive"][data-type="accent-3"] { background-color: var(--ds-color-accent-tertiary-light); color: var(--ds-color-accent-tertiary); }
-.ds-tag[data-subtype="passive"][data-type="success"] { background-color: var(--ds-color-signal-success-light); color: var(--ds-color-signal-success-strong); }
-.ds-tag[data-subtype="passive"][data-type="warning"] { background-color: var(--ds-color-signal-warning-light); color: var(--ds-color-signal-warning-strong); }
-.ds-tag[data-subtype="passive"][data-type="danger"] { background-color: var(--ds-color-signal-error-light); color: var(--ds-color-signal-error-strong); }
+/* Passive: a tint of the type's hue with the hue as text, per theme from
+   the tag.* tokens (Color-Base-Light / -Dark): light keeps the palette
+   tints, dark uses each hue's darkest step with a light step as text, so a
+   tag stays recognisable without reading as a light block on the dark
+   surface (explicit request 2026-10-23; replaces the 2026-09-30 dark
+   exception that was accent-2's alone). */
+.ds-tag[data-subtype="passive"][data-type="accent-1"] { background-color: var(--ds-color-tag-accent-1-bg); color: var(--ds-color-tag-accent-1-text); }
+.ds-tag[data-subtype="passive"][data-type="accent-2"] { background-color: var(--ds-color-tag-accent-2-bg); color: var(--ds-color-tag-accent-2-text); }
+.ds-tag[data-subtype="passive"][data-type="accent-3"] { background-color: var(--ds-color-tag-accent-3-bg); color: var(--ds-color-tag-accent-3-text); }
+.ds-tag[data-subtype="passive"][data-type="success"] { background-color: var(--ds-color-tag-success-bg); color: var(--ds-color-tag-success-text); }
+.ds-tag[data-subtype="passive"][data-type="warning"] { background-color: var(--ds-color-tag-warning-bg); color: var(--ds-color-tag-warning-text); }
+.ds-tag[data-subtype="passive"][data-type="danger"] { background-color: var(--ds-color-tag-danger-bg); color: var(--ds-color-tag-danger-text); }
 .ds-tag[data-subtype="passive"][data-type="neutral"] {
   background-color: var(--ds-color-bg-surface-pressed);
   color: var(--ds-color-text-subactive);

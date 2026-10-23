@@ -74,6 +74,18 @@
   --ds-color-tooltip-bg: #2E2E2E;
   --ds-color-tooltip-border: #000000;
   --ds-color-tooltip-text: #FFFFFF;
+  --ds-color-tag-accent-1-bg: #E8E8F3;
+  --ds-color-tag-accent-1-text: #0000AD;
+  --ds-color-tag-accent-2-bg: #F4ECF5;
+  --ds-color-tag-accent-2-text: #C614E1;
+  --ds-color-tag-accent-3-bg: #FCEAD9;
+  --ds-color-tag-accent-3-text: #CA7D25;
+  --ds-color-tag-success-bg: #E1EFDF;
+  --ds-color-tag-success-text: #388A2B;
+  --ds-color-tag-warning-bg: #FBF6EC;
+  --ds-color-tag-warning-text: #C7AA14;
+  --ds-color-tag-danger-bg: #F5EDED;
+  --ds-color-tag-danger-text: #CC6161;
 
   /* palette (Base-Primitives: base / accent / signal) */
   --ds-color-base-0: #FFFFFF;
@@ -344,6 +356,18 @@
   --ds-color-input-border-focus: #B95E1D;
   --ds-color-input-icon: #808080;
   --ds-color-header-cell-label: #808080;
+  --ds-color-tag-accent-1-bg: #000080;
+  --ds-color-tag-accent-1-text: #C2C2FF;
+  --ds-color-tag-accent-2-bg: #5C005C;
+  --ds-color-tag-accent-2-text: #FF8FFF;
+  --ds-color-tag-accent-3-bg: #4C2910;
+  --ds-color-tag-accent-3-text: #E7A474;
+  --ds-color-tag-success-bg: #18442E;
+  --ds-color-tag-success-text: #83D8AD;
+  --ds-color-tag-warning-bg: #4E410E;
+  --ds-color-tag-warning-text: #EBD270;
+  --ds-color-tag-danger-bg: #6D181F;
+  --ds-color-tag-danger-text: #EBA3A9;
 
   /* shadow (Base-Shapes, resolved against dark colors) */
   --ds-shadow-tief-1: 1px 1px 0px 0px #909090, -1px -1px 0px 0px #D8D7D4;
