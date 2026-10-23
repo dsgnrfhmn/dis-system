@@ -149,7 +149,6 @@
   top: calc(var(--u) * 50);
   width: calc(var(--u) * 361);
   height: calc(var(--u) * 440);
-  background-color: var(--ds-color-base-800);
   object-position: center bottom;
 }
 
@@ -187,14 +186,16 @@
    Cells are addressed by data-cell (0..3, left to right, top to bottom), not by
    position among the siblings, so an empty cell never shifts the others and a cell
    can be moved to by its number later. A filled cell is an <img>, an empty one a
-   .ds-portfolio-sheet__slot: the same box in the same fill. */
+   .ds-portfolio-sheet__slot: the same box. */
 .ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__image,
 .ds-portfolio-sheet[data-layout="multi"] .ds-portfolio-sheet__slot {
   width: calc(var(--u) * 244.484);
   height: calc(var(--u) * 244.484);
-  background-color: var(--ds-color-base-800);
   object-position: center;
 }
+
+/* No fill in a cell (maintainer, 2026-10-23): the part of a box a picture does not cover,
+   and an empty cell, are transparent, so the sheet shows through. */
 
 .ds-portfolio-sheet[data-layout="multi"] [data-cell="0"] {
   left: calc(var(--u) * 293.395);
