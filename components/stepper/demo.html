@@ -1,0 +1,8 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: grid; gap: var(--ds-spacing-6); padding: var(--ds-spacing-8); background-color: var(--ds-color-bg-surface);">
+  {% for current in [1, 2, 3] %}
+  {% with steps=['Photo', 'Check text', 'Done'], current=current %}{% include "components/stepper/template.html" %}{% endwith %}
+  {% endfor %}
+</div>

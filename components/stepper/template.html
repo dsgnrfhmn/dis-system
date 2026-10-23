@@ -1,0 +1,13 @@
+{#
+  stepper: the steps of a short flow (upload -> check -> done), the current one
+  marked. steps: list of labels; current: 1-based index of the current step.
+  Steps before it are done and carry a check mark after the label; label is
+  the list's aria-label.
+#}
+{% set _steps = steps | default(['Photo', 'Check text', 'Done']) %}
+{% set _current = current | default(1) | int %}
+<ol class="ds-stepper" aria-label="{{ label | default('Steps') }}">
+  {% for step in _steps %}
+  <li class="ds-stepper__step" data-state="{{ 'done' if loop.index < _current else ('current' if loop.index == _current else 'todo') }}"{% if loop.index == _current %} aria-current="step"{% endif %}><span class="ds-stepper__number">{{ loop.index }}</span> {{ step }}{% if loop.index < _current %}<span class="ds-stepper__done" aria-label="{{ done_label | default('done') }}" role="img"></span>{% endif %}</li>
+  {% endfor %}
+</ol>

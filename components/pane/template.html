@@ -1,12 +1,26 @@
+{#
+  content: plain text body (autoescaped). Block markup (a table, a list,
+  paragraphs; 2026-10-23): set body_html with a {% set %} block before the
+  include --
+    {% set body_html %}<p>{{ text }}</p>{% endset %}{% include "components/pane/template.html" %}
+  A block set is markup-safe and its own {{ }} still autoescape; a plain
+  string passed as body_html is escaped like content.
+  action_href: the head's action is a link (e.g. "Close" back to the page
+  without this side pane); dotted like the button, since it stays on the
+  same view. no_action: no action. emphasis: the title at full opacity.
+  caption: '' (or none) renders no caption.
+#}
 <section class="ds-pane" aria-labelledby="{{ id | default('ds-pane-demo') }}-title">
   <div class="ds-pane__head">
     <div class="ds-pane__heading">
-      <span class="ds-pane__title" id="{{ id | default('ds-pane-demo') }}-title">{{ title | default('Included projects') }}</span>
-      <span class="ds-pane__caption">{{ caption | default('4 total') }}</span>
+      <span class="ds-pane__title" id="{{ id | default('ds-pane-demo') }}-title"{% if emphasis %} data-emphasis="true"{% endif %}>{{ title | default('Included projects') }}</span>
+      {% if caption is not defined or caption %}<span class="ds-pane__caption">{{ caption | default('4 total') }}</span>{% endif %}
     </div>
-    {% with priority='secondary', status='active', underline='dotted', label=action | default('Add project') %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% if not no_action %}
+    {% with priority='secondary', status='active', underline='dotted', label=action | default('Add project'), href=action_href %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% endif %}
   </div>
   <div class="ds-pane__body">
-    <div class="ds-pane__scroll">{{ content | default('') }}</div>
+    <div class="ds-pane__scroll">{% if body_html %}{{ body_html }}{% else %}{{ content | default('') }}{% endif %}</div>
   </div>
 </section>

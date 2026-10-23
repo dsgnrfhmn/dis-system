@@ -1,0 +1,31 @@
+{#
+  word-token: one word inside a running text that the reader can look up.
+  text: the word as it stands in the text. state: none | noted (in the
+  reader's notes) | known (already in their word list) | active (the word
+  the card belongs to). id: unique per page, ties the card to the word.
+  card (optional, all fields plain text and optional):
+    kicker -- small caps line (lemma, part of speech);
+    title -- the main line (translation);
+    gloss -- second language, subdued;
+    note -- grammar note for this occurrence, under a rule;
+    hint -- what a click does.
+  interactive (default true): a <button> that emits ds-word-token-click;
+  false: a focusable span (a marked run in a corrected sentence whose card
+  only explains). extra_attrs: page-author attributes on the word (data-
+  ids the host reads back); never end-user data.
+  mode='legend' renders instead a legend of the states: legend is a list of
+  {state, sample, label}.
+#}
+{% if mode == 'legend' %}
+<p class="ds-word-token-legend">
+  {% for item in legend | default([{'state': 'noted', 'sample': 'Word', 'label': 'in notes'}, {'state': 'known', 'sample': 'Word', 'label': 'already in the word list'}]) %}
+  <span class="ds-word-token-legend__item"><span class="ds-word-token" data-state="{{ item.state }}" data-static>{{ item.sample }}</span> {{ item.label }}</span>
+  {% endfor %}
+  {% if legend_hint %}<span class="ds-word-token-legend__item">{{ legend_hint }}</span>{% endif %}
+</p>
+{% else %}
+{% set _id = id | default('ds-word-token-demo') %}
+{% set _state = state if state in ['noted', 'known', 'active'] else 'none' %}
+{% set _interactive = interactive is not defined or interactive %}
+<span class="ds-word-token-wrap">{% if _interactive %}<button type="button" class="ds-word-token" data-state="{{ _state }}"{% if card %} aria-describedby="{{ _id }}-card"{% endif %}{% if extra_attrs %} {{ extra_attrs | safe }}{% endif %}>{{ text | default('word', true) }}</button>{% else %}<span class="ds-word-token" data-state="{{ _state }}" tabindex="0"{% if card %} aria-describedby="{{ _id }}-card"{% endif %}{% if extra_attrs %} {{ extra_attrs | safe }}{% endif %}>{{ text | default('word', true) }}</span>{% endif %}{% if card %}<span class="ds-word-token__card" role="tooltip" id="{{ _id }}-card">{% if card.kicker %}<span class="ds-word-token__kicker">{{ card.kicker }}</span>{% endif %}{% if card.title %}<span class="ds-word-token__title">{{ card.title }}</span>{% endif %}{% if card.text %}<span class="ds-word-token__text">{{ card.text }}</span>{% endif %}{% if card.gloss %}<span class="ds-word-token__gloss">{{ card.gloss }}</span>{% endif %}{% if card.note %}<span class="ds-word-token__note">{{ card.note }}</span>{% endif %}{% if card.hint %}<span class="ds-word-token__hint">{{ card.hint }}</span>{% endif %}</span>{% endif %}</span>
+{% endif %}

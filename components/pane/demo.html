@@ -14,5 +14,11 @@
   {% with id='pane-d', title='Preview', caption='9 Pages', action='Download PDF' %}{% include "components/pane/template.html" %}{% endwith %}
 </div>
 
+<p style="margin: var(--ds-spacing-7) 0 var(--ds-spacing-3); font-family: var(--ds-font-body-text-family); color: var(--ds-color-text-active);">Block body and a Close link (a side pane).</p>
+<div class="ds-split" style="height: 260px; background: var(--ds-color-bg-surface-pressed);">
+  {% set body_html %}<div style="padding: var(--ds-spacing-7) var(--ds-spacing-6); display: grid; gap: var(--ds-spacing-4); font-family: var(--ds-font-body-text-family); color: var(--ds-color-text-active);"><p style="margin: 0;">der Antrag is masculine. In the sentence it is the accusative object.</p><p style="margin: 0;">In the accusative only the masculine changes: ein -> einen.</p></div>{% endset %}
+  {% with id='pane-e', title='Error explained', caption='accusative - masculine', action='Close', action_href='#', emphasis=true %}{% include "components/pane/template.html" %}{% endwith %}
+</div>
+
 <script src="../text-button/component.js"></script>
 <script src="component.js"></script>

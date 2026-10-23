@@ -1,0 +1,8 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="width: 340px; padding: var(--ds-spacing-8); background-color: var(--ds-color-bg-surface);">
+  {% with label='Photo of the letter with uncertain spots marked', regions=[{'x': 52, 'y': 26, 'w': 30, 'h': 5, 'kind': 'uncertain', 'label': 'uncertain: line 4'}, {'x': 30, 'y': 39, 'w': 42, 'h': 5, 'kind': 'accepted', 'label': 'accepted: line 6'}] %}{% include "components/image-regions/template.html" %}{% endwith %}
+</div>
+
+<script src="component.js"></script>

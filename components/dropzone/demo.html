@@ -1,0 +1,10 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="padding: var(--ds-spacing-8); background-color: var(--ds-color-bg-surface); max-width: 560px;">
+  {% with id='dropzone-demo', name='photo', accept='image/jpeg,image/png', prompt='Drop a photo here or', choose_label='choose a file', hint='JPG or PNG - up to 20 MB - one photo per text' %}{% include "components/dropzone/template.html" %}{% endwith %}
+</div>
+
+<script src="../text-button/component.js"></script>
+<script src="component.js"></script>

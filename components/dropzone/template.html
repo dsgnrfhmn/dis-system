@@ -1,0 +1,25 @@
+{#
+  dropzone: a file field you can drop a file on. A real <input type="file">
+  (name, accept, required) inside a <label>, so the form submits the file
+  without script; component.js adds drag and drop and the chosen-file row.
+  id: the input's id; name: its form name; accept: e.g. "image/jpeg,image/png";
+  prompt / choose_label / hint: the visible texts; remove_label: the file
+  row's button; multiple is not supported (one file per field).
+#}
+{% set _id = id | default('ds-dropzone-demo') %}
+<div class="ds-dropzone" data-dropzone>
+  <label class="ds-dropzone__area" for="{{ _id }}">
+    <span class="ds-dropzone__icon" data-icon="add" aria-hidden="true"></span>
+    <span class="ds-dropzone__prompt">{{ prompt | default('Drop a photo here or') }} <span class="ds-text-button ds-dropzone__choose" data-priority="secondary" data-status="active" data-underline="dotted"><span class="ds-text-button__text">{{ choose_label | default('choose a file') }}</span></span></span>
+    {% if hint is not defined or hint %}<span class="ds-dropzone__hint">{{ hint | default('JPG or PNG, up to 20 MB') }}</span>{% endif %}
+    <input class="ds-dropzone__input" type="file" id="{{ _id }}" name="{{ name | default('file') }}"{% if accept %} accept="{{ accept }}"{% endif %}{% if required %} required{% endif %}>
+  </label>
+  <div class="ds-dropzone__file" hidden>
+    <span class="ds-dropzone__thumb" aria-hidden="true"><img alt="" hidden></span>
+    <span class="ds-dropzone__file-text">
+      <span class="ds-dropzone__name"></span>
+      <span class="ds-dropzone__meta"></span>
+    </span>
+    {% with priority='secondary', status='active', underline='dotted', label=remove_label | default('Remove'), extra_attrs='data-dropzone-remove' %}{% include "components/text-button/template.html" %}{% endwith %}
+  </div>
+</div>

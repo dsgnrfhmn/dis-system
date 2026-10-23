@@ -5,9 +5,31 @@
   "category": "navigation",
   "layout": "wide",
   "variants": [],
-  "props": [],
+  "props": [
+    {
+      "name": "nav_links",
+      "type": "array",
+      "required": false,
+      "default": null,
+      "description": "Center links: {label, href, current}."
+    },
+    {
+      "name": "workspace_label",
+      "type": "string",
+      "required": false,
+      "default": "Workspace",
+      "description": "Value of the left dropdown."
+    },
+    {
+      "name": "right_actions",
+      "type": "array",
+      "required": false,
+      "default": [],
+      "description": "Extra actions before the theme toggle: {label, href} is a link; {label, form_action, hidden} is a POST form around a submit button (hidden: name -> value, e.g. a CSRF token)."
+    }
+  ],
   "source": "penpot:7cfc6f3b-95fe-808f-8008-8d3a693d14e4",
-  "rationale": "Layout from Penpot's Nav-bar instance: a flex row, centered, justify-content: space-between; both side slots are flex rows too, so buttons of different heights line up. Box values follow the Figma nav instance: 10px (spacing-cell) padding on all four sides and a 0.5px bottom hairline in object-dark-passive -- raw 0.5px because Figma draws it and --ds-border-width-thin (1px) stays correct for tables. Penpot's column gap of 101px is not reproduced: it is an artifact of a fixed 1240px demo board, and with space-between any explicit gap would be right at exactly one width. Sticky, not fixed: the bar is always the page's first full-width element, so both look the same once scrolled, but sticky keeps it in document flow and content below needs no hand-maintained offset. bg.surface and the hairline keep it legible over content scrolling beneath it.\n\nLeft: a composed input-dropdown at 160px (the width table-cell's dropdown cell uses for the same Penpot source). Center: text-buttons with no gap (Penpot's gap is 0; the buttons' own padding separates them). Which link is primary (current page) is markup the host supplies; Penpot's \"Property 1\" axis only changes which link carries it, so it isn't a style variant. Right: the theme toggle is a real text-button (secondary, active, dotted -- toggling stays on the page) with an icon and a visible label (\"Dark\" / \"Light\"); both name the target theme, the same convention the site's own toggle uses. The label is not sourced from Penpot, whose theme icon is a bare glyph. The theme icons draw a 16-unit circle in a 24-unit viewBox, so a spacing-7 (24px) box reproduces Penpot's 16px glyph. .ds-nav-bar__theme-* classes are kept only as stable selectors for the toggle script and carry no CSS.\n\nNotification dot: .ds-nav-bar__dot inside a nav link is a 12px accent-2 circle at the link's right edge, toggled with hidden -- an unread-updates marker. It is the only round shape in the system; Figma draws it round. Keeping it in sync across pages is the host's concern. Not sourced from the design: the link click-swap and the theme toggle's behavior, without which the current link would never change and the toggle wouldn't toggle. Rendering verified in light and dark themes.",
+  "rationale": "Layout from Penpot's Nav-bar instance: a flex row, centered, justify-content: space-between; both side slots are flex rows too, so buttons of different heights line up. Box values follow the Figma nav instance: 10px (spacing-cell) padding on all four sides and a 0.5px bottom hairline in object-dark-passive -- raw 0.5px because Figma draws it and --ds-border-width-thin (1px) stays correct for tables. Penpot's column gap of 101px is not reproduced: it is an artifact of a fixed 1240px demo board, and with space-between any explicit gap would be right at exactly one width. Sticky, not fixed: the bar is always the page's first full-width element, so both look the same once scrolled, but sticky keeps it in document flow and content below needs no hand-maintained offset. bg.surface and the hairline keep it legible over content scrolling beneath it.\n\nLeft: a composed input-dropdown at 160px (the width table-cell's dropdown cell uses for the same Penpot source). Center: text-buttons with no gap (Penpot's gap is 0; the buttons' own padding separates them). Which link is primary (current page) is markup the host supplies; Penpot's \"Property 1\" axis only changes which link carries it, so it isn't a style variant. Right: the theme toggle is a real text-button (secondary, active, dotted -- toggling stays on the page) with an icon and a visible label (\"Dark\" / \"Light\"); both name the target theme, the same convention the site's own toggle uses. The label is not sourced from Penpot, whose theme icon is a bare glyph. The theme icons draw a 16-unit circle in a 24-unit viewBox, so a spacing-7 (24px) box reproduces Penpot's 16px glyph. .ds-nav-bar__theme-* classes are kept only as stable selectors for the toggle script and carry no CSS.\n\nNotification dot: .ds-nav-bar__dot inside a nav link is a 12px accent-2 circle at the link's right edge, toggled with hidden -- an unread-updates marker. It is the only round shape in the system; Figma draws it round. Keeping it in sync across pages is the host's concern. Not sourced from the design: the link click-swap and the theme toggle's behavior, without which the current link would never change and the toggle wouldn't toggle. Rendering verified in light and dark themes. Additions 2026-10-23: right_actions for actions such as signing out (a POST form whose box is display: contents so it does not change the row); the bar wraps its groups onto more rows on a narrow window instead of widening the page, and has z-index 3 (pane's sticky head's value) so positioned content scrolling under the sticky bar does not paint over it. 2026-10-23: the left and right groups take equal shares of the remaining width (flex 1 1 0, never below their content), so the center links sit at the bar's true middle, aligned with a page's centered content, instead of midway between two groups of different widths.",
   "themes_supported": [
     "light",
     "dark"

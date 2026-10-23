@@ -1,0 +1,10 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: grid; gap: var(--ds-spacing-6); padding: var(--ds-spacing-8); background-color: var(--ds-color-bg-surface);">
+  {% with value=40, label='Text recognition' %}{% include "components/progress-bar/template.html" %}{% endwith %}
+  {% with value=100, label='Text recognition' %}{% include "components/progress-bar/template.html" %}{% endwith %}
+  {% with value=none, label='Text recognition' %}{% include "components/progress-bar/template.html" %}{% endwith %}
+</div>
+
+<script src="component.js"></script>

@@ -159,3 +159,24 @@
   user-select: none;
   cursor: col-resize;
 }
+
+/* Motion (data-motion, 2026-10-23): a side pane that opens beside a list
+   slides in from its right edge and fades in; on closing it slides and fades
+   out. Only transform and opacity move, so the list beside it is not laid out
+   again on every frame. While leaving, the pane takes the surface fill: the
+   list may already take its place underneath and must not show through the
+   pane's text. fade-in / fade-out: the same without the slide, for a pane
+   stacked above its list (narrow windows). The host sets the attribute and
+   removes it on animationend. Nothing moves under prefers-reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .ds-pane[data-motion="enter"] { animation: ds-pane-enter 0.22s cubic-bezier(0.2, 0, 0, 1); }
+  .ds-pane[data-motion="leave"] { animation: ds-pane-leave 0.16s ease-in forwards; }
+  .ds-pane[data-motion="fade-in"] { animation: ds-pane-fade-in 0.22s ease-out; }
+  .ds-pane[data-motion="fade-out"] { animation: ds-pane-fade-out 0.16s ease-in forwards; }
+}
+.ds-pane[data-motion="leave"],
+.ds-pane[data-motion="fade-out"] { background-color: var(--ds-color-bg-surface); }
+@keyframes ds-pane-enter { from { opacity: 0; transform: translateX(var(--ds-spacing-7)); } }
+@keyframes ds-pane-leave { to { opacity: 0; transform: translateX(var(--ds-spacing-7)); } }
+@keyframes ds-pane-fade-in { from { opacity: 0; } }
+@keyframes ds-pane-fade-out { to { opacity: 0; } }

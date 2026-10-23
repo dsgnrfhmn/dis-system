@@ -97,6 +97,14 @@
   /* border-nav (2026-09-30): object-dark-passive in light, transparent in
      dark -- no rule under the nav in the dark theme. */
   border-bottom: 0.5px solid var(--ds-color-border-nav);
+  /* Narrow windows (2026-10-23): the three groups wrap onto more rows
+     instead of widening the page; row-gap is the cell spacing the bar
+     already pads with. Stacking (same day): a sticky bar is painted under
+     positioned content that scrolls beneath it (a table's sticky header, a
+     field) unless it has its own order -- 3, pane's sticky head's value. */
+  flex-wrap: wrap;
+  row-gap: var(--ds-spacing-cell);
+  z-index: 3;
 }
 
 /* ---- left: workspace switcher (.ds-input-dropdown, composed as-is) ----
@@ -144,7 +152,24 @@
 .ds-nav-bar__center {
   display: flex;
   align-items: center;
+  flex: none;
+  /* On a narrow window the bar wraps and the links may get a row of their
+     own: auto margins keep them centred there; beside the side groups (which
+     take all free space) the margins are 0. */
+  margin-inline: auto;
 }
+
+/* Centered page links (2026-10-23): the left and right groups share the
+   remaining width equally (flex: 1 1 0), so the center links sit at the
+   bar's true middle -- above a page's centered title -- however wide the
+   two side groups are; space-between alone centered them between unequal
+   groups, off the page's middle. The right group's items stay at its end. */
+.ds-nav-bar__left,
+.ds-nav-bar__right {
+  flex: 1 1 0;
+  min-width: max-content;
+}
+.ds-nav-bar__right { justify-content: flex-end; }
 
 /* ---- right: theme toggle. Penpot's own instance is a bare icon board
    (Icons / Theme-dark or Theme-light) with no button chrome at all --
@@ -197,3 +222,7 @@
 .ds-nav-bar__dot[hidden] {
   display: none;
 }
+
+/* Extra right-side actions (right_actions, 2026-10-23): a form around a
+   submit button (sign out) must not add its own box to the row. */
+.ds-nav-bar__right > form { display: contents; }

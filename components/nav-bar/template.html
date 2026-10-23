@@ -25,6 +25,20 @@
   </div>
 
   <div class="ds-nav-bar__right">
+    {# right_actions (2026-10-23): extra actions before the theme toggle.
+       {label, href} is a link; {label, form_action, hidden} is a POST form
+       around a submit button, hidden a mapping of hidden field name -> value
+       (a CSRF token). #}
+    {% for action in right_actions | default([]) %}
+    {% if action.form_action %}
+    <form method="post" action="{{ action.form_action | safe_url }}">
+      {% for name, value in (action.hidden | default({})).items() %}<input type="hidden" name="{{ name }}" value="{{ value }}">{% endfor %}
+      {% with priority='secondary', status='active', underline='dotted', label=action.label, submit=true, icon=none, extra_class=none, icon_extra_class=none, label_extra_class=none %}{% include "components/text-button/template.html" %}{% endwith %}
+    </form>
+    {% else %}
+    <a href="{{ action.href | safe_url }}" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="solid"><span class="ds-text-button__text">{{ action.label }}</span></a>
+    {% endif %}
+    {% endfor %}
     {% with priority='secondary', status='active', underline='dotted', icon=theme_icon | default('theme-dark'), label=theme_label | default('Dark'), extra_class='ds-nav-bar__theme-toggle', icon_extra_class='ds-nav-bar__theme-icon', label_extra_class='ds-nav-bar__theme-label' %}{% include "components/text-button/template.html" %}{% endwith %}
   </div>
 </nav>

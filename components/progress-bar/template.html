@@ -1,0 +1,6 @@
+{#
+  progress-bar: a thin line that fills with the progress of a running task
+  (text recognition). value: 0-100, or none for an indeterminate task;
+  label: the accessible name.
+#}
+<div class="ds-progress-bar" role="progressbar" aria-label="{{ label | default('Progress') }}" aria-valuemin="0" aria-valuemax="100"{% if value is not none and value is defined %} aria-valuenow="{{ value | int }}" data-value="{{ value | int }}"{% else %} data-indeterminate{% endif %}><span class="ds-progress-bar__fill"></span></div>

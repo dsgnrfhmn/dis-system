@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="display: grid; gap: var(--ds-spacing-6); max-width: 760px; padding: var(--ds-spacing-8); background-color: var(--ds-color-bg-surface); color: var(--ds-color-text-active); font-family: var(--ds-font-body-text-family); font-size: var(--ds-font-system-message-size); line-height: 1.7;">
+  <p style="margin: 0;">
+    bitte {% with id='wt-reichen', text='reichen', state='active', card={'kicker': 'einreichen - verb, separable', 'title': 'to submit', 'gloss': 'hand in', 'note': 'here: imperative, polite form: "reichen Sie ... ein"', 'hint': 'Click: add to notes'} %}{% include "components/word-token/template.html" %}{% endwith %}
+    Sie die fehlenden {% with id='wt-unterlagen', text='Unterlagen', state='noted', card={'kicker': 'die Unterlagen - noun, plural only', 'title': 'documents', 'hint': 'Click: remove from notes'} %}{% include "components/word-token/template.html" %}{% endwith %}
+    bis zum 15. November ein. Ohne diese Unterlagen koennen wir Ihren
+    {% with id='wt-antrag', text='Antrag', state='known', card={'kicker': 'der Antrag - noun, masculine', 'title': 'application', 'hint': 'In your word list'} %}{% include "components/word-token/template.html" %}{% endwith %}
+    leider nicht {% with id='wt-bearbeiten', text='bearbeiten', card={'kicker': 'bearbeiten - verb', 'title': 'to process'} %}{% include "components/word-token/template.html" %}{% endwith %}.
+  </p>
+  <p style="margin: 0;">
+    Ich stelle {% with id='wt-einen', text='einen', interactive=false, card={'kicker': 'accusative - masculine', 'text': '"einen Antrag stellen": der Antrag is the accusative object. Masculine accusative: ein -> einen.', 'gloss': 'Antrag is masculine, accusative case.'} %}{% include "components/word-token/template.html" %}{% endwith %} Antrag.
+  </p>
+  {% with mode='legend', legend=[{'state': 'noted', 'sample': 'Word', 'label': 'in notes'}, {'state': 'known', 'sample': 'Word', 'label': 'already in the word list'}], legend_hint='Hover: translation - Click: note it' %}{% include "components/word-token/template.html" %}{% endwith %}
+</div>
+
+<script src="component.js"></script>
