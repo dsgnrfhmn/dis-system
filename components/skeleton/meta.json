@@ -4,7 +4,12 @@
   "status": "stable",
   "category": "controls",
   "listed": true,
-  "variants": ["row", "item", "block", "page"],
+  "variants": [
+    "row",
+    "item",
+    "block",
+    "page"
+  ],
   "props": [
     {
       "name": "variant",
@@ -15,8 +20,11 @@
     }
   ],
   "source": "none",
-  "rationale": "Pages used to show empty containers (or false empty states) until their API calls returned. A skeleton shows the shape of what is coming: bars at the width of typical cells, in bg.surface-pressed, pulsing in opacity (1.4s, still under prefers-reduced-motion). It is declarative: data-skeleton=\"row:4\" on a container, filled by component.js when the HTML is parsed, cleared as soon as real content is added to the container (or with dsSkeleton.clear()); a 10s fail-safe clears it anyway. grid-column: 1 / -1 makes one placeholder span all columns of a grid table. [data-skeleton-hide] hides an empty state meanwhile. Not sourced from Figma (explicit request 2026-10-12). Rendering verified in light and dark themes.",
-  "themes_supported": ["light", "dark"],
+  "rationale": "Pages used to show empty containers (or false empty states) until their API calls returned. A skeleton shows the shape of what is coming: bars at the width of typical cells, in bg.surface-pressed, pulsing in opacity (1.4s, still under prefers-reduced-motion). It is declarative: data-skeleton=\"row:4\" on a container, filled by component.js when the HTML is parsed, cleared as soon as real content is added to the container (or with dsSkeleton.clear()); a 10s fail-safe clears it anyway. grid-column: 1 / -1 makes one placeholder span all columns of a grid table. [data-skeleton-hide] hides an empty state meanwhile. Not sourced from Figma (explicit request 2026-10-12). Rendering verified in light and dark themes. Update 2026-10-20 (explicit request): data-static on a hand-written .ds-skeleton draws the shape without the pulse and component.js leaves it in place when the page data arrives; used for the blank sheets of an empty preview.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
   "uses": [],
   "a11y_notes": "Placeholders are aria-hidden; the container carries aria-busy=\"true\" while they are shown. The pulse is disabled under prefers-reduced-motion."
 }

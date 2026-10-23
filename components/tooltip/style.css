@@ -1,59 +1,75 @@
 /*
   tooltip
 
-  Not from Penpot as its own component -- no MCP access this session to
-  check, and no dedicated "Tooltip" board was found in this repo's
-  earlier survey. Built for exactly one phase-one usage: Undo's
-  disabled-state hover copy (the consumer spec, "There is
-  nothing to undo more, honey").
+  Not from Penpot as its own component. Built for Undo's disabled-state hover
+  copy (the consumer spec), now used on every consumer control.
 
-  Pure CSS, no JS at all: content: attr(data-tooltip) reads the trigger
-  element's own attribute directly, so there is no dynamic text to wire
-  up, no show/hide state to track, and no positioning math to get wrong
-  -- :hover and :focus-visible are the show condition, nothing else.
-  Deliberately not the popup/dropdown-menu pattern (hidden-toggle +
-  JS-driven open/close): a tooltip's content is static per-instance and
-  its dismissal is exactly "stop hovering/focusing," which native CSS
-  pseudo-classes already model perfectly -- adding JS here would be
-  complexity with no functional gain, the opposite of what CLAUDE.md's
-  "no decorative/unnecessary code" principle asks for.
-
-  Known limitation, not fixed here: no viewport-clamping. A trigger near
-  the right edge of its container could overflow off-screen. Flagged
-  rather than solved, since the consuming app's one real usage (Undo, inside a table
-  header's action cluster) is never near an edge in practice.
+  The bubble is ONE shared element, .ds-tooltip-layer, which component.js
+  creates and shows as a manual popover for whichever [data-tooltip] element
+  is hovered or focused (explicit request 2026-10-20, "tooltips always above
+  any content"). A popover is painted in the browser's top layer, above every
+  z-index, overflow clip and stacking context on the page, so a tooltip is
+  never cut off by a table cell, a sticky header or a hero block. The text is
+  the trigger's own data-tooltip attribute; this file is only the look.
 */
-
-/* A text button draws its hover brackets on its own ::before and ::after, so the
-   bubble of a text button is the ::after of its label span instead (2026-10-14:
-   the generic rule below turned the closing bracket into a dark empty box).
-   Everything else carries the bubble on the element itself. */
-[data-tooltip]:not(.ds-text-button),
-.ds-text-button[data-tooltip] > :is(.ds-text-button__text, .ds-text-button__label) {
-  position: relative;
-}
 
 /* Look: Figma D_SYSTEM Tooltip (node 103:4777) -- a dark box (tooltip-bg,
    #2e2e2e) with a 1px black edge and white body text, 10px padding, no
    shadow: the same in both themes, since it is a layer over any page.
-   Figma's text+icon variant is not drawn: the bubble is this ::after, and a
-   host's ::before is already taken (text-button's hover brackets). */
-[data-tooltip]:not(.ds-text-button)::after,
-.ds-text-button[data-tooltip] > :is(.ds-text-button__text, .ds-text-button__label)::after {
+   Figma's text+icon variant is not drawn.
+
+   The [popover] user-agent defaults (centered, inset 0, border, canvas fill)
+   are reset; component.js sets left and top in pixels (position: fixed). */
+.ds-tooltip-layer {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  /* At most a third of the viewport wide, wrapping onto more lines past that
+     (explicit request 2026-09-30: a long text -- e.g. a truncated table
+     cell's full title -- used to run as one nowrap line across the whole
+     screen). width: max-content keeps a short tooltip exactly as wide as its
+     text; 33vw is this component's own fixed dimension, not a scale value. */
+  width: max-content;
+  max-width: 33vw;
+  max-height: none;
+  overflow: visible;
+  box-sizing: border-box;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  padding: var(--ds-spacing-cell);
+  background-color: var(--ds-color-tooltip-bg);
+  border: var(--ds-border-width-thin) solid var(--ds-color-tooltip-border);
+  color: var(--ds-color-tooltip-text);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  border-radius: var(--ds-radius-none);
+  pointer-events: none;
+  /* Invisible while component.js measures and places it, then faded in. */
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.ds-tooltip-layer[data-visible="true"] {
+  opacity: 1;
+}
+
+/* data-preview="visible": shows a bubble without hover/focus, for documentation
+   pages that lay components out side by side (the site's Toasters and tooltips
+   card). Not for use in product UI. It is drawn as the trigger's own ::after
+   (the one place the old inline bubble survives), same look as the layer. */
+[data-tooltip][data-preview="visible"]:not(.ds-text-button) {
+  position: relative;
+}
+
+[data-tooltip][data-preview="visible"]:not(.ds-text-button)::after {
   content: attr(data-tooltip);
   position: absolute;
   bottom: calc(100% + var(--ds-spacing-2));
   left: 50%;
-  /* --_tooltip-shift / data-tooltip-placement / data-tooltip-clamped are set by
-     component.js on hover/focus to keep the bubble on screen (2026-09-30);
-     without it the bubble sits centered above, unclamped, as before. */
-  transform: translateX(calc(-50% + var(--_tooltip-shift, 0px)));
-  /* At most a third of the viewport wide, wrapping onto more lines past
-     that (explicit request 2026-09-30: a long text -- e.g. a truncated
-     table cell's full title -- used to run as one nowrap line across the
-     whole screen). width: max-content keeps a short tooltip exactly as
-     wide as its text; 33vw is this component's own fixed dimension, not a
-     scale value. */
+  transform: translateX(-50%);
   width: max-content;
   max-width: 33vw;
   white-space: normal;
@@ -68,70 +84,8 @@
   line-height: var(--ds-font-body-text-line-height);
   letter-spacing: var(--ds-font-body-text-letter-spacing);
   border-radius: var(--ds-radius-none);
-  opacity: 0;
   pointer-events: none;
-  transition: opacity 0.1s ease;
   z-index: 10;
-}
-
-/* data-tooltip-instant: no delay for this one (explicit request 2026-10-14: the
-   Summary cell's verdict shows at once on hover). */
-[data-tooltip][data-tooltip-instant]:not(.ds-text-button):hover::after,
-[data-tooltip][data-tooltip-instant]:not(.ds-text-button):focus-visible::after,
-[data-tooltip][data-tooltip-instant]:not(.ds-text-button):has(:focus-visible)::after,
-.ds-text-button[data-tooltip][data-tooltip-instant]:hover > :is(.ds-text-button__text, .ds-text-button__label)::after,
-.ds-text-button[data-tooltip][data-tooltip-instant]:focus-visible > :is(.ds-text-button__text, .ds-text-button__label)::after {
-  transition-delay: 0s;
-}
-
-/* The label span reads its own attribute (component.js mirrors the text onto it). */
-.ds-text-button[data-tooltip] > :is(.ds-text-button__text, .ds-text-button__label)::after {
-  content: attr(data-tooltip-text);
-}
-
-/* :has(:focus-visible): a tooltip on a container (a table cell) whose
-   keyboard-focused element is a control inside it (the cell's button)
-   shows too (explicit request 2026-10-03, tooltips on keyboard focus).
-   Keyboard focus only -- a mouse click inside still shows it on hover
-   alone, as before. */
-[data-tooltip]:not(.ds-text-button):hover::after,
-[data-tooltip]:not(.ds-text-button):focus-visible::after,
-[data-tooltip]:not(.ds-text-button):has(:focus-visible)::after,
-.ds-text-button[data-tooltip]:hover > :is(.ds-text-button__text, .ds-text-button__label)::after,
-.ds-text-button[data-tooltip]:focus-visible > :is(.ds-text-button__text, .ds-text-button__label)::after {
-  opacity: 1;
-  /* Shown one second after hover or focus (explicit request 2026-10-14): a
-     tooltip that appears at once flashes over every control the pointer passes.
-     The delay is only on this showing state, so it disappears immediately. A
-     fixed timing of this component, not a scale value. */
-  transition-delay: 1s;
-}
-
-/* Text too tall for the viewport on either side (explicit request
-   2026-09-30, "if it doesn't fit in height, end it with ..."): component.js
-   puts the text cut at the last word that fits, plus an ellipsis, in
-   data-tooltip-clamped. Cut in JS rather than with line-clamp, which leaves
-   part of the next line showing through the bubble's bottom padding. */
-[data-tooltip][data-tooltip-clamped]:not(.ds-text-button)::after {
-  content: attr(data-tooltip-clamped);
-}
-
-.ds-text-button[data-tooltip][data-tooltip-clamped] > :is(.ds-text-button__text, .ds-text-button__label)::after {
-  content: attr(data-tooltip-text-clamped);
-}
-
-/* Not enough room above the trigger: component.js flips the bubble below. */
-[data-tooltip][data-tooltip-placement="below"]:not(.ds-text-button)::after,
-.ds-text-button[data-tooltip][data-tooltip-placement="below"] > :is(.ds-text-button__text, .ds-text-button__label)::after {
-  bottom: auto;
-  top: calc(100% + var(--ds-spacing-2));
-}
-
-/* data-preview="visible": shows the tooltip without hover/focus, for
-   documentation pages that lay components out side by side (the site's
-   Toasters and tooltips card). Not for use in product UI. */
-[data-tooltip][data-preview="visible"]::after {
-  opacity: 1;
 }
 
 .ds-tooltip-demo {

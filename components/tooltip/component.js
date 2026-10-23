@@ -1,26 +1,33 @@
 /*
-  tooltip -- show/hide is pure CSS (:hover, :focus-visible) and the text
-  comes straight from the trigger's own data-tooltip attribute via content:
-  attr() in style.css. This file only keeps the bubble on screen
-  (explicit request 2026-09-30, "make the tooltip adapt to the screen, and
-  if it doesn't fit in height, end it with ..."), which CSS alone can't:
-  the bubble's position depends on where its trigger sits in the viewport.
+  tooltip -- one shared bubble (.ds-tooltip-layer) shown for whichever
+  [data-tooltip] element the pointer or keyboard focus is on. The text comes
+  from that element's own data-tooltip attribute.
 
-  On hover/focus of any [data-tooltip] element (one delegated listener on
-  the document, so triggers added later -- or given data-tooltip at hover
-  time by a host -- work too), it measures the trigger and the bubble and
-  sets on the trigger:
-    - --_tooltip-shift: a horizontal offset that keeps the bubble at least
-      spacing-6 from either viewport edge (the same margin popup's anchored
-      placement keeps, read from the token at runtime);
-    - data-tooltip-placement="below" when the full bubble fits below but
-      not above (default placement stays above);
-    - data-tooltip-clamped: when it fits on neither side, the text cut at
-      the last word that fits on the roomier side, plus an ellipsis;
-      style.css shows that instead of data-tooltip.
-  Runs one frame after the event, so a host listener on the same event
-  (e.g. one that sets data-tooltip only once it sees the text is
-  truncated) has already run.
+  Why one element in the top layer (explicit request 2026-10-20, "tooltips
+  always above any content"): the earlier bubble was the trigger's own
+  ::after, so it lived inside the trigger's stacking context and was cut off
+  by anything that clipped or out-stacked an ancestor (a table cell's
+  overflow, a sticky header, the hero block). The shared bubble is a manual
+  popover (popover="manual", showPopover()), which the browser paints in the
+  top layer above every z-index, overflow and stacking context on the page,
+  popups included. It is positioned with position: fixed from the trigger's
+  rect.
+
+  Show: one second after hover or keyboard focus (explicit request
+  2026-10-14: a tooltip that appears at once flashes over every control the
+  pointer passes); data-tooltip-instant on the trigger skips the delay.
+  Hide: at once, when the pointer or focus leaves the trigger, on scroll,
+  resize, Escape, or when the trigger is removed from the page.
+
+  Fit (explicit request 2026-09-30, "make the tooltip adapt to the screen, and
+  if it doesn't fit in height, end it with ..."): the bubble sits above the
+  trigger, flips below when it only fits there, is kept at least spacing-6
+  from the viewport edges, and when it fits on neither side its text is cut at
+  the last word that fits, plus an ellipsis.
+
+  A native <button disabled> still gets mouseover in current browsers, so a
+  tooltip on a disabled button works with the pointer; it is not
+  keyboard-reachable (a disabled button takes no focus).
 */
 
 (function () {
@@ -29,38 +36,38 @@ const rootStyle = getComputedStyle(document.documentElement);
 const token = (name, fallback) => parseFloat(rootStyle.getPropertyValue(name)) || fallback;
 const VIEWPORT_MARGIN = token('--ds-spacing-6', 20);
 const GAP = token('--ds-spacing-2', 4);
+const SHOW_DELAY = 1000;
 
-// The bubble's full border-box size, as currently rendered.
-// A text button's bubble is the ::after of its label span (its own ::before and
-// ::after are the hover brackets), so that is what gets measured.
-function bubbleHost(trigger) {
+let layer = null;
+let current = null;   // the trigger the bubble belongs to (shown or waiting)
+let timer = 0;
+let watch = 0;
+
+function getLayer() {
+  if (layer) return layer;
+  layer = document.createElement('div');
+  layer.className = 'ds-tooltip-layer';
+  layer.setAttribute('role', 'tooltip');
+  layer.setAttribute('popover', 'manual');
+  document.body.appendChild(layer);
+  return layer;
+}
+
+// A text button's bubble is centered on its label, not on the padding and
+// hover-bracket space around it.
+function anchorOf(trigger) {
   if (!trigger.classList.contains('ds-text-button')) return trigger;
   return trigger.querySelector(':scope > .ds-text-button__text, :scope > .ds-text-button__label') || trigger;
 }
 
-// content: attr() on the span's ::after reads the span's own attributes, so the
-// text (and its cut) is mirrored onto the span.
-function mirror(trigger) {
-  const host = bubbleHost(trigger);
-  if (host === trigger) return;
-  host.dataset.tooltipText = trigger.dataset.tooltip || '';
-  if (trigger.dataset.tooltipClamped) host.dataset.tooltipTextClamped = trigger.dataset.tooltipClamped;
-  else delete host.dataset.tooltipTextClamped;
+function bubbleHeight(el) {
+  return el.getBoundingClientRect().height;
 }
 
-function measure(trigger) {
-  const b = getComputedStyle(bubbleHost(trigger), '::after');
-  const px = (v) => parseFloat(v) || 0;
-  return {
-    width: px(b.width) + px(b.paddingLeft) + px(b.paddingRight) + px(b.borderLeftWidth) + px(b.borderRightWidth),
-    height: px(b.height) + px(b.paddingTop) + px(b.paddingBottom) + px(b.borderTopWidth) + px(b.borderBottomWidth),
-  };
-}
-
-// Longest word-boundary prefix of `text` (+ ellipsis) whose bubble is at
-// most maxHeight tall — a binary search over the word count, re-measuring
-// the real rendered bubble each step.
-function clampText(trigger, text, maxHeight) {
+// Longest word-boundary prefix of `text` (+ ellipsis) whose bubble is at most
+// maxHeight tall: a binary search over the word count, re-measuring the real
+// rendered bubble each step.
+function clampText(el, text, maxHeight) {
   const words = text.split(/(\s+)/);
   let lo = 1;
   let hi = words.length;
@@ -68,89 +75,116 @@ function clampText(trigger, text, maxHeight) {
   while (lo <= hi) {
     const mid = Math.floor((lo + hi) / 2);
     const candidate = `${words.slice(0, mid).join('').trimEnd()}…`;
-    trigger.dataset.tooltipClamped = candidate;
-    mirror(trigger);
-    if (measure(trigger).height <= maxHeight) {
+    el.textContent = candidate;
+    if (bubbleHeight(el) <= maxHeight) {
       best = candidate;
       lo = mid + 1;
     } else {
       hi = mid - 1;
     }
   }
-  trigger.dataset.tooltipClamped = best;
-  mirror(trigger);
+  el.textContent = best;
 }
 
-function fit(trigger) {
-  if (!trigger.isConnected || !trigger.dataset.tooltip) return;
+function place(trigger, text) {
+  const el = getLayer();
+  el.textContent = text;
+  el.style.left = '0px';
+  el.style.top = '0px';
+  if (!el.matches(':popover-open')) el.showPopover();
 
-  // Measure the unconstrained bubble first.
-  trigger.style.removeProperty('--_tooltip-shift');
-  delete trigger.dataset.tooltipPlacement;
-  delete trigger.dataset.tooltipClamped;
-  mirror(trigger);
-
-  const rect = trigger.getBoundingClientRect();
+  const rect = anchorOf(trigger).getBoundingClientRect();
   const vw = document.documentElement.clientWidth;
   const vh = document.documentElement.clientHeight;
 
-  // Vertical: above if it fits, else below if it fits, else the roomier
-  // side with the text cut to fit.
+  // Vertical: above if it fits, else below if it fits, else the roomier side
+  // with the text cut to fit.
   const roomAbove = rect.top - GAP - VIEWPORT_MARGIN;
   const roomBelow = vh - rect.bottom - GAP - VIEWPORT_MARGIN;
-  const { height } = measure(trigger);
+  let height = bubbleHeight(el);
+  let below = false;
   if (height > roomAbove) {
-    if (height <= roomBelow || roomBelow > roomAbove) trigger.dataset.tooltipPlacement = 'below';
+    below = height <= roomBelow || roomBelow > roomAbove;
     if (height > Math.max(roomAbove, roomBelow)) {
-      clampText(trigger, trigger.dataset.tooltip, Math.max(roomAbove, roomBelow));
+      clampText(el, text, Math.max(roomAbove, roomBelow));
+      height = bubbleHeight(el);
     }
   }
 
-  // Horizontal: keep inside [margin, vw - margin] (measured after any cut,
-  // which can make the bubble narrower).
-  const { width } = measure(trigger);
-  const centeredLeft = rect.left + rect.width / 2 - width / 2;
-  const clampedLeft = Math.max(VIEWPORT_MARGIN, Math.min(centeredLeft, vw - VIEWPORT_MARGIN - width));
-  const shift = clampedLeft - centeredLeft;
-  if (Math.abs(shift) >= 0.5) trigger.style.setProperty('--_tooltip-shift', `${shift}px`);
+  // Horizontal: centered on the trigger, kept inside [margin, vw - margin].
+  const { width } = el.getBoundingClientRect();
+  const centered = rect.left + rect.width / 2 - width / 2;
+  const left = Math.max(VIEWPORT_MARGIN, Math.min(centered, vw - VIEWPORT_MARGIN - width));
+  const top = below ? rect.bottom + GAP : rect.top - GAP - height;
+
+  el.style.left = `${left}px`;
+  el.style.top = `${top}px`;
+  el.dataset.visible = 'true';
 }
 
-// A disabled button gets no mouse events, so the text must already be on the
-// label span before any hover: mirror when data-tooltip is set or the button
-// appears, not only on hover.
-function mirrorAll(root) {
-  if (root.matches && root.matches('.ds-text-button[data-tooltip]')) mirror(root);
-  if (root.querySelectorAll) root.querySelectorAll('.ds-text-button[data-tooltip]').forEach(mirror);
+function hide() {
+  clearTimeout(timer);
+  clearInterval(watch);
+  current = null;
+  if (!layer) return;
+  delete layer.dataset.visible;
+  if (layer.matches(':popover-open')) layer.hidePopover();
 }
 
-function watchTexts() {
-  mirrorAll(document);
-  new MutationObserver((records) => {
-    records.forEach((record) => {
-      if (record.type === 'attributes') mirrorAll(record.target);
-      else record.addedNodes.forEach((node) => {
-        if (node.nodeType !== 1) return;
-        mirrorAll(node);
-        const host = node.closest && node.closest('.ds-text-button[data-tooltip]');
-        if (host) mirror(host);   // the label span the text-button wrapped in
-      });
-    });
-  }).observe(document.documentElement, {
-    subtree: true, childList: true, attributes: true, attributeFilter: ['data-tooltip'],
-  });
+function show(trigger) {
+  const text = trigger.dataset.tooltip;
+  if (!text || !trigger.isConnected) return hide();
+  place(trigger, text);
 }
-watchTexts();
 
-function onEnter(event) {
+function schedule(trigger) {
+  if (trigger === current) return;
+  hide();
+  if (!trigger.dataset.tooltip) return;
+  current = trigger;
+  // Polled while waiting or shown: a trigger a host re-renders away would
+  // otherwise leave its bubble behind with nothing left to fire mouseout.
+  watch = setInterval(() => {
+    if (!current || !current.isConnected) hide();
+  }, 250);
+  const wait = 'tooltipInstant' in trigger.dataset ? 0 : SHOW_DELAY;
+  // Even the instant one runs a frame later, so a host listener on the same
+  // event (one that sets data-tooltip only once it sees the text is
+  // truncated) has already run.
+  timer = setTimeout(() => requestAnimationFrame(() => current === trigger && show(trigger)), wait);
+}
+
+document.addEventListener('mouseover', (event) => {
+  if (!(event.target instanceof Element)) return;
+  const trigger = event.target.closest('[data-tooltip]');
+  if (trigger) schedule(trigger);
+  else if (current) hide();
+});
+
+document.addEventListener('mouseout', (event) => {
+  if (!current) return;
+  const to = event.relatedTarget;
+  if (!(to instanceof Element) || !current.contains(to)) {
+    // Moving onto another trigger is handled by its own mouseover.
+    if (!(to instanceof Element) || !to.closest('[data-tooltip]')) hide();
+  }
+});
+
+// Keyboard focus only (a mouse click that focuses a control shows nothing
+// extra): focus on a control inside a trigger counts, as a tooltip on a table
+// cell around a button.
+document.addEventListener('focusin', (event) => {
   const target = event.target;
-  if (!(target instanceof Element)) return;
-  requestAnimationFrame(() => {
-    const trigger = target.closest('[data-tooltip]');
-    if (trigger) fit(trigger);
-  });
-}
+  if (!(target instanceof Element) || !target.matches(':focus-visible')) return;
+  const trigger = target.closest('[data-tooltip]');
+  if (trigger) schedule(trigger);
+});
+document.addEventListener('focusout', () => hide());
 
-document.addEventListener('mouseover', onEnter);
-document.addEventListener('focusin', onEnter);
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') hide();
+});
+window.addEventListener('scroll', hide, true);
+window.addEventListener('resize', hide);
 
 })();

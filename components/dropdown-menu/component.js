@@ -35,6 +35,11 @@
   closes the menu and lets focus move on. A close while focus is inside
   the menu (a pick, Escape) hands focus back to the trigger, so it isn't
   dropped onto the page body.
+
+  Re-rendered items (explicit request 2026-10-22, a consumer's Portfolio: the
+  project list is read anew from Drive while the page is open): the host may
+  replace the menu's items at any time. Clicks are taken on the menu and the
+  items are looked up on every use, so new items work without a re-init.
 */
 
 // The menu's checkbox glyphs (multiple), inlined from icons/ so they take
@@ -58,20 +63,21 @@ function initDropdown(root) {
   if (!trigger || !menu) return;
 
   const valueEl = trigger.querySelector('[data-dropdown-value]');
-  const items = Array.from(menu.querySelectorAll('.ds-dropdown-menu__item'));
+  const items = () => Array.from(menu.querySelectorAll('.ds-dropdown-menu__item'));
   const multiple = menu.hasAttribute('data-multiple');
+  const hover = root.dataset.openOn === 'hover';
 
   // The item matching the trigger's current text is the selected one (drawn
   // Medium in Figma, node 45:6594). Kept in sync on every pick.
   function markSelected(label) {
-    items.forEach((item) => {
+    items().forEach((item) => {
       item.setAttribute('aria-selected', item.textContent.trim() === label ? 'true' : 'false');
     });
   }
   if (valueEl && !multiple) markSelected(valueEl.textContent.trim());
 
   function enabledItems() {
-    return items.filter((item) => !item.disabled);
+    return items().filter((item) => !item.disabled);
   }
 
   function focusItem(index) {
@@ -138,8 +144,27 @@ function initDropdown(root) {
     if (menu.hidden) {
       open();
       if (event.detail === 0) focusInitialItem();
-    } else close();
+    } else if (!hover) close();
   });
+
+  // Hover mode (data-open-on="hover" on the wrapper, explicit request
+  // 2026-10-20, For You's Recent Activity): the menu opens when the pointer
+  // enters the trigger or the menu and closes shortly after it leaves both.
+  // The delay carries the pointer across the gap between trigger and panel.
+  // A click on the trigger only opens; it never closes what hover just opened.
+  if (hover) {
+    let timer;
+    root.addEventListener('mouseenter', () => {
+      clearTimeout(timer);
+      if (menu.hidden) open();
+    });
+    root.addEventListener('mouseleave', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (!menu.contains(document.activeElement)) close();
+      }, 200);
+    });
+  }
 
   trigger.addEventListener('keydown', (event) => {
     if (!menu.hidden || (event.key !== 'ArrowDown' && event.key !== 'ArrowUp')) return;
@@ -148,35 +173,35 @@ function initDropdown(root) {
     focusInitialItem();
   });
 
-  items.forEach((item) => {
-    item.addEventListener('click', () => {
-      if (multiple) {
-        const selected = item.getAttribute('aria-selected') !== 'true';
-        item.setAttribute('aria-selected', String(selected));
-        item.removeAttribute('data-mixed');
-        root.dispatchEvent(
-          new CustomEvent('ds-dropdown-select', {
-            bubbles: true,
-            detail: {
-              value: item.dataset.value,
-              label: item.textContent.trim(),
-              selected,
-              values: items.filter((i) => i.getAttribute('aria-selected') === 'true').map((i) => i.dataset.value),
-            },
-          })
-        );
-        return;
-      }
-      if (valueEl) valueEl.textContent = item.textContent;
-      markSelected(item.textContent.trim());
-      close();
+  menu.addEventListener('click', (event) => {
+    const item = event.target.closest('.ds-dropdown-menu__item');
+    if (!item || !menu.contains(item) || item.disabled) return;
+    if (multiple) {
+      const selected = item.getAttribute('aria-selected') !== 'true';
+      item.setAttribute('aria-selected', String(selected));
+      item.removeAttribute('data-mixed');
       root.dispatchEvent(
         new CustomEvent('ds-dropdown-select', {
           bubbles: true,
-          detail: { value: item.dataset.value, label: item.textContent },
+          detail: {
+            value: item.dataset.value,
+            label: item.textContent.trim(),
+            selected,
+            values: items().filter((i) => i.getAttribute('aria-selected') === 'true').map((i) => i.dataset.value),
+          },
         })
       );
-    });
+      return;
+    }
+    if (valueEl) valueEl.textContent = item.textContent;
+    markSelected(item.textContent.trim());
+    close();
+    root.dispatchEvent(
+      new CustomEvent('ds-dropdown-select', {
+        bubbles: true,
+        detail: { value: item.dataset.value, label: item.textContent },
+      })
+    );
   });
 }
 

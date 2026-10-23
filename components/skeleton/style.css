@@ -71,11 +71,19 @@
   padding: var(--ds-spacing-5);
 }
 .ds-skeleton[data-variant="page"] .ds-skeleton__bar {
+  display: block; /* the bar is a span in a block parent: without this its size is ignored */
   width: 100%;
   height: auto;
   aspect-ratio: 297 / 210;
   /* A sheet is the surface color on the preview's grey, as the real paper is. */
   background-color: var(--ds-color-bg-surface);
+}
+
+/* data-static (hand-written markup, e.g. the blank sheets of an empty preview):
+   the shape without the pulse, because nothing is loading. component.js does
+   not remove it when the page's data arrives. */
+.ds-skeleton[data-static] {
+  animation: none;
 }
 
 /* The empty state a page shows before any data ("Add a project to see the
