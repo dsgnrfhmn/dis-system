@@ -247,3 +247,10 @@
 .ds-header-tab[data-size="compact"][aria-selected="true"] .ds-header-tab__count {
   visibility: hidden;
 }
+
+/* href renders the tab as a link (navigation between pages): drop the
+   link's own underline; color comes from the label/count rules above. */
+a.ds-header-tab {
+  text-decoration: none;
+  color: inherit;
+}

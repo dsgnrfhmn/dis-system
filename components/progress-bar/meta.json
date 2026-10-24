@@ -1,0 +1,16 @@
+{
+  "name": "progress-bar",
+  "description": "A thin line that shows how far a running task (e.g. local text recognition) has got, or that it is still running when its progress is unknown.",
+  "status": "draft",
+  "category": "controls",
+  "variants": ["determinate", "indeterminate"],
+  "props": [
+    {"name": "value", "type": "number", "required": false, "default": null, "description": "0-100. none (or omitted) renders the indeterminate bar."},
+    {"name": "label", "type": "string", "required": false, "default": "Progress", "description": "Accessible name (aria-label)."}
+  ],
+  "source": "none",
+  "rationale": "From the application design canvas (2026-10-23), no Figma node: a spacing-1 (4px) line in accent-1 under the flow's header. The track is border-table, the hairline color, so the empty part reads as part of the layout, not as a second control. The width comes from data-value via component.js into a private --_progress, so a host passes data, never a style value. Indeterminate (no value) moves a third-width fill across the track: the animation is functional, it is the only sign that a long local task is still running, and it stops under prefers-reduced-motion (the fill then shows full width at reduced opacity). Rendering verified in light and dark themes.",
+  "themes_supported": ["light", "dark"],
+  "a11y_notes": "role=progressbar with aria-valuemin/max and aria-valuenow (omitted while indeterminate), and an aria-label.",
+  "uses": []
+}

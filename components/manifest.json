@@ -125,6 +125,152 @@
     "a11y_notes": "role=\"menu\" with role=\"menuitem\" buttons. Opens from the keyboard with the Menu key or Shift+F10 on a focusable host, at the host's lower left. Focus moves to the first item on open and returns to where it was on a keyboard close. Escape closes. A pointer-only host (a div) is not focusable: give it tabindex if it must be reachable by keyboard."
   },
   {
+    "name": "correction-row",
+    "description": "One proposed correction in a list (e.g. a word text recognition was unsure of): found text -> proposal, a meta line, and Ignore / Accept, or the outcome once decided.",
+    "status": "draft",
+    "category": "tables",
+    "variants": [
+      "open",
+      "accepted",
+      "ignored"
+    ],
+    "props": [
+      {
+        "name": "found",
+        "type": "string",
+        "required": true,
+        "default": "Unterlaqen",
+        "description": "The text as found. Plain text."
+      },
+      {
+        "name": "proposal",
+        "type": "string",
+        "required": true,
+        "default": "Unterlagen",
+        "description": "The proposed replacement. Plain text."
+      },
+      {
+        "name": "meta",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Where it is and how sure (e.g. 'Line 4 \u00b7 61 % sure')."
+      },
+      {
+        "name": "state",
+        "type": "string",
+        "required": false,
+        "default": "open",
+        "description": "open (two actions) | accepted (success tag) | ignored (neutral tag)."
+      },
+      {
+        "name": "ignore_label",
+        "type": "string",
+        "required": false,
+        "default": "Ignore",
+        "description": "Secondary action label."
+      },
+      {
+        "name": "accept_label",
+        "type": "string",
+        "required": false,
+        "default": "Accept",
+        "description": "Primary action label."
+      },
+      {
+        "name": "accepted_label",
+        "type": "string",
+        "required": false,
+        "default": "accepted",
+        "description": "Tag text once accepted."
+      },
+      {
+        "name": "ignored_label",
+        "type": "string",
+        "required": false,
+        "default": "ignored",
+        "description": "Tag text once ignored."
+      },
+      {
+        "name": "extra_attrs",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Raw attributes on the Accept button (page-author markup only)."
+      },
+      {
+        "name": "ignore_extra_attrs",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Raw attributes on the Ignore button (page-author markup only)."
+      }
+    ],
+    "source": "none",
+    "rationale": "From the application design canvas (2026-10-23), no Figma node. Reads as 'this -> that': the found text is struck through in text-subactive (it is being replaced, it is not the reader's mistake, so not the error color), the proposal in body-text-medium so the eye lands on what will stay. The meta line uses the data role like table metadata. The decision sits at the row's end, as the system's row actions do (table-cell's action cells are right-aligned): Ignore secondary, Accept primary, both dotted because they act within the view. Once decided, a passive tag (success for accepted, neutral for ignored) replaces the buttons so the list shows what is left to do. 45px min-height is the canvas's row height; a border-table hairline separates rows like table rows. Rows wrap at narrow widths. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "The arrow is aria-hidden; the row reads 'found, proposal, meta, Ignore, Accept'. Actions are real buttons (text-button).",
+    "uses": [
+      "text-button",
+      "tag"
+    ]
+  },
+  {
+    "name": "disclosure",
+    "description": "A section the reader opens and closes: a summary row with a chevron, a title and a passive caption, and a body. Native details element, no script.",
+    "status": "draft",
+    "category": "controls",
+    "variants": [
+      "closed",
+      "open"
+    ],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "default": "Section",
+        "description": "The summary text."
+      },
+      {
+        "name": "caption",
+        "type": "string",
+        "required": false,
+        "description": "Passive text beside the title, for example a count."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Render the section open."
+      },
+      {
+        "name": "content",
+        "type": "string",
+        "required": false,
+        "description": "Plain text body (used when `items` is not given)."
+      },
+      {
+        "name": "items",
+        "type": "array",
+        "required": false,
+        "description": "Optional list of strings, each rendered as its own paragraph in the body; replaces `content`."
+      }
+    ],
+    "source": "none",
+    "rationale": "Long pages of secondary content (examples, past mistakes) stay scannable when each part can be folded to one row. The native details and summary elements already give the toggle, the keyboard handling (Enter, Space) and the open state to assistive technology, so the component adds no script. The row shows state twice, by the chevron's turn and by the platform's own open state; the caption carries a count in the passive text color so the title stays the main thing. The chevron is the system's arrow-down icon used as a mask in currentColor, rotated a quarter turn when closed. A hairline under the section follows the other lists. Focus uses the accent outline of the system's other focusable text. No Figma node: taken from the application's design canvas of 2026-10-21.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Native <details>/<summary>: the summary is a focusable button with expanded state, toggled by Enter and Space. The chevron is aria-hidden. Visible focus ring on the summary. Content inside a closed section is not rendered, so it is skipped by assistive technology until opened.",
+    "uses": []
+  },
+  {
     "name": "divider",
     "description": "A single 1px rule for separating two stacked sections (horizontal, Penpot's own instance) or two items in a row, e.g. grouped buttons in a table-header-actions bar (vertical, not from Penpot).",
     "status": "stable",
@@ -193,6 +339,81 @@
       "divider"
     ],
     "a11y_notes": "Menu container has role=\"listbox\"; items have role=\"option\". The trigger (paired via [data-dropdown-trigger] inside a .ds-dropdown wrapper) gets aria-expanded toggled automatically by component.js -- it must already carry aria-haspopup=\"listbox\" itself (input-dropdown does). Escape closes the menu and returns focus to the trigger. Clicking outside the .ds-dropdown wrapper closes it. Keyboard (2026-10-03): ArrowDown/ArrowUp on the closed trigger open the menu; in the open menu they move focus between enabled items (wrapping), Home/End jump to the first/last, Enter/Space pick the focused item (native button click), Tab closes the menu and lets focus move on. Opening from the keyboard focuses the selected item, else the first; closing while focus is inside the menu returns it to the trigger. Items stay ordinary Tab-reachable buttons rather than a roving tabindex, so nothing extra is needed for a menu a host builds at runtime. A divider item renders role=\"separator\" (divider's own template), not role=\"option\" -- it's not a selectable choice and carries no data-value, so component.js's select-click listener has nothing to attach to it in the first place. Multiple: the listbox has aria-multiselectable=\"true\" and each option's aria-selected is its ticked state; the glyphs are aria-hidden."
+  },
+  {
+    "name": "dropzone",
+    "description": "A file field that takes one file by drag and drop or the file picker, then shows that file as a row (thumbnail, name, size) with Remove. A real file input, so the form submits it without script.",
+    "status": "draft",
+    "category": "inputs",
+    "variants": [],
+    "props": [
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "default": "ds-dropzone-demo",
+        "description": "The file input's id (the drop area is its <label>)."
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "default": "file",
+        "description": "The file input's form name."
+      },
+      {
+        "name": "accept",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "The input's accept list (e.g. image/jpeg,image/png). A hint for the picker only; the server still checks the file."
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "The input is required."
+      },
+      {
+        "name": "prompt",
+        "type": "string",
+        "required": false,
+        "default": "Drop a photo here or",
+        "description": "Text before the choose link."
+      },
+      {
+        "name": "choose_label",
+        "type": "string",
+        "required": false,
+        "default": "choose a file",
+        "description": "The inline text-button-styled label that opens the picker."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "required": false,
+        "default": "JPG or PNG, up to 20 MB",
+        "description": "Formats and size limit, in the data role. '' renders none."
+      },
+      {
+        "name": "remove_label",
+        "type": "string",
+        "required": false,
+        "default": "Remove",
+        "description": "Label of the file row's button."
+      }
+    ],
+    "source": "none",
+    "rationale": "From the application design canvas (2026-10-23), no Figma node. The dashed border-width-default edge in object-dark-passive is the drop-target sign (a solid edge would read as a panel); it and the add icon turn accent-1 while a file is dragged over, the only feedback a drag has. The fill is bg-surface-pressed: the canvas used the base-50 primitive, which has no themed token (it would stay light in the dark theme); flagged and replaced. The whole area is the input's <label>, so a click anywhere opens the picker and the input stays the single real control (keyboard focus shows the accent outline on the area). The choose text uses text-button's look (secondary, dotted: it stays on the page) without being a second button. Subdued texts use text-subactive (the canvas used the base-750 primitive, not themed). After a choice the area gives way to one file row so the reader sees what will be sent: thumbnail 64x84 (the canvas's size, a portrait page), name, size, pixel size, Remove. The thumbnail is a local object URL; nothing is uploaded by this component. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "The control is a native <input type=file> labelled by the whole area, so it is focusable and announced with the prompt text. Remove returns focus to the input. Drag and drop is an addition, never the only way.",
+    "uses": [
+      "text-button"
+    ]
   },
   {
     "name": "empty-state",
@@ -452,7 +673,7 @@
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bd9b372",
-    "rationale": "Only Size is modeled as a variant. Penpot's other axis, Type (Archived / Found / Analysed / Queue / Queue-Small), changes only which title table-header renders and how many actions table-header-actions renders -- those components' own variants -- so modeling it here would duplicate their variant surfaces in a shell with no visual opinion about them.\n\ndata-size=\"big\" (Figma header row): a plain 60px bg.surface row with 20px side padding, no gap between actions, no frame and no top padding, and one hairline under it -- the same hairline every table row has, so the header reads as the table's first row. data-size=\"small\" keeps the earlier shaded bar: bg.surface-pressed with the border-width-thin / object-dark-passive border of table-cell's grid, inner padding spacing.3 (8px, Token-bound in Penpot's Queue/Small instance). Nested table-header's own chip background and border are reset inside the row so the two don't form a doubled box. The row is justify-content: space-between, which docks the title left and the actions right regardless of either's width. The divider Penpot draws under the header is not composed: the row's own border-bottom does that job, and a text.subactive divider against it would render as a doubled, two-tone line.\n\nSearch (not sourced from Penpot): one search box per table, filtering its rows. It composes input's template unchanged (no icon; the icon set has no search glyph). With a search, the row switches from space-between to flex-start + gap, because space-between only works for exactly two children. By default a \"Search\" trigger reveals the input and blurring an empty input collapses it back, so an unused field doesn't take header space; a non-empty input stays open. data-open=\"always\" renders the input with no trigger, and data-align=\"end\" docks the zone to the right edge. layout=\"bulk\" is the bulk-actions row: table-header-actions flush left, an optional always-open search right, no title. The search field keeps a visible border through header-block's own rule, although input's transparent fill is borderless at rest. Rendering verified in light and dark themes. more_actions (bulk layout, explicit request 2026-10-01): a second action group after the first, set apart by divider's vertical dot -- the same dot this system already uses between actions -- so page-wide actions (Add, Fetch) and actions on the selected rows read as two groups in one reading line. search_plain: the field is input's own, unboxed at rest, for a header whose search shouldn't stand out as a box.",
+    "rationale": "Only Size is modeled as a variant. Penpot's other axis, Type (Archived / Found / Analysed / Queue / Queue-Small), changes only which title table-header renders and how many actions table-header-actions renders -- those components' own variants -- so modeling it here would duplicate their variant surfaces in a shell with no visual opinion about them.\n\ndata-size=\"big\" (Figma header row): a plain 60px bg.surface row with 20px side padding, no gap between actions, no frame and no top padding, and one hairline under it -- the same hairline every table row has, so the header reads as the table's first row. data-size=\"small\" keeps the earlier shaded bar: bg.surface-pressed with the border-width-thin / object-dark-passive border of table-cell's grid, inner padding spacing.3 (8px, Token-bound in Penpot's Queue/Small instance). Nested table-header's own chip background and border are reset inside the row so the two don't form a doubled box. The row is justify-content: space-between, which docks the title left and the actions right regardless of either's width. The divider Penpot draws under the header is not composed: the row's own border-bottom does that job, and a text.subactive divider against it would render as a doubled, two-tone line.\n\nSearch (not sourced from Penpot): one search box per table, filtering its rows. It composes input's template unchanged (no icon; the icon set has no search glyph). With a search, the row switches from space-between to flex-start + gap, because space-between only works for exactly two children. By default a \"Search\" trigger reveals the input and blurring an empty input collapses it back, so an unused field doesn't take header space; a non-empty input stays open. data-open=\"always\" renders the input with no trigger, and data-align=\"end\" docks the zone to the right edge. layout=\"bulk\" is the bulk-actions row: table-header-actions flush left, an optional always-open search right, no title. The search field keeps a visible border through header-block's own rule, although input's transparent fill is borderless at rest. Rendering verified in light and dark themes. more_actions (bulk layout, explicit request 2026-10-01): a second action group after the first, set apart by divider's vertical dot -- the same dot this system already uses between actions -- so page-wide actions (Add, Fetch) and actions on the selected rows read as two groups in one reading line. search_plain: the field is input's own, unboxed at rest, for a header whose search shouldn't stand out as a box. 2026-10-23: the big row uses min-height and wraps its groups (actions, search) onto more rows on a narrow window instead of widening the page.",
     "themes_supported": [
       "light",
       "dark"
@@ -503,6 +724,12 @@
         "type": "string",
         "required": false,
         "description": "\"compact\": 56px tabs for a pane head (see rationale); default is the 60px full-width strip."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "description": "Render the tab as an <a href> (through safe_url) so it navigates, e.g. between pages, instead of a button that switches a panel. Keeps role=\"tab\" and aria-selected."
       }
     ],
     "source": "figma:APPFILEKEY#150:16076,150:16077",
@@ -511,7 +738,96 @@
       "light",
       "dark"
     ],
-    "a11y_notes": "A real role=\"tab\" <button>, per the WAI-ARIA tabs pattern. The host wraps the tabs in a role=\"tablist\" container (this component doesn't own that wrapper) and pairs each tab with its role=\"tabpanel\". aria-selected reflects the active prop and is kept in sync on click by component.js. The focus-visible outline (accent-1, 2px, matching table-header's tabs) has no Figma equivalent: static design tools don't model keyboard focus.",
+    "a11y_notes": "A real role=\"tab\" <button>, per the WAI-ARIA tabs pattern. The host wraps the tabs in a role=\"tablist\" container (this component doesn't own that wrapper) and pairs each tab with its role=\"tabpanel\". aria-selected reflects the active prop and is kept in sync on click by component.js. The focus-visible outline (accent-1, 2px, matching table-header's tabs) has no Figma equivalent: static design tools don't model keyboard focus. With href the tab is an <a role=\"tab\">: the WAI-ARIA tabs pattern expects tabs to switch panels in place, so use href only when each tab is a separate page and mark the current one with active.",
+    "uses": []
+  },
+  {
+    "name": "image-regions",
+    "description": "A photo (or a page placeholder) with rectangles over the parts that need the reader's eye, e.g. where text recognition was unsure (uncertain) or where a correction was taken (accepted).",
+    "status": "draft",
+    "category": "cards-layouts",
+    "variants": [
+      "uncertain",
+      "accepted"
+    ],
+    "props": [
+      {
+        "name": "src",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Image URL (through safe_url). None: the page placeholder."
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "required": false,
+        "default": "",
+        "description": "The image's alt text."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "Photo",
+        "description": "Accessible name of the placeholder."
+      },
+      {
+        "name": "regions",
+        "type": "array",
+        "required": false,
+        "default": [],
+        "description": "List of {x, y, w, h, kind, label}: position and size in percent of the image, kind uncertain | accepted, label an accessible description (none: decorative)."
+      }
+    ],
+    "source": "none",
+    "rationale": "From the application design canvas (2026-10-23), no Figma node. The rectangles use the same signal pairs as inline-mark's states in the text beside the photo (uncertain: the for-review row-status edge and fill; accepted: the approved row-status edge, no fill, so the text under it stays readable; both themed, unlike the signal-* primitives), so photo and text point at each other. Edge width border-width-default so the frame reads at a glance over a busy photo. The placeholder (grey lines on bg-surface-pressed, 440px high -- the canvas's portrait page) stands in while no image is shown; the canvas used the base-50 primitive, which has no themed token, replaced by bg-surface-pressed. Positions are host data in data-* attributes, applied as private custom properties by component.js, so no style value comes from the host. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "With an image, alt describes it; without, the frame is role=img with label. Each labelled region is role=img with its own name; unlabelled regions are aria-hidden.",
+    "uses": []
+  },
+  {
+    "name": "inline-mark",
+    "description": "A run of text inside a sentence that marks a correction: struck-through text to remove, or filled text to add, with an optional tooltip.",
+    "status": "draft",
+    "category": "tags",
+    "variants": [
+      "remove",
+      "add",
+      "uncertain"
+    ],
+    "props": [
+      {
+        "name": "kind",
+        "type": "string",
+        "required": true,
+        "default": "remove",
+        "description": "remove (struck through, system-error-strong), add (signal-success-light fill, success-strong text, medium weight, dotted underline) or uncertain (row-status-for-review fill and outline: text a recognizer was unsure of)."
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "required": true,
+        "default": "word",
+        "description": "The run's text. Plain text."
+      },
+      {
+        "name": "tooltip",
+        "type": "string",
+        "required": false,
+        "description": "Optional explanation; set as data-tooltip, so the tooltip component shows it on hover and focus. Makes the mark focusable (tabindex 0)."
+      }
+    ],
+    "source": "none",
+    "rationale": "Shows a correction in the sentence itself, so a learner sees what changed and where. Two kinds: remove is struck through in the error color; add has a light success fill, the strong success color, medium weight and a dotted underline, so it is distinguishable without color (a struck-through run versus an underlined one). Colors are existing tokens (system-error-strong follows the theme; the signal pair is the palette's own light/strong, like the tag, so the add fill keeps its contrast in both themes). The mark inherits the surrounding font and size and only changes weight for add, so it can sit in any line of text. The tooltip is the existing data-tooltip mechanism; a marked run with a tooltip is focusable so it is reachable by keyboard. No source in Figma: drawn from the application's design canvas of 2026-10-21; no Figma node exists. uncertain (2026-10-23): the for-review row-status pair as fill and outline (themed; the signal-warning primitives stay light under light text in the dark theme) marks text the reader should check (text recognition was unsure); told apart from the corrections by shape (an outline, no underline, no strike), not color alone.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Plain inline span. Strike-through and fill are visual only: a screen reader reads the text without saying it was removed or added, so a host should state the change in text nearby (for example a visually hidden 'removed' / 'added', or the corrected sentence in full). The tooltip text is only reachable by hover and focus.",
     "uses": []
   },
   {
@@ -521,6 +837,7 @@
     "category": "inputs",
     "variants": [
       "text",
+      "password",
       "textarea"
     ],
     "props": [
@@ -529,7 +846,7 @@
         "type": "string",
         "required": false,
         "default": "text",
-        "description": "\"text\" (default, a single-line <input>) or \"textarea\" (a multi-line <textarea>, not from Penpot -- see rationale)."
+        "description": "\"text\" (default, a single-line <input>), \"password\" (a single-line <input type=\"password\">) or \"textarea\" (a multi-line <textarea>, not from Penpot -- see rationale)."
       },
       {
         "name": "fill",
@@ -556,6 +873,44 @@
         "required": false,
         "default": 8,
         "description": "Only meaningful when type=\"textarea\". Sets the native rows attribute."
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "description": "Native name attribute, so the field is submitted with its form."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "description": "Native id attribute, for a visible <label for>."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "Accessible name (aria-label) for a field without a visible <label>."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Native disabled attribute. Not a Figma state; the browser's disabled styling applies."
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Native required attribute."
+      },
+      {
+        "name": "autocomplete",
+        "type": "string",
+        "required": false,
+        "description": "Native autocomplete token, e.g. \"username\" or \"current-password\"."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc59",
@@ -641,15 +996,85 @@
     "a11y_notes": "role=\"status\" so the loading message is announced when the veil is shown; the spinner is aria-hidden. The veil does not trap focus: the host should also mark the area inert while loading if it must not be used."
   },
   {
+    "name": "message",
+    "description": "One turn of a task and answer exchange: a filled prompt panel or an outlined, right-aligned answer, with an optional label and optional inline corrections.",
+    "status": "draft",
+    "category": "cards-layouts",
+    "variants": [
+      "prompt",
+      "answer"
+    ],
+    "props": [
+      {
+        "name": "variant",
+        "type": "string",
+        "required": true,
+        "default": "prompt",
+        "description": "prompt (filled bg-surface-pressed panel) or answer (outlined, right-aligned). Other values fall back to prompt."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "Optional small uppercase caption above the text."
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "required": false,
+        "default": "Message",
+        "description": "The message text. Plain text."
+      },
+      {
+        "name": "segments",
+        "type": "array",
+        "required": false,
+        "description": "Optional list of {text, kind?, tooltip?} replacing `text`. A segment with kind remove or add renders as an inline-mark (with its tooltip); others are plain text."
+      }
+    ],
+    "source": "none",
+    "rationale": "A task and the learner's reply are two voices, so they differ by shape, not only by color: the prompt is a filled panel (bg-surface-pressed), the answer is outlined with the hairline token and aligned to the right. Padding is spacing-5 for both; the text uses the body type, the label the data role in uppercase and text-subactive, so the label reads as a caption. Segments let the same box show a corrected sentence by composing inline-mark; the plain-text path covers every other case. Arrangement of messages in a column (gaps, a pinned input) is the host's layout, not part of this component. No Figma node: taken from the application's design canvas of 2026-10-21.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Plain divs of text; no role. A host that shows a conversation should put the messages in a list or a log region and say who speaks (the label can carry it). Corrections come from inline-mark; see its notes on conveying removed and added text to assistive technology.",
+    "uses": [
+      "inline-mark"
+    ]
+  },
+  {
     "name": "nav-bar",
     "description": "The primary top navigation bar: a workspace switcher (left), the page / section links (center), and a theme toggle (right). A composition shell, like table-row -- it composes real input-dropdown and text-button instances rather than restyling them. It stays pinned to the top of the viewport while the page scrolls (position:sticky, top:0), with an opaque background and a bottom hairline so it stays legible over scrolling content; this is part of the component, so every page that uses it gets the same behavior.",
     "status": "stable",
     "category": "navigation",
     "layout": "wide",
     "variants": [],
-    "props": [],
+    "props": [
+      {
+        "name": "nav_links",
+        "type": "array",
+        "required": false,
+        "default": null,
+        "description": "Center links: {label, href, current}."
+      },
+      {
+        "name": "workspace_label",
+        "type": "string",
+        "required": false,
+        "default": "Workspace",
+        "description": "Value of the left dropdown."
+      },
+      {
+        "name": "right_actions",
+        "type": "array",
+        "required": false,
+        "default": [],
+        "description": "Extra actions before the theme toggle: {label, href} is a link; {label, form_action, hidden} is a POST form around a submit button (hidden: name -> value, e.g. a CSRF token)."
+      }
+    ],
     "source": "penpot:7cfc6f3b-95fe-808f-8008-8d3a693d14e4",
-    "rationale": "Layout from Penpot's Nav-bar instance: a flex row, centered, justify-content: space-between; both side slots are flex rows too, so buttons of different heights line up. Box values follow the Figma nav instance: 10px (spacing-cell) padding on all four sides and a 0.5px bottom hairline in object-dark-passive -- raw 0.5px because Figma draws it and --ds-border-width-thin (1px) stays correct for tables. Penpot's column gap of 101px is not reproduced: it is an artifact of a fixed 1240px demo board, and with space-between any explicit gap would be right at exactly one width. Sticky, not fixed: the bar is always the page's first full-width element, so both look the same once scrolled, but sticky keeps it in document flow and content below needs no hand-maintained offset. bg.surface and the hairline keep it legible over content scrolling beneath it.\n\nLeft: a composed input-dropdown at 160px (the width table-cell's dropdown cell uses for the same Penpot source). Center: text-buttons with no gap (Penpot's gap is 0; the buttons' own padding separates them). Which link is primary (current page) is markup the host supplies; Penpot's \"Property 1\" axis only changes which link carries it, so it isn't a style variant. Right: the theme toggle is a real text-button (secondary, active, dotted -- toggling stays on the page) with an icon and a visible label (\"Dark\" / \"Light\"); both name the target theme, the same convention the site's own toggle uses. The label is not sourced from Penpot, whose theme icon is a bare glyph. The theme icons draw a 16-unit circle in a 24-unit viewBox, so a spacing-7 (24px) box reproduces Penpot's 16px glyph. .ds-nav-bar__theme-* classes are kept only as stable selectors for the toggle script and carry no CSS.\n\nNotification dot: .ds-nav-bar__dot inside a nav link is a 12px accent-2 circle at the link's right edge, toggled with hidden -- an unread-updates marker. It is the only round shape in the system; Figma draws it round. Keeping it in sync across pages is the host's concern. Not sourced from the design: the link click-swap and the theme toggle's behavior, without which the current link would never change and the toggle wouldn't toggle. Rendering verified in light and dark themes.",
+    "rationale": "Layout from Penpot's Nav-bar instance: a flex row, centered, justify-content: space-between; both side slots are flex rows too, so buttons of different heights line up. Box values follow the Figma nav instance: 10px (spacing-cell) padding on all four sides and a 0.5px bottom hairline in object-dark-passive -- raw 0.5px because Figma draws it and --ds-border-width-thin (1px) stays correct for tables. Penpot's column gap of 101px is not reproduced: it is an artifact of a fixed 1240px demo board, and with space-between any explicit gap would be right at exactly one width. Sticky, not fixed: the bar is always the page's first full-width element, so both look the same once scrolled, but sticky keeps it in document flow and content below needs no hand-maintained offset. bg.surface and the hairline keep it legible over content scrolling beneath it.\n\nLeft: a composed input-dropdown at 160px (the width table-cell's dropdown cell uses for the same Penpot source). Center: text-buttons with no gap (Penpot's gap is 0; the buttons' own padding separates them). Which link is primary (current page) is markup the host supplies; Penpot's \"Property 1\" axis only changes which link carries it, so it isn't a style variant. Right: the theme toggle is a real text-button (secondary, active, dotted -- toggling stays on the page) with an icon and a visible label (\"Dark\" / \"Light\"); both name the target theme, the same convention the site's own toggle uses. The label is not sourced from Penpot, whose theme icon is a bare glyph. The theme icons draw a 16-unit circle in a 24-unit viewBox, so a spacing-7 (24px) box reproduces Penpot's 16px glyph. .ds-nav-bar__theme-* classes are kept only as stable selectors for the toggle script and carry no CSS.\n\nNotification dot: .ds-nav-bar__dot inside a nav link is a 12px accent-2 circle at the link's right edge, toggled with hidden -- an unread-updates marker. It is the only round shape in the system; Figma draws it round. Keeping it in sync across pages is the host's concern. Not sourced from the design: the link click-swap and the theme toggle's behavior, without which the current link would never change and the toggle wouldn't toggle. Rendering verified in light and dark themes. Additions 2026-10-23: right_actions for actions such as signing out (a POST form whose box is display: contents so it does not change the row); the bar wraps its groups onto more rows on a narrow window instead of widening the page, and has z-index 3 (pane's sticky head's value) so positioned content scrolling under the sticky bar does not paint over it. 2026-10-23: the left and right groups take equal shares of the remaining width (flex 1 1 0, never below their content), so the center links sit at the bar's true middle, aligned with a page's centered content, instead of midway between two groups of different widths.",
     "themes_supported": [
       "light",
       "dark"
@@ -657,6 +1082,92 @@
     "a11y_notes": "A real <nav aria-label=\"Primary\"> landmark (not in Penpot; a design tool has no landmarks). Center links are <button> elements with aria-current=\"page\" on the current one, updated on click by component.js; in a real site they should be <a href>. The theme toggle's accessible name is its visible label (\"Dark\" / \"Light\"), with the icon aria-hidden and no separate aria-label, so visible and accessible names can't diverge (WCAG 2.5.3); both update on every click to name what activating it does. The workspace switcher is input-dropdown as-is; see its notes.",
     "uses": [
       "input-dropdown",
+      "text-button"
+    ]
+  },
+  {
+    "name": "note-item",
+    "description": "One word noted while reading, in a side list: the word colored by gender, its translation, the form it had in the text, and either an 'in list' tag or an 'Add to list' action.",
+    "status": "draft",
+    "category": "sidebar",
+    "variants": [
+      "in-list",
+      "not-in-list"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "default": "die Unterlagen",
+        "description": "The word, with its article for nouns. Plain text."
+      },
+      {
+        "name": "article",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "der | die | das colors the word (der accent-1, die row-status-declined-text, das row-status-approved-text); anything else keeps the text color."
+      },
+      {
+        "name": "translation",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "The translation. Plain text."
+      },
+      {
+        "name": "form",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "The form the word had in the text, in the data role."
+      },
+      {
+        "name": "in_list",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "true: a passive neutral tag; false: the add action."
+      },
+      {
+        "name": "in_list_label",
+        "type": "string",
+        "required": false,
+        "default": "in list",
+        "description": "The tag's text."
+      },
+      {
+        "name": "add_label",
+        "type": "string",
+        "required": false,
+        "default": "Add to list",
+        "description": "The action's label (secondary, dotted)."
+      },
+      {
+        "name": "submit",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "The add action submits its enclosing form."
+      },
+      {
+        "name": "extra_attrs",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Raw attributes on the add button (page-author markup only)."
+      }
+    ],
+    "source": "none",
+    "rationale": "From the application design canvas (2026-10-23), no Figma node. Three lines because the three facts are read in order: which word (in the same gender colors as table-cell's article links, so a noun's gender is visible before its article is read), what it means, how it appeared in the text (data role, text-subactive: context, not content). The state sits at the end of the first line: a passive tag when nothing is left to do, a secondary dotted text-button when there is (it stays in the view). Padding spacing-4 / spacing-6 matches a pane's content inset; a border-table hairline separates items like table rows. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "Plain text lines and a real button; color is never the only carrier of the gender, which the article in label also states.",
+    "uses": [
+      "tag",
       "text-button"
     ]
   },
@@ -696,10 +1207,28 @@
         "required": false,
         "default": false,
         "description": "Render the rename field (.ds-page-head__title-input) in place of the title. Same type tokens, no padding or border, so the bar does not change size."
+      },
+      {
+        "name": "actions_left",
+        "type": "array",
+        "required": false,
+        "description": "List of {label, href?, submit?, underline?} rendered as text buttons next to the title, replacing main_action. An empty list renders none. Unset: the single main_action button, as before."
+      },
+      {
+        "name": "actions_right",
+        "type": "array",
+        "required": false,
+        "description": "Same item shape, rendered on the right, replacing the fixed Undo / Download PDF buttons. An empty list renders none. Unset: those two buttons, as before."
+      },
+      {
+        "name": "meta_text",
+        "type": "string",
+        "required": false,
+        "description": "A passive line of text after the left-hand actions (counts, a note). Plain text, not interactive."
       }
     ],
     "source": "figma:APPFILEKEY#150:16217,150:16233,150:16362",
-    "rationale": "Height is spacing.9 + spacing.6 (60px), side padding spacing.6 (20px), bg.surface with one hairline (object-dark.passive) under it. The title is the heading-3 role (Inter 24px; one step above the heading-4 the Figma frames use, 2026-10-18, explicit request: the set name read too small) with line-height normal, so the bar's height, not the type scale, sets the rhythm. The gap between title and main action is spacing.cell (10px); the right group has no gap because text buttons hug their labels (see text-button). Both groups are flex rows with min-width 0, so a long title ellipsizes instead of pushing the actions out. Rendering verified in light and dark themes. Rename in place (2026-10-11): the title is the heading-4 role; the rename field reuses the same four type tokens with zero padding, border and fill, so swapping title for field changes nothing about the box: no jump, no reflow of the actions. It is marked by an accent line drawn as an inset shadow (not a border, which would add height) and sized to its text with field-sizing: content, capped at the bar. The editable title carries the system's dotted-underline clickable affordance on hover and focus only, so a read-only title looks as before. Not from Figma (the Figma bar draws no editing state); built from existing tokens only.",
+    "rationale": "Height is spacing.9 + spacing.6 (60px), side padding spacing.6 (20px), bg.surface with one hairline (object-dark.passive) under it. The title is the heading-3 role (Inter 24px; one step above the heading-4 the Figma frames use, 2026-10-18, explicit request: the set name read too small) with line-height normal, so the bar's height, not the type scale, sets the rhythm. The gap between title and main action is spacing.cell (10px); the right group has no gap because text buttons hug their labels (see text-button). Both groups are flex rows with min-width 0, so a long title ellipsizes instead of pushing the actions out. Rendering verified in light and dark themes. Rename in place (2026-10-11): the title is the heading-4 role; the rename field reuses the same four type tokens with zero padding, border and fill, so swapping title for field changes nothing about the box: no jump, no reflow of the actions. It is marked by an accent line drawn as an inset shadow (not a border, which would add height) and sized to its text with field-sizing: content, capped at the bar. The editable title carries the system's dotted-underline clickable affordance on hover and focus only, so a read-only title looks as before. Not from Figma (the Figma bar draws no editing state); built from existing tokens only. 2026-10-23: min-height instead of height and flex-wrap, so on a narrow window the groups wrap onto a second row instead of widening the page; at full width it is still 60px.",
     "themes_supported": [
       "light",
       "dark"
@@ -745,10 +1274,45 @@
         "required": false,
         "default": "Add project",
         "description": "Label of the head's text button."
+      },
+      {
+        "name": "body_html",
+        "type": "markup",
+        "required": false,
+        "default": null,
+        "description": "Block body set with {% set body_html %}...{% endset %} before the include (markup-safe; its own {{ }} autoescape). A plain string is escaped like content."
+      },
+      {
+        "name": "action_href",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "The head's action is a link (e.g. Close back to the view without this side pane)."
+      },
+      {
+        "name": "no_action",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "No head action."
+      },
+      {
+        "name": "emphasis",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "The title at full opacity (data-emphasis)."
+      },
+      {
+        "name": "data-motion",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "On .ds-pane, set by the host for one animation and removed on animationend: enter (slide in from the right edge + fade in, 220ms), leave (slide out + fade out, 160ms, surface fill), fade-in / fade-out (the same without the slide, for a pane stacked above its list). No motion under prefers-reduced-motion."
       }
     ],
     "source": "figma:APPFILEKEY#150:16217,150:16233,150:16362",
-    "rationale": "Head height is spacing.9 + spacing.5 (56px), side padding spacing.6, bg.surface, one hairline under it. The title uses the \"title\" role (Inter SemiBold 16px) and the caption the caption role (Inter Italic 16px), both at 50% opacity as in Figma, bottom-aligned so their baselines meet, spacing.cell apart. .ds-pane__body and .ds-pane__scroll are separate so a positioned body (e.g. one a loading-veil covers) can wrap the scrolling region, while a simple pane scrolls directly under the head. The scrollbar is hidden (scrollbar-width: none); wheel, keys and touch still scroll.\n\nAttributes: data-divider=\"start\" on the head and body draws a hairline on the pane's left edge (the divider between two panes); data-emphasis=\"true\" on the title shows it at full opacity; a body with the hidden attribute is hidden (tab panels).\n\nResizable split: any flex row with data-resizable and a .ds-split__handle between two neighbours. The handle is a 0-wide flex item on the border between them, with an 8px (spacing.3) grab area centered on the line and a 2px accent line on hover, focus and while dragging. Dragging, or ArrowLeft / ArrowRight (24px a step), resizes the target: data-resize-target=\"end\" (default) the element after the handle, \"start\" the one before it. data-min-size / data-min-rest set the target's and the rest's minimum in pixels (default 320 each). The size is applied as data-resized plus --_resize-size on the target, not an inline flex, so CSS states keep priority (sidebar-list's collapsed rule beats it, and the handle beside a collapsed sidebar is hidden). The size is not remembered across a reload (explicit request 2026-10-12): every split starts as the CSS has it, and data-resize-key only clears a share an earlier version stored. Within a session the size is a share of the row, so another window width keeps the proportion. It emits ds-split-resize and a window resize, so nested splits re-apply their stored share and paper-preview's scroll thumb updates. Not sourced from Figma: the handle and resizing; the design shows only the divider line. Rendering verified in light and dark themes.",
+    "rationale": "Head height is spacing.9 + spacing.5 (56px), side padding spacing.6, bg.surface, one hairline under it. The title uses the \"title\" role (Inter SemiBold 16px) and the caption the caption role (Inter Italic 16px), both at 50% opacity as in Figma, bottom-aligned so their baselines meet, spacing.cell apart. .ds-pane__body and .ds-pane__scroll are separate so a positioned body (e.g. one a loading-veil covers) can wrap the scrolling region, while a simple pane scrolls directly under the head. The scrollbar is hidden (scrollbar-width: none); wheel, keys and touch still scroll.\n\nAttributes: data-divider=\"start\" on the head and body draws a hairline on the pane's left edge (the divider between two panes); data-emphasis=\"true\" on the title shows it at full opacity; a body with the hidden attribute is hidden (tab panels).\n\nResizable split: any flex row with data-resizable and a .ds-split__handle between two neighbours. The handle is a 0-wide flex item on the border between them, with an 8px (spacing.3) grab area centered on the line and a 2px accent line on hover, focus and while dragging. Dragging, or ArrowLeft / ArrowRight (24px a step), resizes the target: data-resize-target=\"end\" (default) the element after the handle, \"start\" the one before it. data-min-size / data-min-rest set the target's and the rest's minimum in pixels (default 320 each). The size is applied as data-resized plus --_resize-size on the target, not an inline flex, so CSS states keep priority (sidebar-list's collapsed rule beats it, and the handle beside a collapsed sidebar is hidden). The size is not remembered across a reload (explicit request 2026-10-12): every split starts as the CSS has it, and data-resize-key only clears a share an earlier version stored. Within a session the size is a share of the row, so another window width keeps the proportion. It emits ds-split-resize and a window resize, so nested splits re-apply their stored share and paper-preview's scroll thumb updates. Not sourced from Figma: the handle and resizing; the design shows only the divider line. Rendering verified in light and dark themes. Additions 2026-10-23: body_html gives the pane a block slot (tables, paragraphs, lists) instead of string content only; action_href makes the head action a link, dotted because closing a side pane stays on the same view; caption '' renders none. Motion, 2026-10-23: a side pane opening beside a list slides 24px (spacing-7) and fades in, and leaves the same way, so the eye follows where the content came from; only transform and opacity animate, because animating the list's column widths re-laid out every row on every frame (measured: dropped frames on a 100-row table, none with this). While leaving the pane takes bg-surface so a list already widened underneath does not show through. Functional motion, off under prefers-reduced-motion.",
     "themes_supported": [
       "light",
       "dark"
@@ -919,6 +1483,40 @@
     ],
     "a11y_notes": "Each title is an <ol> with a single <li> so screen readers announce the step number. The head button is a real text-button. Collapsible steps: the title's <li> becomes role=button with aria-expanded and aria-controls, reachable by Tab, toggled by Enter / Space; a closed body is visibility:hidden.",
     "listed": false
+  },
+  {
+    "name": "progress-bar",
+    "description": "A thin line that shows how far a running task (e.g. local text recognition) has got, or that it is still running when its progress is unknown.",
+    "status": "draft",
+    "category": "controls",
+    "variants": [
+      "determinate",
+      "indeterminate"
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "required": false,
+        "default": null,
+        "description": "0-100. none (or omitted) renders the indeterminate bar."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "Progress",
+        "description": "Accessible name (aria-label)."
+      }
+    ],
+    "source": "none",
+    "rationale": "From the application design canvas (2026-10-23), no Figma node: a spacing-1 (4px) line in accent-1 under the flow's header. The track is border-table, the hairline color, so the empty part reads as part of the layout, not as a second control. The width comes from data-value via component.js into a private --_progress, so a host passes data, never a style value. Indeterminate (no value) moves a third-width fill across the track: the animation is functional, it is the only sign that a long local task is still running, and it stops under prefers-reduced-motion (the fill then shows full width at reduced opacity). Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "role=progressbar with aria-valuemin/max and aria-valuenow (omitted while indeterminate), and an aria-label.",
+    "uses": []
   },
   {
     "name": "radio",
@@ -1103,6 +1701,55 @@
     "a11y_notes": "Placeholders are aria-hidden; the container carries aria-busy=\"true\" while they are shown. The pulse is disabled under prefers-reduced-motion."
   },
   {
+    "name": "stepper",
+    "description": "The steps of a short multi-step flow in one row (e.g. upload a photo, check the recognized text, done), the current step marked and earlier steps checked off.",
+    "status": "draft",
+    "category": "navigation",
+    "variants": [],
+    "props": [
+      {
+        "name": "steps",
+        "type": "array",
+        "required": true,
+        "default": [
+          "Photo",
+          "Check text",
+          "Done"
+        ],
+        "description": "Step labels, in order. Plain text."
+      },
+      {
+        "name": "current",
+        "type": "number",
+        "required": true,
+        "default": 1,
+        "description": "1-based index of the current step. Steps before it are done (check mark), steps after it are to do."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "Steps",
+        "description": "aria-label of the list."
+      },
+      {
+        "name": "done_label",
+        "type": "string",
+        "required": false,
+        "default": "done",
+        "description": "Accessible name of a done step's check mark."
+      }
+    ],
+    "source": "none",
+    "rationale": "From the application design canvas (2026-10-23), no Figma node. Orientation, not content: the data typography role in uppercase and text-subactive, like a table's header labels. The current step is told apart by color (text-active) and by shape (a solid underline of border-width-default, offset spacing-2), so it does not depend on color alone; it is not accent-1 and not dotted, so it does not read as a link (CLAUDE.md, Interaction conventions). The steps are not clickable: the flow moves by its own buttons. A done step's check mark is two borders of a rotated box in currentColor, because the icon set has no check icon (checkbox-selected is a filled box); flagged rather than adding an icon. The canvas used the base-750 primitive for the inactive steps; text-subactive is the themed semantic token for it. aria-current=\"step\" marks the current step for assistive technology. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "An ordered list with an aria-label; the current step has aria-current=\"step\"; the check mark is role=img with an accessible name.",
+    "uses": []
+  },
+  {
     "name": "table-cell",
     "description": "A single cell within a table-row of a queue table: text data, an icon/checkbox slot, a link, a dropdown/input field, or an action-button slot, depending on `type`. table-row composes several of these per row; header-block's divider marks the boundary between the header and the first row of cells.",
     "status": "stable",
@@ -1122,7 +1769,8 @@
       "dropdown",
       "input",
       "empty-state",
-      "status-label"
+      "status-label",
+      "tag"
     ],
     "props": [
       {
@@ -1130,13 +1778,33 @@
         "type": "string",
         "required": true,
         "default": "text-active-cell",
-        "description": "Which cell kind this renders: checkbox-cell (was Penpot's \"icon\"), icon-cell (was \"saved\" and \"action-icons\", merged into one type that holds any number of icons), date, text-active-cell (was \"title\", \"organisation\" and \"description\", already identical), text-passive-cell (was \"source\"), text-subactive-cell (was \"summary\"), link, 1-action, 2-actions, 3-actions, dropdown, input, empty-state, status-label. See rationale."
+        "description": "Which cell kind this renders: checkbox-cell (was Penpot's \"icon\"), icon-cell (was \"saved\" and \"action-icons\", merged into one type that holds any number of icons), date, text-active-cell (was \"title\", \"organisation\" and \"description\", already identical), text-passive-cell (was \"source\"), text-subactive-cell (was \"summary\"), link, 1-action, 2-actions, 3-actions, dropdown, input, empty-state, status-label, tag. See rationale."
       },
       {
         "name": "content",
         "type": "string",
         "required": false,
-        "description": "The cell's text content, for text-bearing types (date, text-active-cell, text-passive-cell, text-subactive-cell, link, dropdown, input). Not applicable to checkbox-cell, icon-cell, 1-action, 2-actions, 3-actions, or empty-state, which have fixed or composed content. For 1-action/2-actions/3-actions, doubles as the primary (rightmost) button's label."
+        "description": "The cell's text content, for text-bearing types (date, text-active-cell, text-passive-cell, text-subactive-cell, link, dropdown, input, tag). Not applicable to checkbox-cell, icon-cell, 1-action, 2-actions, 3-actions, or empty-state, which have fixed or composed content. For 1-action/2-actions/3-actions, doubles as the primary (rightmost) button's label."
+      },
+      {
+        "name": "tag_type",
+        "type": "string",
+        "required": false,
+        "default": "neutral",
+        "description": "Only for type=\"tag\": the tag's type (accent-1 | accent-2 | accent-3 | success | warning | danger | neutral), passed to the composed tag."
+      },
+      {
+        "name": "tag_subtype",
+        "type": "string",
+        "required": false,
+        "default": "passive",
+        "description": "Only for type=\"tag\": active or passive, passed to the composed tag."
+      },
+      {
+        "name": "article",
+        "type": "string",
+        "required": false,
+        "description": "Only for type=\"link\": der | die | das colors the link by grammatical gender (der keeps accent-1, die row-status-declined-text, das row-status-approved-text). Other values are ignored."
       },
       {
         "name": "checkbox_role",
@@ -1194,10 +1862,45 @@
         "type": "string",
         "required": false,
         "description": "Text-bearing types only. Renders Figma's \"Single-active-t+button\" cell (D_SYSTEM node 28:949): the text clipped to one line with an ellipsis, followed by a secondary dotted text-button with this label (e.g. \"view\") that stays whole. The host page wires the button (e.g. to a popup showing the full text)."
+      },
+      {
+        "name": "submit",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Only for type \"1-action\": the action button is a submit button of the enclosing form."
+      },
+      {
+        "name": "plain",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Only for type=\"link\": no underline; without an article the link takes the text color and turns accent-1 while its row is hovered or focused. For a row whose whole area is the link (table-row href)."
+      },
+      {
+        "name": "mark",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Text-bearing types: a short count after the text (e.g. '\u27171'), in the declined status colors -- how often this form was wrong."
+      },
+      {
+        "name": "mark_label",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Accessible name of the mark (e.g. 'wrong once')."
+      },
+      {
+        "name": "highlight",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "'success' fills the cell with row-status-approved-bg and its text with row-status-approved-text (the answer in a rule table)."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bca088c",
-    "rationale": "Layout (Figma flat table): every cell is one table row high -- spacing.row (44px) plus a 1px object-dark-passive hairline under it -- with spacing.cell (10px) padding, on bg.surface, and no vertical rules. Text is one line with an ellipsis; .ds-table-cell__clip clips an excerpt beside an inline \"view\" button. Cells share the row's width (flex 1 1 0%); fixed-content types (checkbox-cell, icon-cell, input, the action types, status-label) are flex: none and size to their content. Link cells right-align and never wrap (at most two lines, accent-1, underline on hover). Action cells left-align with a 16px right padding. A dropdown or input cell lets its field fill the cell; the input keeps its box border in the cell (Figma's table rows draw it), although input's transparent fill is borderless elsewhere.\n\nTypes: started as Penpot's 15 Type values and were merged where Penpot's own cells were identical. text-active-cell (was title / organisation / description -- pixel-identical in Penpot) is text.active body text; text-passive-cell (was source) and text-subactive-cell (was summary; body-text italic) keep Penpot's identifiers; icon-cell (was saved and action-icons) holds any number of icons, adopting action-icons' multi-icon layout, a deliberate deviation for a lone saved icon; checkbox-cell (was icon) is Penpot's generic single-icon cell, also used for the drag handle. Penpot's State axis is \"Value 1\" (an unused placeholder) on almost every type, so there is no `state` prop: hover lives in the composed controls. Composition, not restyling: action cells compose text-button, dropdown and input cells compose input-dropdown and input.\n\nIcons: every glyph is the Figma D_SYSTEM set (node 103:4711) in icons/, inlined by component.js so currentColor and --_icon-fill / --_icon-mark apply. Checkbox and save rest as an input-icon outline on an input-fill box (input-icon rather than Figma's text-inactive, which disappears on the dark surface) and turn accent on hover; a selected checkbox is an accent box with an inverse mark; a saved bookmark fills with accent-2. checkbox-cell carries both an unchecked and a checked icon, and table-row's CSS swaps them off the row's data-selected, so selection needs no extra script. The checkbox styling is scoped to [data-icon=\"checkbox\"], so a drag glyph in the same cell layout isn't recolored; data-icon=\"drag\" paints Figma's drag glyph.\n\nRow actions: in light, active action buttons rest in text-inactive (like an inactive tab title) and turn accent-1 while their row is hovered, focused or selected (Figma node 237:31166), so a long table isn't a wall of blue; disabled, loading, error and unread buttons keep their own color. Dark keeps them accent, because dark's text-inactive would not read on its background. 1-action, 2-actions and 3-actions share one shape (row, left-aligned, flex: none); 3-actions has no Penpot instance and follows 2-actions.\n\nAdditions not sourced from the design: `editable` renders the text and a hidden .ds-input side by side and toggles hidden, so the cell's size never changes between states; the trigger is a row's own button (extra_attrs='data-edit-trigger'), because editing sits behind an explicit action. extra_attrs / secondary_extra_attrs / tertiary_extra_attrs pass raw attributes through to the composed text-buttons (author markup, never user data). status-label is a plain, non-interactive span in system-success replacing an action group once a record is done -- not a disabled button, since there is nothing to click. `checkbox_role=\"select-all\"` adds a third, semi-selected icon for a header checkbox that table-row drives. Shift+click on a Save icon saves or unsaves the range since the last Save click in the same table (visible rows, DOM order), dispatched as one ds-table-cell-favourite-toggle event with detail.range = true. Rendering verified in light and dark themes. Collapsed excerpt (explicit request 2026-10-11, threshold changed 2026-10-12): a text cell is an ellipsized excerpt (.ds-table-cell__clip) followed by a text button, usually \"view\". A button carrying data-collapse-label opts in: the excerpt is shown only when the column leaves room for as much text as \"Dear Artist, This October, ARRIVAL Gallery will bring artists\" in the excerpt's own font (the room is the cell's text box minus the button, the same in every row, so a column collapses entirely or not at all; re-measured on every width change and for cells added later). With less room component.js sets data-collapsed on the .ds-table-cell__text, style.css hides the excerpt, and the button is renamed after the field (\"Summary\", \"Full Description\") and lines up like a button standing in for column text. Other cells are untouched. The sample text is a constant in component.js because it is a behavior, not a style value.\n\nThe notes field's \"Add a note\" placeholder is hidden (opacity 0) until its row is hovered or something in the row has focus: empty fields on every row would repeat the same hint down the column. Typed text is unaffected.",
+    "rationale": "Layout (Figma flat table): every cell is one table row high -- spacing.row (44px) plus a 1px object-dark-passive hairline under it -- with spacing.cell (10px) padding, on bg.surface, and no vertical rules. Text is one line with an ellipsis; .ds-table-cell__clip clips an excerpt beside an inline \"view\" button. Cells share the row's width (flex 1 1 0%); fixed-content types (checkbox-cell, icon-cell, input, the action types, status-label) are flex: none and size to their content. Link cells right-align and never wrap (at most two lines, accent-1, underline on hover). Action cells left-align with a 16px right padding. A dropdown or input cell lets its field fill the cell; the input keeps its box border in the cell (Figma's table rows draw it), although input's transparent fill is borderless elsewhere.\n\nTypes: started as Penpot's 15 Type values and were merged where Penpot's own cells were identical. text-active-cell (was title / organisation / description -- pixel-identical in Penpot) is text.active body text; text-passive-cell (was source) and text-subactive-cell (was summary; body-text italic) keep Penpot's identifiers; icon-cell (was saved and action-icons) holds any number of icons, adopting action-icons' multi-icon layout, a deliberate deviation for a lone saved icon; checkbox-cell (was icon) is Penpot's generic single-icon cell, also used for the drag handle. Penpot's State axis is \"Value 1\" (an unused placeholder) on almost every type, so there is no `state` prop: hover lives in the composed controls. Composition, not restyling: action cells compose text-button, dropdown and input cells compose input-dropdown and input.\n\nIcons: every glyph is the Figma D_SYSTEM set (node 103:4711) in icons/, inlined by component.js so currentColor and --_icon-fill / --_icon-mark apply. Checkbox and save rest as an input-icon outline on an input-fill box (input-icon rather than Figma's text-inactive, which disappears on the dark surface) and turn accent on hover; a selected checkbox is an accent box with an inverse mark; a saved bookmark fills with accent-2. checkbox-cell carries both an unchecked and a checked icon, and table-row's CSS swaps them off the row's data-selected, so selection needs no extra script. The checkbox styling is scoped to [data-icon=\"checkbox\"], so a drag glyph in the same cell layout isn't recolored; data-icon=\"drag\" paints Figma's drag glyph.\n\nRow actions: in light, active action buttons rest in text-inactive (like an inactive tab title) and turn accent-1 while their row is hovered, focused or selected (Figma node 237:31166), so a long table isn't a wall of blue; disabled, loading, error and unread buttons keep their own color. Dark keeps them accent, because dark's text-inactive would not read on its background. 1-action, 2-actions and 3-actions share one shape (row, left-aligned, flex: none); 3-actions has no Penpot instance and follows 2-actions.\n\nAdditions not sourced from the design: `editable` renders the text and a hidden .ds-input side by side and toggles hidden, so the cell's size never changes between states; the trigger is a row's own button (extra_attrs='data-edit-trigger'), because editing sits behind an explicit action. extra_attrs / secondary_extra_attrs / tertiary_extra_attrs pass raw attributes through to the composed text-buttons (author markup, never user data). status-label is a plain, non-interactive span in system-success replacing an action group once a record is done -- not a disabled button, since there is nothing to click. `checkbox_role=\"select-all\"` adds a third, semi-selected icon for a header checkbox that table-row drives. Shift+click on a Save icon saves or unsaves the range since the last Save click in the same table (visible rows, DOM order), dispatched as one ds-table-cell-favourite-toggle event with detail.range = true. Rendering verified in light and dark themes. Collapsed excerpt (explicit request 2026-10-11, threshold changed 2026-10-12): a text cell is an ellipsized excerpt (.ds-table-cell__clip) followed by a text button, usually \"view\". A button carrying data-collapse-label opts in: the excerpt is shown only when the column leaves room for as much text as \"Dear Artist, This October, ARRIVAL Gallery will bring artists\" in the excerpt's own font (the room is the cell's text box minus the button, the same in every row, so a column collapses entirely or not at all; re-measured on every width change and for cells added later). With less room component.js sets data-collapsed on the .ds-table-cell__text, style.css hides the excerpt, and the button is renamed after the field (\"Summary\", \"Full Description\") and lines up like a button standing in for column text. Other cells are untouched. The sample text is a constant in component.js because it is a behavior, not a style value.\n\nThe notes field's \"Add a note\" placeholder is hidden (opacity 0) until its row is hovered or something in the row has focus: empty fields on every row would repeat the same hint down the column. Typed text is unaffected. Additions 2026-10-23 (application design canvas, no Figma node): plain links (data-plain) drop the underline because the whole row is the target, so an underline on one cell would mislabel the click area; a non-gendered plain link uses the text color at rest and accent-1 while its row is hovered (the row's hover is the affordance), in both themes. mark is a data-role count on row-status-declined-bg / -text, so a form table shows where the mistakes are in place, with an accessible name. highlight='success' is the approved row-status pair (themed; the signal-success primitives stay light in the dark theme), for the one cell that is the answer.",
     "themes_supported": [
       "light",
       "dark"
@@ -1205,9 +1908,10 @@
     "uses": [
       "text-button",
       "input-dropdown",
-      "input"
+      "input",
+      "tag"
     ],
-    "a11y_notes": "type=\"dropdown\" renders a real .ds-input-dropdown <button> (listen for its ds-input-dropdown-open event); type=\"input\" a real <input type=\"text\">; type=\"link\" a real <a href>. Icon cells use role=\"img\" with an aria-label per icon, since each icon is its own unit; the inlined SVGs carry no separate text. Icons are fetched at runtime relative to the script's own URL (so they work wherever the system is vendored), and need http(s): from file:// the icon slots stay empty. Known gaps: the Save icon toggles on click but stays role=\"img\" with no aria-pressed and no keyboard handler, so its state isn't announced and it is pointer-only, as is Shift+click range saving; `editable`'s switch to the input moves focus but isn't announced, and the input has no label. status-label is plain text."
+    "a11y_notes": "type=\"dropdown\" renders a real .ds-input-dropdown <button> (listen for its ds-input-dropdown-open event); type=\"input\" a real <input type=\"text\">; type=\"link\" a real <a href>. Icon cells use role=\"img\" with an aria-label per icon, since each icon is its own unit; the inlined SVGs carry no separate text. Icons are fetched at runtime relative to the script's own URL (so they work wherever the system is vendored), and need http(s): from file:// the icon slots stay empty. Known gaps: the Save icon toggles on click but stays role=\"img\" with no aria-pressed and no keyboard handler, so its state isn't announced and it is pointer-only, as is Shift+click range saving; `editable`'s switch to the input moves focus but isn't announced, and the input has no label. status-label is plain text. type=\"tag\" is plain inline text (see tag): the label carries the meaning, color only reinforces it."
   },
   {
     "name": "table-footer",
@@ -1296,7 +2000,7 @@
     ],
     "props": [],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bdb9ea8",
-    "rationale": "Renamed from Penpot's \"table-header_right-block\": the schema's name pattern rejects the underscore. Penpot's Actions axis values (\"1 Action\" ... \"3 Actions\", and inconsistently \"4\") are normalized to \"1-action\" ... \"4-actions\". The component is only a flex-row shell: column gap 0 (Token-confirmed in Penpot -- the buttons' own padding separates them) and right padding 0, because header-block's row already carries the 20px side padding and the buttons hug their labels. It composes real text-button instances rather than restyling buttons, because Penpot's source is itself composition: every child in every sampled instance is a text-button (no fill token, only a label). The emphasis pattern read off the instances: each extra action is lower emphasis, and the single primary action is always last, rightmost. Every sampled action (Add item, Export, Clear filters, Select all) acts within the current table view, so all use the dotted underline (CLAUDE.md, Interaction conventions). Each action may carry a `status` (text-button's, default 'active'), so bulk actions can render disabled until rows are selected. It sets no background, so header-block's shaded row shows through behind its buttons. Rendering verified in light and dark themes.",
+    "rationale": "Renamed from Penpot's \"table-header_right-block\": the schema's name pattern rejects the underscore. Penpot's Actions axis values (\"1 Action\" ... \"3 Actions\", and inconsistently \"4\") are normalized to \"1-action\" ... \"4-actions\". The component is only a flex-row shell: column gap 0 (Token-confirmed in Penpot -- the buttons' own padding separates them) and right padding 0, because header-block's row already carries the 20px side padding and the buttons hug their labels. It composes real text-button instances rather than restyling buttons, because Penpot's source is itself composition: every child in every sampled instance is a text-button (no fill token, only a label). The emphasis pattern read off the instances: each extra action is lower emphasis, and the single primary action is always last, rightmost. Every sampled action (Add item, Export, Clear filters, Select all) acts within the current table view, so all use the dotted underline (CLAUDE.md, Interaction conventions). Each action may carry a `status` (text-button's, default 'active'), so bulk actions can render disabled until rows are selected, `submit` (true: a form submit button) and `extra_attrs` (raw attribute passthrough, e.g. form=\"id\"). It sets no background, so header-block's shaded row shows through behind its buttons. Rendering verified in light and dark themes.",
     "themes_supported": [
       "light",
       "dark"
@@ -1488,10 +2192,30 @@
         "type": "string",
         "required": false,
         "description": "Optional data-flash=\"success\" on the row: its cells fade from system-success back to their own fill once, over three seconds (a result just landed). The host sets it and removes it on animationend; no animation under prefers-reduced-motion. The green starts weaker in the dark theme."
+      },
+      {
+        "name": "extra_attrs",
+        "type": "string",
+        "required": false,
+        "description": "Raw attribute passthrough on the row element (e.g. a data-* identifier the host page reads back). Same contract as text-button's extra_attrs: the host passes only trusted, pre-escaped markup."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "data-href on the row: a click anywhere in the row that is not on a control opens this URL (component.js). Keep a link cell in the row for keyboard and middle-click. Before navigating, a cancelable ds-table-row-open { href } event is dispatched on the row; preventDefault() keeps the page (a host opening the row in place)."
+      },
+      {
+        "name": "cells",
+        "type": "array",
+        "required": false,
+        "default": null,
+        "description": "Cell dicts passed to table-cell. Keys passed through: type, content, icons, secondary_label, input_value, href, single_icon, single_icon_label, priority, checkbox_role, options, dropdown_label, view_label, tag_type, tag_subtype, article, plain, mark, mark_label, highlight, submit, extra_attrs, secondary_extra_attrs, tertiary_label, tertiary_extra_attrs."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bd68c76",
-    "rationale": "Only Penpot's State axis (Default | Selected) is a style variant. Its other axes -- Type (Checkbox only, Analysed, Found, Archived, Submitted, Empty State, Collection, Check + Button, Snippet) and Comment -- only change which table-cells are composed, never the row's own CSS, so they are demo compositions, not props (as header-block treats its Type axis). Each Type's composition was read off its Penpot instance by x-position, not DOM order: Penpot authors rows in row-reverse with actions first, and this component uses plain left-to-right order, which renders the same and keeps the source readable. Penpot's \"Analysed2\" appears to be a leftover duplicate and is not demoed; the second, unlabeled checkbox of \"Check + Button\" is reproduced as it is, with no invented purpose.\n\nLayout (Figma flat table): the row is a flex container with align-items: stretch, so every cell is as tall as the tallest, like a real table row. Hover, focus-within and selected fills go on the cells, not the row, because hosts often lay rows out as display:contents inside a grid (so columns align across rows), and a display:contents element paints nothing. Selected is bg.surface-pressed; data-selected-fill=\"strong\" on the table container uses the darker base/250 (Figma screen 25). Checkbox and save icons show only on hover, focus, selected or saved (the header row always shows them), and data-reveal-actions on the container dims row actions to 40% until hover or keyboard focus, so a long table reads as data first. A row's data-status colors its Status dropdown's value as a pill in the row-status tokens.\n\nSelection: only a click on the row's own checkbox (a checkbox-cell containing [data-icon=\"checkbox\"], so a drag handle in the same cell type is excluded) toggles data-selected; the checked icon swaps in by CSS. Shift+click selects the range from the last clicked row in the same table (visible rows in DOM order, so it follows sorting and skips rows hidden by a search), as one ds-table-row-select event with detail.range = true. A [data-checkbox-group] container may hold one select-all header cell (table-cell checkbox_role=\"select-all\"), whose checked / semi / unchecked state follows how many rows are selected; clicking it selects all unless all are selected.\n\nReordering: a checkbox-cell holding Penpot's \"Drag\" glyph is a reorder handle. The row's own script uses native drag and drop, started only from the handle (draggable sits on the handle, which has a box even when the row is display:contents); dragover moves the row before or after the sibling under the pointer, measured on the sibling's first cell, and the dragged row's cells dim to 0.5 -- motion only as feedback. Hosts can drive their own drag and drop instead: data-dragging=\"true\" dims a row, data-drop=\"before\"/\"after\" draws an accent line on its top or bottom edge, and the whole handle cell shows the grab cursor. Not sourced from the design: selection, range selection, select-all and reordering. Rendering verified in light and dark themes.",
+    "rationale": "Only Penpot's State axis (Default | Selected) is a style variant. Its other axes -- Type (Checkbox only, Analysed, Found, Archived, Submitted, Empty State, Collection, Check + Button, Snippet) and Comment -- only change which table-cells are composed, never the row's own CSS, so they are demo compositions, not props (as header-block treats its Type axis). Each Type's composition was read off its Penpot instance by x-position, not DOM order: Penpot authors rows in row-reverse with actions first, and this component uses plain left-to-right order, which renders the same and keeps the source readable. Penpot's \"Analysed2\" appears to be a leftover duplicate and is not demoed; the second, unlabeled checkbox of \"Check + Button\" is reproduced as it is, with no invented purpose.\n\nLayout (Figma flat table): the row is a flex container with align-items: stretch, so every cell is as tall as the tallest, like a real table row. Hover, focus-within and selected fills go on the cells, not the row, because hosts often lay rows out as display:contents inside a grid (so columns align across rows), and a display:contents element paints nothing. Selected is bg.surface-pressed; data-selected-fill=\"strong\" on the table container uses the darker base/250 (Figma screen 25). Checkbox and save icons show only on hover, focus, selected or saved (the header row always shows them), and data-reveal-actions on the container dims row actions to 40% until hover or keyboard focus, so a long table reads as data first. A row's data-status colors its Status dropdown's value as a pill in the row-status tokens.\n\nSelection: only a click on the row's own checkbox (a checkbox-cell containing [data-icon=\"checkbox\"], so a drag handle in the same cell type is excluded) toggles data-selected; the checked icon swaps in by CSS. Shift+click selects the range from the last clicked row in the same table (visible rows in DOM order, so it follows sorting and skips rows hidden by a search), as one ds-table-row-select event with detail.range = true. A [data-checkbox-group] container may hold one select-all header cell (table-cell checkbox_role=\"select-all\"), whose checked / semi / unchecked state follows how many rows are selected; clicking it selects all unless all are selected.\n\nReordering: a checkbox-cell holding Penpot's \"Drag\" glyph is a reorder handle. The row's own script uses native drag and drop, started only from the handle (draggable sits on the handle, which has a box even when the row is display:contents); dragover moves the row before or after the sibling under the pointer, measured on the sibling's first cell, and the dragged row's cells dim to 0.5 -- motion only as feedback. Hosts can drive their own drag and drop instead: data-dragging=\"true\" dims a row, data-drop=\"before\"/\"after\" draws an accent line on its top or bottom edge, and the whole handle cell shows the grab cursor. Not sourced from the design: selection, range selection, select-all and reordering. Rendering verified in light and dark themes. The `cells` list passes each cell's own props through to table-cell: type, content, icons, secondary_label, input_value, href, single_icon, single_icon_label, priority, checkbox_role, options, dropdown_label, view_label, tag_type, tag_subtype and article. Additions 2026-10-23: href makes the whole row a mouse target (pointer cursor on every cell), skipping clicks on controls, with modifier keys or while selecting text; the row-select checkbox cell is focusable (role=checkbox, aria-checked following data-selected) and toggles with Space / Enter through the same click path, with an accent focus outline. Cells now receive submit / extra_attrs and the other action props, so a host no longer builds action rows by hand.",
     "themes_supported": [
       "light",
       "dark"
@@ -1499,7 +2223,7 @@
     "uses": [
       "table-cell"
     ],
-    "a11y_notes": "Selection listens only on the row's checkbox cell, so clicks on other cells and their controls never collide with it. No row roles are added (role=\"row\", aria-selected), since the system doesn't wrap rows in a role=\"table\" structure; a host adds them at table level. Known gaps: the row checkbox and the select-all control are role=\"img\" icons with aria-labels (\"Select row\", \"Select all rows\"), not real checkboxes, so their checked / mixed state isn't announced, and Shift+click range selection has no keyboard equivalent. The drag handle has aria-label=\"Reorder\", but native drag and drop is pointer-only; an accessible reorder needs a keyboard path (e.g. arrow keys on the focused handle with a live announcement), not implemented. The second checkbox of \"Check + Button\" is labeled plainly \"Checkbox\"."
+    "a11y_notes": "Selection listens only on the row's checkbox cell, so clicks on other cells and their controls never collide with it. No row roles are added (role=\"row\", aria-selected), since the system doesn't wrap rows in a role=\"table\" structure; a host adds them at table level. Known gaps: the row checkbox and the select-all control are role=\"img\" icons with aria-labels (\"Select row\", \"Select all rows\"), not real checkboxes, so their checked / mixed state isn't announced, and Shift+click range selection has no keyboard equivalent. The drag handle has aria-label=\"Reorder\", but native drag and drop is pointer-only; an accessible reorder needs a keyboard path (e.g. arrow keys on the focused handle with a live announcement), not implemented. The second checkbox of \"Check + Button\" is labeled plainly \"Checkbox\". 2026-10-23: the checkbox cell is keyboard operable (Tab, Space, Enter) with aria-checked; a row href is only a larger mouse target, the link cell stays the keyboard path."
   },
   {
     "name": "tag",
@@ -1536,6 +2260,12 @@
         "required": false,
         "default": "tag",
         "description": "The tag's text."
+      },
+      {
+        "name": "article",
+        "type": "string",
+        "required": false,
+        "description": "der | die | das: chooses the type by grammatical gender (der accent-1, die danger, das success) when `type` is not set. Other values fall back to accent-1."
       }
     ],
     "source": "figma:DSYSTEMFILEKEY#103:4746",
@@ -1627,6 +2357,25 @@
         "required": false,
         "default": "regular",
         "description": "regular (unset) or small (data-size=\"small\"): the box is as tall as one line of regular text, with no vertical padding, so a button can sit on a line of text without making its row taller. The 11px sides, brackets and underline are the regular button's. Text buttons only: icon_only and outlined keep their own boxes."
+      },
+      {
+        "name": "submit",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Renders type=\"submit\" so the button submits its enclosing form; otherwise type=\"button\"."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "description": "Renders an <a href> (through safe_url) instead of a <button>, for navigation. A disabled link has no href and carries aria-disabled."
+      },
+      {
+        "name": "article",
+        "type": "string",
+        "required": false,
+        "description": "der | die | das: tints an active label by grammatical gender (der keeps accent-1, die row-status-declined-text, das row-status-approved-text). Other values are ignored; only the active status is affected."
       }
     ],
     "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc55",
@@ -1699,7 +2448,7 @@
         "name": "text",
         "type": "string",
         "required": true,
-        "description": "The tooltip's text. In real usage this is the data-tooltip attribute value on the actual trigger element (a button, an icon span, etc.) -- not a separate component instance."
+        "description": "The tooltip's text. In real usage this is the data-tooltip attribute value on the actual trigger element (a button, an icon span, etc.) -- not a separate component instance. A line break in the text (a newline in the attribute value) starts a new line in the bubble, so one tooltip can carry a label, a text and a translation."
       },
       {
         "name": "label",
@@ -1713,14 +2462,121 @@
         "required": false,
         "default": null,
         "description": "visible: data-preview=\"visible\" on the [data-tooltip] element shows the tooltip without hover/focus. Documentation only (the site's Toasters and tooltips card); never in product UI."
+      },
+      {
+        "name": "data-tooltip-mode",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "On <html> or <body>, not on a trigger: 'layer' is accepted for pages written for the opt-in layer mode of 2026-10-23 and changes nothing, since every tooltip is the shared layer."
+      },
+      {
+        "name": "data-tooltip-delay",
+        "type": "number",
+        "required": false,
+        "default": 1000,
+        "description": "On <html> or <body>: milliseconds before a tooltip shows on that page. Unset: 1000. data-tooltip-instant on a trigger still skips it."
+      },
+      {
+        "name": "window.dsTooltip",
+        "type": "object",
+        "required": false,
+        "default": null,
+        "description": "show(box, text) shows host text at once at a box ({getBoundingClientRect}), e.g. a word inside a text; hide(); isTrigger(element); delay (ms, the page's show delay)."
       }
     ],
     "source": "none",
-    "rationale": "Styled to Figma D_SYSTEM's Tooltip (node 103:4777): a dark fill (tooltip-bg, Figma base/900), a 1px tooltip-border, white body text, 10px padding, no shadow -- dark so it reads as a layer above the page in either theme. Pure CSS, no JavaScript: content: attr(data-tooltip) reads the trigger's own attribute, and :hover / :focus-visible are the whole show condition, because a tooltip's dismissal is exactly 'stop hovering or focusing'. Adding JS (as popup and dropdown-menu need for their open state) would be complexity with no functional gain. Figma's text+icon variant is not implemented: the bubble is the host's ::after, and a host's ::before is already taken (text-button's hover brackets), so there is no free box for an icon. Known limitation: no viewport clamping, so a trigger near a container edge can render the bubble partly off-screen. Rendering verified in light and dark themes. Update 2026-09-30 (explicit request): the bubble is at most a third of the viewport wide and wraps, and a small component.js keeps it on screen -- shifted inside the viewport edges, flipped below when it only fits there, and its text cut at the last word that fits, with an ellipsis, when it fits on neither side. Show/hide stays pure CSS; the script only measures and sets --_tooltip-shift, data-tooltip-placement and data-tooltip-clamped on the trigger. Update 2026-10-14 (explicit request, tooltips on every consumer button): a text button already draws its hover brackets on its own ::before and ::after, so the generic bubble turned the closing bracket into an empty dark box. On a .ds-text-button the bubble is the ::after of its label span (.ds-text-button__text / __label) instead, and component.js mirrors the text (and its cut) onto that span as data-tooltip-text / data-tooltip-text-clamped, because content: attr() on the span's pseudo-element reads the span's own attributes. The brackets are untouched. Update 2026-10-14 (explicit request): the bubble is shown one second after hover or focus (transition-delay: 1s on the shown state) and hides at once. data-tooltip-instant on the trigger skips that delay (the Summary cell's verdict). Update 2026-10-20 (explicit request, \"tooltips always above any content\"): the bubble is no longer the trigger's ::after. A single shared .ds-tooltip-layer, created and shown by component.js as a manual popover (top layer), is placed with position: fixed from the trigger's rect, so no overflow clip, sticky header or stacking context can cut it off. The 1 s show delay, data-tooltip-instant, the on-screen fit (shift, flip below, cut with an ellipsis) and the look are unchanged; they moved from CSS to the script, and the text-button label mirroring (data-tooltip-text) is gone. data-preview=\"visible\" still draws an inline ::after for the documentation page.",
+    "rationale": "Styled to Figma D_SYSTEM's Tooltip (node 103:4777): a dark fill (tooltip-bg, Figma base/900), a 1px tooltip-border, white body text, 10px padding, no shadow -- dark so it reads as a layer above the page in either theme. Pure CSS, no JavaScript: content: attr(data-tooltip) reads the trigger's own attribute, and :hover / :focus-visible are the whole show condition, because a tooltip's dismissal is exactly 'stop hovering or focusing'. Adding JS (as popup and dropdown-menu need for their open state) would be complexity with no functional gain. Figma's text+icon variant is not implemented: the bubble is the host's ::after, and a host's ::before is already taken (text-button's hover brackets), so there is no free box for an icon. Known limitation: no viewport clamping, so a trigger near a container edge can render the bubble partly off-screen. Rendering verified in light and dark themes. Update 2026-09-30 (explicit request): the bubble is at most a third of the viewport wide and wraps, and a small component.js keeps it on screen -- shifted inside the viewport edges, flipped below when it only fits there, and its text cut at the last word that fits, with an ellipsis, when it fits on neither side. Show/hide stays pure CSS; the script only measures and sets --_tooltip-shift, data-tooltip-placement and data-tooltip-clamped on the trigger. Update 2026-10-14 (explicit request, tooltips on every consumer button): a text button already draws its hover brackets on its own ::before and ::after, so the generic bubble turned the closing bracket into an empty dark box. On a .ds-text-button the bubble is the ::after of its label span (.ds-text-button__text / __label) instead, and component.js mirrors the text (and its cut) onto that span as data-tooltip-text / data-tooltip-text-clamped, because content: attr() on the span's pseudo-element reads the span's own attributes. The brackets are untouched. Update 2026-10-14 (explicit request): the bubble is shown one second after hover or focus (transition-delay: 1s on the shown state) and hides at once. data-tooltip-instant on the trigger skips that delay (the Summary cell's verdict). Update 2026-10-20 (explicit request, \"tooltips always above any content\"): the bubble is no longer the trigger's ::after. A single shared .ds-tooltip-layer, created and shown by component.js as a manual popover (top layer), is placed with position: fixed from the trigger's rect, so no overflow clip, sticky header or stacking context can cut it off. The 1 s show delay, data-tooltip-instant, the on-screen fit (shift, flip below, cut with an ellipsis) and the look are unchanged; they moved from CSS to the script, and the text-button label mirroring (data-tooltip-text) is gone. data-preview=\"visible\" still draws an inline ::after for the documentation page. Merge with the opt-in layer mode of 2026-10-23 (another consumer's reading page): the shared top-layer bubble stays the one mechanism for every page, and that mode's additions are kept on it -- a text-button, header-tab or sort button whose label carries data-tooltip shows it for the whole button, data-tooltip-delay sets a page's delay, a line break in the text starts a new line (white-space: pre-line), and window.dsTooltip lets a host that explains words inside running text (no element per word) show its text on the same layer, so there is one tooltip mechanism and one look on the page. A host tooltip hides on scroll, resize, a click or a key, not when the pointer leaves.",
     "themes_supported": [
       "light",
       "dark"
     ],
     "a11y_notes": ":focus-visible (not just :hover) shows the tooltip, so keyboard users reach it with Tab; so does keyboard focus on a control inside the trigger (:has(:focus-visible), 2026-10-03), for a tooltip set on a container such as a table cell around a button. The bubble has role=\"tooltip\" but is not linked to its trigger; if the text must be announced, the host should add aria-describedby pointing at a real, visually hidden text node. A native <button disabled> can't receive focus, so a tooltip on a disabled button is mouse-only; to make it keyboard-reachable, the host would use aria-disabled on a still-focusable button instead of the disabled attribute."
+  },
+  {
+    "name": "word-token",
+    "description": "A word inside a running text that the reader can look up: its state (in notes, already in the word list, open) shows as fill or underline, a hover or focus opens a card with lemma, translation and a grammar note, and a click is reported to the host. Also renders the legend of the states.",
+    "status": "draft",
+    "category": "controls",
+    "variants": [
+      "none",
+      "noted",
+      "known",
+      "active",
+      "legend"
+    ],
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "required": true,
+        "default": "word",
+        "description": "The word as it stands in the text. Plain text."
+      },
+      {
+        "name": "state",
+        "type": "string",
+        "required": false,
+        "default": "none",
+        "description": "none | noted (bg-text-highlight fill) | known (dotted accent underline) | active (pressed fill and hairline outline: the word whose card is shown)."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "default": "ds-word-token-demo",
+        "description": "Unique per page; the card gets <id>-card and the word aria-describedby it."
+      },
+      {
+        "name": "card",
+        "type": "object",
+        "required": false,
+        "default": null,
+        "description": "{kicker, title, text, gloss, note, hint}, each optional plain text: kicker (lemma and part of speech, data role, uppercase), title (translation, heading-5), text (an explanation, body), gloss (second language, italic, subdued), note (grammar note for this occurrence, under a rule), hint (what a click does). No card: no popup."
+      },
+      {
+        "name": "interactive",
+        "type": "boolean",
+        "required": false,
+        "default": true,
+        "description": "true: a <button> that emits ds-word-token-click { text }. false: a focusable span whose card only explains (a marked run in a corrected sentence)."
+      },
+      {
+        "name": "extra_attrs",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "Raw attributes on the word element (data-* ids the host reads back). Page-author markup only, never end-user data."
+      },
+      {
+        "name": "mode",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "'legend' renders the legend instead of a word."
+      },
+      {
+        "name": "legend",
+        "type": "array",
+        "required": false,
+        "default": null,
+        "description": "With mode='legend': list of {state, sample, label}."
+      },
+      {
+        "name": "legend_hint",
+        "type": "string",
+        "required": false,
+        "default": null,
+        "description": "With mode='legend': a last item explaining hover and click."
+      }
+    ],
+    "source": "none",
+    "rationale": "From the application design canvas (2026-10-23), no Figma node. A word must stay part of its sentence, so it keeps the text's font, size and color; its relation to the reader's lists is shown by fill or line, never by color alone: noted is the bg-text-highlight fill (a marker pen over picked words), known is the dotted accent-1 underline (the system's 'clickable, stays on this view' line, CLAUDE.md Interaction conventions), active is bg-surface-pressed with a border-default hairline (the word the open card belongs to). Hover adds the pressed fill, the same hover the system's rows use, instead of brackets, which would push the sentence's words apart; that is the stated reason this control does not reuse text-button's bracket affordance. The card is tooltip's dark layer (tooltip-bg / -border / -text) so it reads as above the page in both themes, structured into the roles the content has (kicker in the data role at 60% opacity, translation in heading-5, gloss italic, note under a shadow-high rule, hint), because a plain tooltip's single text cannot carry them. Width 380px is the canvas's card width, clamped to the viewport. component.js places the card at fixed coordinates under the word (above when there is no room) so no scrolling container cuts it; without script it opens under the word by CSS. The 300 ms hover delay keeps cards from flashing while the pointer crosses a text; keyboard focus opens at once. Rendering verified in light and dark themes.",
+    "themes_supported": [
+      "light",
+      "dark"
+    ],
+    "a11y_notes": "An interactive word is a native <button> (Tab, Enter, Space); a non-interactive one is a focusable span. The card is role=tooltip and linked by aria-describedby, so a screen reader reads it after the word. Escape closes the card. The card never takes the pointer, so it cannot cover the next word's hover.",
+    "uses": []
   }
 ]

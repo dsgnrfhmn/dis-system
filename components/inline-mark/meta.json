@@ -1,0 +1,41 @@
+{
+  "name": "inline-mark",
+  "description": "A run of text inside a sentence that marks a correction: struck-through text to remove, or filled text to add, with an optional tooltip.",
+  "status": "draft",
+  "category": "tags",
+  "variants": [
+    "remove",
+    "add",
+    "uncertain"
+  ],
+  "props": [
+    {
+      "name": "kind",
+      "type": "string",
+      "required": true,
+      "default": "remove",
+      "description": "remove (struck through, system-error-strong), add (signal-success-light fill, success-strong text, medium weight, dotted underline) or uncertain (row-status-for-review fill and outline: text a recognizer was unsure of)."
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "default": "word",
+      "description": "The run's text. Plain text."
+    },
+    {
+      "name": "tooltip",
+      "type": "string",
+      "required": false,
+      "description": "Optional explanation; set as data-tooltip, so the tooltip component shows it on hover and focus. Makes the mark focusable (tabindex 0)."
+    }
+  ],
+  "source": "none",
+  "rationale": "Shows a correction in the sentence itself, so a learner sees what changed and where. Two kinds: remove is struck through in the error color; add has a light success fill, the strong success color, medium weight and a dotted underline, so it is distinguishable without color (a struck-through run versus an underlined one). Colors are existing tokens (system-error-strong follows the theme; the signal pair is the palette's own light/strong, like the tag, so the add fill keeps its contrast in both themes). The mark inherits the surrounding font and size and only changes weight for add, so it can sit in any line of text. The tooltip is the existing data-tooltip mechanism; a marked run with a tooltip is focusable so it is reachable by keyboard. No source in Figma: drawn from the application's design canvas of 2026-10-21; no Figma node exists. uncertain (2026-10-23): the for-review row-status pair as fill and outline (themed; the signal-warning primitives stay light under light text in the dark theme) marks text the reader should check (text recognition was unsure); told apart from the corrections by shape (an outline, no underline, no strike), not color alone.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "a11y_notes": "Plain inline span. Strike-through and fill are visual only: a screen reader reads the text without saying it was removed or added, so a host should state the change in text nearby (for example a visually hidden 'removed' / 'added', or the corrected sentence in full). The tooltip text is only reachable by hover and focus.",
+  "uses": []
+}

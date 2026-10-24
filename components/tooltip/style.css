@@ -11,6 +11,8 @@
   z-index, overflow clip and stacking context on the page, so a tooltip is
   never cut off by a table cell, a sticky header or a hero block. The text is
   the trigger's own data-tooltip attribute; this file is only the look.
+  data-tooltip-mode="layer" on <html> or <body> needs no rule here: every
+  tooltip is the layer.
 */
 
 /* Look: Figma D_SYSTEM Tooltip (node 103:4777) -- a dark box (tooltip-bg,
@@ -34,7 +36,9 @@
   max-height: none;
   overflow: visible;
   box-sizing: border-box;
-  white-space: normal;
+  /* pre-line: a line break in data-tooltip starts a new line (label,
+     text, translation); other whitespace still collapses. */
+  white-space: pre-line;
   overflow-wrap: anywhere;
   padding: var(--ds-spacing-cell);
   background-color: var(--ds-color-tooltip-bg);

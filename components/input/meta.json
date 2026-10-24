@@ -5,6 +5,7 @@
   "category": "inputs",
   "variants": [
     "text",
+    "password",
     "textarea"
   ],
   "props": [
@@ -13,7 +14,7 @@
       "type": "string",
       "required": false,
       "default": "text",
-      "description": "\"text\" (default, a single-line <input>) or \"textarea\" (a multi-line <textarea>, not from Penpot -- see rationale)."
+      "description": "\"text\" (default, a single-line <input>), \"password\" (a single-line <input type=\"password\">) or \"textarea\" (a multi-line <textarea>, not from Penpot -- see rationale)."
     },
     {
       "name": "fill",
@@ -40,6 +41,44 @@
       "required": false,
       "default": 8,
       "description": "Only meaningful when type=\"textarea\". Sets the native rows attribute."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "Native name attribute, so the field is submitted with its form."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "Native id attribute, for a visible <label for>."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "Accessible name (aria-label) for a field without a visible <label>."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Native disabled attribute. Not a Figma state; the browser's disabled styling applies."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Native required attribute."
+    },
+    {
+      "name": "autocomplete",
+      "type": "string",
+      "required": false,
+      "description": "Native autocomplete token, e.g. \"username\" or \"current-password\"."
     }
   ],
   "source": "penpot:28cec651-3f14-8022-8008-8c9a0bb4dc59",

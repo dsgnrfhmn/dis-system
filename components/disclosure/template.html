@@ -1,0 +1,16 @@
+{#
+  disclosure: a section the reader can open and close (native <details>).
+  title: the summary text. caption: optional passive text beside it (a count).
+  open: render it open. content: plain text body. items: optional list of
+  strings rendered as separate paragraphs (replaces content).
+#}
+<details class="ds-disclosure"{% if open %} open{% endif %}>
+  <summary class="ds-disclosure__summary">
+    <span class="ds-disclosure__chevron" aria-hidden="true"></span>
+    <span class="ds-disclosure__title">{{ title | default('Section', true) }}</span>
+    {% if caption %}<span class="ds-disclosure__caption">{{ caption }}</span>{% endif %}
+  </summary>
+  <div class="ds-disclosure__body">
+    {% if items %}{% for item in items %}<p class="ds-disclosure__item">{{ item }}</p>{% endfor %}{% else %}{{ content | default('', true) }}{% endif %}
+  </div>
+</details>

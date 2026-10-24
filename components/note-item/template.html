@@ -1,0 +1,22 @@
+{#
+  note-item: one word noted while reading, in a side list: the word (colored
+  by grammatical gender: article der | die | das), its translation, the form
+  it had in the text, and at the end either a passive "in list" tag or an
+  "Add to list" action.
+  label: the word with article; article: der | die | das (else the text
+  color); translation, form: plain text; in_list: true shows the tag;
+  in_list_label / add_label: the texts; extra_attrs: page-author attributes
+  on the add button (e.g. a form submit's name/value).
+#}
+<div class="ds-note-item">
+  <span class="ds-note-item__text">
+    <span class="ds-note-item__label"{% if article in ['der', 'die', 'das'] %} data-article="{{ article }}"{% endif %}>{{ label | default('die Unterlagen') }}</span>
+    {% if translation %}<span class="ds-note-item__translation">{{ translation }}</span>{% endif %}
+    {% if form %}<span class="ds-note-item__form">{{ form }}</span>{% endif %}
+  </span>
+  {% if in_list %}
+  {% with label=in_list_label | default('in list'), type='neutral', subtype='passive' %}{% include "components/tag/template.html" %}{% endwith %}
+  {% else %}
+  {% with priority='secondary', status='active', underline='dotted', label=add_label | default('Add to list'), extra_attrs=extra_attrs, submit=submit, article=none, href=none %}{% include "components/text-button/template.html" %}{% endwith %}
+  {% endif %}
+</div>

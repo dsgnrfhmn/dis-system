@@ -58,6 +58,21 @@ document.querySelectorAll('.ds-table-row').forEach((row) => {
   ).find((cell) => cell.querySelector('[data-icon="checkbox"]'));
   if (!checkboxCell) return;
 
+  // Keyboard (2026-10-23): the cell is the checkbox, so it takes focus and
+  // Space / Enter toggle it through the same click path (Shift+Space keeps
+  // the range behaviour). aria-checked follows data-selected, whoever sets it.
+  checkboxCell.setAttribute('role', 'checkbox');
+  checkboxCell.tabIndex = 0;
+  if (!checkboxCell.hasAttribute('aria-label')) checkboxCell.setAttribute('aria-label', 'Select row');
+  const syncChecked = () => checkboxCell.setAttribute('aria-checked', String(row.getAttribute('data-selected') === 'true'));
+  syncChecked();
+  new MutationObserver(syncChecked).observe(row, { attributes: true, attributeFilter: ['data-selected'] });
+  checkboxCell.addEventListener('keydown', (event) => {
+    if (event.key !== ' ' && event.key !== 'Enter') return;
+    event.preventDefault();
+    checkboxCell.dispatchEvent(new MouseEvent('click', { bubbles: true, shiftKey: event.shiftKey }));
+  });
+
   checkboxCell.addEventListener('mousedown', (event) => {
     if (event.shiftKey) event.preventDefault();
   });
@@ -320,5 +335,29 @@ document.querySelectorAll('.ds-table-row').forEach((row) => {
     const rect = cell.getBoundingClientRect();
     const isBefore = e.clientY - rect.top < rect.height / 2;
     row.parentElement.insertBefore(dragging, isBefore ? row : row.nextSibling);
+  });
+});
+
+/*
+  Row link (2026-10-23): a row with data-href (table-row's href prop) opens
+  that URL when clicked anywhere that is not itself interactive -- a word list
+  where the row, not one underlined cell, is the target. The row's own link
+  cell stays the keyboard path and the middle-click / new-tab path, so the
+  click handler only adds the larger mouse target; it skips clicks with a
+  modifier key, on a link, button, input, label or checkbox cell, and while
+  text is being selected.
+  Before navigating it dispatches a cancelable ds-table-row-open
+  { href } on the row (bubbling): a host that opens the row in place (a side
+  pane, no page load) calls preventDefault() on it, and nothing navigates.
+*/
+document.querySelectorAll('.ds-table-row[data-href]').forEach((row) => {
+  row.addEventListener('click', (event) => {
+    if (event.defaultPrevented || event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (event.target.closest('a, button, input, select, textarea, label, [data-type="checkbox-cell"]')) return;
+    if (String(window.getSelection && window.getSelection()).length) return;
+    const href = row.getAttribute('data-href');
+    const open = new CustomEvent('ds-table-row-open', { bubbles: true, cancelable: true, detail: { href } });
+    if (row.dispatchEvent(open)) window.location.assign(href);
   });
 });

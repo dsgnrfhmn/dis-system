@@ -317,3 +317,14 @@
     animation: none;
   }
 }
+
+/* Row link (data-href, 2026-10-23): the whole row opens the URL (component.js),
+   so every cell shows the pointer; interactive children keep their own. */
+.ds-table-row[data-href] > .ds-table-cell { cursor: pointer; }
+
+/* Keyboard focus on the row-select checkbox cell (component.js makes it
+   focusable): the same accent outline as a focused link cell. */
+.ds-table-row > .ds-table-cell[data-type="checkbox-cell"][role="checkbox"]:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: calc(var(--ds-border-width-default) * -1);
+}

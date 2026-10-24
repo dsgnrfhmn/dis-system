@@ -434,6 +434,17 @@
   padding: var(--ds-spacing-cell) var(--ds-spacing-5) var(--ds-spacing-cell) var(--ds-spacing-button-x);
 }
 
+/*
+  tag (not from Penpot): a tag in a row, for a status or a score band. Sized
+  to its content like status-label, so a short chip does not stretch to the
+  column; the tag itself is the unchanged tag component.
+*/
+.ds-table-cell[data-type="tag"] {
+  justify-content: flex-start;
+  flex: none;
+  padding: var(--ds-spacing-cell) var(--ds-spacing-5) var(--ds-spacing-cell) var(--ds-spacing-button-x);
+}
+
 /* ---- text-passive-cell (Penpot "Source"): same layout as the data-cell
    group, but text.subactive -- Penpot's own de-emphasized-secondary-text
    token (see also table-header's info caption and divider's fill).
@@ -520,6 +531,48 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.ds-table-cell__link[data-article="die"] { color: var(--ds-color-row-status-declined-text); }
+.ds-table-cell__link[data-article="das"] { color: var(--ds-color-row-status-approved-text); }
+
+/* Plain link (data-plain, 2026-10-23): a word in a word list, where the whole
+   row is the click target (table-row's href), so the cell's own underline
+   would mark one cell of an already clickable row. No underline; a link
+   without an article takes the text color and turns accent-1 while its row is
+   hovered or focused (the row's hover is the affordance); a gendered link
+   keeps its gender color, which carries information. Same specificity as the
+   dark-theme rules below, declared before them, so dark keeps its own. */
+.ds-table-cell__link[data-plain],
+.ds-table-cell__link[data-plain]:hover { text-decoration-line: none; }
+.ds-table-cell__link[data-plain]:not([data-article]) { color: var(--ds-color-text-active); }
+.ds-table-row:is(:hover, :focus-within) .ds-table-cell__link[data-plain]:not([data-article]) { color: var(--ds-color-accent-1); }
+
+/* Mark (2026-10-23): a short count next to a cell's text -- how often the
+   learner got this form wrong -- in the declined status colors, so a table of
+   forms shows where the mistakes are without a separate column. */
+.ds-table-cell__mark {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: var(--ds-spacing-7);
+  padding: 0 var(--ds-spacing-2);
+  background-color: var(--ds-color-row-status-declined-bg);
+  color: var(--ds-color-row-status-declined-text);
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+}
+.ds-table-cell:has(> .ds-table-cell__mark) { column-gap: var(--ds-spacing-3); }
+.ds-table-cell:has(> .ds-table-cell__mark) > .ds-table-cell__text { flex: none; }
+
+/* Highlight (2026-10-23): one cell of a rule table is the answer (the form
+   the learner needed), in the approved row-status pair -- themed, unlike the
+   signal-success primitives, which stay light in the dark theme. */
+.ds-table-cell[data-highlight="success"] { background-color: var(--ds-color-row-status-approved-bg); }
+.ds-table-cell[data-highlight="success"] > .ds-table-cell__text {
+  color: var(--ds-color-row-status-approved-text);
+  font-weight: var(--ds-font-body-text-medium-weight);
 }
 
 .ds-table-cell__link:hover {
@@ -711,6 +764,32 @@
 }
 [data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-text-button[data-status="active"]:not([data-unread="true"]),
 [data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-table-cell__link {
+  color: var(--ds-color-accent-1);
+}
+
+/* Article links keep their gender color in the dark theme, at rest and while
+   the row is hovered: the color carries the word's gender, so the grey-until-
+   hover rule above does not apply to them (der keeps the accent). Same
+   selectors plus the attribute, so they win by specificity. */
+[data-theme="dark"] .ds-table-row .ds-table-cell .ds-table-cell__link[data-article="der"],
+[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-table-cell__link[data-article="der"] {
+  color: var(--ds-color-accent-1);
+}
+[data-theme="dark"] .ds-table-row .ds-table-cell .ds-table-cell__link[data-article="die"],
+[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-table-cell__link[data-article="die"] {
+  color: var(--ds-color-row-status-declined-text);
+}
+[data-theme="dark"] .ds-table-row .ds-table-cell .ds-table-cell__link[data-article="das"],
+[data-theme="dark"] .ds-table-row:is(:hover, :focus-within, [data-selected="true"]) .ds-table-cell .ds-table-cell__link[data-article="das"] {
+  color: var(--ds-color-row-status-approved-text);
+}
+
+/* A plain link is the row's label, not a secondary action, so in the dark
+   theme it stays in the text color at rest too (accent-1 on hover, above). */
+[data-theme="dark"] .ds-table-row .ds-table-cell .ds-table-cell__link[data-plain]:not([data-article]) {
+  color: var(--ds-color-text-active);
+}
+[data-theme="dark"] .ds-table-row:is(:hover, :focus-within) .ds-table-cell .ds-table-cell__link[data-plain]:not([data-article]) {
   color: var(--ds-color-accent-1);
 }
 

@@ -1,0 +1,13 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../text-button/style.css">
+<link rel="stylesheet" href="../tag/style.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="width: 420px; background-color: var(--ds-color-bg-surface);">
+  {% with label='einreichen', translation='to submit', form='reichen ... ein - imperative' %}{% include "components/note-item/template.html" %}{% endwith %}
+  {% with label='die Unterlagen', article='die', translation='documents', form='plural', in_list=true %}{% include "components/note-item/template.html" %}{% endwith %}
+  {% with label='der Nachweis', article='der', translation='proof', form='Nachweis - accusative' %}{% include "components/note-item/template.html" %}{% endwith %}
+  {% with label='das Formular', article='das', translation='form', form='Formular' %}{% include "components/note-item/template.html" %}{% endwith %}
+</div>
+
+<script src="../text-button/component.js"></script>

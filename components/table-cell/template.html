@@ -8,7 +8,7 @@
 #}
 {% set _type = type | default('text-active-cell') %}
 {% set _icon_labels = icon_labels | default({'save': 'Saved', 'drag': 'Reorder', 'checkbox': 'Select row'}) %}
-<div class="ds-table-cell"{% if _type %} data-type="{{ _type }}"{% endif %}{% if checkbox_role %} data-checkbox-role="{{ checkbox_role }}"{% endif %}{% if editable %} data-editable{% endif %}>
+<div class="ds-table-cell"{% if _type %} data-type="{{ _type }}"{% endif %}{% if checkbox_role %} data-checkbox-role="{{ checkbox_role }}"{% endif %}{% if editable %} data-editable{% endif %}{% if highlight == 'success' %} data-highlight="success"{% endif %}>
 {% if _type == 'checkbox-cell' %}
   {% if single_icon %}
   <span class="ds-table-cell__icon" data-icon="{{ single_icon }}" aria-hidden="true" role="img" aria-label="{{ single_icon_label | default(_icon_labels.get(single_icon, single_icon | capitalize), true) }}"></span>
@@ -25,7 +25,7 @@
   <span class="ds-table-cell__icon" data-icon="{{ icon }}" aria-hidden="true" role="img" aria-label="{{ _icon_labels.get(icon, icon | capitalize) }}"></span>
   {% endfor %}
 {% elif _type == '1-action' %}
-  {% with priority=priority | default('primary', true), status='active', underline='dotted', label=content | default('Confirm', true), extra_attrs=extra_attrs %}{% include "components/text-button/template.html" %}{% endwith %}
+  {% with priority=priority | default('primary', true), status='active', underline='dotted', label=content | default('Confirm', true), extra_attrs=extra_attrs, submit=submit %}{% include "components/text-button/template.html" %}{% endwith %}
 {% elif _type == '2-actions' %}
   {% with priority='secondary', status='active', underline='dotted', label=secondary_label | default('Dismiss', true), extra_attrs=secondary_extra_attrs %}{% include "components/text-button/template.html" %}{% endwith %}
   {% with priority='primary', status='active', underline='dotted', label=content | default('Confirm', true), extra_attrs=extra_attrs %}{% include "components/text-button/template.html" %}{% endwith %}
@@ -35,6 +35,8 @@
   {% with priority='primary', status='active', underline='dotted', label=content | default('Confirm', true), extra_attrs=extra_attrs %}{% include "components/text-button/template.html" %}{% endwith %}
 {% elif _type == 'status-label' %}
   <span class="ds-table-cell__status-label">{{ content | default('Status', true) }}</span>
+{% elif _type == 'tag' %}
+  {% with label=content | default('Tag', true), type=tag_type | default('neutral', true), subtype=tag_subtype | default('passive', true) %}{% include "components/tag/template.html" %}{% endwith %}
 {% elif _type == 'dropdown' %}
   {% if options %}
   <div class="ds-dropdown">
@@ -51,13 +53,14 @@
 {% elif _type == 'input' %}
   {% with value=input_value, placeholder=content | default('Add a note', true) %}{% include "components/input/template.html" %}{% endwith %}
 {% elif _type == 'link' %}
-  <a class="ds-table-cell__link" href="{{ href | default('#', true) | safe_url }}">{{ content | default('open link', true) }}</a>
+  <a class="ds-table-cell__link" href="{{ href | default('#', true) | safe_url }}"{% if article in ['der', 'die', 'das'] %} data-article="{{ article }}"{% endif %}{% if plain %} data-plain{% endif %}>{{ content | default('open link', true) }}</a>
 {% elif _type == 'empty-state' %}
   <span class="ds-table-cell__text">{{ content | default('Nothing here yet.', true) }}</span>
 {% elif view_label %}
   <span class="ds-table-cell__text"><span class="ds-table-cell__clip">{{ content | default('', true) }}</span> {% with priority='secondary', status='active', underline='dotted', label=view_label, extra_attrs=none %}{% include "components/text-button/template.html" %}{% endwith %}</span>
 {% else %}
   <span class="ds-table-cell__text">{{ content | default('', true) }}</span>
+  {% if mark %}<span class="ds-table-cell__mark"{% if mark_label %} role="img" aria-label="{{ mark_label }}"{% endif %}>{{ mark }}</span>{% endif %}
   {% if editable %}
   <input type="text" class="ds-input ds-table-cell__edit-input" value="{{ content | default('', true) }}" hidden>
   {% endif %}

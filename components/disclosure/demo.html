@@ -1,0 +1,8 @@
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="style.css">
+
+<div style="max-width: 480px; padding: var(--ds-spacing-6); background-color: var(--ds-color-bg-surface);">
+  {% with title='Examples', caption='3', content='Das Haus ist alt.', open=true %}{% include "components/disclosure/template.html" %}{% endwith %}
+  {% with title='More examples', caption='2', items=['Das Haus ist alt.', 'Wir kaufen ein Haus.'], open=true %}{% include "components/disclosure/template.html" %}{% endwith %}
+  {% with title='Your mistakes', caption='0', content='No mistakes yet.' %}{% include "components/disclosure/template.html" %}{% endwith %}
+</div>

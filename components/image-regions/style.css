@@ -1,0 +1,53 @@
+/*
+  image-regions
+  A photo in a hairline frame with rectangles over parts of it: uncertain
+  (for-review row-status edge and fill) and accepted
+  (approved row-status edge, no fill, so the text under it stays readable). The
+  same pairs inline-mark uses for the same states in the text, so the photo
+  and the text point at each other. Without an image, a page placeholder of
+  grey lines on the pressed surface stands in. Region positions are data
+  (percent of the image), applied by component.js.
+  Application design canvas, 2026-10-23; no Figma node.
+*/
+.ds-image-regions { margin: 0; }
+
+.ds-image-regions__frame {
+  position: relative;
+  box-sizing: border-box;
+  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-image-regions__img { display: block; width: 100%; height: auto; }
+
+.ds-image-regions__placeholder {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--ds-spacing-3);
+  padding: var(--ds-spacing-7) var(--ds-spacing-6);
+  /* 440px: the canvas's preview height (a portrait page). */
+  min-height: 440px;
+  box-sizing: border-box;
+}
+.ds-image-regions__line {
+  height: var(--ds-spacing-1);
+  width: var(--_w, 100%);
+  background-color: var(--ds-color-object-dark-passive);
+}
+
+.ds-image-regions__region {
+  position: absolute;
+  left: var(--_x, 0);
+  top: var(--_y, 0);
+  width: var(--_w, 0);
+  height: var(--_h, 0);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.ds-image-regions__region[data-kind="uncertain"] {
+  border: var(--ds-border-width-default) solid var(--ds-color-row-status-for-review-text);
+  background-color: var(--ds-color-row-status-for-review-bg);
+}
+.ds-image-regions__region[data-kind="accepted"] {
+  border: var(--ds-border-width-default) solid var(--ds-color-row-status-approved-text);
+}

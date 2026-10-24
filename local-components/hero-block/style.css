@@ -87,3 +87,12 @@
 .ds-hero-block__search .ds-input {
   text-align: center;
 }
+
+/* data-fit="content" (maintainer, 2026-10-22): the block is at least 30% of
+   the viewport high instead of the fixed 400px and grows with its content;
+   the title and the field stay together, centred in that height, and the
+   title may wrap (a narrow window). For a page whose hero is only a title and
+   a search field. */
+.ds-hero-block[data-fit="content"] { height: auto; min-height: 30vh; }
+.ds-hero-block[data-fit="content"] .ds-hero-block__search { margin-bottom: auto; }
+.ds-hero-block[data-fit="content"] .ds-hero-block__title { white-space: normal; text-align: center; }

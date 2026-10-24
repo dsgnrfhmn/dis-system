@@ -47,6 +47,17 @@
     {% with icon='theme-dark', icon_only=true, outlined=true, label='Switch to dark theme' %}{% include "components/text-button/template.html" %}{% endwith %}
   </div>
 
+  <div style="display: flex; gap: var(--ds-spacing-3); margin-top: var(--ds-spacing-5);">
+    {% with href='#link', label='Link button' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% with href='#link', status='disabled', label='Disabled link' %}{% include "components/text-button/template.html" %}{% endwith %}
+  </div>
+
+  <div style="display: flex; gap: var(--ds-spacing-3); margin-top: var(--ds-spacing-5);">
+    {% for art in ['der', 'die', 'das'] %}
+    {% with article=art, label=art ~ ' Tisch', priority='secondary', underline='dotted' %}{% include "components/text-button/template.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+
 </div>
 
 <script src="component.js"></script>

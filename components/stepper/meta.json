@@ -1,0 +1,18 @@
+{
+  "name": "stepper",
+  "description": "The steps of a short multi-step flow in one row (e.g. upload a photo, check the recognized text, done), the current step marked and earlier steps checked off.",
+  "status": "draft",
+  "category": "navigation",
+  "variants": [],
+  "props": [
+    {"name": "steps", "type": "array", "required": true, "default": ["Photo", "Check text", "Done"], "description": "Step labels, in order. Plain text."},
+    {"name": "current", "type": "number", "required": true, "default": 1, "description": "1-based index of the current step. Steps before it are done (check mark), steps after it are to do."},
+    {"name": "label", "type": "string", "required": false, "default": "Steps", "description": "aria-label of the list."},
+    {"name": "done_label", "type": "string", "required": false, "default": "done", "description": "Accessible name of a done step's check mark."}
+  ],
+  "source": "none",
+  "rationale": "From the application design canvas (2026-10-23), no Figma node. Orientation, not content: the data typography role in uppercase and text-subactive, like a table's header labels. The current step is told apart by color (text-active) and by shape (a solid underline of border-width-default, offset spacing-2), so it does not depend on color alone; it is not accent-1 and not dotted, so it does not read as a link (CLAUDE.md, Interaction conventions). The steps are not clickable: the flow moves by its own buttons. A done step's check mark is two borders of a rotated box in currentColor, because the icon set has no check icon (checkbox-selected is a filled box); flagged rather than adding an icon. The canvas used the base-750 primitive for the inactive steps; text-subactive is the themed semantic token for it. aria-current=\"step\" marks the current step for assistive technology. Rendering verified in light and dark themes.",
+  "themes_supported": ["light", "dark"],
+  "a11y_notes": "An ordered list with an aria-label; the current step has aria-current=\"step\"; the check mark is role=img with an accessible name.",
+  "uses": []
+}

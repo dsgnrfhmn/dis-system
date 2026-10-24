@@ -34,10 +34,28 @@
       "required": false,
       "default": false,
       "description": "Render the rename field (.ds-page-head__title-input) in place of the title. Same type tokens, no padding or border, so the bar does not change size."
+    },
+    {
+      "name": "actions_left",
+      "type": "array",
+      "required": false,
+      "description": "List of {label, href?, submit?, underline?} rendered as text buttons next to the title, replacing main_action. An empty list renders none. Unset: the single main_action button, as before."
+    },
+    {
+      "name": "actions_right",
+      "type": "array",
+      "required": false,
+      "description": "Same item shape, rendered on the right, replacing the fixed Undo / Download PDF buttons. An empty list renders none. Unset: those two buttons, as before."
+    },
+    {
+      "name": "meta_text",
+      "type": "string",
+      "required": false,
+      "description": "A passive line of text after the left-hand actions (counts, a note). Plain text, not interactive."
     }
   ],
   "source": "figma:APPFILEKEY#150:16217,150:16233,150:16362",
-  "rationale": "Height is spacing.9 + spacing.6 (60px), side padding spacing.6 (20px), bg.surface with one hairline (object-dark.passive) under it. The title is the heading-3 role (Inter 24px; one step above the heading-4 the Figma frames use, 2026-10-18, explicit request: the set name read too small) with line-height normal, so the bar's height, not the type scale, sets the rhythm. The gap between title and main action is spacing.cell (10px); the right group has no gap because text buttons hug their labels (see text-button). Both groups are flex rows with min-width 0, so a long title ellipsizes instead of pushing the actions out. Rendering verified in light and dark themes. Rename in place (2026-10-11): the title is the heading-4 role; the rename field reuses the same four type tokens with zero padding, border and fill, so swapping title for field changes nothing about the box: no jump, no reflow of the actions. It is marked by an accent line drawn as an inset shadow (not a border, which would add height) and sized to its text with field-sizing: content, capped at the bar. The editable title carries the system's dotted-underline clickable affordance on hover and focus only, so a read-only title looks as before. Not from Figma (the Figma bar draws no editing state); built from existing tokens only.",
+  "rationale": "Height is spacing.9 + spacing.6 (60px), side padding spacing.6 (20px), bg.surface with one hairline (object-dark.passive) under it. The title is the heading-3 role (Inter 24px; one step above the heading-4 the Figma frames use, 2026-10-18, explicit request: the set name read too small) with line-height normal, so the bar's height, not the type scale, sets the rhythm. The gap between title and main action is spacing.cell (10px); the right group has no gap because text buttons hug their labels (see text-button). Both groups are flex rows with min-width 0, so a long title ellipsizes instead of pushing the actions out. Rendering verified in light and dark themes. Rename in place (2026-10-11): the title is the heading-4 role; the rename field reuses the same four type tokens with zero padding, border and fill, so swapping title for field changes nothing about the box: no jump, no reflow of the actions. It is marked by an accent line drawn as an inset shadow (not a border, which would add height) and sized to its text with field-sizing: content, capped at the bar. The editable title carries the system's dotted-underline clickable affordance on hover and focus only, so a read-only title looks as before. Not from Figma (the Figma bar draws no editing state); built from existing tokens only. 2026-10-23: min-height instead of height and flex-wrap, so on a narrow window the groups wrap onto a second row instead of widening the page; at full width it is still 60px.",
   "themes_supported": [
     "light",
     "dark"

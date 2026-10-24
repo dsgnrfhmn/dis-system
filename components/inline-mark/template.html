@@ -1,0 +1,10 @@
+{#
+  inline-mark: a short run inside a sentence that marks a correction.
+  kind: remove (struck through) | add (filled, medium weight, dotted underline)
+        | uncertain (outlined in the warning color: text a recognizer was unsure of)
+  text: the run's text (plain text).
+  tooltip: optional; becomes data-tooltip, so the tooltip component shows it
+  on hover and keyboard focus (the mark is then focusable).
+#}
+{% set _kind = kind if kind in ['remove', 'add', 'uncertain'] else 'remove' %}
+<span class="ds-inline-mark" data-kind="{{ _kind }}"{% if tooltip %} data-tooltip="{{ tooltip }}" tabindex="0"{% endif %}>{{ text | default('word', true) }}</span>

@@ -1,0 +1,17 @@
+{#
+  image-regions: a photo (or a page placeholder while none is loaded) with
+  rectangles over the parts a host wants to point at (where text
+  recognition was unsure, where a correction was accepted).
+  src / alt: the image; label: accessible name when there is no image.
+  regions: list of {x, y, w, h, kind, label} -- x/y/w/h in percent of the
+  image (data, applied by component.js), kind uncertain | accepted, label
+  an accessible description.
+#}
+<figure class="ds-image-regions">
+  <div class="ds-image-regions__frame"{% if not src %} role="img" aria-label="{{ label | default('Photo') }}"{% endif %}>
+    {% if src %}<img class="ds-image-regions__img" src="{{ src | safe_url }}" alt="{{ alt | default('') }}">{% else %}<span class="ds-image-regions__placeholder" aria-hidden="true">{% for w in [55, 0, 100, 92, 100, 85, 0, 100, 96, 70, 0, 45] %}<span class="ds-image-regions__line" data-w="{{ w }}"></span>{% endfor %}</span>{% endif %}
+    {% for r in regions | default([]) %}
+    <span class="ds-image-regions__region" data-kind="{{ r.kind if r.kind in ['uncertain', 'accepted'] else 'uncertain' }}" data-x="{{ r.x | float }}" data-y="{{ r.y | float }}" data-w="{{ r.w | float }}" data-h="{{ r.h | float }}"{% if r.label %} role="img" aria-label="{{ r.label }}"{% else %} aria-hidden="true"{% endif %}></span>
+    {% endfor %}
+  </div>
+</figure>

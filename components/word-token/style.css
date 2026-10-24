@@ -1,0 +1,124 @@
+/*
+  word-token
+  A word in a running text that can be looked up. It keeps the text's own
+  font and color -- a word must still read as part of its sentence -- and
+  shows its relation to the reader's lists by shape and fill:
+    noted  -- the text highlight fill (bg-text-highlight): picked while reading;
+    known  -- a dotted accent-1 underline: already in the word list, the
+              system's "clickable, stays on the page" line;
+    active -- the pressed surface plus a hairline outline: the word whose
+              card is open.
+  The card is the tooltip's dark layer (tooltip-bg / -border / -text), so
+  it reads as above the page in both themes, but structured: a kicker in the
+  data role, the translation in heading-5, a subdued gloss, a grammar note
+  under a rule, and the click hint. component.js places it (fixed, so no
+  scrolling ancestor cuts it) below the word, or above when there is no room.
+  Application design canvas, 2026-10-23; no Figma node.
+*/
+.ds-word-token-wrap { position: relative; }
+
+.ds-word-token {
+  /* Reset a <button> to inline text. */
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+.ds-word-token[data-static] { cursor: default; }
+span.ds-word-token:not([data-static]) { cursor: help; }
+
+.ds-word-token:hover:not([data-static]) {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-word-token[data-state="noted"] { background-color: var(--ds-color-bg-text-highlight); }
+
+.ds-word-token[data-state="known"] {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: var(--ds-border-width-default);
+  text-decoration-color: var(--ds-color-accent-1);
+  text-underline-offset: var(--ds-spacing-1);
+}
+
+.ds-word-token[data-state="active"] {
+  background-color: var(--ds-color-bg-surface-pressed);
+  outline: var(--ds-border-width-thin) solid var(--ds-color-border-default);
+}
+
+.ds-word-token:focus-visible {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-border-width-default);
+}
+
+.ds-word-token__card {
+  position: absolute;
+  left: 0;
+  top: calc(100% + var(--ds-spacing-2));
+  z-index: 10;
+  display: none;
+  flex-direction: column;
+  row-gap: var(--ds-spacing-3);
+  box-sizing: border-box;
+  /* 380px: the canvas's card width; never wider than the viewport. */
+  width: min(380px, calc(100vw - var(--ds-spacing-6) * 2));
+  padding: var(--ds-spacing-cell);
+  background-color: var(--ds-color-tooltip-bg);
+  border: var(--ds-border-width-thin) solid var(--ds-color-tooltip-border);
+  color: var(--ds-color-tooltip-text);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  font-style: normal;
+  line-height: var(--ds-font-body-text-line-height);
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+}
+
+/* Without script the card opens under the word on hover or focus; with
+   component.js it opens through data-open, at fixed coordinates. */
+.ds-word-token-wrap:not([data-js]):is(:hover, :focus-within) > .ds-word-token__card,
+.ds-word-token-wrap[data-open] > .ds-word-token__card { display: flex; }
+.ds-word-token-wrap[data-js] > .ds-word-token__card {
+  position: fixed;
+  left: var(--_card-x, 0);
+  top: var(--_card-y, 0);
+}
+
+.ds-word-token__kicker {
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.ds-word-token__title {
+  font-family: var(--ds-font-heading-5-family);
+  font-size: var(--ds-font-heading-5-size);
+  font-weight: var(--ds-font-heading-5-weight);
+  line-height: var(--ds-font-heading-5-line-height);
+}
+.ds-word-token__gloss { font-style: italic; opacity: 0.6; }
+.ds-word-token__note {
+  padding-top: var(--ds-spacing-3);
+  border-top: var(--ds-border-width-thin) solid var(--ds-color-shadow-high);
+}
+.ds-word-token__hint { opacity: 0.6; }
+
+.ds-word-token-legend {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--ds-spacing-6);
+  row-gap: var(--ds-spacing-3);
+  font-style: italic;
+  color: var(--ds-color-text-subactive);
+}
+.ds-word-token-legend .ds-word-token { font-style: normal; color: var(--ds-color-text-active); }

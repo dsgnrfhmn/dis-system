@@ -1,0 +1,24 @@
+{
+  "name": "correction-row",
+  "description": "One proposed correction in a list (e.g. a word text recognition was unsure of): found text -> proposal, a meta line, and Ignore / Accept, or the outcome once decided.",
+  "status": "draft",
+  "category": "tables",
+  "variants": ["open", "accepted", "ignored"],
+  "props": [
+    {"name": "found", "type": "string", "required": true, "default": "Unterlaqen", "description": "The text as found. Plain text."},
+    {"name": "proposal", "type": "string", "required": true, "default": "Unterlagen", "description": "The proposed replacement. Plain text."},
+    {"name": "meta", "type": "string", "required": false, "default": null, "description": "Where it is and how sure (e.g. 'Line 4 · 61 % sure')."},
+    {"name": "state", "type": "string", "required": false, "default": "open", "description": "open (two actions) | accepted (success tag) | ignored (neutral tag)."},
+    {"name": "ignore_label", "type": "string", "required": false, "default": "Ignore", "description": "Secondary action label."},
+    {"name": "accept_label", "type": "string", "required": false, "default": "Accept", "description": "Primary action label."},
+    {"name": "accepted_label", "type": "string", "required": false, "default": "accepted", "description": "Tag text once accepted."},
+    {"name": "ignored_label", "type": "string", "required": false, "default": "ignored", "description": "Tag text once ignored."},
+    {"name": "extra_attrs", "type": "string", "required": false, "default": null, "description": "Raw attributes on the Accept button (page-author markup only)."},
+    {"name": "ignore_extra_attrs", "type": "string", "required": false, "default": null, "description": "Raw attributes on the Ignore button (page-author markup only)."}
+  ],
+  "source": "none",
+  "rationale": "From the application design canvas (2026-10-23), no Figma node. Reads as 'this -> that': the found text is struck through in text-subactive (it is being replaced, it is not the reader's mistake, so not the error color), the proposal in body-text-medium so the eye lands on what will stay. The meta line uses the data role like table metadata. The decision sits at the row's end, as the system's row actions do (table-cell's action cells are right-aligned): Ignore secondary, Accept primary, both dotted because they act within the view. Once decided, a passive tag (success for accepted, neutral for ignored) replaces the buttons so the list shows what is left to do. 45px min-height is the canvas's row height; a border-table hairline separates rows like table rows. Rows wrap at narrow widths. Rendering verified in light and dark themes.",
+  "themes_supported": ["light", "dark"],
+  "a11y_notes": "The arrow is aria-hidden; the row reads 'found, proposal, meta, Ignore, Accept'. Actions are real buttons (text-button).",
+  "uses": ["text-button", "tag"]
+}

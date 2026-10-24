@@ -10,8 +10,8 @@
   {'type': 'input', 'input_value': 'Status'},
   {'type': '1-action', 'content': 'Archive'}
 ]) %}
-<div class="ds-table-row" data-selected="{{ 'true' if selected else 'false' }}"{% if status %} data-status="{{ status }}"{% endif %}>
+<div class="ds-table-row" data-selected="{{ 'true' if selected else 'false' }}"{% if status %} data-status="{{ status }}"{% endif %}{% if href %} data-href="{{ href | safe_url }}"{% endif %}{% if extra_attrs %} {{ extra_attrs | safe }}{% endif %}>
   {% for cell in _cells %}
-  {% with type=cell.get('type'), content=cell.get('content'), icons=cell.get('icons'), secondary_label=cell.get('secondary_label'), input_value=cell.get('input_value'), href=cell.get('href'), single_icon=cell.get('single_icon'), single_icon_label=cell.get('single_icon_label'), priority=cell.get('priority'), checkbox_role=cell.get('checkbox_role'), options=cell.get('options'), dropdown_label=cell.get('dropdown_label'), view_label=cell.get('view_label') %}{% include "components/table-cell/template.html" %}{% endwith %}
+  {% with type=cell.get('type'), content=cell.get('content'), icons=cell.get('icons'), secondary_label=cell.get('secondary_label'), input_value=cell.get('input_value'), href=cell.get('href'), single_icon=cell.get('single_icon'), single_icon_label=cell.get('single_icon_label'), priority=cell.get('priority'), checkbox_role=cell.get('checkbox_role'), options=cell.get('options'), dropdown_label=cell.get('dropdown_label'), view_label=cell.get('view_label'), tag_type=cell.get('tag_type'), tag_subtype=cell.get('tag_subtype'), article=cell.get('article'), plain=cell.get('plain'), mark=cell.get('mark'), mark_label=cell.get('mark_label'), highlight=cell.get('highlight'), submit=cell.get('submit'), extra_attrs=cell.get('extra_attrs'), secondary_extra_attrs=cell.get('secondary_extra_attrs'), tertiary_label=cell.get('tertiary_label'), tertiary_extra_attrs=cell.get('tertiary_extra_attrs') %}{% include "components/table-cell/template.html" %}{% endwith %}
   {% endfor %}
 </div>

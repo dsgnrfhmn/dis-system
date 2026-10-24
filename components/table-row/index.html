@@ -47,6 +47,7 @@
 <link rel="stylesheet" href="../input/style.css">
 <link rel="stylesheet" href="../input-dropdown/style.css">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../tag/style.css">
 <style>
   .table-row-demo-grid {
     display: grid;
@@ -472,6 +473,56 @@
 </div>
 </div>
 
+<div class="ds-table-cell__text" style="color: var(--ds-color-text-subactive); margin: var(--ds-spacing-4) 0 var(--ds-spacing-1);">Cells with tag_type / tag_subtype and article</div>
+<div class="ds-table-row" data-selected="false">
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#" data-article="der">der Tisch</a>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">table</span>
+</div>
+<div class="ds-table-cell" data-type="tag">
+<span class="ds-tag" data-type="success" data-subtype="passive">7</span>
+</div>
+</div>
+
+<div class="ds-table-cell__text" style="color: var(--ds-color-text-subactive); margin: var(--ds-spacing-4) 0 var(--ds-spacing-1);">Row href (the whole row opens the word), plain links, a mark and a highlighted cell</div>
+<div class="ds-table-row" data-selected="false" data-href="#word-haus">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#word-haus" data-article="das" data-plain>das Haus</a>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">house</span>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false" data-href="#word-gehen">
+<div class="ds-table-cell" data-type="checkbox-cell">
+  <span class="ds-table-cell__icon" data-icon="checkbox" data-checkbox-state="unchecked" aria-hidden="true" role="img" aria-label="Select row"></span>
+  <span class="ds-table-cell__icon" data-icon="checkbox-selected" data-checkbox-state="checked" aria-hidden="true" role="img" aria-label="Select row"></span>
+</div>
+<div class="ds-table-cell" data-type="link">
+  <a class="ds-table-cell__link" href="#word-gehen" data-plain>gehen</a>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">to go</span>
+</div>
+</div>
+<div class="ds-table-row" data-selected="false">
+<div class="ds-table-cell" data-type="text-passive-cell">
+  <span class="ds-table-cell__text">Dat.</span>
+</div>
+<div class="ds-table-cell" data-type="text-active-cell">
+  <span class="ds-table-cell__text">der Wohnung</span>
+<span class="ds-table-cell__mark" role="img" aria-label="wrong once">x1</span></div>
+<div class="ds-table-cell" data-type="text-active-cell" data-highlight="success">
+  <span class="ds-table-cell__text">einen</span>
+</div>
+</div>
+
 </div>
 
 <script src="../text-button/component.js"></script>
@@ -479,3 +530,4 @@
 <script src="../table-cell/component.js"></script>
 <script src="component.js"></script>
 <script src="../input/component.js"></script>
+<script src="../tag/component.js"></script>

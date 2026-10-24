@@ -13,7 +13,12 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  height: calc(var(--ds-spacing-9) + var(--ds-spacing-6));
+  /* min-height, wrapping (2026-10-23): on a narrow window the left and right
+     groups wrap onto a second row instead of widening the page; at full
+     width the bar keeps its 60px. */
+  min-height: calc(var(--ds-spacing-9) + var(--ds-spacing-6));
+  flex-wrap: wrap;
+  row-gap: var(--ds-spacing-3);
   padding: 0 var(--ds-spacing-6);
   background-color: var(--ds-color-bg-surface);
   border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
@@ -23,6 +28,7 @@
 .ds-page-head__right {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   min-width: 0;
 }
@@ -84,5 +90,18 @@
   letter-spacing: var(--ds-font-heading-3-letter-spacing);
   line-height: normal;
   color: var(--ds-color-text-active);
+  text-overflow: ellipsis;
+}
+
+/* meta_text: a plain, passive line after the left-hand actions (counts,
+   a last-saved note). Not interactive, so no underline or bracket. */
+.ds-page-head__meta {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  color: var(--ds-color-text-subactive);
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
 }

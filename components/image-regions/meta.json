@@ -1,0 +1,18 @@
+{
+  "name": "image-regions",
+  "description": "A photo (or a page placeholder) with rectangles over the parts that need the reader's eye, e.g. where text recognition was unsure (uncertain) or where a correction was taken (accepted).",
+  "status": "draft",
+  "category": "cards-layouts",
+  "variants": ["uncertain", "accepted"],
+  "props": [
+    {"name": "src", "type": "string", "required": false, "default": null, "description": "Image URL (through safe_url). None: the page placeholder."},
+    {"name": "alt", "type": "string", "required": false, "default": "", "description": "The image's alt text."},
+    {"name": "label", "type": "string", "required": false, "default": "Photo", "description": "Accessible name of the placeholder."},
+    {"name": "regions", "type": "array", "required": false, "default": [], "description": "List of {x, y, w, h, kind, label}: position and size in percent of the image, kind uncertain | accepted, label an accessible description (none: decorative)."}
+  ],
+  "source": "none",
+  "rationale": "From the application design canvas (2026-10-23), no Figma node. The rectangles use the same signal pairs as inline-mark's states in the text beside the photo (uncertain: the for-review row-status edge and fill; accepted: the approved row-status edge, no fill, so the text under it stays readable; both themed, unlike the signal-* primitives), so photo and text point at each other. Edge width border-width-default so the frame reads at a glance over a busy photo. The placeholder (grey lines on bg-surface-pressed, 440px high -- the canvas's portrait page) stands in while no image is shown; the canvas used the base-50 primitive, which has no themed token, replaced by bg-surface-pressed. Positions are host data in data-* attributes, applied as private custom properties by component.js, so no style value comes from the host. Rendering verified in light and dark themes.",
+  "themes_supported": ["light", "dark"],
+  "a11y_notes": "With an image, alt describes it; without, the frame is role=img with label. Each labelled region is role=img with its own name; unlabelled regions are aria-hidden.",
+  "uses": []
+}

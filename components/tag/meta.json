@@ -33,6 +33,12 @@
       "required": false,
       "default": "tag",
       "description": "The tag's text."
+    },
+    {
+      "name": "article",
+      "type": "string",
+      "required": false,
+      "description": "der | die | das: chooses the type by grammatical gender (der accent-1, die danger, das success) when `type` is not set. Other values fall back to accent-1."
     }
   ],
   "source": "figma:DSYSTEMFILEKEY#103:4746",

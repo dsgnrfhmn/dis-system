@@ -12,6 +12,11 @@
     {% endfor %}
   </div>
   {% endfor %}
+  <div style="display: flex; gap: var(--ds-spacing-6);">
+    {% for article in ['der', 'die', 'das'] %}
+    {% with label=article, subtype='passive' %}{% include "components/tag/template.html" %}{% endwith %}
+    {% endfor %}
+  </div>
 </div>
 
 <script src="component.js"></script>

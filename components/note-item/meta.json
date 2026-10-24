@@ -1,0 +1,23 @@
+{
+  "name": "note-item",
+  "description": "One word noted while reading, in a side list: the word colored by gender, its translation, the form it had in the text, and either an 'in list' tag or an 'Add to list' action.",
+  "status": "draft",
+  "category": "sidebar",
+  "variants": ["in-list", "not-in-list"],
+  "props": [
+    {"name": "label", "type": "string", "required": true, "default": "die Unterlagen", "description": "The word, with its article for nouns. Plain text."},
+    {"name": "article", "type": "string", "required": false, "default": null, "description": "der | die | das colors the word (der accent-1, die row-status-declined-text, das row-status-approved-text); anything else keeps the text color."},
+    {"name": "translation", "type": "string", "required": false, "default": null, "description": "The translation. Plain text."},
+    {"name": "form", "type": "string", "required": false, "default": null, "description": "The form the word had in the text, in the data role."},
+    {"name": "in_list", "type": "boolean", "required": false, "default": false, "description": "true: a passive neutral tag; false: the add action."},
+    {"name": "in_list_label", "type": "string", "required": false, "default": "in list", "description": "The tag's text."},
+    {"name": "add_label", "type": "string", "required": false, "default": "Add to list", "description": "The action's label (secondary, dotted)."},
+    {"name": "submit", "type": "boolean", "required": false, "default": false, "description": "The add action submits its enclosing form."},
+    {"name": "extra_attrs", "type": "string", "required": false, "default": null, "description": "Raw attributes on the add button (page-author markup only)."}
+  ],
+  "source": "none",
+  "rationale": "From the application design canvas (2026-10-23), no Figma node. Three lines because the three facts are read in order: which word (in the same gender colors as table-cell's article links, so a noun's gender is visible before its article is read), what it means, how it appeared in the text (data role, text-subactive: context, not content). The state sits at the end of the first line: a passive tag when nothing is left to do, a secondary dotted text-button when there is (it stays in the view). Padding spacing-4 / spacing-6 matches a pane's content inset; a border-table hairline separates items like table rows. Rendering verified in light and dark themes.",
+  "themes_supported": ["light", "dark"],
+  "a11y_notes": "Plain text lines and a real button; color is never the only carrier of the gender, which the article in label also states.",
+  "uses": ["tag", "text-button"]
+}
