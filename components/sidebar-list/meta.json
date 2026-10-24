@@ -38,7 +38,7 @@
     "light",
     "dark"
   ],
-  "a11y_notes": "An <aside> with aria-label. The toggle is a real button with aria-expanded and a label that flips between Collapse sidebar and Expand sidebar; each set row's name and save buttons are real buttons (the save button uses aria-pressed).",
+  "a11y_notes": "An <aside> with aria-label. The toggle is a real button with aria-expanded and a label that flips between Collapse sidebar and Expand sidebar (on a collapsed sidebar the toggle pins it open, also while hover has it slid open); each set row's name and save buttons are real buttons (the save button uses aria-pressed).",
   "uses": [
     "sidebar-item"
   ]

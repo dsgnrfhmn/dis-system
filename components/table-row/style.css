@@ -103,7 +103,7 @@
   opacity: 0.5;
 }
 
-/* data-dragging is set by a host page that reorders live (host script
+/* data-dragging is set by a host page that reorders live (the host's boot script
    sortable): the dragged row itself moves through the list as the gap, the
    rows it passes slide aside. Same feedback as --dragging, on the cells. */
 
@@ -283,6 +283,39 @@
    one step darker (Figma base/250) than the hover fill. Light theme only. */
 :root:not([data-theme="dark"]) [data-selected-fill="strong"] .ds-table-row[data-selected="true"] > .ds-table-cell {
   background-color: var(--ds-color-base-250);
+}
+
+/* ---- Flash: a row that just changed state (2026-10-18) ----------------------
+   data-flash="success" on a row fades its cells from green back to their own
+   fill in three seconds, once: the page sets it when a result lands (an item
+   analysed) and removes it on animationend. Cells carry the fill, same as the
+   hover and selected rules above, so the keyframes sit on the cells; there is
+   no `to`, so each cell fades into whatever fill it has (surface, hover,
+   selected). The green is system-success, the same token in both themes; the
+   mix only sets how strong it starts. Dark starts lower so it stays a dark
+   green on the dark surface instead of a bright one. Motion is feedback only:
+   under prefers-reduced-motion there is no animation. */
+.ds-table-row {
+  --_flash-mix: 38%;
+}
+:root[data-theme="dark"] .ds-table-row {
+  --_flash-mix: 22%;
+}
+
+@keyframes ds-table-row-flash-success {
+  from {
+    background-color: color-mix(in srgb, var(--ds-color-system-success) var(--_flash-mix), transparent);
+  }
+}
+
+.ds-table-row[data-flash="success"] > .ds-table-cell {
+  animation: ds-table-row-flash-success 3s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-table-row[data-flash="success"] > .ds-table-cell {
+    animation: none;
+  }
 }
 
 /* Row link (data-href, 2026-10-23): the whole row opens the URL (component.js),

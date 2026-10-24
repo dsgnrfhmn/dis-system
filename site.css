@@ -18,7 +18,7 @@
    Smooth scroll: programmatic and anchor scrolls glide instead of jumping
    (CSS scroll-behavior does not smooth wheel input -- that is by choice).
    Theme fade: the page toggle switches data-theme inside
-   document.startViewTransition (host script), so the browser cross-fades two
+   document.startViewTransition (the host's script), so the browser cross-fades two
    snapshots of the page, 180ms, in one compositor animation. (An earlier
    version transitioned color on every element for 150ms; on a page with a
    thousand cells that stuttered.) Without startViewTransition the theme

@@ -3,7 +3,8 @@
   The 60px bar under the nav bar on the Collection and Template pages: the set's title
   and its main action on the left, the secondary actions on the right, one
   hairline underneath. The consumer-app Figma file APPFILEKEY, Collection node
-  150:16217 and Template node 150:16362.
+  150:16217 and Template node 150:16362. The title is the heading-3 role, one step above
+  the heading-4 of those frames (explicit request 2026-10-18); the edit field matches it.
 */
 .ds-page-head {
   flex: none;
@@ -20,7 +21,7 @@
   row-gap: var(--ds-spacing-3);
   padding: 0 var(--ds-spacing-6);
   background-color: var(--ds-color-bg-surface);
-  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
 }
 
 .ds-page-head__left,
@@ -38,9 +39,9 @@
 
 .ds-page-head__title {
   margin: 0;
-  font-family: var(--ds-font-heading-4-family);
-  font-size: var(--ds-font-heading-4-size);
-  font-weight: var(--ds-font-heading-4-weight);
+  font-family: var(--ds-font-heading-3-family);
+  font-size: var(--ds-font-heading-3-size);
+  font-weight: var(--ds-font-heading-3-weight);
   line-height: normal;
   color: var(--ds-color-text-active);
   white-space: nowrap;
@@ -82,11 +83,11 @@
   box-shadow: inset 0 calc(-1 * var(--ds-border-width-default)) 0 var(--ds-color-accent-1);
   outline: none;
   field-sizing: content;
-  font-family: var(--ds-font-heading-4-family);
-  font-size: var(--ds-font-heading-4-size);
-  font-weight: var(--ds-font-heading-4-weight);
-  font-style: var(--ds-font-heading-4-style);
-  letter-spacing: var(--ds-font-heading-4-letter-spacing);
+  font-family: var(--ds-font-heading-3-family);
+  font-size: var(--ds-font-heading-3-size);
+  font-weight: var(--ds-font-heading-3-weight);
+  font-style: var(--ds-font-heading-3-style);
+  letter-spacing: var(--ds-font-heading-3-letter-spacing);
   line-height: normal;
   color: var(--ds-color-text-active);
   text-overflow: ellipsis;

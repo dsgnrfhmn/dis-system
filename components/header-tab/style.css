@@ -88,7 +88,7 @@
   padding: var(--ds-spacing-cell) var(--ds-spacing-6);
   background-color: var(--ds-color-bg-surface-pressed);
   border: none;
-  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
   box-sizing: border-box;
   cursor: pointer;
   text-align: left;
@@ -191,7 +191,7 @@
 }
 
 /*
-  Dark theme (consuming dashboard, 2026-10-01): an inactive tab takes the
+  Dark theme (consumer dashboard, 2026-10-01): an inactive tab takes the
   page background like the active one, so the strip reads as one surface
   and only the text marks the open tab -- the inactive title and caption
   sit a step below the active tab's text in header-cell-label (#808080, the
@@ -228,7 +228,7 @@
 .ds-header-tab[data-size="compact"] {
   height: calc(var(--ds-spacing-9) + var(--ds-spacing-5));
   padding: 0 var(--ds-spacing-6);
-  border-left: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border-left: var(--ds-border-width-thin) solid var(--ds-color-border-table);
 }
 
 .ds-header-tab[data-size="compact"] .ds-header-tab__label {

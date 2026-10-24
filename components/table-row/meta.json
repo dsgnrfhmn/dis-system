@@ -23,6 +23,12 @@
       "description": "Optional data-status on the row (analysed / submitted / approved / pending / declined): style.css colors the value of the row's dropdown-type cell as a status pill from the row-status tokens. Other values, or none, leave it plain."
     },
     {
+      "name": "flash",
+      "type": "string",
+      "required": false,
+      "description": "Optional data-flash=\"success\" on the row: its cells fade from system-success back to their own fill once, over three seconds (a result just landed). The host sets it and removes it on animationend; no animation under prefers-reduced-motion. The green starts weaker in the dark theme."
+    },
+    {
       "name": "extra_attrs",
       "type": "string",
       "required": false,

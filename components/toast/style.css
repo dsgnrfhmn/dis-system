@@ -8,7 +8,7 @@
   and a failed action produces an error toast.
 
   Position since 2026-10-12: top center, 20px from the top edge, over the nav,
-  as on the Figma app-file artboard 345:10101 (Toster 315x66 at y=20, centered on
+  as on the Figma app artboard 345:10101 (Toster 315x66 at y=20, centered on
   the 1920 canvas). The stack hugs its toasts, up to 480px; newest at the bottom.
 
   Look since 2026-09-27: Figma D_SYSTEM's Toster (node 103:4772), see the
@@ -89,8 +89,24 @@
 }
 
 .ds-toast__actions {
+  flex: none;
   display: flex;
-  column-gap: var(--ds-spacing-3);
+  /* No gap of its own: each text-button already carries 11px of padding on both sides,
+     so the labels sit 22px apart (maintainer, 2026-10-13, "closer to each other"). */
+  column-gap: 0;
+}
+
+/* text-button keeps about 20px of room each side of its label; the second button
+   pulls into the first one's room by 10px (spacing-cell), so the labels sit about
+   30px apart instead of 40, and hover's [ ] brackets still have their space. */
+.ds-toast__actions .ds-text-button + .ds-text-button {
+  margin-inline-start: calc(-1 * var(--ds-spacing-cell));
+}
+
+/* With actions the toast has no close icon: the actions take its place at the
+   right of the text row (maintainer, 2026-10-13). */
+.ds-toast[data-actions] .ds-toast__message {
+  flex: 1 1 auto;
 }
 
 /* Close: a 24px square in the strong color with a white X (Figma's Close

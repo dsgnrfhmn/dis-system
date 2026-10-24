@@ -419,5 +419,68 @@
       "$type": "color",
       "$description": "Dark counterpart chosen 2026-09-27 (no Figma dark source): muted column label, as light base.600"
     }
+  },
+  "tag": {
+    "$description": "Explicit request 2026-10-23 (consumer EVENTS, \"tags are too strong in dark\"): the light tints read as glaring light blocks on the black.900 surface, and accent-2's earlier exception (magenta.800 fill) as a loud one. Each type keeps its hue; the fill is that hue's darkest step and the text a light step of it, so the tag stays recognisable but quiet. Text on fill is at least 6:1 for every pair. accent-1 uses blue.800, not .900: blue.900 is nearly indistinguishable from the surface (1.04:1).",
+    "accent-1-bg": {
+      "$value": "{blue.800}",
+      "$type": "color",
+      "$description": ""
+    },
+    "accent-1-text": {
+      "$value": "{blue.100}",
+      "$type": "color",
+      "$description": ""
+    },
+    "accent-2-bg": {
+      "$value": "{magenta.900}",
+      "$type": "color",
+      "$description": ""
+    },
+    "accent-2-text": {
+      "$value": "{magenta.200}",
+      "$type": "color",
+      "$description": ""
+    },
+    "accent-3-bg": {
+      "$value": "{orange.900}",
+      "$type": "color",
+      "$description": ""
+    },
+    "accent-3-text": {
+      "$value": "{orange.300}",
+      "$type": "color",
+      "$description": ""
+    },
+    "success-bg": {
+      "$value": "{green.900}",
+      "$type": "color",
+      "$description": ""
+    },
+    "success-text": {
+      "$value": "{green.300}",
+      "$type": "color",
+      "$description": ""
+    },
+    "warning-bg": {
+      "$value": "{yellow.900}",
+      "$type": "color",
+      "$description": ""
+    },
+    "warning-text": {
+      "$value": "{yellow.300}",
+      "$type": "color",
+      "$description": ""
+    },
+    "danger-bg": {
+      "$value": "{red.800}",
+      "$type": "color",
+      "$description": ""
+    },
+    "danger-text": {
+      "$value": "{red.200}",
+      "$type": "color",
+      "$description": ""
+    }
   }
 }

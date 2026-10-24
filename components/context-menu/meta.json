@@ -1,0 +1,57 @@
+{
+  "name": "context-menu",
+  "description": "The menu a right click opens on an element: a panel of actions at the pointer, built from dropdown-menu's own panel, items and divider. The host element carries data-context-menu=\"<menu id>\"; choosing an item dispatches ds-context-menu-select on it.",
+  "status": "stable",
+  "category": "inputs",
+  "listed": false,
+  "layout": "wide",
+  "variants": [
+    "floating",
+    "inline"
+  ],
+  "props": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "The menu's id; a host element points at it with data-context-menu. One menu can serve every element of a list."
+    },
+    {
+      "name": "items",
+      "type": "array",
+      "required": false,
+      "description": "A list of { value, label, disabled } or { divider: true }. value comes back in ds-context-menu-select; a disabled item stays listed and takes no click."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Actions",
+      "description": "The menu's accessible name (aria-label)."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Rendered visible. Only for the demo; in use component.js shows and hides the menu."
+    },
+    {
+      "name": "inline",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Variant inline: drawn in the flow instead of fixed at the pointer. Only for the demo and docs."
+    }
+  ],
+  "source": "none",
+  "rationale": "Requested by the maintainer (2026-10-19) for the CV sets sidebar (Delete, Rename, Duplicate, Download PDF), to be used on every list later. No design source defines a context menu, so nothing is invented: the panel is dropdown-menu's (white, 1px border in input-border-hover, no shadow, 44px items, base/100 hover, hairline divider, disabled state), reached by the same classes, which is why it needs dropdown-menu/style.css beside it. This component adds only what a floating menu needs: position fixed at the pointer, clamped to the viewport; z-index 40, above the sidebar (30) and below popups; a 200px minimum width (spacing.9 x 5; dropdown-menu's 100% is its trigger's width, and there is no trigger); and data-context-open on the host, which keeps the row's hover fill while its menu is open so it is clear what a click acts on. component.js is the same shape as dropdown-menu's: closes on Escape, an outside press, Tab, scroll, resize and window blur; arrow, Home and End keys move between enabled items. It does not decide what an item does: a destructive one is confirmed by the host. A destructive item is set apart by a divider and carries no color of its own: no design source asks for one.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
+  "uses": [
+    "divider"
+  ],
+  "a11y_notes": "role=\"menu\" with role=\"menuitem\" buttons. Opens from the keyboard with the Menu key or Shift+F10 on a focusable host, at the host's lower left. Focus moves to the first item on open and returns to where it was on a keyboard close. Escape closes. A pointer-only host (a div) is not focusable: give it tabindex if it must be reachable by keyboard."
+}

@@ -59,7 +59,11 @@
     messageEl.textContent = message;
     body.appendChild(messageEl);
 
+    // A toast with actions has no close icon: the actions sit in the same row as the
+    // text, where the icon would be (maintainer, 2026-10-13). One without actions keeps
+    // the X. Dismissing is then up to the actions and the auto-dismiss timer.
     if (actions.length) {
+      toast.dataset.actions = '';
       const actionsEl = document.createElement('div');
       actionsEl.className = 'ds-toast__actions';
       actions.forEach((action) => {
@@ -69,20 +73,26 @@
         button.dataset.priority = 'secondary';
         button.dataset.status = 'active';
         button.dataset.underline = 'dotted';
-        button.textContent = action.label;
+        // The label sits in text-button's own span: the dotted underline is drawn on it,
+        // and text-button's component.js has already run, so it will not wrap bare text.
+        const label = document.createElement('span');
+        label.className = 'ds-text-button__text';
+        label.textContent = action.label;
+        button.appendChild(label);
         if (action.onClick) button.addEventListener('click', action.onClick);
         actionsEl.appendChild(button);
       });
-      body.appendChild(actionsEl);
+      toast.appendChild(actionsEl);
+    } else {
+      // Close (Figma D_SYSTEM Toster's X): dismisses now; the toast still
+      // auto-dismisses after `duration` if left alone.
+      const close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'ds-toast__close';
+      close.setAttribute('aria-label', 'Dismiss');
+      close.addEventListener('click', () => dismiss());
+      toast.appendChild(close);
     }
-    // Close (Figma D_SYSTEM Toster's X): dismisses now; the toast still
-    // auto-dismisses after `duration` if left alone.
-    const close = document.createElement('button');
-    close.type = 'button';
-    close.className = 'ds-toast__close';
-    close.setAttribute('aria-label', 'Dismiss');
-    close.addEventListener('click', () => dismiss());
-    toast.appendChild(close);
 
     stack.appendChild(toast);
 

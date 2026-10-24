@@ -59,7 +59,28 @@
 }
 
 .ds-popup-step__head[data-collapsible] .ds-popup-step__title {
+  margin-right: auto;
   transition: opacity 150ms ease;
+}
+
+/* The open/close arrow, left of the title (maintainer, 2026-10-22): the same arrow-down icon and
+   accent as the dropdown's, pointing down while the step is open and right while it is
+   closed. Decorative: the head toggles on a click anywhere, the title li is the keyboard
+   and screen reader button. */
+.ds-popup-step__head[data-collapsible]::before {
+  content: "";
+  flex: none;
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  margin-right: var(--ds-spacing-3);
+  background-color: var(--ds-color-accent-1);
+  -webkit-mask: url("../../icons/arrow-down.svg") center / 100% 100% no-repeat;
+  mask: url("../../icons/arrow-down.svg") center / 100% 100% no-repeat;
+  transition: transform 150ms ease;
+}
+
+.ds-popup-step__head[data-collapsible][data-collapsed]::before {
+  transform: rotate(-90deg);
 }
 
 .ds-popup-step__head[data-collapsible]:not([data-collapsed]) .ds-popup-step__title,
@@ -100,7 +121,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ds-popup-step__head[data-collapsible] + .ds-popup-step__body,
-  .ds-popup-step__head[data-collapsible] .ds-popup-step__title {
+  .ds-popup-step__head[data-collapsible] .ds-popup-step__title,
+  .ds-popup-step__head[data-collapsible]::before {
     transition: none;
   }
 }

@@ -1,17 +1,18 @@
 {
   "name": "portfolio-sheet",
-  "description": "One 842x599 sheet of a portfolio document, drawn to Figma's 'Design template' section: main (title, year, one picture), work, detail (portrait picture, caption at its side), multi (2x2), exhibition (wide photo), text and more-text (one 300px column). The same markup is the dashboard preview and, later, the PDF page.",
+  "description": "One 842x599 sheet of a portfolio document, drawn to the page types of the artist's own portfolio PDF: band (title and year, one picture across the width below), side (text column, picture right at full height), figure-side (text column, picture right off the edge, caption under it), grid-side (text column, 2x2 grid), grid (2x2 grid, captions stacked left), full (full-bleed picture, caption over it), figure (whole picture centred, caption bottom right), text (one column) and missing. The same markup is the dashboard preview and, later, the PDF page.",
   "status": "draft",
   "category": "cards-layouts",
   "listed": false,
   "variants": [
-    "main",
-    "work",
-    "detail",
-    "multi",
-    "exhibition",
+    "band",
+    "side",
+    "figure-side",
+    "grid-side",
+    "grid",
+    "full",
+    "figure",
     "text",
-    "more-text",
     "missing"
   ],
   "props": [
@@ -19,47 +20,53 @@
       "name": "layout",
       "type": "string",
       "required": true,
-      "default": "main",
-      "description": "Which Figma sheet to draw: main, work, detail, multi, exhibition, text, more-text, or missing (the project behind the entry is gone)."
+      "default": "band",
+      "description": "Which page type to draw: band, side, figure-side, grid-side, grid, full, figure, text, or missing (the project behind the entry is gone)."
     },
     {
       "name": "title",
       "type": "string",
       "required": false,
       "default": null,
-      "description": "main only: the project name, Bodoni Moda Bold 28."
+      "description": "band, side, figure-side, grid-side: the project name, Karla Medium 28/34."
     },
     {
       "name": "subtitle",
       "type": "string",
       "required": false,
       "default": null,
-      "description": "main only: the line under the title (year)."
+      "description": "band, side, figure-side, grid-side: the year line under the title, Karla Light 13/16."
     },
     {
       "name": "images",
       "type": "array",
       "required": false,
       "default": [],
-      "description": "Pictures as {src, alt, prefix, label, suffix, lines}. One for main, work and exhibition, four for multi. The caption block is built from the first one: prefix + label (medium weight) + suffix, then one line each."
+      "description": "band, side, figure-side, full, figure: one {src, alt, prefix, label, suffix, lines}, captioned under it (figure-side, figure) or over it (band, side, full; white, black over a bright picture)."
+    },
+    {
+      "name": "slots",
+      "type": "array",
+      "required": false,
+      "description": "grid-side and grid: cells 0..3, each {cell, image} with image as in images or none for an empty cell. grid stacks a caption per filled cell on the left; grid-side has none."
     },
     {
       "name": "paragraphs",
       "type": "array",
       "required": false,
       "default": [],
-      "description": "text and more-text: the paragraphs of the column."
+      "description": "side, figure-side, grid-side (under the title) and text: list of strings, Karla Light 13/16, 8 between paragraphs."
     },
     {
-      "name": "page",
-      "type": "number",
+      "name": "note",
+      "type": "string",
       "required": false,
       "default": null,
-      "description": "The number printed bottom left as 'page N'."
+      "description": "missing only: the line saying which project could not be read."
     }
   ],
-  "source": "figma:APPFILEKEY/328:19053",
-  "rationale": "Read off the Figma section 'Design template' (node 328:19053, one frame per layout, all 842x599). Every offset is the Figma value as a multiple of one 842nd of the sheet's width (--u, a container-query unit), so the sheet is the identical drawing in a 400px pane and at 842px in print, and the preview can never drift from the exported page. Paper is white with black text in both themes: it is a document, and print must not depend on the app theme. Pictures are never cropped (object-fit: contain, maintainer 2026-10-11), the exhibition photo included, so portrait and landscape pictures of any proportion fit a slot; the host chooses work, detail, multi or exhibition from the picture's proportions. In detail (328:18918) the picture sits against its caption and the page number stays black, since Figma's white number assumes a full-bleed picture. Type is Bodoni Moda Bold for the title and Karla Light / Medium for text and captions, as in Figma; neither is a dis-system token yet, so the stacks live in this component with local() @font-face and fall back to a system serif / sans-serif until the files are self-hosted. The multi sheet's empty-cell fill is Figma's raw #3E3F36, which has no variable: base-800 is used.",
+  "source": "none",
+  "rationale": "Measured off the artist's own portfolio PDF (842x599 pt, the same size as the sheet), which supersedes the earlier Figma 'Design template' (maintainer, 2026-10-24): every offset is the PDF value times --u, one 842nd of the sheet's width (a container-query unit), so the sheet is the identical drawing in a 400px pane and at 842px in print. Pictures are cropped where the PDF crops them (cover) and whole where it shows them whole (figure). A caption over a picture is white and turns black over a bright one; component.js reads the picture under the caption through a small canvas, which is the only behavior. No page numbers: the PDF has none. Titles are Karla Medium, the nearest face dis-system has to the PDF's geometric sans (maintainer, 2026-10-24: no new font). Paper stays white and text black in both themes: this is a document, not an app surface. Staged in local-components until the maintainer confirms it goes into dis-system.",
   "themes_supported": [
     "light",
     "dark"

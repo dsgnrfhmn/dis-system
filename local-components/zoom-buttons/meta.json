@@ -9,7 +9,7 @@
     {"name": "direction", "type": "string", "required": true, "description": "Per button, data-direction: \"in\" (+) or \"out\" (-)."}
   ],
   "source": "none",
-  "rationale": "Requested by the maintainer (2026-10-11) for the CV Preview pane, in the look of the sidebar collapse toggle (.ds-sidebar-list__toggle): same size (spacing-row by spacing-9), thin dark-passive border, accent-1 mask icon, bg-surface-pressed on hover, focus ring as the toggle. No Figma node exists for it, so source is none; the minus icon is drawn as the counterpart of icons/add.svg and staged beside the component. The two buttons share one border (negative margin of the border width) so they read as one control. Staged in local-components until maintainer confirms it goes into dis-system.",
+  "rationale": "Requested by the maintainer (2026-10-11) for the CV Preview pane, in the look of the sidebar collapse toggle (.ds-sidebar-list__toggle): same size (spacing-row by spacing-9), thin dark-passive border, accent-1 mask icon, bg-surface-pressed on hover, focus ring as the toggle. No Figma node exists for it, so source is none; the minus icon is drawn as the counterpart of icons/add.svg and staged beside the component. The two buttons share one border (negative margin of the border width) so they read as one control. Staged in local-components until the maintainer confirms it goes into dis-system.",
   "themes_supported": ["light", "dark"],
   "a11y_notes": "Native buttons with aria-label (Zoom in, Zoom out), grouped with role=group and a label. A button at the zoom limit is disabled. Icons are decorative (aria-hidden)."
 }

@@ -9,6 +9,15 @@
     {% with type='source', text='Rollback: redeploy the previous tag and clear the CDN cache.' %}{% include "components/block-row/template.html" %}{% endwith %}
   </ul>
   <ul class="ds-block-list" style="flex: 1;">
+    {% with type='source', overlay=true, text='Overlay: the actions float over the right end of this text on hover, one button wide.' %}{% include "components/block-row/template.html" %}{% endwith %}
+    {% with type='source', overlay=true, included=true, text='Overlay, already used: Remove floats the same way.' %}{% include "components/block-row/template.html" %}{% endwith %}
+  </ul>
+  <ul class="ds-block-list" style="flex: 1;">
+    {% with type='source', overlay=true, compact=true, heading=true, text='A section heading' %}{% include "components/block-row/template.html" %}{% endwith %}
+    {% with type='source', overlay=true, compact=true, text='Compact: one line, 35px.' %}{% include "components/block-row/template.html" %}{% endwith %}
+    {% with type='source', overlay=true, compact=true, included=true, text='Compact, already used: Remove, one line tall.' %}{% include "components/block-row/template.html" %}{% endwith %}
+  </ul>
+  <ul class="ds-block-list" style="flex: 1;">
     {% with type='editable', text='Escalation: page on-call after 15 minutes without an update.' %}{% include "components/block-row/template.html" %}{% endwith %}
     {% with type='editable', text='Runbook: restart the ingest worker, then drain the queue.' %}{% include "components/block-row/template.html" %}{% endwith %}
   </ul>

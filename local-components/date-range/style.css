@@ -1,0 +1,224 @@
+/*
+  date-range (STAGED in local-components; no Figma node yet, explicit request
+  2026-10-23 for a consumer's EVENTS Date filter).
+
+  A panel in dropdown-menu's look: bg-surface, a 1px input-border-hover edge,
+  no shadow, no radius. Left: the preset column, text-buttons (secondary,
+  dotted: they change the view, they don't navigate). Each preset stays on one line. Right: a month head
+  (previous / month name / next) over a 7-column day grid, Monday first, and
+  a footer with the chosen range in words and Clear.
+
+  Days are 40px squares (spacing-9), the size of an icon-only button's box,
+  so the grid is a regular pointer target. State is fill, like a table row:
+  - in range: bg-row-selected (a selected row's fill);
+  - start / end: accent-1 with text-inverced (the one interactive color,
+    the same pair as gallery-image's picker badge);
+  - hover: bg-surface-pressed (table-header-cell's hover);
+  - today: a thin dark-passive inset ring, so it is findable without
+    competing with a selection;
+  - outside the month: text-inactive; outside min / max: disabled, inactive
+    text and no hover.
+  The panel is fixed width (7 x 40px grid + paddings + the preset column):
+  a calendar that reflows would move every day under the pointer.
+*/
+
+.ds-date-range {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: stretch;
+  background-color: var(--ds-color-bg-surface);
+  border: var(--ds-border-width-thin) solid var(--ds-color-input-border-hover, var(--ds-color-object-dark-pressed));
+  border-radius: var(--ds-radius-none);
+  color: var(--ds-color-text-active);
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  text-transform: none;
+}
+
+.ds-date-range[hidden] {
+  display: none;
+}
+
+/* Popover: under its trigger, 10px off it, like dropdown-menu's panel.
+   The host's wrapper is the positioned ancestor (.ds-dropdown). */
+.ds-date-range[data-popover] {
+  position: absolute;
+  top: calc(100% + var(--ds-spacing-3) + var(--ds-spacing-1));
+  left: 0;
+  z-index: 30;
+}
+
+.ds-date-range[data-popover][data-align="end"] {
+  left: auto;
+  right: 0;
+}
+
+.ds-date-range__presets {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  white-space: nowrap;
+  padding: var(--ds-spacing-3) 0;
+  border-right: var(--ds-border-width-thin) solid var(--ds-color-border-table);
+}
+
+/* The current preset reads as chosen with table-header-cell's active
+   filter fill (bg-surface-pressed), not a bolder weight: bold text is
+   wider and would resize the panel. */
+.ds-date-range__presets .ds-text-button {
+  width: 100%;
+}
+
+.ds-date-range__presets .ds-text-button[aria-pressed="true"] {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-date-range__calendar {
+  display: flex;
+  flex-direction: column;
+  padding: var(--ds-spacing-3) var(--ds-spacing-4) var(--ds-spacing-4);
+}
+
+.ds-date-range__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--ds-spacing-9);
+}
+
+.ds-date-range__month {
+  font-family: var(--ds-font-title-family);
+  font-size: var(--ds-font-title-size);
+  font-weight: var(--ds-font-title-weight);
+  line-height: var(--ds-font-title-line-height);
+}
+
+.ds-date-range__step {
+  box-sizing: border-box;
+  width: var(--ds-spacing-9);
+  height: var(--ds-spacing-9);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.ds-date-range__step:hover:not(:disabled) {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-date-range__step:disabled {
+  cursor: default;
+}
+
+.ds-date-range__step-icon {
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  background-color: var(--ds-color-accent-1);
+}
+
+.ds-date-range__step:disabled .ds-date-range__step-icon {
+  background-color: var(--ds-color-object-dark-passive);
+}
+
+.ds-date-range__step[data-step="-1"] .ds-date-range__step-icon {
+  -webkit-mask: url("../../icons/arrow-left.svg") center / 100% 100% no-repeat;
+  mask: url("../../icons/arrow-left.svg") center / 100% 100% no-repeat;
+}
+
+.ds-date-range__step[data-step="1"] .ds-date-range__step-icon {
+  -webkit-mask: url("../../icons/arrow-right.svg") center / 100% 100% no-repeat;
+  mask: url("../../icons/arrow-right.svg") center / 100% 100% no-repeat;
+}
+
+.ds-date-range__grid {
+  display: grid;
+  grid-template-columns: repeat(7, var(--ds-spacing-9));
+}
+
+.ds-date-range__weekday {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--ds-spacing-8);
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+  line-height: var(--ds-font-data-line-height);
+  text-transform: uppercase;
+  color: var(--ds-color-header-cell-label, var(--ds-color-text-subactive));
+}
+
+.ds-date-range__day {
+  box-sizing: border-box;
+  width: var(--ds-spacing-9);
+  height: var(--ds-spacing-9);
+  padding: 0;
+  border: none;
+  border-radius: var(--ds-radius-none);
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.ds-date-range__day[data-outside] {
+  color: var(--ds-color-text-inactive);
+}
+
+.ds-date-range__day:hover:not(:disabled) {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-date-range__day[data-today] {
+  box-shadow: inset 0 0 0 var(--ds-border-width-thin) var(--ds-color-object-dark-passive);
+}
+
+.ds-date-range__day[data-in-range] {
+  background-color: var(--ds-color-bg-row-selected);
+}
+
+.ds-date-range__day[data-edge],
+.ds-date-range__day[data-edge]:hover {
+  background-color: var(--ds-color-accent-1);
+  color: var(--ds-color-text-inverced);
+}
+
+.ds-date-range__day:disabled {
+  color: var(--ds-color-text-inactive);
+  cursor: default;
+}
+
+.ds-date-range__day:focus-visible,
+.ds-date-range__step:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+.ds-date-range__foot {
+  /* As wide as the grid, whatever the summary says, so the panel never
+     changes width while a range is picked. */
+  box-sizing: border-box;
+  width: calc(var(--ds-spacing-9) * 7);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-spacing-3);
+  margin-top: var(--ds-spacing-3);
+  padding-top: var(--ds-spacing-3);
+  border-top: var(--ds-border-width-thin) solid var(--ds-color-border-table);
+}
+
+.ds-date-range__summary {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--ds-color-text-subactive);
+}

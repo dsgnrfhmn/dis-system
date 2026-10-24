@@ -98,6 +98,16 @@
   font-weight: var(--ds-font-body-text-medium-weight);
 }
 
+/* A link item (an <a class="ds-dropdown-menu__item" href>, explicit request
+   2026-10-20, For You's Recent Activity): it leaves the page, so it carries
+   the solid underline the nav links use. Same box and hover as a button item. */
+a.ds-dropdown-menu__item {
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-thickness: var(--ds-border-width-thin);
+  text-underline-offset: var(--ds-spacing-1);
+}
+
 /* Mirror data-size="compact" from the trigger (input-dropdown) onto the
    wrapper, like "large": a block-level container the 200px trigger fills. */
 .ds-dropdown[data-size="compact"] {

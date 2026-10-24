@@ -2,7 +2,7 @@
   hero-block (Figma: hero-dashboard-block, node 330:30584 in the consumer-app
   file, 1920x320)
 
-  STAGED in local-components until maintainer confirms it goes into dis-system.
+  STAGED in local-components until the maintainer confirms it goes into dis-system.
 
   Rules: every value is a var(--ds-*) reference from tokens/output.css.
 
@@ -27,7 +27,7 @@
 
   The search field is the transparent input. Its width is Figma's 800px, a
   fixed dimension read off the design; text is centred as drawn. The block
-  ends 20px below the field's box (maintainer, 2026-10-11; Figma has 40px).
+  ends 60px below the field's box (maintainer, 2026-10-14; was 20px, Figma has 40px).
 */
 .ds-hero-block {
   box-sizing: border-box;
@@ -38,7 +38,9 @@
   gap: var(--ds-spacing-6);
   width: 100%;
   height: 400px; /* fixed block height (maintainer, 2026-10-11) */
-  padding: var(--ds-spacing-9) var(--ds-spacing-cell) var(--ds-spacing-6);
+  /* Bottom: the field ends 60px above the block's edge (maintainer, 2026-10-14: raised
+     from 20px, in two steps). */
+  padding: var(--ds-spacing-9) var(--ds-spacing-cell) calc(3 * var(--ds-spacing-6));
   background-color: var(--ds-color-bg-surface);
   color: var(--ds-color-text-active);
 }

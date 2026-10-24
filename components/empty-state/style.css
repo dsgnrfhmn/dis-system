@@ -58,12 +58,8 @@
   height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
   padding: var(--ds-spacing-cell);
   gap: 0;
-  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-bg-surface-pressed);
+  border-bottom: var(--ds-border-width-thin) solid var(--ds-color-border-table);
   opacity: 0.5;
-}
-
-:root:not([data-theme="dark"]) .ds-empty-state[data-size="row"] {
-  border-bottom-color: var(--ds-color-base-150);
 }
 
 .ds-empty-state[data-size="row"] .ds-empty-state__message {
@@ -132,7 +128,7 @@
   gap: 0;
   padding: 0;
   background-color: var(--ds-color-base-175);
-  box-shadow: inset var(--ds-border-width-thin) 0 0 0 var(--ds-color-object-dark-passive);
+  box-shadow: inset var(--ds-border-width-thin) 0 0 0 var(--ds-color-border-table);
   opacity: 0.5;
 }
 

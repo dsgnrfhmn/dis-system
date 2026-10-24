@@ -147,8 +147,8 @@
 
 .ds-sidebar-item[data-type="set"][data-active="true"] {
   background-color: var(--ds-color-bg-surface-pressed);
-  border-top-color: var(--ds-color-object-dark-passive);
-  border-bottom-color: var(--ds-color-object-dark-passive);
+  border-top-color: var(--ds-color-border-table);
+  border-bottom-color: var(--ds-color-border-table);
 }
 
 /* Hover / keyboard focus: the whole row takes the selected fill, as in
@@ -167,8 +167,8 @@
    base/300 rules above and below), like the selected row. */
 .ds-sidebar-item[data-type="set"]:hover,
 .ds-sidebar-item[data-type="set"]:focus-within {
-  border-top-color: var(--ds-color-object-dark-passive);
-  border-bottom-color: var(--ds-color-object-dark-passive);
+  border-top-color: var(--ds-color-border-table);
+  border-bottom-color: var(--ds-color-border-table);
 }
 
 /* Muted set (2026-09-30, explicit request: "items whose status is applied
@@ -294,6 +294,16 @@
   --_icon-fill: currentColor;
 }
 
+/* The save button of an inactive, unsaved set is there only while its row is hovered or holds
+   focus (explicit request 2026-10-19, CV and Portfolio): a list of sets reads as names,
+   and the selected set keeps its button in view. The create row's plus is not a save
+   and stays. Opacity, not display, so the row and the button's place never change, and
+   keyboard focus still reaches it (focus-within shows it). No transition: it follows the
+   pointer at once. A saved set keeps its mark at all times: it says something, the empty outline only offers it. */
+.ds-sidebar-item[data-type="set"]:not([data-active="true"]):not([data-role="create"]):not(:hover):not(:focus-within) .ds-sidebar-item__save:not([aria-pressed="true"]) {
+  opacity: 0;
+}
+
 /* Selected set, Figma D_SYSTEM 188:4543: base/150 fill (one step darker than
    hover's base/100, so the chosen row stays distinct under the pointer), the
    name in black at Medium weight with no underline, ellipsis, the two
@@ -311,4 +321,11 @@
 
 .ds-sidebar-item[data-type="set"][data-active="true"] .ds-text-button[data-underline] .ds-text-button__text {
   text-decoration: none;
+}
+
+/* data-dragging is set by a host page that reorders the sets live (the host's boot script
+   sortable): the dragged row moves through the list as the gap, the rows it passes
+   slide aside. Same half-opacity feedback as table-row. */
+.ds-sidebar-item[data-dragging="true"] {
+  opacity: 0.5;
 }

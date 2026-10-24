@@ -51,7 +51,9 @@
   }
 
   function clear() {
-    document.querySelectorAll('.ds-skeleton').forEach(function (el) { el.remove(); });
+    // A data-static skeleton is drawn by hand as an empty place (a preview with
+    // nothing in it), not while loading, so it stays.
+    document.querySelectorAll('.ds-skeleton:not([data-static])').forEach(function (el) { el.remove(); });
     document.querySelectorAll('[aria-busy="true"]').forEach(function (el) {
       if (el.hasAttribute('data-skeleton')) el.removeAttribute('aria-busy');
     });

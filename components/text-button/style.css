@@ -458,6 +458,17 @@ a.ds-text-button {
   color: var(--ds-color-accent-2-hover);
 }
 
+/* ---- size="small" (data-size, explicit request 2026-10-19, for the compact block rows) --
+   The box is as tall as one line of regular text: no vertical padding, so the height is
+   the label's own line-height (buttonSecondary / buttonPrimary, 1.2, the same 1.2 as the
+   body text) and a button can sit on a line of text without making its row taller. The
+   11px sides are kept, so the hover brackets and the underline are the regular button's.
+   Text buttons only: icon-only and outlined keep their own boxes. */
+.ds-text-button[data-size="small"]:not([data-icon-only="true"]):not([data-outlined="true"]) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 /* ---- Figma D_SYSTEM button set (node 103:4732) ---------------------------
    Three additions to the variants above, each sized so the button's outer
    box stays the one the plain text button already has (40px tall, 11px

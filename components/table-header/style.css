@@ -54,7 +54,7 @@
   column-gap: var(--ds-spacing-5);
   padding: var(--ds-spacing-3) var(--ds-spacing-5) var(--ds-spacing-3) var(--ds-spacing-6);
   background-color: var(--ds-color-bg-surface-pressed);
-  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  border: var(--ds-border-width-thin) solid var(--ds-color-border-table);
   box-sizing: border-box;
 }
 
