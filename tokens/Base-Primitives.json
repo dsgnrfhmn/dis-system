@@ -666,6 +666,11 @@
       "$value": "#F2EEE6",
       "$type": "color",
       "$description": ""
+    },
+    "warm-200": {
+      "$value": "#EBE4D6",
+      "$type": "color",
+      "$description": "One step warmer and darker than warm-100: the hover of a surface that rests on warm-100 (explicit request 2026-10-24). Not from Figma."
     }
   },
   "accent": {

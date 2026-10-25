@@ -17,10 +17,12 @@
   --ds-color-shadow-low: #1A1918;
   --ds-color-shadow-middle: #3D3B39;
   --ds-color-shadow-high: #62605D;
+  --ds-color-text-toast: #FFFFFF;
   --ds-color-text-active: #000000;
   --ds-color-text-subactive: rgba(0, 0, 0, 0.4);
   --ds-color-text-inactive: #93918E;
   --ds-color-text-inverced: #FFFFFF;
+  --ds-color-bg-toast: #000000;
   --ds-color-bg-surface: #FFFFFF;
   --ds-color-bg-surface-pressed: #F3F2F0;
   --ds-color-bg-row-selected: #D8D7D4;
@@ -106,6 +108,7 @@
   --ds-color-base-950: #171717;
   --ds-color-base-1000: #000000;
   --ds-color-base-warm-100: #F2EEE6;
+  --ds-color-base-warm-200: #EBE4D6;
   --ds-color-accent-primary: #0000AD;
   --ds-color-accent-primary-alt: #0000AB;
   --ds-color-accent-secondary: #C614E1;
@@ -299,10 +302,12 @@
   --ds-color-shadow-low: rgb(0, 0, 0);
   --ds-color-shadow-middle: #1A1918;
   --ds-color-shadow-high: #262523;
+  --ds-color-text-toast: #000000;
   --ds-color-text-active: #F4F3F1;
   --ds-color-text-subactive: #CDC9C1;
   --ds-color-text-inactive: #424242;
   --ds-color-text-inverced: #1A1918;
+  --ds-color-bg-toast: #FFFFFF;
   --ds-color-bg-surface: #1A1918;
   --ds-color-bg-surface-pressed: #424242;
   --ds-color-bg-overlay: #2E2E2E;
@@ -319,9 +324,9 @@
   --ds-color-object-white-active: #424242;
   --ds-color-object-white-disabled: #ADADAD;
   --ds-color-object-white-pressed: #ADADAD;
-  --ds-color-tooltip-bg: #2E2E2E;
-  --ds-color-tooltip-border: #000000;
-  --ds-color-tooltip-text: #FFFFFF;
+  --ds-color-tooltip-bg: #F3F2F0;
+  --ds-color-tooltip-border: #F3F2F0;
+  --ds-color-tooltip-text: #000000;
   --ds-color-row-status-analysed-text: #FF5CFF;
   --ds-color-row-status-analysed-bg: rgba(255, 92, 255, 0.2);
   --ds-color-row-status-submitted-text: #00ADAD;
@@ -377,4 +382,6 @@
 /* light-only slots: no dark value exists, so dark must not inherit them */
 :root:not([data-theme="dark"]) {
   /* colors (Color-Base-Light, slots with no dark counterpart) */
+  --ds-color-bg-row-current: #F7F7F7;
+  --ds-color-bg-row-visited: #F7F7F7;
 }

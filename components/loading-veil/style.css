@@ -7,8 +7,9 @@
   the window, not of the area. The consumer-app Figma file APPFILEKEY, node
   150:16233. The area must be position: relative (.ds-pane__body is).
 
-  The spinner glyph rotates clockwise at mid speed (1.2s per turn, linear). It
-  stands still under prefers-reduced-motion. A page's own first load does not use
+  The spinner glyph (icons/loading.svg: a faint ring and a quarter arc in full ink,
+  an ordinary spinner since 2026-10-25) rotates clockwise at mid speed (1.2s per
+  turn, linear). It stands still under prefers-reduced-motion. A page's own first load does not use
   this veil: what loads in fades in element by element (see fade-in).
 */
 .ds-loading-veil {
@@ -47,12 +48,20 @@
   transform: translate(-50%, -50%);
 }
 
+/* The spinner: a grey ring with a quarter of it in the arc color, square ends (explicit
+   request 2026-10-25). Drawn here to the geometry of icons/loading.svg (ring radius 8 and
+   stroke 2 in its 24 box: 7 to 9 twelfths of the half size) rather than masked with
+   that file, because a mask paints one color only: the ring is a radial mask and the two
+   colors a conic fill, its first quarter (12 to 3 o'clock) the arc. It turns as a whole.
+   The boxed variant's arc is its text color (white), the bare one's the accent. */
 .ds-loading-veil__icon {
+  --_spinner-arc: currentColor;
+  --_spinner-track: var(--ds-color-object-dark-passive);
   width: var(--ds-spacing-7);
   height: var(--ds-spacing-7);
-  background-color: currentColor;
-  -webkit-mask: url("../../icons/loading.svg") center / 100% 100% no-repeat;
-  mask: url("../../icons/loading.svg") center / 100% 100% no-repeat;
+  background: conic-gradient(var(--_spinner-arc) 0 25%, var(--_spinner-track) 25% 100%);
+  -webkit-mask: radial-gradient(closest-side, transparent calc(700% / 12), var(--ds-color-base-1000) calc(700% / 12) calc(900% / 12), transparent calc(900% / 12));
+  mask: radial-gradient(closest-side, transparent calc(700% / 12), var(--ds-color-base-1000) calc(700% / 12) calc(900% / 12), transparent calc(900% / 12));
 }
 
 .ds-loading-veil__icon {
@@ -63,6 +72,45 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Bare (data-variant="bare", explicit request 2026-10-25): only the spinner, centred in
+   the area, with no veil and no box: the area is still being filled (a page or a
+   preview on its way in), nothing in it is being blocked. The glyph is twice the size,
+   its arc in the accent color on the grey ring (explicit request 2026-10-25, as the busy
+   create row of sidebar-list). The label stays for screen readers only. The boxed
+   variant keeps a white arc: the accent would not read on the tooltip's near-black box. */
+.ds-loading-veil[data-variant="bare"]::before {
+  content: none;
+}
+
+.ds-loading-veil[data-variant="bare"] {
+  pointer-events: none;
+}
+
+.ds-loading-veil[data-variant="bare"] .ds-loading-veil__tip {
+  top: 50%;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+}
+
+.ds-loading-veil[data-variant="bare"] .ds-loading-veil__icon {
+  --_spinner-arc: var(--ds-color-accent-1);
+}
+
+.ds-loading-veil[data-variant="bare"] .ds-loading-veil__icon {
+  width: calc(var(--ds-spacing-7) * 2);
+  height: calc(var(--ds-spacing-7) * 2);
+}
+
+.ds-loading-veil[data-variant="bare"] .ds-loading-veil__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {

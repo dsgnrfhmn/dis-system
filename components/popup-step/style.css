@@ -44,6 +44,29 @@
   width: 100%;
 }
 
+/* A note beside the title (explicit request 2026-10-24), e.g. "No images in this
+   section" on a step with nothing to choose: body text in text-inactive, right after
+   the title (spacing-3 from it); a text button on the head stays at the right edge.
+   A collapsible title pushes the rest right with margin-right: auto, so it gives that
+   up while a note follows it. */
+.ds-popup-step__head[data-collapsible] .ds-popup-step__title:has(+ .ds-popup-step__note:not([hidden])) {
+  margin-right: 0;
+}
+
+.ds-popup-step__note {
+  margin-left: var(--ds-spacing-3);
+  margin-right: auto;
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  color: var(--ds-color-text-inactive);
+  white-space: nowrap;
+}
+
+.ds-popup-step__note[hidden] {
+  display: none;
+}
+
 /* ---- data-collapsible: the step is an accordion section ------------------
    Added 2026-10-12 (Add project popup: step 1 open first, then 2-4 together
    once a project is chosen). The head toggles the body right after it, so
@@ -63,8 +86,9 @@
   transition: opacity 150ms ease;
 }
 
-/* The open/close arrow, left of the title (maintainer, 2026-10-22): the same arrow-down icon and
-   accent as the dropdown's, pointing down while the step is open and right while it is
+/* The open/close arrow, left of the title (maintainer, 2026-10-22): the same arrow-down icon as
+   the dropdown's, in the title's own text colour (explicit request 2026-10-24: it reads as
+   part of the title, not as a separate control), pointing down while the step is open and right while it is
    closed. Decorative: the head toggles on a click anywhere, the title li is the keyboard
    and screen reader button. */
 .ds-popup-step__head[data-collapsible]::before {
@@ -73,14 +97,31 @@
   width: var(--ds-spacing-7);
   height: var(--ds-spacing-7);
   margin-right: var(--ds-spacing-3);
-  background-color: var(--ds-color-accent-1);
+  background-color: var(--ds-color-text-active);
   -webkit-mask: url("../../icons/arrow-down.svg") center / 100% 100% no-repeat;
   mask: url("../../icons/arrow-down.svg") center / 100% 100% no-repeat;
-  transition: transform 150ms ease;
+  transition: transform 150ms ease, opacity 150ms ease;
 }
 
 .ds-popup-step__head[data-collapsible][data-collapsed]::before {
   transform: rotate(-90deg);
+}
+
+/* A closed step's arrow is grey like its title (explicit request 2026-10-24): the same
+   half opacity, lifting to full on hover with the title; an open step's is black. */
+.ds-popup-step__head[data-collapsible]::before {
+  opacity: 0.5;
+}
+
+.ds-popup-step__head[data-collapsible]:not([data-collapsed])::before,
+.ds-popup-step__head[data-collapsible]:hover::before {
+  opacity: 1;
+}
+
+/* The head's own action (Reset the selection) acts on the step's body, so it only
+   shows while the step is open (explicit request 2026-10-24). */
+.ds-popup-step__head[data-collapsible][data-collapsed] > .ds-text-button {
+  visibility: hidden;
 }
 
 .ds-popup-step__head[data-collapsible]:not([data-collapsed]) .ds-popup-step__title,

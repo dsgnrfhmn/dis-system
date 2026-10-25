@@ -96,7 +96,10 @@
   box-sizing: border-box;
   height: calc(var(--ds-cv-sheet-h) - var(--ds-cv-sheet-top) - var(--ds-cv-sheet-footer));
   margin: var(--ds-cv-sheet-top) var(--ds-cv-sheet-margin) 0;
-  overflow: hidden;
+  /* Cut what does not fit, but leave room round the box for a block's in-place edge
+     (3-unit offset plus the widest edge), so a full-width block's edge is not cut off;
+     the room stays inside the sheet's 50-unit margin. */
+  clip-path: inset(calc(-3px - var(--ds-border-width-default) / var(--ds-cv-sheet-scale)));
 }
 
 .ds-cv-sheet__title {
@@ -220,6 +223,35 @@
 .ds-cv-sheet__block:focus-within > .ds-cv-sheet__actions,
 .ds-cv-sheet__block[data-editing="true"] > .ds-cv-sheet__actions {
   display: flex;
+}
+
+/* In place (opts.clickToEdit, explicit request 2026-10-24): the same look as
+   portfolio-sheet's texts edited in place, so both previews edit alike. Hover: the text
+   cursor and a dotted dark-passive edge instead of the tint. Editing: an accent edge
+   round the block, the paper showing behind it, no line under the field. Edge widths
+   are divided by the sheet's scale so they are 1px / 2px on screen at any zoom, as on
+   the portfolio sheet; the 3-unit offset scales with the sheet like the portfolio's. */
+.ds-cv-sheet-stack[data-click-to-edit] .ds-cv-sheet__block {
+  cursor: text;
+}
+
+.ds-cv-sheet-stack[data-click-to-edit] .ds-cv-sheet__block:hover,
+.ds-cv-sheet-stack[data-click-to-edit] .ds-cv-sheet__block:focus-within {
+  background-color: transparent;
+  box-shadow: none;
+  outline: calc(var(--ds-border-width-thin) / var(--ds-cv-sheet-scale)) dotted var(--ds-color-object-dark-passive);
+  outline-offset: 3px;
+}
+
+.ds-cv-sheet-stack[data-click-to-edit] .ds-cv-sheet__block[data-editing="true"] {
+  background-color: transparent;
+  box-shadow: none;
+  outline: calc(var(--ds-border-width-default) / var(--ds-cv-sheet-scale)) solid var(--ds-color-accent-1);
+  outline-offset: 3px;
+}
+
+.ds-cv-sheet-stack[data-click-to-edit] .ds-cv-sheet__edit {
+  box-shadow: none;
 }
 
 /* Edit mode: the textarea sits where the text was, accent line like block-row's. The

@@ -1,0 +1,17 @@
+{
+  "name": "detail-pane",
+  "description": "A row's details docked beside its table, like a task pane in Word: a two-track split whose side slides in when a row opens, a dis-system pane with the row's name, a caption and Close, and a body of labelled blocks. DsDetailPane.split opens, closes (Close, Esc) and resizes it (drag or arrow keys on its left edge).",
+  "status": "draft",
+  "category": "cards-layouts",
+  "listed": false,
+  "variants": ["open", "closed"],
+  "props": [
+    {"name": "title", "type": "string", "required": false, "default": "Details", "description": "The row's name, in the pane's head."},
+    {"name": "caption", "type": "string", "required": false, "default": "", "description": "A short line beside the name (a type, a status)."}
+  ],
+  "source": "none",
+  "rationale": "Explicit request 2026-10-25: clicking a table row shows its details beside the table instead of in a popup, so the reader keeps the list in view and can move from row to row (the sibling dashboard's side pane, generalised). The side track grows from 0 as a transition of the grid tracks, so the table narrows while the pane slides in: the motion shows where the details came from; it is off under prefers-reduced-motion. The pane keeps its open width while the track animates, so its text does not reflow during the slide. Its left edge is the existing split handle, placed on the side's edge, so resizing looks and works like every split. The body's blocks use existing type roles: an uppercase data label (the table header's colour) over body text with its line breaks kept, a heading-3 title, a row of text buttons. The host places the side (it sticks under the host's own sticky chrome) and chooses which table columns to drop while the pane is open. Staged in local-components until the maintainer confirms it goes into dis-system. Update 2026-10-25 (explicit request, opening lagged and the dropped columns should fade): opening and closing switch the split once inside a view transition (type ds-detail, 300ms); the side slides at its own size, the rest cross-fades, so dropped columns fade out and returning ones fade in. The grid-track transition, which laid the table out every frame (about 25ms of main thread per frame beside the 120-row table), is gone; the main thread is free while it moves.",
+  "themes_supported": ["light", "dark"],
+  "a11y_notes": "The handle is a focusable separator with aria-valuemin/max/now; ArrowLeft / ArrowRight resize. Esc closes the pane unless a field, a menu or a popup has focus. The host labels the pane (aria-label) and marks the open row with aria-current.",
+  "uses": []
+}

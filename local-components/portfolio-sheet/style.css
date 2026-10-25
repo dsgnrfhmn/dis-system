@@ -1,6 +1,6 @@
 /*
   portfolio-sheet: one 842x599 sheet of a portfolio, drawn to the page types of
-  the artist's own portfolio PDF (maintainer, 2026-10-24; it supersedes the earlier
+  the reference PDF (maintainer, 2026-10-24; it supersedes the earlier
   Figma section 328:19053 for this component). Every offset below is measured
   off that PDF in its own units (842 x 599 pt) and noted with the page it comes
   from. The layout of each sheet is chosen by the host (in the consumer's own layout code).
@@ -58,6 +58,16 @@
   line-height: normal;
 }
 
+/* Tools beside the sheet (explicit request 2026-10-24): inside an element with
+   data-sheet-tools="outside" (a host's zoomed-out preview, where the sheet has room on
+   its right), the sheet still cuts its content at its top, left and bottom edges but
+   not at its right one, so a tool placed past that edge (layout-picker) shows. Nothing
+   of the sheet's own runs past its right edge. */
+[data-sheet-tools="outside"] .ds-portfolio-sheet {
+  overflow: visible;
+  clip-path: inset(0 -100% 0 0);
+}
+
 /* No font-size on the sheet itself: cqw on the container resolves against
    its own ancestors, not against the sheet. Every child sets its own. */
 .ds-portfolio-sheet > * {
@@ -70,6 +80,44 @@
   display: block;
   object-fit: cover;
   object-position: center;
+}
+
+/* A work is never cropped (explicit request 2026-10-24): data-role="work" draws the
+   whole picture inside its box, as large as the box allows, centred; in a row with
+   captions under it (pair, triple) it stands on the caption line. Only exhibition
+   views (data-role="exhibition") fill their box and may be cropped. */
+.ds-portfolio-sheet__image[data-role="work"] {
+  object-fit: contain;
+}
+
+.ds-portfolio-sheet:is([data-layout="pair"], [data-layout="triple"]) .ds-portfolio-sheet__image[data-role="work"] {
+  object-position: center bottom;
+}
+
+/* Swapping two pictures by drag and drop (explicit request 2026-10-24). The host
+   sets draggable="true" on the pictures that can move, data-dragging="true" on the
+   one being dragged and data-drop="true" on the one under the pointer; the same
+   feedback as table-row's: the dragged one dims, the target gets an accent edge
+   inside its box, so the layout never shifts. */
+.ds-portfolio-sheet__image[draggable="true"] {
+  cursor: grab;
+}
+
+/* Hover (explicit request 2026-10-24, "an accent hover, so I see I can do something
+   with them"): a picture that can be moved takes the same accent edge inside its box
+   as a drop target, so it reads as something to pick up. */
+.ds-portfolio-sheet__image[draggable="true"]:hover {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: calc(var(--ds-border-width-default) * -1);
+}
+
+.ds-portfolio-sheet__image[data-dragging="true"] {
+  opacity: 0.5;
+}
+
+.ds-portfolio-sheet__image[data-drop="true"] {
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: calc(var(--ds-border-width-default) * -1);
 }
 
 /* ---- the text column: title, year, text in one flow (PDF p3, p5, p6) ----
@@ -231,6 +279,56 @@
   text-align: left;
 }
 
+/* ---- pair and triple: two or three works in one row, a caption under each
+   (explicit request 2026-10-24, chosen per sheet with layout-picker; not in the
+   PDF). 50 in from both sides like the other templates, 20 between cells. Cells
+   are addressed by data-cell like the grids, and so are their captions. ---- */
+.ds-portfolio-sheet[data-layout="pair"] .ds-portfolio-sheet__image,
+.ds-portfolio-sheet[data-layout="pair"] .ds-portfolio-sheet__slot {
+  top: calc(var(--u) * 40);
+  width: calc(var(--u) * 361);
+  height: calc(var(--u) * 440);
+}
+
+.ds-portfolio-sheet[data-layout="pair"] .ds-portfolio-sheet__caption {
+  top: calc(var(--u) * 492);
+  width: calc(var(--u) * 361);
+  text-align: left;
+}
+
+.ds-portfolio-sheet[data-layout="pair"] [data-cell="0"] {
+  left: calc(var(--u) * 50);
+}
+
+.ds-portfolio-sheet[data-layout="pair"] [data-cell="1"] {
+  left: calc(var(--u) * 431);
+}
+
+.ds-portfolio-sheet[data-layout="triple"] .ds-portfolio-sheet__image,
+.ds-portfolio-sheet[data-layout="triple"] .ds-portfolio-sheet__slot {
+  top: calc(var(--u) * 90);
+  width: calc(var(--u) * 234);
+  height: calc(var(--u) * 330);
+}
+
+.ds-portfolio-sheet[data-layout="triple"] .ds-portfolio-sheet__caption {
+  top: calc(var(--u) * 432);
+  width: calc(var(--u) * 234);
+  text-align: left;
+}
+
+.ds-portfolio-sheet[data-layout="triple"] [data-cell="0"] {
+  left: calc(var(--u) * 50);
+}
+
+.ds-portfolio-sheet[data-layout="triple"] [data-cell="1"] {
+  left: calc(var(--u) * 304);
+}
+
+.ds-portfolio-sheet[data-layout="triple"] [data-cell="2"] {
+  left: calc(var(--u) * 558);
+}
+
 /* ---- full: the whole sheet (PDF p9, p14) ---- */
 .ds-portfolio-sheet[data-layout="full"] .ds-portfolio-sheet__image {
   left: 0;
@@ -263,6 +361,109 @@
   top: calc(var(--u) * 47);
   width: calc(var(--u) * 320);
   font-size: calc(var(--u) * 12);
+}
+
+/* ---- cover: page 1 of the reference PDF rebuilt as text (explicit request
+   2026-10-24). Measured on that page: the photo 200 x 200 in the top right corner, the
+   column from 50 to 590 with the title and name 28 / 34 (title bold, name in base-750,
+   the nearest fixed grey to the page's #525252), the details 13 / 16, the heading 20 /
+   24 bold, the text 13 / 16 with 8 between paragraphs, and the contacts under the photo
+   from 642. Karla throughout, as the other sheets (the page's titles are a geometric
+   sans this system does not carry). ---- */
+.ds-portfolio-sheet[data-layout="cover"] .ds-portfolio-sheet__column {
+  top: calc(var(--u) * 40);
+  width: calc(var(--u) * 540);
+}
+
+.ds-portfolio-sheet[data-layout="cover"] .ds-portfolio-sheet__image {
+  left: calc(var(--u) * 642);
+  top: 0;
+  width: calc(var(--u) * 200);
+  height: calc(var(--u) * 200);
+}
+
+.ds-portfolio-sheet__cover-title,
+.ds-portfolio-sheet__cover-name {
+  margin: 0;
+  font-size: calc(var(--u) * 28);
+  line-height: calc(var(--u) * 34);
+}
+
+.ds-portfolio-sheet__cover-title {
+  font-weight: 700;
+}
+
+.ds-portfolio-sheet__cover-name {
+  font-weight: 400;
+  color: var(--ds-color-base-750);
+}
+
+.ds-portfolio-sheet__cover-details,
+.ds-portfolio-sheet__cover-contacts {
+  display: flex;
+  flex-direction: column;
+  font-size: calc(var(--u) * 13);
+  line-height: calc(var(--u) * 16);
+}
+
+.ds-portfolio-sheet__cover-details {
+  margin-top: calc(var(--u) * 8.5);
+}
+
+.ds-portfolio-sheet__cover-details p,
+.ds-portfolio-sheet__cover-contacts p {
+  margin: 0;
+}
+
+.ds-portfolio-sheet__cover-heading {
+  margin: calc(var(--u) * 25) 0 0;
+  font-weight: 700;
+  font-size: calc(var(--u) * 20);
+  line-height: calc(var(--u) * 24);
+}
+
+.ds-portfolio-sheet[data-layout="cover"] .ds-portfolio-sheet__column .ds-portfolio-sheet__text {
+  margin-top: calc(var(--u) * 15);
+}
+
+.ds-portfolio-sheet__cover-contacts {
+  left: calc(var(--u) * 642);
+  top: calc(var(--u) * 215);
+  width: calc(var(--u) * 200);
+  line-height: calc(var(--u) * 18);
+}
+
+/* ---- Texts edited in place (explicit request 2026-10-24) ----
+   The host marks the texts it lets the viewer change with data-editable and turns one
+   into contenteditable="true" on a click. Hover: the text cursor and a dotted edge (the
+   system's "this acts within the view" line), 2px so the dots stay visible (explicit
+   request 2026-10-24). Editing: an accent edge, the paper behind
+   the text so nothing under it shows through, and a scroll once the text runs past the
+   sheet's foot (the whole project text is edited at once, also where the sheet shows
+   part of it). The paper stays base-0 / base-1000 in both themes, as the sheet does. */
+.ds-portfolio-sheet [data-editable] {
+  cursor: text;
+}
+
+.ds-portfolio-sheet [data-editable]:hover {
+  outline: var(--ds-border-width-default) dotted var(--ds-color-object-dark-passive);
+  outline-offset: calc(var(--u) * 3);
+}
+
+.ds-portfolio-sheet [data-editable][contenteditable="true"] {
+  z-index: 3;
+  max-height: calc(var(--u) * 520);
+  overflow: auto;
+  background-color: var(--ds-color-base-0);
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: calc(var(--u) * 3);
+}
+
+/* A caption over the picture (data-on="image") is edited where it stands, without the
+   paper behind it (explicit request 2026-10-24): its white (or, data-tone="light",
+   black) text stays readable on the picture. */
+.ds-portfolio-sheet__caption[data-on="image"][data-editable][contenteditable="true"] {
+  background-color: transparent;
 }
 
 @media print {

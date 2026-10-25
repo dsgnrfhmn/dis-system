@@ -223,10 +223,38 @@
 /* ---- Figma flat table: row states -------------------------------------
    Cells carry the fill, so the hover / selected fill goes on the cells
    (rows may be display:contents inside a grid). */
+/* An action row (data-action-row, explicit request 2026-10-24): a row-like element laid
+   out as display:contents whose whole width is one action (a table's "Add Project"
+   row). It answers hover like a row and shows the pointer; the host makes a click
+   anywhere on it press its button. */
+[data-action-row] > .ds-table-cell {
+  cursor: pointer;
+}
+
+/* Visited (data-visited="true", explicit request 2026-10-24): the viewer has already
+   acted on this row (opened its popup or link, analysed, archived...), so its cells take
+   a faint grey, lighter than hover; hover and selected still show over it. The host
+   decides what counts and how long it lasts. bg-row-visited has no dark value, so dark
+   keeps the plain surface. */
+.ds-table-row[data-visited="true"] > .ds-table-cell {
+  background-color: var(--ds-color-bg-row-visited, var(--ds-color-bg-surface));
+}
+
+[data-action-row]:hover > .ds-table-cell,
+[data-action-row]:focus-within > .ds-table-cell,
 .ds-table-row:hover > .ds-table-cell,
 .ds-table-row:focus-within > .ds-table-cell {
   /* bg-row-hover (2026-09-30): surface-pressed in light, black in dark. */
   background-color: var(--ds-color-bg-row-hover);
+}
+
+/* Current (data-current="true", explicit request 2026-10-25): the row of what the host
+   shows elsewhere right now (the project under the reader's eye in a preview beside the
+   table). Only its fill tells it, one step lighter than hover (bg-row-current); its icons
+   and actions stay as on any row, and hover, focus and selected still show over it. The
+   host sets it on one row. */
+.ds-table-row[data-current="true"]:not(:hover):not(:focus-within) > .ds-table-cell {
+  background-color: var(--ds-color-bg-row-current, var(--ds-color-bg-row-hover));
 }
 
 /* Selected is darker than hover (consumer-app Figma 237:31166: base/250, 2026-09-24),

@@ -17,6 +17,13 @@
 
   Dispatches ds-sidebar-list-toggle (bubbles, detail: { collapsed, peek }) so a
   host page can react (e.g. persist it). `collapsed` is the in-flow state.
+
+  Motion (explicit request 2026-10-25, "super smooth"): collapsing and pinning open
+  change the sidebar's place in the page flow at once, so the page is laid out once;
+  the elements after it in its row then slide from where they were to where they are
+  (a transform, 200ms, the curve of the panel's own edge in style.css), which the
+  compositor runs without laying the page out again on every frame. Not under
+  prefers-reduced-motion.
 */
 (function () {
   function setLabel(sidebar) {
@@ -43,6 +50,37 @@
     notify(sidebar);
   }
 
+  const MOVE_MS = 200;
+  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Runs change(), which moves the sidebar's edge in the page flow, and slides what
+  // follows it in its row from its old place to its new one.
+  function slideFlow(sidebar, change) {
+    const row = sidebar.parentElement;
+    const after = [];
+    for (let el = sidebar.nextElementSibling; el; el = el.nextElementSibling) after.push(el);
+    if (reduced() || !row || !after.length || !after[0].animate) {
+      change();
+      return;
+    }
+    const before = after.map((el) => el.getBoundingClientRect().left);
+    change();
+    const moves = after.map((el, i) => [el, before[i] - el.getBoundingClientRect().left]).filter(([, dx]) => Math.abs(dx) > 0.5);
+    if (!moves.length) return;
+    // While they slide, nothing sticks out past the row, and the panel stays on top.
+    const overflow = row.style.overflowX;
+    row.style.overflowX = 'clip';
+    sidebar.dataset.moving = '';
+    const runs = moves.map(([el, dx]) => el.animate(
+      [{ transform: `translateX(${dx}px)` }, { transform: 'translateX(0)' }],
+      { duration: MOVE_MS, easing: 'ease' }
+    ).finished.catch(() => {}));
+    Promise.all(runs).then(() => {
+      row.style.overflowX = overflow;
+      delete sidebar.dataset.moving;
+    });
+  }
+
   document.querySelectorAll('.ds-sidebar-list__toggle').forEach((toggle) => {
     toggle.addEventListener('click', (event) => {
       const sidebar = toggle.closest('.ds-sidebar-list');
@@ -53,12 +91,16 @@
         if (event.pointerType === 'touch' && sidebar.dataset.peek !== 'true') {
           sidebar.dataset.peek = 'true';
         } else {
-          sidebar.dataset.collapsed = 'false';
-          delete sidebar.dataset.peek;
+          slideFlow(sidebar, () => {
+            sidebar.dataset.collapsed = 'false';
+            delete sidebar.dataset.peek;
+          });
         }
       } else {
-        sidebar.dataset.collapsed = 'true';
-        delete sidebar.dataset.peek;
+        slideFlow(sidebar, () => {
+          sidebar.dataset.collapsed = 'true';
+          delete sidebar.dataset.peek;
+        });
       }
       setLabel(sidebar);
       notify(sidebar);

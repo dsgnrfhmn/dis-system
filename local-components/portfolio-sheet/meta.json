@@ -1,6 +1,6 @@
 {
   "name": "portfolio-sheet",
-  "description": "One 842x599 sheet of a portfolio document, drawn to the page types of the artist's own portfolio PDF: band (title and year, one picture across the width below), side (text column, picture right at full height), figure-side (text column, picture right off the edge, caption under it), grid-side (text column, 2x2 grid), grid (2x2 grid, captions stacked left), full (full-bleed picture, caption over it), figure (whole picture centred, caption bottom right), text (one column) and missing. The same markup is the dashboard preview and, later, the PDF page.",
+  "description": "One 842x599 sheet of a portfolio document, drawn to the page types of the reference PDF: band (title and year, one picture across the width below), side (text column, picture right at full height), figure-side (text column, picture right off the edge, caption under it), grid-side (text column, 2x2 grid), grid (2x2 grid, captions stacked left), full (full-bleed picture, caption over it), figure (whole picture centred, caption bottom right), text (one column) and missing. The same markup is the dashboard preview and, later, the PDF page.",
   "status": "draft",
   "category": "cards-layouts",
   "listed": false,
@@ -13,7 +13,10 @@
     "full",
     "figure",
     "text",
-    "missing"
+    "missing",
+    "pair",
+    "triple",
+    "cover"
   ],
   "props": [
     {
@@ -63,10 +66,17 @@
       "required": false,
       "default": null,
       "description": "missing only: the line saying which project could not be read."
+    },
+    {
+      "name": "editable",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "data-editable on a title, subtitle, text or caption: hover shows the text cursor and a dotted edge; contenteditable=\"true\" on it (set by the host on a click) shows an accent edge over the paper and scrolls a long text."
     }
   ],
   "source": "none",
-  "rationale": "Measured off the artist's own portfolio PDF (842x599 pt, the same size as the sheet), which supersedes the earlier Figma 'Design template' (maintainer, 2026-10-24): every offset is the PDF value times --u, one 842nd of the sheet's width (a container-query unit), so the sheet is the identical drawing in a 400px pane and at 842px in print. Pictures are cropped where the PDF crops them (cover) and whole where it shows them whole (figure). A caption over a picture is white and turns black over a bright one; component.js reads the picture under the caption through a small canvas, which is the only behavior. No page numbers: the PDF has none. Titles are Karla Medium, the nearest face dis-system has to the PDF's geometric sans (maintainer, 2026-10-24: no new font). Paper stays white and text black in both themes: this is a document, not an app surface. Staged in local-components until the maintainer confirms it goes into dis-system.",
+  "rationale": "Measured off the reference PDF (842x599 pt, the same size as the sheet), which supersedes the earlier Figma 'Design template' (maintainer, 2026-10-24): every offset is the PDF value times --u, one 842nd of the sheet's width (a container-query unit), so the sheet is the identical drawing in a 400px pane and at 842px in print. Pictures are cropped where the PDF crops them (cover) and whole where it shows them whole (figure). A caption over a picture is white and turns black over a bright one; component.js reads the picture under the caption through a small canvas, which is the only behavior. No page numbers: the PDF has none. Titles are Karla Medium, the nearest face dis-system has to the PDF's geometric sans (maintainer, 2026-10-24: no new font). Paper stays white and text black in both themes: this is a document, not an app surface. Staged in local-components until the maintainer confirms it goes into dis-system. Pair and triple (explicit request 2026-10-24, chosen per sheet with layout-picker; not in the PDF): two works of 361 x 440 or three of 234 x 330 in one row, 50 in from both sides and 20 apart like the other templates, each with its caption under it; cells and captions are addressed by data-cell like the grids. Editing in place (explicit request 2026-10-24): the host marks editable texts data-editable; hover gives the text cursor and a dotted edge, the system's in-view line, and editing an accent edge with the paper behind the text and a scroll past the sheet's foot, since the whole project text is edited at once. Cover (explicit request 2026-10-24): page 1 of the reference PDF rebuilt as text around its photo, measured on that page (photo 200 x 200 top right, column 50 to 590, title and name 28 / 34, details 13 / 16, heading 20 / 24, text 13 / 16, contacts under the photo); the name in base-750, the nearest fixed grey to the page's #525252; Karla throughout as the other sheets. Works are never cropped (explicit request 2026-10-24): an image with data-role=\"work\" is drawn whole inside its box (object-fit contain, centred; on the caption line in pair and triple); only exhibition views (data-role=\"exhibition\") fill their box and may be cropped. Tools beside the sheet (explicit request 2026-10-24): inside an element with data-sheet-tools=\"outside\" the sheet clips its content at its top, left and bottom edges only (clip-path instead of overflow), so a tool hung past its right edge (layout-picker) shows; nothing of the sheet's own runs past that edge. A caption over the picture (data-on=\"image\") is edited without the paper behind it (explicit request 2026-10-24), so its white or black text stays readable on the picture. Hover (explicit request 2026-10-24): a picture that can be moved (draggable) takes the drop target's accent edge inside its box on hover, so it reads as something to pick up.",
   "themes_supported": [
     "light",
     "dark"

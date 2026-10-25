@@ -1,15 +1,38 @@
 {
   "name": "zoom-buttons",
-  "description": "Two square buttons, plus above minus, glued into one column in the bottom right corner of a positioned container. Emits ds-zoom-step with direction 1 or -1; the host does the zooming.",
+  "description": "Two square buttons, plus above minus, glued into one column in the bottom right corner of a positioned container. Emits ds-zoom-step with direction 1 or -1; the host does the zooming. DsZoomButtons.bar draws a whole preview zoom bar (Fit width and the inline group) with its stepping logic, shared by every preview that uses it.",
   "status": "draft",
   "category": "controls",
   "listed": false,
-  "variants": ["in", "out"],
+  "variants": [
+    "in",
+    "out"
+  ],
   "props": [
-    {"name": "direction", "type": "string", "required": true, "description": "Per button, data-direction: \"in\" (+) or \"out\" (-)."}
+    {
+      "name": "direction",
+      "type": "string",
+      "required": true,
+      "description": "Per button, data-direction: \"in\" (+) or \"out\" (-)."
+    },
+    {
+      "name": "inline",
+      "type": "boolean",
+      "required": false,
+      "description": "data-inline on the group: the buttons sit side by side in the flow (a toolbar) instead of a column in the container's bottom right corner."
+    },
+    {
+      "name": "bar",
+      "type": "boolean",
+      "required": false,
+      "description": "DsZoomButtons.bar(root, { fitted, apply }): draws a preview's zoom bar into root (Fit width and the inline group; the zoom is in the group's accessible name, not written out) and keeps its state; the host says how big the fitted page is and draws a zoom."
+    }
   ],
   "source": "none",
-  "rationale": "Requested by the maintainer (2026-10-11) for the CV Preview pane, in the look of the sidebar collapse toggle (.ds-sidebar-list__toggle): same size (spacing-row by spacing-9), thin dark-passive border, accent-1 mask icon, bg-surface-pressed on hover, focus ring as the toggle. No Figma node exists for it, so source is none; the minus icon is drawn as the counterpart of icons/add.svg and staged beside the component. The two buttons share one border (negative margin of the border width) so they read as one control. Staged in local-components until the maintainer confirms it goes into dis-system.",
-  "themes_supported": ["light", "dark"],
+  "rationale": "Requested by the maintainer (2026-10-11) for the CV Preview pane, in the look of the sidebar collapse toggle (.ds-sidebar-list__toggle): same size (spacing-row by spacing-9), thin dark-passive border, accent-1 mask icon, bg-surface-pressed on hover, focus ring as the toggle. No Figma node exists for it, so source is none; the minus icon is drawn as the counterpart of icons/add.svg and staged beside the component. The two buttons share one border (negative margin of the border width) so they read as one control. Staged in local-components until the maintainer confirms it goes into dis-system. Inline (explicit request 2026-10-24, the portfolio preview's toolbar): position static and a row, the buttons glued side by side, \"-\" then \"+\". Bar (explicit request 2026-10-24): the Portfolio and CV previews zoom alike, so the bar's markup and logic live here once (component.js) and each page only says how big its fitted page is and how to draw a zoom; a change here changes both. The click is caught on the document so a group drawn by the bar works like one in markup. Fit is the largest view (the maintainer, 2026-10-24): the page as wide as the preview, so + is off there; - steps down through the ZOOMS smaller than the fitted size, + steps back up and past the largest of them returns to fit. The zoom is no longer written next to the buttons (the maintainer, 2026-10-24): Fit width being on or off already says whether the preview is zoomed; the value stays in the group's accessible name. fitOnPaper takes an optional aside: room a centred page needs on each side for a tool hung beside it (the Portfolio's layout menu), so no step pushes that tool past the preview's edge.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
   "a11y_notes": "Native buttons with aria-label (Zoom in, Zoom out), grouped with role=group and a label. A button at the zoom limit is disabled. Icons are decorative (aria-hidden)."
 }

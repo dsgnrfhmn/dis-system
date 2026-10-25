@@ -5,13 +5,29 @@
   "category": "cards-layouts",
   "listed": false,
   "layout": "wide",
-  "variants": ["landscape"],
+  "variants": [
+    "landscape"
+  ],
   "props": [
-    {"name": "blocks", "type": "array", "required": true, "description": "[{kind: \"heading\" | \"text\", text}]. A text block starting with YYYY<TAB> is a dated row; a year is drawn once for consecutive rows of the same year on a sheet. With opts.editable, blocks are dragged only among the blocks of the same year of the same section."},
-    {"name": "title", "type": "string", "required": false, "default": "", "description": "The big title at the top of the first sheet (Figma: CURRICULUM VITAE)."}
+    {
+      "name": "blocks",
+      "type": "array",
+      "required": true,
+      "description": "[{kind: \"heading\" | \"text\", text}]. A text block starting with YYYY<TAB> is a dated row; a year is drawn once for consecutive rows of the same year on a sheet. With opts.editable, blocks are dragged only among the blocks of the same year of the same section."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "The big title at the top of the first sheet (Figma: CURRICULUM VITAE)."
+    }
   ],
   "source": "figma:APPFILEKEY#328:19147,328:19319",
-  "rationale": "Read off Figma section CV (frames 328:19147 cover, 328:19319 inner): sheet 842 x 599, 50px side margins, 42px top, 50px footer; Bodoni Moda Bold 28/34 and 20, Karla Light 10/12.7 and 12, black on white; year column 24px with a 16px gap. Type roles have no dis-system tokens yet (dis-system is Inter throughout), so they are component custom properties at the top of style.css, ready to move into tokens/*.json. Font files are not in the repo: the stacks fall back to a serif and Inter. Colors use existing tokens (text-active, object-white-passive, base-0 in light). Dark theme (2026-10-19, explicit request): the sheet stays paper, a muted white (base-100) with black text (base-1000) from the palette primitives. Staged in local-components until the maintainer confirms it goes into dis-system.",
-  "themes_supported": ["light", "dark"],
+  "rationale": "Read off Figma section CV (frames 328:19147 cover, 328:19319 inner): sheet 842 x 599, 50px side margins, 42px top, 50px footer; Bodoni Moda Bold 28/34 and 20, Karla Light 10/12.7 and 12, black on white; year column 24px with a 16px gap. Type roles have no dis-system tokens yet (dis-system is Inter throughout), so they are component custom properties at the top of style.css, ready to move into tokens/*.json. Font files are not in the repo: the stacks fall back to a serif and Inter. Colors use existing tokens (text-active, object-white-passive, base-0 in light). Dark theme (2026-10-19, explicit request): the sheet stays paper, a muted white (base-100) with black text (base-1000) from the palette primitives. Staged in local-components until the maintainer confirms it goes into dis-system. In place (clickToEdit, explicit request 2026-10-24): the look of portfolio-sheet's texts edited in place, so both previews edit alike: a dotted edge and the text cursor on hover, an accent edge round the block while editing, the paper behind, edges 1px / 2px on screen at any zoom.",
+  "themes_supported": [
+    "light",
+    "dark"
+  ],
   "a11y_notes": "Sheets are a visual preview of the document; headings are real h2/h3 elements and block text is set as text, never as markup. The page footer is decoration of the preview."
 }

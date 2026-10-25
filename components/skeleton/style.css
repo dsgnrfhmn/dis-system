@@ -14,6 +14,13 @@
     item   a sidebar item: one bar
     block  a CV block: two lines
     page   a paper sheet (A4 landscape ratio), for preview panes
+
+  Image (class ds-skeleton-image on an <img>, explicit request 2026-10-25): a
+  picture that is still on its way is its own placeholder. Its box shows the same
+  grey, pulsing, until its pixels arrive; then the picture fades in over 450ms
+  (fade-in's timing) and the grey goes. For pictures loaded late or lazily
+  (loading="lazy"), which can arrive at any time, not only on the page's first
+  load. The box must have its size from the layout, not from the picture.
 */
 .ds-skeleton {
   display: flex;
@@ -92,13 +99,38 @@ html[data-skeleton] [data-skeleton-hide] {
   display: none;
 }
 
+/* Image: component.js sets data-loaded when the picture has loaded ("loaded"), was
+   already there when it was put in the page ("instant": a redrawn view does not
+   flash its pictures) or could not be loaded ("error": the grey stays, still). Until
+   then the box is the skeleton. */
+img.ds-skeleton-image:not([data-loaded]) {
+  background-color: var(--ds-color-bg-surface-pressed);
+  animation: ds-skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+img.ds-skeleton-image[data-loaded="loaded"] {
+  animation: ds-skeleton-image-in 450ms cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+}
+
+img.ds-skeleton-image[data-loaded="error"] {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+@keyframes ds-skeleton-image-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @keyframes ds-skeleton-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.45; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ds-skeleton {
+  .ds-skeleton,
+  img.ds-skeleton-image:not([data-loaded]),
+  img.ds-skeleton-image[data-loaded="loaded"] {
     animation: none;
   }
 }

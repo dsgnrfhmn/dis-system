@@ -7,9 +7,19 @@
   "Toasts stack bottom-right and auto-dismiss," a toast may carry actions,
   and a failed action produces an error toast.
 
-  Position since 2026-10-12: top center, 20px from the top edge, over the nav,
-  as on the Figma app artboard 345:10101 (Toster 315x66 at y=20, centered on
-  the 1920 canvas). The stack hugs its toasts, up to 480px; newest at the bottom.
+  Position since 2026-10-25 (explicit request): bottom right, 20px (spacing-6)
+  from both edges, so a toast never covers the page head or the nav. The stack
+  hugs its toasts, up to 480px; newest at the bottom, next to the edge, and the
+  older ones move up. (2026-10-12 to 2026-10-25 it was top center, as on the
+  Figma app artboard 345:10101.)
+
+  Motion (2026-10-25, explicit request): a toast rises 20px into place while it
+  fades in (240ms), so a new message is seen arriving from its corner; it fades
+  out sinking a little (180ms) before it is removed. A line along its bottom
+  edge, in the toast's strong color, shrinks from full width to nothing over the
+  toast's duration: the time left before it goes. It stops while the toast is
+  hovered or focused, as the timer does. Under prefers-reduced-motion nothing
+  moves: toasts appear and go at once, and the line is not drawn.
 
   Look since 2026-09-27: Figma D_SYSTEM's Toster (node 103:4772), see the
   .ds-toast rule below. The stack is 480px (spacing-9 x 12), Figma's toast
@@ -18,12 +28,11 @@
 
 .ds-toast-stack {
   position: fixed;
-  top: var(--ds-spacing-6);
-  left: 50%;
-  transform: translateX(-50%);
+  right: var(--ds-spacing-6);
+  bottom: var(--ds-spacing-6);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   gap: var(--ds-spacing-3);
   z-index: 200;
   width: max-content;
@@ -39,15 +48,28 @@
   Toast, Figma D_SYSTEM node 103:4772 (Toster: warning, success). One status
   color family per toast: the family's medium color fills it, its strong
   color draws the 1px border and fills the 24px close square (white X).
-  Figma draws success and warning; error and default follow the same
-  pattern in the danger (signal.error) and neutral (base) families. The
-  palette colors are fixed on purpose -- a status color means the same in
-  both themes -- so the text is fixed black (base-1000) on every fill.
+  Figma draws success and warning; error follows the same pattern in the
+  danger (signal.error) family. The palette colors are fixed on purpose -- a
+  status color means the same in both themes -- so the text is fixed black
+  (base-1000) on those fills. The default toast is the exception, black with
+  white text (below).
   Figma's toast has no shadow: the border is its edge.
 */
+/* The default (neutral) toast is black with white text on the light page since
+   2026-10-25 (explicit request): it stands apart from the page's light greys, where a
+   grey toast sank in. On the dark page it is the other way round, white with black
+   text (explicit request 2026-10-25), for the same reason: the tokens bg.toast and
+   text.toast swap with the theme. Its strong color is base-750 in both, the edge and
+   the close square (white X): it reads on the black toast and on the white one. Its
+   lines (time, progress) and actions take the color of its text. The status families
+   keep their fills and black text in both themes. */
 .ds-toast {
-  --_toast-fill: var(--ds-color-base-150);
-  --_toast-strong: var(--ds-color-base-600);
+  --_toast-fill: var(--ds-color-bg-toast);
+  --_toast-strong: var(--ds-color-base-750);
+  --_toast-text: var(--ds-color-text-toast);
+  --_toast-line: var(--ds-color-text-toast);
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -60,16 +82,29 @@
 .ds-toast[data-status="success"] {
   --_toast-fill: var(--ds-color-signal-success);
   --_toast-strong: var(--ds-color-signal-success-strong);
+  --_toast-text: var(--ds-color-base-1000);
+  --_toast-line: var(--_toast-strong);
 }
 
 .ds-toast[data-status="warning"] {
   --_toast-fill: var(--ds-color-signal-warning);
   --_toast-strong: var(--ds-color-signal-warning-strong);
+  --_toast-text: var(--ds-color-base-1000);
+  --_toast-line: var(--_toast-strong);
 }
 
 .ds-toast[data-status="error"] {
   --_toast-fill: var(--ds-color-signal-error);
   --_toast-strong: var(--ds-color-signal-error-strong);
+  --_toast-text: var(--ds-color-base-1000);
+  --_toast-line: var(--_toast-strong);
+}
+
+/* Actions on the default toast take its text color (white on black, black on white):
+   the accent would not read on black. Underline and hover brackets follow the text
+   color. */
+.ds-toast:not([data-status="success"]):not([data-status="warning"]):not([data-status="error"]) .ds-text-button[data-status="active"] {
+  color: var(--ds-color-text-toast);
 }
 
 .ds-toast__body {
@@ -85,7 +120,7 @@
   font-weight: var(--ds-font-system-message-weight);
   line-height: var(--ds-font-system-message-line-height);
   letter-spacing: var(--ds-font-system-message-letter-spacing);
-  color: var(--ds-color-base-1000);
+  color: var(--_toast-text);
 }
 
 .ds-toast__actions {
@@ -135,6 +170,104 @@
 }
 
 .ds-toast__close:focus-visible {
-  outline: var(--ds-border-width-default) solid var(--ds-color-base-1000);
+  outline: var(--ds-border-width-default) solid var(--_toast-text);
   outline-offset: var(--ds-spacing-focus-offset);
+}
+
+/* Coming in: up from below, fading in. Going out (data-leaving, set by component.js,
+   which removes the toast when this ends): sinking a little, fading out. */
+.ds-toast-stack > .ds-toast {
+  animation: ds-toast-in 240ms cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+}
+
+.ds-toast-stack > .ds-toast[data-leaving] {
+  animation: ds-toast-out 180ms cubic-bezier(0.55, 0, 1, 0.45) forwards;
+  pointer-events: none;
+}
+
+@keyframes ds-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ds-spacing-6));
+  }
+}
+
+@keyframes ds-toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(var(--ds-spacing-3));
+  }
+}
+
+/* Time left: a spacing-1 line on the bottom edge, in the strong color, shrinking from
+   the right over the toast's duration (component.js sets --_toast-duration). Paused
+   with the timer while the toast is hovered or focused (data-paused). */
+.ds-toast__timer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--ds-spacing-1);
+  background-color: var(--_toast-line);
+  transform-origin: left center;
+  animation: ds-toast-timer var(--_toast-duration, 5000ms) linear forwards;
+}
+
+.ds-toast[data-paused] .ds-toast__timer {
+  animation-play-state: paused;
+}
+
+@keyframes ds-toast-timer {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* A running task's progress (show({ progress }), update()): the same spacing-1 line on
+   the bottom edge, filling from the left with the task. While the progress cannot be
+   told (data-indeterminate) a third of it moves across, the only sign the task still
+   runs; under reduced motion it shows full width, faint. */
+.ds-toast__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--ds-spacing-1);
+  overflow: hidden;
+}
+
+.ds-toast__progress::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--_toast-progress, 0%);
+  background-color: var(--_toast-line);
+  transition: width 300ms ease-out;
+}
+
+.ds-toast__progress[data-indeterminate]::before {
+  width: 33%;
+  transition: none;
+  animation: ds-toast-progress-run 1.2s linear infinite;
+}
+
+@keyframes ds-toast-progress-run {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(300%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-toast__progress[data-indeterminate]::before {
+    animation: none;
+    width: 100%;
+    opacity: 0.4;
+  }
+
+  .ds-toast-stack > .ds-toast,
+  .ds-toast-stack > .ds-toast[data-leaving] {
+    animation: none;
+  }
+
+  .ds-toast__timer {
+    display: none;
+  }
 }

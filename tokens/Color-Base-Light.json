@@ -80,6 +80,11 @@
     }
   },
   "text": {
+    "toast": {
+      "$value": "{base.0}",
+      "$type": "color",
+      "$description": "Text, lines and actions on the default toast (toast, explicit request 2026-10-25): the opposite of bg.toast, white on the black light-theme toast and black on the white dark-theme one."
+    },
     "active": {
       "$value": "{base.1000}",
       "$type": "color",
@@ -102,6 +107,11 @@
     }
   },
   "bg": {
+    "toast": {
+      "$value": "{base.1000}",
+      "$type": "color",
+      "$description": "The default (neutral) toast's fill (toast, explicit request 2026-10-25): black on the light page, white on the dark one, so it always stands apart from the page instead of sinking into its greys. Paired with text.toast."
+    },
     "surface": {
       "$value": "{base.0}",
       "$type": "color",
@@ -131,6 +141,16 @@
       "$value": "{base.100}",
       "$type": "color",
       "$description": "Table row hover/focus fill (table-row). Same as bg.surface-pressed in light, so light rows are unchanged."
+    },
+    "row-current": {
+      "$value": "{base.50}",
+      "$type": "color",
+      "$description": "The current row of a table (table-row data-current, explicit request 2026-10-25): the row of what the page shows elsewhere right now, one step lighter than row-hover so it marks the place without looking hovered. Light only: dark has no value, table-row falls back to row-hover there."
+    },
+    "row-visited": {
+      "$value": "{base.50}",
+      "$type": "color",
+      "$description": "A table row the viewer has already acted on (table-row data-visited, explicit request 2026-10-24): a faint grey, lighter than row-hover, so touched and untouched rows tell apart and hover still shows. Light only: dark has no value, table-row falls back to the plain surface there."
     },
     "text-highlight": {
       "$value": "{yellow.400}",

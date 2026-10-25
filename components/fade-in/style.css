@@ -17,9 +17,32 @@
   animation-delay: var(--_fade-delay, 0ms);
 }
 
+/* A held area (data-fade-hold) stays invisible until the page's first data is
+   drawn; component.js then removes the attribute and fades it in as one piece. */
+[data-fade-hold] {
+  opacity: 0;
+}
+
 /* An image still downloading stays invisible; it fades in when its pixels arrive. */
 img[data-ds-fade-pending] {
   opacity: 0;
+}
+
+/* Leaving the page (component.js leave()): the marked area fades out in 200ms, faster
+   than it came in, and stays out until the next page has loaded. ease-in, so it
+   accelerates away rather than lingering. */
+[data-fade-leaving] {
+  animation: ds-fade-out 200ms cubic-bezier(0.55, 0, 1, 0.45) forwards;
+  pointer-events: none;
+}
+
+@keyframes ds-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes ds-fade-in {
@@ -34,7 +57,8 @@ img[data-ds-fade-pending] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ds-fade-in {
+  .ds-fade-in,
+  [data-fade-leaving] {
     animation: none;
   }
 }

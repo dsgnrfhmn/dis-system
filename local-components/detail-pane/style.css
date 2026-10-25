@@ -1,0 +1,195 @@
+/*
+  detail-pane (STAGED in local-components, not pushed into components/: awaiting the
+  maintainer's confirmation per the consumer's CLAUDE.md "new element" rule).
+
+  A row's details docked beside its table, like a task pane in Word (explicit request
+  2026-10-25, after the sibling dashboard's side pane): .ds-detail-split is a two-track
+  grid, table and side; the side track grows from 0 when a row opens. The side holds a
+  .ds-split__handle on its left edge (drag or arrow keys resize it, component.js) and a
+  dis-system pane marked .ds-detail: head with the row's name, a caption and Close;
+  a body of labelled blocks.
+
+  The host page places the side (it sticks under its own sticky chrome: top and height
+  are page layout) and decides which columns its table drops while the pane is open.
+
+  Motion (explicit request 2026-10-25: opening lagged, and the columns the table drops
+  should fade out and back in): the tracks no longer transition, which laid the whole
+  table out on every frame. component.js switches the split in one step inside a view
+  transition: the page is laid out once, the browser keeps a picture of it before and
+  after, and the compositor animates between them. The pane (named ds-detail-side while
+  it moves, data-moving) slides in from the right edge and back out at its own size,
+  over the side's surface;
+  everything else cross-fades, so the columns the table drops fade out, the ones it
+  brings back fade in, and the ones that move fade across. 300ms. Without view
+  transitions, or under prefers-reduced-motion, the split simply switches.
+*/
+.ds-detail-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0fr);
+  align-items: start;
+  container-type: inline-size;
+}
+
+/* Open: the side's share of the split is component.js's --_side-track (fr), 40% until
+   dragged. */
+.ds-detail-split[data-open="true"] {
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--_side-track, 0.6667fr));
+}
+
+.ds-detail-split[data-dragging="true"] {
+  user-select: none;
+  cursor: col-resize;
+}
+
+.ds-detail-split__table,
+.ds-detail-split__side {
+  min-width: 0;
+}
+
+/* Whatever the table cannot fit in its share is cut at the split, never drawn under
+   the pane. */
+.ds-detail-split__table {
+  overflow-x: clip;
+}
+
+.ds-detail-split__side {
+  position: sticky;
+  overflow-x: clip;
+  /* The surface the pane slides over while it opens (explicit request 2026-10-25: the
+     page's own color showed beside the moving pane). */
+  background-color: var(--ds-color-bg-surface);
+}
+
+/* The handle sits on the side's left edge instead of between two flex items; its grab
+   area and accent line stay inside the side, which clips anything past its edge. */
+.ds-detail-split__side > .ds-split__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.ds-detail-split__side > .ds-split__handle::before,
+.ds-detail-split__side > .ds-split__handle::after {
+  left: 0;
+}
+
+.ds-detail-split:not([data-open="true"]) .ds-split__handle {
+  display: none;
+}
+
+.ds-detail-split[data-dragging="true"] .ds-split__handle::after {
+  background-color: var(--ds-color-accent-1);
+}
+
+/* The pane keeps its open width while the track animates, so its content does not
+   reflow during the slide. A thin rule on its left edge, against the table. */
+.ds-detail.ds-pane {
+  box-sizing: border-box;
+  width: calc(var(--_side-share, 0.4) * 100cqw);
+  /* The same line as the table's and the sidebar's (explicit request 2026-10-25: in
+     dark, object-dark-passive drew it brighter than every other line). */
+  border-left: var(--ds-border-width-thin) solid var(--ds-color-border-table);
+  background-color: var(--ds-color-bg-surface);
+}
+
+/* The head: the row's name at full strength, its caption beside it, Close on the right.
+   A long name cuts first. */
+.ds-detail .ds-pane__heading {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.ds-detail .ds-pane__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ds-detail__body {
+  display: grid;
+  gap: var(--ds-spacing-6);
+  align-content: start;
+  padding: var(--ds-spacing-6) var(--ds-spacing-6) var(--ds-spacing-9);
+}
+
+.ds-detail__title {
+  margin: 0;
+  font-family: var(--ds-font-heading-3-family);
+  font-size: var(--ds-font-heading-3-size);
+  font-weight: var(--ds-font-heading-3-weight);
+  line-height: var(--ds-font-heading-3-line-height);
+  letter-spacing: var(--ds-font-heading-3-letter-spacing);
+  overflow-wrap: anywhere;
+}
+
+/* A row of text buttons; their own side padding is the gap between them. */
+.ds-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: calc(-1 * var(--ds-spacing-button-x));
+}
+
+/* One labelled section: an uppercase data-role label over its content. */
+.ds-detail__block {
+  display: grid;
+  gap: var(--ds-spacing-2);
+}
+
+.ds-detail__label {
+  margin: 0;
+  font-family: var(--ds-font-data-family);
+  font-size: var(--ds-font-data-size);
+  font-weight: var(--ds-font-data-weight);
+  line-height: var(--ds-font-data-line-height);
+  letter-spacing: var(--ds-font-data-letter-spacing);
+  text-transform: uppercase;
+  color: var(--ds-color-header-cell-label);
+}
+
+.ds-detail__text {
+  margin: 0;
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  color: var(--ds-color-text-active);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.ds-detail__heading {
+  margin: var(--ds-spacing-3) 0 0;
+  font-family: var(--ds-font-title-family);
+  font-size: var(--ds-font-title-size);
+  font-weight: var(--ds-font-title-weight);
+  color: var(--ds-color-text-active);
+}
+
+/* A field in a block (notes) fills the pane's width. */
+.ds-detail__field {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ---- the view transition of opening and closing (component.js) ---- */
+/* The pane itself moves, not the side: the side's surface stays in the page's picture,
+   so the place the pane slides into is the surface color, not the page behind. A
+   closed side has no width and the pane sits just past the right edge, so the pane
+   slides in from there and back out to it at its own size. */
+.ds-detail-split[data-moving] .ds-detail-split__side > .ds-detail {
+  view-transition-name: ds-detail-side;
+}
+
+:root:active-view-transition-type(ds-detail)::view-transition-group(*),
+:root:active-view-transition-type(ds-detail)::view-transition-old(*),
+:root:active-view-transition-type(ds-detail)::view-transition-new(*) {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* The pane slides; it does not fade. */
+:root:active-view-transition-type(ds-detail)::view-transition-old(ds-detail-side),
+:root:active-view-transition-type(ds-detail)::view-transition-new(ds-detail-side) {
+  animation-name: none;
+  mix-blend-mode: normal;
+}

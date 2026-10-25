@@ -3,7 +3,7 @@
   The sets sidebar of the Collection and Template pages (the consumer-app Figma file
   APPFILEKEY, Collection nodes 150:16217 / 150:16475 / 150:16503,
   Template screens 20-22). A 280px column on the surface color with one hairline on
-  its right edge: a 60px head (title at half opacity, collapse toggle) over a
+  its right edge (see Collapsed for the moving edge): a 60px head (title at half opacity, collapse toggle) over a
   scrolling list of sidebar-item type="set" rows. Only the list scrolls: the head and
   the create row (first in the list, sticky) stay where they are. Collapsed (data-collapsed
   = "true") it is a 64px strip holding only the toggle, its arrow flipped.
@@ -18,7 +18,6 @@
   display: flex;
   flex-direction: column;
   background-color: var(--ds-color-bg-surface);
-  border-right: var(--ds-border-width-thin) solid var(--ds-color-border-table);
   overflow: hidden;
 }
 
@@ -70,6 +69,33 @@
   background-color: var(--ds-color-bg-row-hover);
 }
 
+/* A create row whose action is running (data-busy, explicit request 2026-10-25: New Full
+   Set reads every project first): the host swaps its plus for the loading glyph, which
+   turns until the action is done; the row takes no clicks meanwhile. Still under
+   prefers-reduced-motion. */
+.ds-sidebar-list .ds-sidebar-item[data-role="create"][data-busy] {
+  pointer-events: none;
+}
+
+.ds-sidebar-list .ds-sidebar-item[data-role="create"][data-busy] .ds-sidebar-item__save-icon {
+  animation: ds-sidebar-list-busy 1.2s linear infinite;
+  /* The loading glyph's ring is grey, its turning quarter the accent (icons/loading.svg). */
+  --_icon-fill: var(--ds-color-object-dark-passive);
+  --_icon-fill-opacity: 1;
+}
+
+@keyframes ds-sidebar-list-busy {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-sidebar-list .ds-sidebar-item[data-role="create"][data-busy] .ds-sidebar-item__save-icon {
+    animation: none;
+  }
+}
+
 .ds-sidebar-list .ds-sidebar-item[data-role="create"] .ds-sidebar-item__save-icon,
 .ds-sidebar-list .ds-sidebar-item[data-role="create"] .ds-sidebar-item__save:hover .ds-sidebar-item__save-icon {
   color: var(--ds-color-accent-1);
@@ -116,37 +142,60 @@
 }
 
 /* Collapsed: the sidebar keeps a 64px strip in the page flow, holding only the
-   toggle. It is still its full width (negative margin gives back the rest of
-   the flow footprint) and clipped to the strip, so opening it (data-peek) is a
-   slide: the clip opens to the right OVER the page, 200ms, and nothing in the
-   page layout moves. Escape, a click outside and the toggle close it again;
-   component.js sets data-peek.
-   The right hairline is not a border: a border sits on the full box's edge, which the
-   clip hides until the slide is over. It is the ::after at --_sb-edge, the one length
-   that both the clip and the line are drawn from, and that length is what the
-   transition animates (registered below so it can be), so the line travels with the
-   edge of the panel. Outside the collapsed state --_sb-edge rests at the strip, so
-   collapsing and pinning open are as instant as before. */
-@property --_sb-edge {
-  syntax: "<length>";
+   toggle. It is still its full width (a negative margin gives back the rest of
+   the flow footprint) and clipped to the strip, so opening it over the page
+   (data-peek, by hover or the toggle) is a slide: the clip opens to the right OVER
+   the page and nothing in the page layout moves. Escape, a click outside and the
+   toggle close it again; component.js sets data-peek.
+
+   Collapsing and pinning open move too (explicit request 2026-10-25): the panel's
+   edge travels between its full width and the strip, and the page beside it follows,
+   200ms each way. Two numbers say how far the sidebar is open: --_sb-in in the page
+   flow (the margin) and --_sb-shown on screen (the clip). Expanded both are 1,
+   collapsed both 0, peeking only --_sb-shown is 1. They are fractions, not lengths,
+   so dragging the sidebar's width (pane's resize) follows the pointer at once.
+   Only --_sb-shown is transitioned (it repaints the sidebar alone). The flow switches
+   at once, so the page is laid out once, at its new width, and component.js slides the
+   elements after the sidebar from where they were to where they are with a transform,
+   which the compositor runs (explicit request 2026-10-25, "super smooth": animating the
+   margin laid the whole page out on every frame, 70 to 80ms each beside a long preview).
+   data-moving keeps the panel above them while they slide.
+   The right hairline is the border at full width; while the edge moves the clip would
+   hide it, so the ::after at the visible edge draws it and the line travels with the
+   panel. The head is as wide as the visible part, so the toggle rides the edge and the
+   title is cut as it narrows. The title and the list stay laid out and clipped while
+   the edge moves, and are hidden (visibility) once a collapse has finished. */
+@property --_sb-in {
+  syntax: "<number>";
   inherits: true;
-  initial-value: 0px;
+  initial-value: 1;
+}
+
+@property --_sb-shown {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
 }
 
 .ds-sidebar-list {
-  --_sb-edge: var(--_sb-strip);
-}
-
-.ds-sidebar-list[data-collapsed="true"] {
+  --_sb-in: 1;
+  --_sb-shown: 1;
+  --_sb-edge: calc(var(--_sb-strip) + (var(--_sb-full) - var(--_sb-strip)) * var(--_sb-shown));
   position: relative;
-  z-index: 30;
-  margin-right: calc(var(--_sb-strip) - var(--_sb-full));
-  border-right: none;
+  /* The line at full width is this border. While the edge moves or rests at the strip
+     the clip hides the border, and the ::after below draws the line at the edge
+     (overflow hides the ::after at full width, where it falls on the border). */
+  border-right: var(--ds-border-width-thin) solid var(--ds-color-border-table);
+  margin-right: calc((var(--_sb-full) - var(--_sb-strip)) * (var(--_sb-in) - 1));
   clip-path: inset(0 calc(var(--_sb-full) - var(--_sb-edge)) 0 0);
-  transition: --_sb-edge 200ms ease;
+  transition: --_sb-shown 200ms ease;
 }
 
-.ds-sidebar-list[data-collapsed="true"]::after {
+.ds-sidebar-list[data-moving] {
+  z-index: 30;
+}
+
+.ds-sidebar-list::after {
   content: "";
   position: absolute;
   top: 0;
@@ -157,19 +206,42 @@
   pointer-events: none;
 }
 
-.ds-sidebar-list[data-collapsed="true"][data-peek="true"] {
-  --_sb-edge: var(--_sb-full);
+.ds-sidebar-list__head {
+  width: min(100%, var(--_sb-edge));
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ds-sidebar-list[data-collapsed="true"] {
-    transition: none;
-  }
+.ds-sidebar-list__title {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.ds-sidebar-list[data-collapsed="true"] {
+  --_sb-in: 0;
+  --_sb-shown: 0;
+  z-index: 30;
+}
+
+.ds-sidebar-list[data-collapsed="true"][data-peek="true"] {
+  --_sb-shown: 1;
+}
+
+.ds-sidebar-list__title,
+.ds-sidebar-list__items {
+  transition: visibility 0s;
 }
 
 .ds-sidebar-list[data-collapsed="true"]:not([data-peek="true"]) .ds-sidebar-list__title,
 .ds-sidebar-list[data-collapsed="true"]:not([data-peek="true"]) .ds-sidebar-list__items {
-  display: none;
+  visibility: hidden;
+  transition-delay: 200ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-sidebar-list,
+  .ds-sidebar-list__title,
+  .ds-sidebar-list__items {
+    transition: none;
+  }
 }
 
 /* A collapsed sidebar's toggle always points right: it pins the sidebar open, also while
