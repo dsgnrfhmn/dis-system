@@ -4,7 +4,10 @@
   "status": "stable",
   "category": "popups",
   "listed": true,
-  "variants": [],
+  "variants": [
+    "veil",
+    "bare"
+  ],
   "props": [
     {
       "name": "label",
@@ -12,10 +15,17 @@
       "required": false,
       "default": "Loading",
       "description": "Tooltip text."
+    },
+    {
+      "name": "variant",
+      "type": "string",
+      "required": false,
+      "default": null,
+      "description": "\"bare\" (2026-10-25): only the spinner, twice the size, centred in the area, no veil and no box; the label is for screen readers only. Omitted: the veil with its Loading tooltip."
     }
   ],
   "source": "figma:APPFILEKEY#150:16233,150:16284,150:16299",
-  "rationale": "The veil covers its positioned parent (inset 0) above the content (z-index 5, below popups at 100 and toasts at 200) with the popup overlay color (bg.overlay) at 50% opacity, exactly like a popup's backdrop, so 'this area is busy' reads the same way as 'this area is behind a dialog'. The tooltip is a dark box (Figma base/900 with a base/1000 hairline, white text, 10px padding and gap) holding the spinner glyph (a CSS mask, so it takes the text color) and the label. It is centered horizontally and translated -50% / -50%, so the host places its center by setting style.top (Figma draws it at the middle of the window, not of the area). Not sourced from Figma: the hidden-attribute API and role=\"status\". Rendering verified in light and dark themes. The spinner rotates clockwise, 1.2s linear per turn, and stops under prefers-reduced-motion.",
+  "rationale": "The veil covers its positioned parent (inset 0) above the content (z-index 5, below popups at 100 and toasts at 200) with the popup overlay color (bg.overlay) at 50% opacity, exactly like a popup's backdrop, so 'this area is busy' reads the same way as 'this area is behind a dialog'. The tooltip is a dark box (Figma base/900 with a base/1000 hairline, white text, 10px padding and gap) holding the spinner glyph (a CSS mask, so it takes the text color) and the label. It is centered horizontally and translated -50% / -50%, so the host places its center by setting style.top (Figma draws it at the middle of the window, not of the area). Not sourced from Figma: the hidden-attribute API and role=\"status\". Rendering verified in light and dark themes. The spinner rotates clockwise, 1.2s linear per turn, and stops under prefers-reduced-motion. Bare (explicit request 2026-10-25): an area that is still being filled (a page or a preview on its way in) shows only the spinner at its centre, with no veil (nothing in it is blocked) and no box; the glyph is twice the size in the passive dark color, and it does not take pointer events. Update 2026-10-25 (explicit request): the spinner is an ordinary one, a faint ring with a quarter arc in full ink (icons/loading.svg), instead of the half-filled circle. The bare spinner is drawn in accent-1 (explicit request 2026-10-25); the boxed one stays white on its dark tooltip. Later the same day (explicit request): the arc has square ends, the ring is grey (object-dark-passive) and the arc accent; drawn in CSS to the icon's geometry, since a mask paints one color.",
   "themes_supported": [
     "light",
     "dark"

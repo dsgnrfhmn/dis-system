@@ -21,6 +21,11 @@
    open (save) or brings the block back (delete). With opts.animate a re-render fades
    new blocks in and slides moved ones; fadeOut(container, id) is the way out.
    opts.actions === false keeps blocks identified and draggable but draws no Edit / Delete.
+   opts.clickToEdit (explicit request 2026-10-24): a click on a block edits it in place: the
+   field takes exactly the block's height (a longer text scrolls inside it), there are no
+   Save / Discard buttons, leaving the field or Ctrl+Enter saves, Esc gives up, and an
+   emptied block keeps its text (onEmpty says why). Going back is the host's undo. A click
+   that ends a text selection does not edit.
    opts.reveal = { id } or { index } scrolls that block (or the one now at that place,
    when a block was removed) into view, softly; a new block waits, hidden, until the
    scroll has arrived and only then fades in. reveal(container, spec) does the scroll alone
@@ -203,30 +208,27 @@
     return wrap;
   }
 
-  // Zoom multiplies the fit-to-width scale. It is kept on the container (data-zoom) so a
-  // re-render of the same container keeps it.
-  const ZOOMS = [0.5, 0.75, 1, 1.25, 1.5, 2];
-  function zoomIndex(stack) {
-    const i = ZOOMS.indexOf(parseFloat(stack.dataset.zoom));
-    return i === -1 ? ZOOMS.indexOf(1) : i;
-  }
-
+  // Zoom (DsZoomButtons.bar on the host, explicit request 2026-10-24): fit to the stack's
+  // width by default, or a scale of the page's own 842 px kept on the container
+  // (data-zoom), so a re-render of the same container keeps it. The stack scrolls both
+  // ways when the zoomed pages are larger than it.
   const observed = new WeakMap();
-  function fit(stack) {
+  function fittedScale(stack) {
     const cs = getComputedStyle(stack);
     const width = stack.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-    if (width > 0) {
-      const scale = (width / PAGE_W) * ZOOMS[zoomIndex(stack)];
-      stack.style.setProperty('--ds-cv-sheet-scale', String(scale));
-    }
+    return width > 0 ? width / PAGE_W : 0;
+  }
+  function fit(stack) {
+    const zoom = parseFloat(stack.dataset.zoom);
+    const scale = zoom > 0 ? zoom : fittedScale(stack);
+    if (scale > 0) stack.style.setProperty('--ds-cv-sheet-scale', String(scale));
   }
 
-  /** One zoom step (+1 in, -1 out). Returns {zoom, atMin, atMax} for the new level. */
-  function zoomBy(stack, direction) {
-    const i = Math.max(0, Math.min(ZOOMS.length - 1, zoomIndex(stack) + direction));
-    stack.dataset.zoom = String(ZOOMS[i]);
+  /** Draw a zoom: a scale of the page's own size, or null to fit the stack's width. */
+  function setZoom(stack, zoom) {
+    if (zoom > 0) stack.dataset.zoom = String(zoom);
+    else delete stack.dataset.zoom;
     fit(stack);
-    return { zoom: ZOOMS[i], atMin: i === 0, atMax: i === ZOOMS.length - 1 };
   }
 
   const FADE_MS = 180;
@@ -336,6 +338,8 @@
     const blocks = container.__blocks;
     const block = blocks.find((b) => b.id === node.dataset.blockId);
     if (!block) return;
+    const inPlace = container.__clickToEdit;
+    const height = node.offsetHeight;        // the block keeps its height while edited in place
     node.dataset.editing = 'true';
     node.draggable = false;
     node.textContent = '';
@@ -343,14 +347,19 @@
     ta.value = block.text;
     ta.spellcheck = false;
     ta.setAttribute('aria-label', 'Edit block');
-    const fitHeight = () => { ta.style.height = 'auto'; ta.style.height = `${ta.scrollHeight + 2}px`; };
-    ta.addEventListener('input', fitHeight);
     node.appendChild(ta);
-    const actions = el('span', 'ds-cv-sheet__actions');
-    actions.appendChild(button('Discard', 'discard-edit'));
-    actions.appendChild(button('Save', 'save-edit'));
-    node.appendChild(actions);
-    fitHeight();
+    if (inPlace) {
+      ta.style.height = `${height}px`;
+      ta.style.overflowY = 'auto';
+    } else {
+      const fitHeight = () => { ta.style.height = 'auto'; ta.style.height = `${ta.scrollHeight + 2}px`; };
+      ta.addEventListener('input', fitHeight);
+      const actions = el('span', 'ds-cv-sheet__actions');
+      actions.appendChild(button('Discard', 'discard-edit'));
+      actions.appendChild(button('Save', 'save-edit'));
+      node.appendChild(actions);
+      fitHeight();
+    }
     ta.focus();
     ta.setSelectionRange(ta.value.length, ta.value.length);
   }
@@ -361,8 +370,12 @@
     if (save) {
       const value = node.querySelector('.ds-cv-sheet__edit').value.trim();
       const block = container.__blocks.find((b) => b.id === node.dataset.blockId);
-      if (!value) return h.onEmpty && h.onEmpty();
-      if (block && value !== block.text && !(await h.onSave(block.id, value))) return;
+      if (!value) {
+        if (h.onEmpty) h.onEmpty();
+        if (!container.__clickToEdit) return;   // in place: the block keeps its text
+      } else if (block && value !== block.text && !(await h.onSave(block.id, value))) {
+        return;
+      }
     }
     if (!node.isConnected || node.dataset.editing !== 'true') return;
     // Nothing changed (or discarded): draw the block as it was.
@@ -393,6 +406,11 @@
     container.addEventListener('click', (event) => {
       const b = event.target.closest('[data-action]');
       const node = event.target.closest('[data-block-id]');
+      if (!b && node && container.contains(node) && container.__clickToEdit && handlers.get(container)
+          && node.dataset.editing !== 'true' && !node.dataset.removing && !String(window.getSelection() || '')) {
+        startEdit(container, node);
+        return;
+      }
       if (!b || !node || !container.contains(node)) return;
       const h = handlers.get(container);
       if (!h) return;
@@ -412,16 +430,27 @@
         });
       }
     });
+    // Edited in place: leaving the field saves it.
+    container.addEventListener('focusout', (event) => {
+      if (!container.__clickToEdit || !(event.target instanceof Element) || !event.target.matches('.ds-cv-sheet__edit')) return;
+      const node = event.target.closest('[data-editing="true"]');
+      if (node && node.isConnected && !node.__ending) {
+        node.__ending = true;
+        endEdit(container, node, true).finally(() => { node.__ending = false; });
+      }
+    });
     container.addEventListener('keydown', (event) => {
       const node = event.target.closest && event.target.closest('[data-editing="true"]');
       if (!node) return;
       if (event.key === 'Escape') {
         event.preventDefault();
         event.stopPropagation();
+        node.__ending = true;   // the field goes away: its focusout must not save
         endEdit(container, node, false);
       } else if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
-        endEdit(container, node, true);
+        node.__ending = true;
+        endEdit(container, node, true).finally(() => { node.__ending = false; });
       }
     });
     container.addEventListener('dragstart', (event) => {
@@ -473,6 +502,8 @@
     const before = opts && opts.animate && !reducedMotion() ? positions(container) : null;
     const scroll = { top: container.scrollTop, left: container.scrollLeft };
     container.__actions = !(opts && opts.actions === false);
+    container.__clickToEdit = !!(opts && opts.clickToEdit);
+    container.toggleAttribute('data-click-to-edit', container.__clickToEdit);   // the in-place look (style.css)
     container.classList.add('ds-cv-sheet-stack');
     container.textContent = '';
     container.__blocks = blocks;
@@ -516,5 +547,5 @@
     return pages.length;
   }
 
-  window.DsCvSheet = { render, zoomBy, fadeOut, restore, reveal };
+  window.DsCvSheet = { render, setZoom, fadeOut, restore, reveal };
 })();

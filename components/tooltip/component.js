@@ -25,6 +25,11 @@
   from the viewport edges, and when it fits on neither side its text is cut at
   the last word that fits, plus an ellipsis.
 
+  Left (explicit request 2026-10-24, a column of icon buttons at a page's right):
+  data-tooltip-placement="left" on the trigger puts the bubble at its left,
+  centred on its height, kept inside the viewport's height; with no room on
+  the left it falls back to the above / below placement.
+
   A native <button disabled> still gets mouseover in current browsers, so a
   tooltip on a disabled button works with the pointer; it is not
   keyboard-reachable (a disabled button takes no focus).
@@ -123,7 +128,7 @@ function clampText(el, text, maxHeight) {
   el.textContent = best;
 }
 
-function place(box, text) {
+function place(box, text, placement) {
   const el = getLayer();
   el.textContent = text;
   el.style.left = '0px';
@@ -133,6 +138,18 @@ function place(box, text) {
   const rect = anchorOf(box).getBoundingClientRect();
   const vw = document.documentElement.clientWidth;
   const vh = document.documentElement.clientHeight;
+
+  if (placement === 'left') {
+    const { width, height } = el.getBoundingClientRect();
+    const left = rect.left - GAP - width;
+    if (left >= VIEWPORT_MARGIN) {
+      const centred = rect.top + rect.height / 2 - height / 2;
+      el.style.left = `${left}px`;
+      el.style.top = `${Math.max(VIEWPORT_MARGIN, Math.min(centred, vh - VIEWPORT_MARGIN - height))}px`;
+      el.dataset.visible = 'true';
+      return;
+    }
+  }
 
   // Vertical: above if it fits, else below if it fits, else the roomier side
   // with the text cut to fit.
@@ -171,7 +188,7 @@ function hide() {
 function show(t) {
   const text = t.source.getAttribute('data-tooltip');
   if (!text || !t.box.isConnected || !t.source.isConnected) return hide();
-  place(t.box, text);
+  place(t.box, text, t.source.getAttribute('data-tooltip-placement'));
 }
 
 function schedule(t) {

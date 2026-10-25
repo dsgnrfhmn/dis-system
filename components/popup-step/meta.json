@@ -40,10 +40,16 @@
       "required": false,
       "default": false,
       "description": "With collapsible: the step starts closed."
+    },
+    {
+      "name": "note",
+      "type": "string",
+      "required": false,
+      "description": "A .ds-popup-step__note in the head, right after the title: a short remark in text-inactive (\"No images in this section\"); hidden while it has nothing to say."
     }
   ],
   "source": "figma:APPFILEKEY#150:16503,150:16475",
-  "rationale": "The head is 56px (spacing.9 + spacing.5) with 20px side padding, no border and no fill: the popup surface shows through, and steps are separated by their own heads, not by rules. The title is an ordered list with start=N and one item, so the number is real list numbering; the 24px inline-start margin (spacing.7) makes room for it, and the title uses the \"title\" role at half opacity, like a pane title. The body is inset spacing.cell (10px) / spacing.6 (20px). A .ds-dropdown directly inside a step fills the width. The head's text button hugs its label (see text-button). Rendering verified in light and dark themes. Collapsible (2026-10-12): the head toggles the body that follows it (data-collapsed on the head, so markup stays two siblings); the body animates height over 150ms and is hidden from focus and assistive tech when closed; the open step's title goes to full opacity. window.dsPopupStep.setOpen() lets a host open or close steps from code.",
+  "rationale": "The head is 56px (spacing.9 + spacing.5) with 20px side padding, no border and no fill: the popup surface shows through, and steps are separated by their own heads, not by rules. The title is an ordered list with start=N and one item, so the number is real list numbering; the 24px inline-start margin (spacing.7) makes room for it, and the title uses the \"title\" role at half opacity, like a pane title. The body is inset spacing.cell (10px) / spacing.6 (20px). A .ds-dropdown directly inside a step fills the width. The head's text button hugs its label (see text-button). Rendering verified in light and dark themes. Collapsible (2026-10-12): the head toggles the body that follows it (data-collapsed on the head, so markup stays two siblings); the body animates height over 150ms and is hidden from focus and assistive tech when closed; the open step's title goes to full opacity. window.dsPopupStep.setOpen() lets a host open or close steps from code. Update 2026-10-24 (explicit request): the accordion arrow takes the title's text colour instead of accent-1, so it reads as part of the title; a head may carry a note right after the title in text-inactive body text, for a step that has nothing to choose. A closed step's arrow takes its title's half opacity (grey), an open step's is full (black); the head's text button shows only while the step is open, since it acts on the body (explicit request 2026-10-24).",
   "themes_supported": [
     "light",
     "dark"

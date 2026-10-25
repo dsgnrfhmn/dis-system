@@ -56,6 +56,22 @@
   font-weight: var(--ds-font-button-primary-weight);
 }
 
+/* A heading after other blocks starts its section with spacing-6 above it (explicit
+   request 2026-10-24: the sections read as groups). The space is a top border in the
+   row's resting fill: it reads as blank surface whatever sits behind the list (a
+   margin showed the pane's grey as a band), and the hover fill and the overlay
+   actions, which live inside the border, stay the size of the text. */
+.ds-block-row[data-kind="heading"]:not(:first-child) {
+  border-top: var(--ds-spacing-6) solid var(--ds-color-bg-surface);
+}
+
+/* A row whose whole box is the click target (data-clickable="true", kind "source"):
+   the host makes a click anywhere on it do what its visible action does (Add or
+   Remove), so the row shows the pointer. The buttons keep their own keyboard path. */
+.ds-block-row[data-clickable="true"] {
+  cursor: pointer;
+}
+
 .ds-block-row__actions {
   flex: none;
   display: flex;
@@ -78,6 +94,13 @@
   background-color: var(--ds-color-base-warm-100);
 }
 
+/* Hover and focus on an included block (explicit request 2026-10-24): one step warmer,
+   so it answers the pointer like a plain row does. Dark keeps bg.surface-pressed for
+   both until it has a value of its own. */
+:root:not([data-theme="dark"]) .ds-block-row[data-type="source"][data-included="true"]:is(:hover, :focus-within) {
+  background-color: var(--ds-color-base-warm-200);
+}
+
 /* Add and Remove sit in one grid cell, so the actions column is as wide as the wider of
    the two and the row does not change size when a block goes in or out of the document.
    The one that does not apply is visibility:hidden, not removed (2026-10-18). */
@@ -96,16 +119,19 @@
    cell's right end. Only the button that applies is laid out (Add or Remove), so the
    cell is exactly one button wide and its hover brackets hug the label. The cell wears
    the row's own fill (inherited, so hover and the "included" shade carry over) only while
-   it is shown; at rest it is transparent and lets no click through to nothing. */
+   it is shown; at rest it is transparent and lets no click through to nothing. It runs
+   the row's full height with the button centred (explicit request 2026-10-24), so on a
+   block of two lines or more the fill covers the text it hides, not one line of it. */
 .ds-block-row[data-actions="overlay"] {
   position: relative;
 }
 .ds-block-row[data-actions="overlay"] .ds-block-row__actions {
   position: absolute;
-  top: 50%;
+  top: 0;
+  bottom: 0;
   right: 0;
-  transform: translateY(-50%);
   display: flex;
+  align-items: center;
   pointer-events: none;
 }
 .ds-block-row[data-actions="overlay"]:is(:hover, :focus-within) .ds-block-row__actions {

@@ -1,0 +1,178 @@
+/*
+  layout-picker (STAGED in local-components, awaiting the maintainer's confirmation)
+
+  A column of square buttons glued into one bordered strip, in the look of
+  zoom-buttons and the sidebar toggle: thin dark-passive border, surface fill,
+  pressed surface on hover, accent focus ring. It hangs at the right middle of its
+  positioned parent, spacing-6 in from the edge, and is invisible (and takes no
+  clicks) until the parent is hovered or holds focus, so it never covers the page
+  it acts on while that page is being read.
+
+  Each button shows a drawing of its layout on a little sheet of the page's own
+  proportion (842 x 599): pictures are accent-1 boxes, a text column is a
+  dark-passive box. The boxes are placed in percent of the little sheet, read off
+  the layouts' real geometry (portfolio-sheet), so the drawing is the page in
+  small; gaps between pictures are drawn at least about 2 px wide, a little wider than
+  the page's, so two pictures never read as one. The current layout is pressed (aria-pressed="true"): accent border.
+*/
+
+.ds-layout-picker {
+  position: absolute;
+  top: 50%;
+  right: var(--ds-spacing-6);
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+}
+
+:is(:hover, :focus-within) > .ds-layout-picker {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Outside (explicit request 2026-10-24): inside an element with
+   data-sheet-tools="outside" (a host's zoomed-out preview) the menu hangs past the
+   parent's right edge, the same spacing-6 away, so it never covers the page. An
+   invisible strip fills that gap, so the pointer crossing it stays on the parent. */
+[data-sheet-tools="outside"] .ds-layout-picker {
+  right: auto;
+  left: calc(100% + var(--ds-spacing-6));
+}
+
+[data-sheet-tools="outside"] .ds-layout-picker::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 100%;
+  width: var(--ds-spacing-6);
+}
+
+.ds-layout-picker__button {
+  position: relative;
+  box-sizing: border-box;
+  width: calc(var(--ds-spacing-8) + var(--ds-spacing-6));
+  height: var(--ds-spacing-row);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ds-color-bg-surface);
+  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  cursor: pointer;
+}
+
+/* Glued: each button shares the one above it's bottom border. */
+.ds-layout-picker__button + .ds-layout-picker__button {
+  margin-top: calc(var(--ds-border-width-thin) * -1);
+}
+
+.ds-layout-picker__button:hover {
+  background-color: var(--ds-color-bg-surface-pressed);
+}
+
+.ds-layout-picker__button[aria-pressed="true"] {
+  z-index: 1;
+  border-color: var(--ds-color-accent-1);
+}
+
+.ds-layout-picker__button:focus-visible {
+  z-index: 2;
+  outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
+  outline-offset: var(--ds-spacing-focus-offset);
+}
+
+/* The little sheet: 32 wide, at the page's 842 x 599 proportion (24 until 2026-10-24,
+   "a bit bigger, the icons are hard to see"); the buttons grew with it to 52 x 44. */
+.ds-layout-picker__glyph {
+  position: relative;
+  display: block;
+  width: var(--ds-spacing-8);
+  aspect-ratio: 842 / 599;
+  border: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+  background-color: var(--ds-color-bg-surface);
+}
+
+.ds-layout-picker__glyph > i {
+  position: absolute;
+  background-color: var(--ds-color-accent-1);
+}
+
+.ds-layout-picker__glyph > i[data-part="text"] {
+  background-color: var(--ds-color-object-dark-passive);
+}
+
+/* auto: an empty sheet with a dashed edge, "let the page choose". */
+.ds-layout-picker__glyph[data-glyph="auto"] {
+  border-style: dashed;
+  border-color: var(--ds-color-accent-1);
+}
+
+/* full: the whole sheet. */
+.ds-layout-picker__glyph[data-glyph="full"] > i { inset: 0; }
+
+/* figure: centred, whole picture (141, 40, 560 x 480). */
+.ds-layout-picker__glyph[data-glyph="figure"] > i { left: 17%; top: 7%; width: 66%; height: 80%; }
+
+/* pair: two side by side with captions under them. */
+.ds-layout-picker__glyph[data-glyph="pair"] > i { top: 7%; width: 40%; height: 73%; }
+.ds-layout-picker__glyph[data-glyph="pair"] > i:nth-child(1) { left: 6%; }
+.ds-layout-picker__glyph[data-glyph="pair"] > i:nth-child(2) { left: 54%; }
+
+/* triple: three in a row. */
+.ds-layout-picker__glyph[data-glyph="triple"] > i { top: 15%; width: 25%; height: 57%; }
+.ds-layout-picker__glyph[data-glyph="triple"] > i:nth-child(1) { left: 5%; }
+.ds-layout-picker__glyph[data-glyph="triple"] > i:nth-child(2) { left: 37.5%; }
+.ds-layout-picker__glyph[data-glyph="triple"] > i:nth-child(3) { left: 70%; }
+
+/* grid and grid-side: 2 x 2 cells of 202 x 166 at left 400 / 610, top 185 / 359,
+   drawn a little smaller so the gaps between the cells stay visible at this size.
+   grid's cells are children 1-4; grid-side's are 2-5 (its text column is child 1). */
+.ds-layout-picker__glyph:is([data-glyph="grid"], [data-glyph="grid-side"]) > i[data-part="img"] { width: 21%; height: 25%; }
+.ds-layout-picker__glyph[data-glyph="grid"] > i:is(:nth-child(1), :nth-child(3)),
+.ds-layout-picker__glyph[data-glyph="grid-side"] > i:is(:nth-child(2), :nth-child(4)) { left: 47.5%; }
+.ds-layout-picker__glyph[data-glyph="grid"] > i:is(:nth-child(2), :nth-child(4)),
+.ds-layout-picker__glyph[data-glyph="grid-side"] > i:is(:nth-child(3), :nth-child(5)) { left: 72.5%; }
+.ds-layout-picker__glyph[data-glyph="grid"] > i:is(:nth-child(1), :nth-child(2)),
+.ds-layout-picker__glyph[data-glyph="grid-side"] > i:is(:nth-child(2), :nth-child(3)) { top: 31%; }
+.ds-layout-picker__glyph[data-glyph="grid"] > i:is(:nth-child(3), :nth-child(4)),
+.ds-layout-picker__glyph[data-glyph="grid-side"] > i:is(:nth-child(4), :nth-child(5)) { top: 60%; }
+
+/* The text column of the opening sheets (left 50, 320 wide). */
+.ds-layout-picker__glyph:is([data-glyph="grid-side"], [data-glyph="side"], [data-glyph="figure-side"]) > i[data-part="text"] {
+  left: 6%; top: 8%; width: 38%; height: 55%;
+}
+
+/* side: the picture at full height on the right. */
+.ds-layout-picker__glyph[data-glyph="side"] > i[data-part="img"] { left: 54%; top: 0; width: 46%; height: 100%; }
+
+/* figure-side: the picture right, running off the edge (392, 117, 450 x 364). */
+.ds-layout-picker__glyph[data-glyph="figure-side"] > i[data-part="img"] { left: 47%; top: 20%; width: 53%; height: 61%; }
+
+/* band: title on top, the picture across the full width below. */
+.ds-layout-picker__glyph[data-glyph="band"] > i[data-part="text"] { left: 6%; top: 8%; width: 40%; height: 8%; }
+.ds-layout-picker__glyph[data-glyph="band"] > i[data-part="img"] { left: 0; top: 24%; width: 100%; height: 76%; }
+
+/* The delete button (explicit request 2026-10-24): last, spacing-3 below the layouts so
+   it is not pressed by a slip, with the trash icon painted accent-1 like zoom-buttons'
+   icons; same box, border and hover as the layout buttons. */
+.ds-layout-picker__button.ds-layout-picker__remove {
+  margin-top: var(--ds-spacing-3);
+}
+
+.ds-layout-picker__icon {
+  width: var(--ds-spacing-7);
+  height: var(--ds-spacing-7);
+  background-color: var(--ds-color-accent-1);
+  -webkit-mask: url("../../icons/delete.svg") center / 100% 100% no-repeat;
+  mask: url("../../icons/delete.svg") center / 100% 100% no-repeat;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ds-layout-picker {
+    transition: opacity 0.12s ease;
+  }
+}

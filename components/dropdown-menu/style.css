@@ -61,6 +61,40 @@
   border-radius: var(--ds-radius-none);
 }
 
+/* Opening (explicit request 2026-10-24, "it should slide out softly, as dropdowns do"):
+   each time the menu is shown it fades in and slides down 4px into place in 150ms,
+   ease-out, so it comes out of its trigger instead of popping. The animation runs
+   whenever [hidden] comes off, because a display change restarts it.
+   Closing (explicit request 2026-10-24): the same way back, a little quicker (120ms,
+   ease-in), so the menu goes back into its trigger instead of vanishing. component.js
+   sets data-closing for it and puts [hidden] on only when it has run; the closing menu
+   takes no clicks. Neither runs under prefers-reduced-motion: the menu then shows and
+   hides at once. */
+@media (prefers-reduced-motion: no-preference) {
+  .ds-dropdown-menu:not([hidden]) {
+    animation: ds-dropdown-menu-open 150ms ease-out;
+  }
+
+  .ds-dropdown-menu[data-closing] {
+    animation: ds-dropdown-menu-close 120ms ease-in forwards;
+    pointer-events: none;
+  }
+}
+
+@keyframes ds-dropdown-menu-open {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--ds-spacing-2) * -1));
+  }
+}
+
+@keyframes ds-dropdown-menu-close {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--ds-spacing-2) * -1));
+  }
+}
+
 .ds-dropdown-menu[hidden] {
   display: none;
 }

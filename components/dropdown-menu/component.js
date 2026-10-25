@@ -94,16 +94,46 @@ function initDropdown(root) {
     (selected || enabled[0])?.focus();
   }
 
+  // Closing animates (style.css, data-closing): the menu stays shown until its
+  // closing animation ends, then gets [hidden]. Meanwhile it counts as closed. With
+  // reduced motion, or if the animation never runs, it is hidden at once / shortly.
+  let closing = null;
+  const isOpen = () => !menu.hidden && !closing;
+  const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function finishClosing() {
+    if (!closing) return;
+    clearTimeout(closing.timer);
+    menu.removeEventListener('animationend', closing.onEnd);
+    menu.removeAttribute('data-closing');
+    closing = null;
+  }
+
   function close() {
+    if (!isOpen()) return;
     const hadFocus = menu.contains(document.activeElement);
-    menu.hidden = true;
     trigger.setAttribute('aria-expanded', 'false');
     document.removeEventListener('click', onOutsideClick);
     document.removeEventListener('keydown', onKeydown);
     if (hadFocus) trigger.focus();
+    if (reducedMotion()) {
+      menu.hidden = true;
+      return;
+    }
+    const done = () => {
+      finishClosing();
+      menu.hidden = true;
+    };
+    closing = {
+      onEnd: (event) => { if (event.target === menu) done(); },
+      timer: setTimeout(done, 300),
+    };
+    menu.addEventListener('animationend', closing.onEnd);
+    menu.setAttribute('data-closing', '');
   }
 
   function open() {
+    finishClosing();   // reopened while closing: the opening animation starts over
     menu.hidden = false;
     trigger.setAttribute('aria-expanded', 'true');
     document.addEventListener('click', onOutsideClick);
@@ -141,7 +171,7 @@ function initDropdown(root) {
 
   // detail === 0: the click came from Enter / Space, not a pointer.
   trigger.addEventListener('click', (event) => {
-    if (menu.hidden) {
+    if (!isOpen()) {
       open();
       if (event.detail === 0) focusInitialItem();
     } else if (!hover) close();
@@ -156,7 +186,7 @@ function initDropdown(root) {
     let timer;
     root.addEventListener('mouseenter', () => {
       clearTimeout(timer);
-      if (menu.hidden) open();
+      if (!isOpen()) open();
     });
     root.addEventListener('mouseleave', () => {
       clearTimeout(timer);
@@ -167,7 +197,7 @@ function initDropdown(root) {
   }
 
   trigger.addEventListener('keydown', (event) => {
-    if (!menu.hidden || (event.key !== 'ArrowDown' && event.key !== 'ArrowUp')) return;
+    if (isOpen() || (event.key !== 'ArrowDown' && event.key !== 'ArrowUp')) return;
     event.preventDefault();
     open();
     focusInitialItem();

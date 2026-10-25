@@ -18,6 +18,13 @@
   does not keep grey shapes forever. Placeholders are aria-hidden and
   data-fade-skip (fade-in leaves them alone); the container gets aria-busy while
   they are there.
+
+  Pictures on their way: an <img class="ds-skeleton-image"> is grey and pulsing
+  (style.css) until this script marks it data-loaded: "loaded" when its pixels
+  arrive (it then fades in), "instant" when it was already loaded as it was put
+  in the page, "error" when it failed. One capturing load/error listener and the
+  insertion observer below cover pictures a host renders at any time. An <img>
+  with no src yet stays a placeholder.
 */
 (function () {
   if (window.dsSkeleton) return;
@@ -85,9 +92,47 @@
     });
   }
 
+  function settleImage(img, how) {
+    if (!img.hasAttribute('data-loaded')) img.setAttribute('data-loaded', how);
+  }
+
+  // A picture already loaded when it is put in the page (from the cache, a redrawn
+  // view) appears at once; one that already failed keeps the still grey.
+  function checkImage(img) {
+    if (!img.complete || !img.getAttribute('src')) return;
+    settleImage(img, img.naturalWidth > 0 ? 'instant' : 'error');
+  }
+
+  function imagesIn(node) {
+    if (node.nodeType !== 1) return [];
+    if (node.matches('img.ds-skeleton-image')) return [node];
+    return Array.prototype.slice.call(node.querySelectorAll('img.ds-skeleton-image'));
+  }
+
+  function checkAdded(records) {
+    records.forEach(function (record) {
+      Array.prototype.forEach.call(record.addedNodes, function (node) {
+        imagesIn(node).forEach(checkImage);
+      });
+    });
+  }
+
+  function onPicture(how) {
+    return function (event) {
+      var img = event.target;
+      if (img instanceof HTMLImageElement && img.classList.contains('ds-skeleton-image')) settleImage(img, how);
+    };
+  }
+  document.addEventListener('load', onPicture('loaded'), true);
+  document.addEventListener('error', onPicture('error'), true);
+
   function start() {
     scan();
-    new MutationObserver(clearFilled).observe(document.body, { childList: true, subtree: true });
+    imagesIn(document.body).forEach(checkImage);
+    new MutationObserver(function (records) {
+      clearFilled(records);
+      checkAdded(records);
+    }).observe(document.body, { childList: true, subtree: true });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);

@@ -16,20 +16,31 @@
                                           // state a number), flagged as
                                           // an invented default; 0 = never
                                           // auto-dismissed, only the close button
+      progress: 40,                      // optional: a running task's progress
+                                          // line, 0-100, or null while it cannot
+                                          // be told (the line moves); omitted: none
     });
 
-  Returns { dismiss } so a caller can remove it early if needed. Stack
-  container (.ds-toast-stack) is created once, lazily, on first use --
-  no page has to remember to add it. column-reverse in style.css (not
-  this file) is what orders the stack; plain appendChild always works.
-  Since 2026-10-12 the stack is top center and new toasts appear below
-  the older ones.
+  onClose (optional, explicit request 2026-10-25): the close button calls it
+  instead of dismissing, so a host can ask first (stop a running task?) and
+  dismiss through the returned dismiss() if the answer is yes.
 
-  Hover-pauses the auto-dismiss timer (not spec-required, a small,
+  Returns { dismiss, update }. update({ message, progress }) changes the text
+  and the progress line of a toast that is still shown (explicit request
+  2026-10-25: a long task such as an export stays in one toast that follows it,
+  with duration 0, until the host dismisses it). A toast with a progress line
+  has no time line: it goes when its task does. Stack
+  container (.ds-toast-stack) is created once, lazily, on first use --
+  no page has to remember to add it. Since 2026-10-25 the stack is bottom
+  right and new toasts appear below the older ones, next to the edge.
+
+  Hover and focus pause the auto-dismiss timer (not spec-required, a small,
   flagged-as-added convenience so a toast with actions doesn't disappear
-  out from under a reaching cursor) -- resumes with a fresh full duration
-  on mouseleave, not the remaining time, since tracking exact remaining
-  time across pause/resume is more bookkeeping than this warrants.
+  out from under a reaching cursor). Since 2026-10-25 the toast shows the
+  time left as a shrinking line (.ds-toast__timer), so the pause keeps the
+  remaining time and the line stops with it (data-paused); leaving resumes
+  both from there. Dismissing plays the fade-out (data-leaving, style.css)
+  and removes the toast when it ends.
 */
 
 (function () {
@@ -43,7 +54,7 @@
     return stack;
   }
 
-  function show({ message = '', status = 'default', actions = [], duration = 5000 } = {}) {
+  function show({ message = '', status = 'default', actions = [], duration = 5000, progress, onClose } = {}) {
     const stack = ensureStack();
 
     const toast = document.createElement('div');
@@ -90,36 +101,94 @@
       close.type = 'button';
       close.className = 'ds-toast__close';
       close.setAttribute('aria-label', 'Dismiss');
-      close.addEventListener('click', () => dismiss());
+      close.addEventListener('click', () => (onClose ? onClose() : dismiss()));
       toast.appendChild(close);
+    }
+
+    // duration 0 (or less): no auto-dismiss at all, only the close button
+    // (explicit request 2026-10-01: a fetch's per-source result stays until
+    // it is read and closed by hand). Such a toast has no time line either.
+    const sticky = !(duration > 0);
+    let bar = null;
+    function setProgress(value) {
+      if (value === undefined) return;
+      if (!bar) {
+        bar = document.createElement('span');
+        bar.className = 'ds-toast__progress';
+        bar.setAttribute('role', 'progressbar');
+        bar.setAttribute('aria-valuemin', '0');
+        bar.setAttribute('aria-valuemax', '100');
+        bar.setAttribute('aria-label', 'Progress');
+        toast.appendChild(bar);
+      }
+      const v = Number(value);
+      if (value === null || Number.isNaN(v)) {
+        bar.setAttribute('data-indeterminate', '');
+        bar.removeAttribute('aria-valuenow');
+      } else {
+        const clamped = Math.max(0, Math.min(100, v));
+        bar.removeAttribute('data-indeterminate');
+        bar.style.setProperty('--_toast-progress', `${clamped}%`);
+        bar.setAttribute('aria-valuenow', String(Math.round(clamped)));
+      }
+    }
+    setProgress(progress);
+    if (!sticky && progress === undefined) {
+      const line = document.createElement('span');
+      line.className = 'ds-toast__timer';
+      line.setAttribute('aria-hidden', 'true');
+      toast.style.setProperty('--_toast-duration', `${duration}ms`);
+      toast.appendChild(line);
     }
 
     stack.appendChild(toast);
 
-    // duration 0 (or less): no auto-dismiss at all, only the close button
-    // (explicit request 2026-10-01: a fetch's per-source result stays until
-    // it is read and closed by hand).
-    const sticky = !(duration > 0);
-    const arm = () => (sticky ? null : setTimeout(dismiss, duration));
-    let timer = arm();
+    let remaining = duration;
+    let started = 0;
+    let timer = null;
+    const run = () => {
+      if (sticky || toast.hasAttribute('data-leaving')) return;
+      started = Date.now();
+      timer = setTimeout(dismiss, remaining);
+      toast.removeAttribute('data-paused');
+    };
+    const pause = () => {
+      if (timer === null) return;
+      clearTimeout(timer);
+      timer = null;
+      remaining = Math.max(0, remaining - (Date.now() - started));
+      toast.setAttribute('data-paused', '');
+    };
     function dismiss() {
       clearTimeout(timer);
-      toast.remove();
+      timer = null;
+      if (toast.hasAttribute('data-leaving')) return;
+      const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (still) {
+        toast.remove();
+        return;
+      }
+      toast.setAttribute('data-leaving', '');
+      const gone = () => toast.remove();
+      toast.addEventListener('animationend', (event) => { if (event.target === toast) gone(); });
+      setTimeout(gone, 400);   // if the animation never runs
     }
-    toast.addEventListener('mouseenter', () => clearTimeout(timer));
-    toast.addEventListener('mouseleave', () => {
-      timer = arm();
-    });
+    run();
+    toast.addEventListener('mouseenter', pause);
+    toast.addEventListener('mouseleave', () => { if (!toast.matches(':focus-within')) run(); });
     // Keyboard/screen-reader users get the same pause via focus, not just
     // mouse hover -- a Tab-reachable action button inside the toast (see
     // above) keeps it alive while it holds focus, same reasoning as the
     // mouse case, added so this isn't a mouse-only mitigation.
-    toast.addEventListener('focusin', () => clearTimeout(timer));
-    toast.addEventListener('focusout', () => {
-      timer = arm();
-    });
+    toast.addEventListener('focusin', pause);
+    toast.addEventListener('focusout', () => { if (!toast.matches(':hover')) run(); });
 
-    return { dismiss };
+    function update({ message: text, progress: value } = {}) {
+      if (typeof text === 'string') messageEl.textContent = text;
+      setProgress(value);
+    }
+
+    return { dismiss, update };
   }
 
   window.dsToast = { show };

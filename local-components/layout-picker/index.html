@@ -1,0 +1,19 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../../components/tooltip/style.css">
+<link rel="stylesheet" href="style.css">
+<p style="font-family: var(--ds-font-body-text-family); color: var(--ds-color-text-active);">Hover the box: the layouts show at its right middle; the pressed one is the current layout.</p>
+<div id="host" style="position: relative; width: 421px; height: 300px; background: var(--ds-color-bg-surface-pressed);"></div>
+<script src="component.js"></script>
+<script src="../../components/tooltip/component.js"></script>
+<script>
+  document.getElementById('host').innerHTML = DsLayoutPicker.html([
+    { name: 'full', label: 'One picture, the whole page' },
+    { name: 'figure', label: 'One picture, centred' },
+    { name: 'pair', label: 'Two side by side' },
+    { name: 'triple', label: 'Three in a row' },
+    { name: 'grid', label: 'Four in a grid' },
+    { name: 'auto', label: 'Automatic' },
+  ], 'pair');
+</script>

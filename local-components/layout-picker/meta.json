@@ -1,0 +1,16 @@
+{
+  "name": "layout-picker",
+  "description": "A vertical column of square buttons, one per page layout, each a small drawing of that layout, at the right middle of a positioned parent while the parent is hovered or focused. The host builds it with DsLayoutPicker.html(options, current) and handles clicks on [data-layout-option].",
+  "status": "draft",
+  "category": "controls",
+  "listed": false,
+  "variants": ["full", "figure", "pair", "triple", "grid", "grid-side", "side", "figure-side", "band", "auto"],
+  "props": [
+    {"name": "options", "type": "string", "required": true, "description": "DsLayoutPicker.html()'s first argument: [{name, label}], one button per layout, in order; name picks the drawing (data-glyph), label is the button's accessible name and tooltip."},
+    {"name": "current", "type": "string", "required": false, "description": "The layout the page has now: that button is pressed (aria-pressed=\"true\", accent border)."}
+  ],
+  "source": "none",
+  "rationale": "Requested 2026-10-24 for the portfolio preview: hover a page and choose its layout (two pictures, three, a grid of four, text and picture). No design source exists, so source is none and every value is composed from tokens. The buttons take the look of zoom-buttons and the sidebar toggle (spacing-row by spacing-9, thin dark-passive border, surface fill, pressed surface on hover, accent focus ring) and are glued into one strip. Each shows the layout drawn on a little sheet of the page's 842 x 599 proportion, pictures as accent-1 boxes and a text column as a dark-passive box, placed in percent read off the layouts' real geometry, so the choice is recognisable without words; the label is the tooltip and the accessible name. The strip is opacity 0 and takes no clicks until its parent is hovered or holds focus, so it does not cover the page while it is read. The pressed layout gets an accent border. The opacity change is a short transition only without reduced motion. Staged in local-components until the maintainer confirms it goes into dis-system. Size (explicit request 2026-10-24, \"a bit bigger, the icons are hard to see\"): the little sheet is 32 wide (spacing-8, was 24) and each button 52 x 44 (spacing-8 + spacing-6 by spacing-row, was 44 x 40). Outside (explicit request 2026-10-24): inside an element with data-sheet-tools=\"outside\" (a host's zoomed-out preview) the menu hangs past its parent's right edge, spacing-6 away, with an invisible strip over that gap so the pointer crossing it keeps the parent hovered. Delete (explicit request 2026-10-24): html(options, current, { remove: label }) adds a last button with the trash icon (icons/delete.svg, drawn for it; Figma's set has none), spacing-3 below the layouts so it is not pressed by a slip; the host asks before it deletes. Tooltips (explicit request 2026-10-24): every button's tooltip opens at its left (tooltip's data-tooltip-placement=\"left\"), beside the column instead of over the buttons above it.",
+  "themes_supported": ["light", "dark"],
+  "a11y_notes": "Native buttons in a role=group labelled Page layout, each with aria-label and aria-pressed for the current layout. The strip shows on focus-within too, so it is reachable by keyboard. The drawings are aria-hidden."
+}

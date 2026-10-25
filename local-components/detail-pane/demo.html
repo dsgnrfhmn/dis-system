@@ -1,0 +1,26 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../tokens/output.css">
+<link rel="stylesheet" href="../../components/pane/style.css">
+<link rel="stylesheet" href="../../components/text-button/style.css">
+<link rel="stylesheet" href="style.css">
+<div class="ds-detail-split" id="demo-split" data-open="true" style="height: 360px;">
+  <div class="ds-detail-split__table"><p>The table.</p></div>
+  <div class="ds-detail-split__side" style="top: 0; height: 360px;">
+    <div class="ds-split__handle" role="separator" aria-orientation="vertical" tabindex="0" aria-label="Resize the details"></div>
+    <section class="ds-pane ds-detail" aria-label="Details" style="height: 360px;">
+      <div class="ds-pane__head">
+        <div class="ds-pane__heading">
+          <span class="ds-pane__title" data-emphasis="true">Residency programme</span>
+          <span class="ds-pane__caption">Open call</span>
+        </div>
+        <button type="button" class="ds-text-button" data-priority="secondary" data-status="active" data-underline="dotted" data-action="close">Close</button>
+      </div>
+      <div class="ds-pane__body"><div class="ds-pane__scroll"><div class="ds-detail__body">
+        <section class="ds-detail__block"><h3 class="ds-detail__label">Status</h3><p class="ds-detail__text">Analysed</p></section>
+        <section class="ds-detail__block"><h3 class="ds-detail__label">Summary</h3><p class="ds-detail__text">A short summary of the item, on as many lines as it needs.</p></section>
+      </div></div></div>
+    </section>
+  </div>
+</div>
+<script src="component.js"></script>

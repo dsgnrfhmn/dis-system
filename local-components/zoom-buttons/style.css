@@ -35,6 +35,29 @@
   margin-top: calc(var(--ds-border-width-thin) * -1);
 }
 
+/* Inline (data-inline, explicit request 2026-10-24): the two buttons side by side in
+   the flow of a toolbar instead of a column in the container's corner; "-" then "+",
+   reading left to right. */
+.ds-zoom-buttons[data-inline] {
+  position: static;
+  flex-direction: row;
+}
+
+.ds-zoom-buttons[data-inline] .ds-zoom-buttons__button + .ds-zoom-buttons__button {
+  margin-top: 0;
+  margin-left: calc(var(--ds-border-width-thin) * -1);
+}
+
+/* Bar (DsZoomButtons.bar, explicit request 2026-10-24): one preview zoom control for
+   every page that has one: "Fit width", then the inline group, in a row spacing-5
+   apart; it sits at the right of the preview's own head (the maintainer, 2026-10-24). */
+.ds-zoom-buttons-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--ds-spacing-5);
+}
+
 .ds-zoom-buttons__button:hover:not(:disabled) {
   background-color: var(--ds-color-bg-surface-pressed);
 }

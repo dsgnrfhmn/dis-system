@@ -4,7 +4,7 @@
   A caption with data-on="image" is white. When its picture loads, the part of
   the picture under the caption (the bottom right of the drawn box) is read
   through a small canvas; over a bright area the caption gets data-tone="light"
-  and turns black (style.css). This is what the artist's PDF does page by page.
+  and turns black (style.css). This is what the reference PDF does page by page.
   Load events do not bubble, so one capturing listener on the document covers
   sheets the host renders later. A picture the canvas may not read (another
   origin) leaves the caption white.

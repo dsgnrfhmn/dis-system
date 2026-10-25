@@ -80,6 +80,11 @@
     }
   },
   "text": {
+    "toast": {
+      "$value": "{base.1000}",
+      "$type": "color",
+      "$description": "Text, lines and actions on the default toast (toast, explicit request 2026-10-25): the opposite of bg.toast, white on the black light-theme toast and black on the white dark-theme one."
+    },
     "active": {
       "$value": "{neutral.50}",
       "$type": "color",
@@ -102,6 +107,11 @@
     }
   },
   "bg": {
+    "toast": {
+      "$value": "{base.0}",
+      "$type": "color",
+      "$description": "The default (neutral) toast's fill (toast, explicit request 2026-10-25): black on the light page, white on the dark one, so it always stands apart from the page instead of sinking into its greys. Paired with text.toast."
+    },
     "surface": {
       "$value": "{black.900}",
       "$type": "color",
@@ -189,23 +199,23 @@
   },
   "tooltip-bg": {
     "default": {
-      "$value": "{silver.900}",
+      "$value": "{base.100}",
       "$type": "color",
-      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) tooltip, node 103:4777: base/900 #2e2e2e fill (Figma base/900, not neutral/900); the same in both themes -- a tooltip is a dark layer over any page"
+      "$description": "Dark theme only (explicit request 2026-10-24, \"in the dark theme the tooltip should be the other way round, light with black text\"): base.100 #F3F2F0, the muted paper white the dark theme already uses for sheets. Light theme keeps Figma D_SYSTEM node 103:4777's dark fill (base/900 #2e2e2e)."
     }
   },
   "tooltip-border": {
     "default": {
-      "$value": "{base.1000}",
+      "$value": "{base.100}",
       "$type": "color",
-      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) tooltip, node 103:4777: base/1000 border; the same in both themes -- a tooltip is a dark layer over any page"
+      "$description": "Dark theme only (explicit request 2026-10-24, the light tooltip): the same as its fill, so the light box has no dark rim against the dark page. Light theme keeps Figma node 103:4777's base/1000 border."
     }
   },
   "tooltip-text": {
     "default": {
-      "$value": "{base.0}",
+      "$value": "{base.1000}",
       "$type": "color",
-      "$description": "Figma D_SYSTEM (DSYSTEMFILEKEY) tooltip, node 103:4777: base/0 text; the same in both themes -- a tooltip is a dark layer over any page"
+      "$description": "Dark theme only (explicit request 2026-10-24, the light tooltip): black text (base.1000) on the light fill. Light theme keeps Figma node 103:4777's base/0 text."
     }
   },
   "row-status": {
