@@ -1,0 +1,112 @@
+{
+  "base": {
+    "$description": "Raw base.* primitives some components read directly (--ds-color-base-*), snapped to the nearer of mono.black / mono.white by perceptual lightness (L* above 50 is white), so no grey leaks through them in Mono.",
+    "0": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "50": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "100": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "150": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "175": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "200": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "250": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "300": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "350": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "400": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "550": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "600": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "750": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "800": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "900": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "950": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "1000": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "warm-100": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "warm-200": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "shadow": {
+    "tief-1": {
+      "$value": "none",
+      "$type": "shadow",
+      "$description": "Mono draws no shadows (garv, 2026-10-27)."
+    },
+    "tief-2": {
+      "$value": "none",
+      "$type": "shadow",
+      "$description": "Mono draws no shadows (garv, 2026-10-27)."
+    }
+  }
+}

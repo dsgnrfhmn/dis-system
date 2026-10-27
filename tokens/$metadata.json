@@ -4,7 +4,10 @@
     "Base-Type",
     "Base-Shapes",
     "Color-Base-Light",
-    "Color-Base-Dark"
+    "Color-Base-Dark",
+    "Style-Mono",
+    "Color-Mono-Light",
+    "Color-Mono-Dark"
   ],
   "activeThemes": [],
   "activeSets": [

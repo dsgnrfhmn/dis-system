@@ -12,6 +12,21 @@ Source of truth, per tokens/$metadata.json's tokenSetOrder:
   Color-Base-Light.json - semantic color tokens for :root
   Color-Base-Dark.json  - semantic color tokens for [data-theme="dark"]
 
+Styles (see STYLES): a style other than Base overrides only the slots it
+changes, switched with data-style="<name>" on the same element as
+data-theme. For each style <S> there are three files:
+  Style-<S>.json        - mode-independent overrides: raw base.* palette
+                          primitives (--ds-color-base-*) and shadow composites
+                          (--ds-shadow-*), emitted under [data-style="<s>"]
+  Color-<S>-Light.json  - semantic color overrides for light, emitted under
+                          [data-style="<s>"]:not([data-theme="dark"])
+  Color-<S>-Dark.json   - semantic color overrides for dark, emitted under
+                          [data-style="<s>"][data-theme="dark"]
+Every override must name a slot Base already defines for that mode (fails
+loudly otherwise): a style recolors the system, it never adds slots. A slot a
+style leaves out keeps its Base value -- Mono relies on that to keep the
+colors that carry meaning (system.*, row-status.*, tag.*, ...).
+
 Naming: --ds-<category>-<dotted-path-with-hyphens>, camelCase token names
 converted to kebab-case, a trailing ".default" path segment dropped.
 
@@ -198,6 +213,57 @@ def split_light_only(light_resolved, dark_resolved):
     return shared, only
 
 
+# Styles layered over Base, in output order. Mono: black and white only
+# (garv, 2026-10-27); its source is this repo, not Figma -- see CLAUDE.md.
+STYLES = ("Mono",)
+
+
+def check_overrides(style, mode, override_resolved, base_resolved):
+    orphans = sorted(set(override_resolved) - set(base_resolved))
+    if orphans:
+        raise ValueError(
+            f"Color-{style}-{mode}.json overrides slots Base does not define "
+            f"for {mode.lower()}: {', '.join(orphans)}"
+        )
+
+
+def build_style_blocks(style, primitives_registry, light_resolved, dark_resolved):
+    """CSS blocks for one style layered over Base. Placed after every Base
+    block, so equal-specificity selectors win by source order."""
+    style_file = load(f"Style-{style}")
+    _, mono_light = resolve_color_set(load(f"Color-{style}-Light"), primitives_registry)
+    _, mono_dark = resolve_color_set(load(f"Color-{style}-Dark"), primitives_registry)
+    check_overrides(style, "Light", mono_light, light_resolved)
+    check_overrides(style, "Dark", mono_dark, dark_resolved)
+
+    sel = f'[data-style="{style.lower()}"]'
+    common = [f"  /* palette overrides (Style-{style}: base) */"]
+    for path, tok in flatten({"base": style_file.get("base", {})}).items():
+        common.append(f"  --ds-color-{css_var_name(path)}: {resolve_ref(tok['$value'], primitives_registry)};")
+    common.append("")
+    common.append(f"  /* shadow overrides (Style-{style}: shadow) */")
+    for name, tok in flatten(style_file.get("shadow", {})).items():
+        common.append(f"  --ds-shadow-{camel_to_kebab(name)}: {tok['$value']};")
+
+    out = []
+    out.append(f"/* {style} style: mode-independent overrides */")
+    out.append(f"{sel} {{")
+    out.extend(common)
+    out.append("}")
+    out.append("")
+    out.append(f'{sel}:not([data-theme="dark"]) {{')
+    out.append(f"  /* colors (Color-{style}-Light) */")
+    out.extend(build_color_vars(mono_light))
+    out.append("}")
+    out.append("")
+    out.append(f'{sel}[data-theme="dark"] {{')
+    out.append(f"  /* colors (Color-{style}-Dark) */")
+    out.extend(build_color_vars(mono_dark))
+    out.append("}")
+    out.append("")
+    return out
+
+
 def main():
     primitives = load("Base-Primitives")
     type_file = load("Base-Type")
@@ -260,6 +326,9 @@ def main():
     out.extend(build_color_vars(light_only))
     out.append("}")
     out.append("")
+
+    for style in STYLES:
+        out.extend(build_style_blocks(style, primitives_registry, light_resolved, dark_resolved))
 
     OUT_PATH.write_text("\n".join(out))
     print(f"Wrote {OUT_PATH} ({len(root_lines) + len(dark_lines) + len(light_only)} lines of declarations)")

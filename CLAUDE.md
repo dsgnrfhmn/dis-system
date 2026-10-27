@@ -30,8 +30,8 @@ important as visual output.
    (`Color-Base-Light.json`, `Color-Base-Dark.json`, the `typography.*`
    composites in `Base-Type.json`) reference them and are what components
    consume. No inline magic numbers, no ad-hoc hex codes. If a value is
-   missing, stop and flag it -- don't invent one locally. Only one style
-   is defined (Base).
+   missing, stop and flag it -- don't invent one locally. Two styles are
+   defined: Base, and Mono layered over it (see Theming).
 3. Read `components/TEMPLATE/` for file structure. Copy it, don't reinvent
    structure per component.
 4. Read `schemas/meta.schema.json` for the exact fields each `meta.json`
@@ -160,6 +160,31 @@ custom properties mapped from `Color-Base-Light.json` /
 value in `style.css`. A component that renders correctly in only one theme
 is not done.
 
+
+### Styles (Base, Mono)
+A style is a second axis next to Light/Dark, switched with
+`data-style="<name>"` on the same element as `data-theme` (no attribute =
+Base). `tokens/build.py` layers each style in `STYLES` over Base from three
+files: `Style-<S>.json` (mode-independent: raw `base.*` palette primitives and
+shadow composites), `Color-<S>-Light.json` and `Color-<S>-Dark.json`. A style
+file holds only the slots it changes; every slot it names must already exist
+in Base for that mode (the build fails otherwise), and a slot it leaves out
+keeps Base's value.
+- **Mono** (garv, 2026-10-27): black and white only (`mono.black` /
+  `mono.white`, aliases of `base.1000` / `base.0`), no greys, no shadows.
+  Colors that carry a defined meaning keep Base's value: `system.*`,
+  `row-status.*`, `tag.*`, `signal.*`, `bg.text-highlight`. `accent-*` is
+  black/white, so the article `der` (read from `accent-1`) loses its blue
+  while `die`/`das` (row-status colors) keep theirs.
+- **Mono's source is this repo, not Figma** -- a deliberate exception to "Don't
+  build ahead of the design source", decided by the maintainer. Its values
+  are edited in `tokens/Color-Mono-*.json` / `Style-Mono.json`.
+- Known Mono gaps (states that differed only by shade now look the same):
+  hover/pressed/disabled, `text.active`/`subactive`/`inactive`,
+  `border-subtle`/`border-strong`, `bg.surface`/`row-hover`/`row-selected`.
+  Grey still appears where a component sets `opacity` (e.g. an input's
+  placeholder) or a scrim (`bg.overlay` at 50%). Non-color cues for these are
+  per-component follow-ups.
 ## Interaction conventions
 Cross-component conventions live here, not only in the `meta.json` of the
 component that introduced them. Check this section before adding hover or

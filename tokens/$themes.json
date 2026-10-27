@@ -11,6 +11,20 @@
     }
   },
   {
+    "id": "style-mono",
+    "name": "Mono",
+    "group": "Style",
+    "description": "Black and white only, layered over Base: data-style=\"mono\" next to data-theme. Color-Mono-Light/Dark apply per mode; slots they leave out (system, row-status, tag, ...) keep Base's colors.",
+    "isSource": false,
+    "selectedTokenSets": {
+      "Base-Shapes": "enabled",
+      "Base-Primitives": "enabled",
+      "Style-Mono": "enabled",
+      "Color-Mono-Light": "enabled",
+      "Color-Mono-Dark": "enabled"
+    }
+  },
+  {
     "id": "mode-light",
     "name": "Light",
     "group": "Mode",

@@ -385,3 +385,142 @@
   --ds-color-bg-row-current: #F7F7F7;
   --ds-color-bg-row-visited: #F7F7F7;
 }
+
+/* Mono style: mode-independent overrides */
+[data-style="mono"] {
+  /* palette overrides (Style-Mono: base) */
+  --ds-color-base-0: #FFFFFF;
+  --ds-color-base-50: #FFFFFF;
+  --ds-color-base-100: #FFFFFF;
+  --ds-color-base-150: #FFFFFF;
+  --ds-color-base-175: #FFFFFF;
+  --ds-color-base-200: #FFFFFF;
+  --ds-color-base-250: #FFFFFF;
+  --ds-color-base-300: #FFFFFF;
+  --ds-color-base-350: #FFFFFF;
+  --ds-color-base-400: #FFFFFF;
+  --ds-color-base-550: #FFFFFF;
+  --ds-color-base-600: #FFFFFF;
+  --ds-color-base-750: #000000;
+  --ds-color-base-800: #000000;
+  --ds-color-base-900: #000000;
+  --ds-color-base-950: #000000;
+  --ds-color-base-1000: #000000;
+  --ds-color-base-warm-100: #FFFFFF;
+  --ds-color-base-warm-200: #FFFFFF;
+
+  /* shadow overrides (Style-Mono: shadow) */
+  --ds-shadow-tief-1: none;
+  --ds-shadow-tief-2: none;
+}
+
+[data-style="mono"]:not([data-theme="dark"]) {
+  /* colors (Color-Mono-Light) */
+  --ds-color-accent-1: #000000;
+  --ds-color-accent-1-hover: #000000;
+  --ds-color-accent-1-pressed: #000000;
+  --ds-color-accent-2: #000000;
+  --ds-color-accent-2-hover: #000000;
+  --ds-color-accent-2-pressed: #000000;
+  --ds-color-border-default: #000000;
+  --ds-color-border-disabled: #000000;
+  --ds-color-border-focus: #000000;
+  --ds-color-border-inverse: #000000;
+  --ds-color-border-muted: #000000;
+  --ds-color-border-nav: #000000;
+  --ds-color-border-strong: #000000;
+  --ds-color-border-subtle: #000000;
+  --ds-color-border-table: #000000;
+  --ds-color-header-cell-label: #000000;
+  --ds-color-icon-disabled: #000000;
+  --ds-color-icon-primary: #000000;
+  --ds-color-icon-secondary: #000000;
+  --ds-color-input-border-focus: #000000;
+  --ds-color-input-border-hover: #000000;
+  --ds-color-input-border: #000000;
+  --ds-color-input-icon: #000000;
+  --ds-color-object-dark-active: #000000;
+  --ds-color-object-dark-disabled: #000000;
+  --ds-color-object-dark-passive: #000000;
+  --ds-color-object-dark-pressed: #000000;
+  --ds-color-text-active: #000000;
+  --ds-color-text-inactive: #000000;
+  --ds-color-text-subactive: #000000;
+  --ds-color-text-inverced: #FFFFFF;
+  --ds-color-text-toast: #FFFFFF;
+  --ds-color-bg-toast: #000000;
+  --ds-color-bg-row-current: #FFFFFF;
+  --ds-color-bg-row-hover: #FFFFFF;
+  --ds-color-bg-row-selected: #FFFFFF;
+  --ds-color-bg-row-visited: #FFFFFF;
+  --ds-color-bg-sidebar: #FFFFFF;
+  --ds-color-bg-surface: #FFFFFF;
+  --ds-color-bg-surface-pressed: #FFFFFF;
+  --ds-color-bg-overlay: #000000;
+  --ds-color-tooltip-bg: #000000;
+  --ds-color-tooltip-border: #000000;
+  --ds-color-input-fill: #FFFFFF;
+  --ds-color-object-white-active: #FFFFFF;
+  --ds-color-object-white-disabled: #FFFFFF;
+  --ds-color-object-white-passive: #FFFFFF;
+  --ds-color-object-white-pressed: #FFFFFF;
+  --ds-color-reflect: #FFFFFF;
+  --ds-color-tooltip-text: #FFFFFF;
+  --ds-color-shadow-low: transparent;
+  --ds-color-shadow-middle: transparent;
+  --ds-color-shadow-high: transparent;
+}
+
+[data-style="mono"][data-theme="dark"] {
+  /* colors (Color-Mono-Dark) */
+  --ds-color-accent-1: #FFFFFF;
+  --ds-color-accent-1-hover: #FFFFFF;
+  --ds-color-accent-1-pressed: #FFFFFF;
+  --ds-color-accent-2: #FFFFFF;
+  --ds-color-accent-2-hover: #FFFFFF;
+  --ds-color-accent-2-pressed: #FFFFFF;
+  --ds-color-border-default: #FFFFFF;
+  --ds-color-border-disabled: #FFFFFF;
+  --ds-color-border-focus: #FFFFFF;
+  --ds-color-border-inverse: #FFFFFF;
+  --ds-color-border-muted: #FFFFFF;
+  --ds-color-border-strong: #FFFFFF;
+  --ds-color-border-subtle: #FFFFFF;
+  --ds-color-border-table: #FFFFFF;
+  --ds-color-header-cell-label: #FFFFFF;
+  --ds-color-icon-disabled: #FFFFFF;
+  --ds-color-icon-primary: #FFFFFF;
+  --ds-color-icon-secondary: #FFFFFF;
+  --ds-color-input-border-focus: #FFFFFF;
+  --ds-color-input-border-hover: #FFFFFF;
+  --ds-color-input-border: #FFFFFF;
+  --ds-color-input-icon: #FFFFFF;
+  --ds-color-object-dark-active: #FFFFFF;
+  --ds-color-object-dark-disabled: #FFFFFF;
+  --ds-color-object-dark-passive: #FFFFFF;
+  --ds-color-object-dark-pressed: #FFFFFF;
+  --ds-color-text-active: #FFFFFF;
+  --ds-color-text-inactive: #FFFFFF;
+  --ds-color-text-subactive: #FFFFFF;
+  --ds-color-text-inverced: #000000;
+  --ds-color-text-toast: #000000;
+  --ds-color-bg-toast: #FFFFFF;
+  --ds-color-bg-row-hover: #000000;
+  --ds-color-bg-row-selected: #000000;
+  --ds-color-bg-sidebar: #000000;
+  --ds-color-bg-surface: #000000;
+  --ds-color-bg-surface-pressed: #000000;
+  --ds-color-bg-overlay: #000000;
+  --ds-color-tooltip-bg: #FFFFFF;
+  --ds-color-tooltip-border: #FFFFFF;
+  --ds-color-input-fill: #000000;
+  --ds-color-object-white-active: #000000;
+  --ds-color-object-white-disabled: #000000;
+  --ds-color-object-white-passive: #000000;
+  --ds-color-object-white-pressed: #000000;
+  --ds-color-reflect: #000000;
+  --ds-color-tooltip-text: #000000;
+  --ds-color-shadow-low: transparent;
+  --ds-color-shadow-middle: transparent;
+  --ds-color-shadow-high: transparent;
+}

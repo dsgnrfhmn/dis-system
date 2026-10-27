@@ -86,6 +86,11 @@ def test_light_only_slots_are_split_out():
     assert shared == {"a": "#1"} and only == {"b": "#2"}
 
 
+def test_style_override_of_a_slot_base_lacks_fails():
+    with pytest.raises(ValueError, match="does not define"):
+        build.check_overrides("Mono", "Dark", {"bg.row-current": "#000000"}, {"bg.surface": "#1A1918"})
+
+
 # ---- the real repo -----------------------------------------------------------
 
 def test_output_css_is_up_to_date(tmp_path, monkeypatch):
@@ -136,3 +141,32 @@ def test_every_static_data_icon_name_exists():
             if name not in names:
                 missing.setdefault(str(f.relative_to(ROOT)), set()).add(name)
     assert not missing, f"data-icon names with no icons/<name>.svg: {missing}"
+
+
+# ---- Mono style --------------------------------------------------------------
+
+def _mono_blocks():
+    css = _strip_css_comments((ROOT / "tokens" / "output.css").read_text())
+    blocks = {}
+    for sel, body in re.findall(r"(\[data-style=\"mono\"\][^{]*)\{([^}]*)\}", css):
+        blocks[sel.strip()] = dict(re.findall(r"(--ds-[a-z0-9-]+):\s*([^;]+);", body))
+    return blocks
+
+
+def test_mono_has_a_block_per_mode():
+    assert set(_mono_blocks()) == {
+        '[data-style="mono"]',
+        '[data-style="mono"]:not([data-theme="dark"])',
+        '[data-style="mono"][data-theme="dark"]',
+    }
+
+
+def test_mono_paints_only_black_and_white():
+    """Mono is black and white, no greys (garv, 2026-10-27). Its overrides are
+    black, white, transparent (shadow colors) or none (shadows); every other
+    color in Mono is a Base slot it deliberately leaves alone."""
+    allowed = {"#000000", "#FFFFFF", "transparent", "none"}
+    for sel, decls in _mono_blocks().items():
+        bad = {k: v for k, v in decls.items() if v.strip() not in allowed}
+        assert not bad, f"{sel} sets non-mono values: {bad}"
+

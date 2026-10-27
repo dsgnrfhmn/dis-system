@@ -16,6 +16,9 @@
   *document's* URL, not the script file's, so reusing that file unmodified
   from a root-level page would 404.
 
+  A second toggle switches the style (Base / Mono) the same way through
+  data-style, dispatching ds-style-change.
+
   The center slot is empty: section navigation moved to index.html's
   sidebar (components/sidebar-list, see initSectionSidebar in site.js)
   when the category pages were merged into one long read, so the bar
@@ -87,4 +90,53 @@ function initNavBar() {
   });
 }
 
+// Style toggle (Base / Mono): data-style on <html>, independent of
+// data-theme -- tokens/output.css layers each style over both modes. The
+// label names the CURRENT style, like the theme toggle's.
+const STYLE_STORAGE_KEY = 'ds-style';
+const STYLES = ['base', 'mono'];
+
+function loadStoredStyle() {
+  try {
+    const stored = localStorage.getItem(STYLE_STORAGE_KEY);
+    return STYLES.includes(stored) ? stored : 'base';
+  } catch (err) {
+    return 'base'; // localStorage unavailable (private mode, etc.)
+  }
+}
+
+function storeStyle(style) {
+  try {
+    localStorage.setItem(STYLE_STORAGE_KEY, style);
+  } catch (err) {
+    // ignore -- style just won't persist this session
+  }
+}
+
+// Base is the absence of the attribute, so a host page without one is Base.
+function applyStyle(style) {
+  if (style === 'base') delete document.documentElement.dataset.style;
+  else document.documentElement.dataset.style = style;
+}
+
+function initStyleToggle() {
+  const styleToggle = document.querySelector('.ds-nav-bar__style-toggle');
+  const styleLabel = document.querySelector('.ds-nav-bar__style-label');
+  if (!styleToggle || !styleLabel) return;
+  const label = (style) => `${style[0].toUpperCase()}${style.slice(1)} style`;
+
+  let style = loadStoredStyle();
+  applyStyle(style);
+  styleLabel.textContent = label(style);
+
+  styleToggle.addEventListener('click', () => {
+    style = STYLES[(STYLES.indexOf(style) + 1) % STYLES.length];
+    applyStyle(style);
+    styleLabel.textContent = label(style);
+    storeStyle(style);
+    document.dispatchEvent(new CustomEvent('ds-style-change', { detail: { style } }));
+  });
+}
+
 initNavBar();
+initStyleToggle();

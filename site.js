@@ -8,8 +8,8 @@
   Theme state itself (storage, the nav-bar toggle) lives in nav.js, shared
   by every root page's nav-bar; this file has no theme opinion of its own,
   it only syncs embedded component iframes to whatever nav.js announces via
-  the ds-theme-change event, plus applies the page's current theme to any
-  iframe as it loads.
+  the ds-theme-change event (and data-style via ds-style-change), plus
+  applies the page's current theme and style to any iframe as it loads.
 */
 
 // Colors card, after the Figma D_SYSTEM web-view (node 103:4608): three
@@ -268,11 +268,19 @@ function initComponentGrid() {
   if (!iframes.length) return;
 
   const currentTheme = () => document.documentElement.dataset.theme || 'light';
+  // data-style mirrors the page's: absent (Base) here means absent there.
+  const syncStyle = (iframe) => {
+    const style = document.documentElement.dataset.style;
+    const target = iframe.contentDocument.documentElement;
+    if (style) target.dataset.style = style;
+    else delete target.dataset.style;
+  };
 
   iframes.forEach((iframe) => {
     iframe.addEventListener('load', () => {
       try {
         iframe.contentDocument.documentElement.dataset.theme = currentTheme();
+        syncStyle(iframe);
         // Re-measure whenever a .ds-dropdown-menu's or .ds-popup-overlay's
         // `hidden` attribute flips (opening/closing it) -- that's the
         // actual event that changes the required iframe size, so watch it
@@ -309,6 +317,16 @@ function initComponentGrid() {
   document.addEventListener('ds-showcase-toggle', (e) => {
     if (!e.detail.open) return;
     e.target.querySelectorAll('.component-card iframe').forEach(resizeIframe);
+  });
+
+  document.addEventListener('ds-style-change', () => {
+    iframes.forEach((iframe) => {
+      try {
+        if (iframe.contentDocument) syncStyle(iframe);
+      } catch (err) {
+        // cross-origin or not yet loaded -- onload handler above covers it
+      }
+    });
   });
 
   document.addEventListener('ds-theme-change', (e) => {

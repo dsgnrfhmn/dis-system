@@ -799,5 +799,18 @@
       "$type": "color",
       "$description": "Figma variable system/error-strong. Distinct from signal.error-strong (#AD0000, already used by text-button's data-status=\"error\") for the same reason as approved above."
     }
+  },
+  "mono": {
+    "$description": "The Mono style's whole palette (garv, 2026-10-27): black and white only, no greys. Aliases of the existing base extremes, no new values.",
+    "black": {
+      "$value": "{base.1000}",
+      "$type": "color",
+      "$description": ""
+    },
+    "white": {
+      "$value": "{base.0}",
+      "$type": "color",
+      "$description": ""
+    }
   }
 }

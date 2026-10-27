@@ -1,0 +1,308 @@
+{
+  "accent-1": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "hover": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "pressed": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "accent-2": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "hover": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "pressed": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-default": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-disabled": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-focus": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-inverse": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-muted": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-strong": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-subtle": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "border-table": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "header-cell-label": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "icon-disabled": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "icon-primary": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "icon-secondary": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "input-border-focus": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "input-border-hover": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "input-border": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "input-icon": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "object-dark": {
+    "active": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "disabled": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "passive": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "pressed": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "text": {
+    "active": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "inactive": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "subactive": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "inverced": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "toast": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "bg": {
+    "toast": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    },
+    "row-hover": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "row-selected": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "sidebar": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "surface": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "surface-pressed": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "overlay": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "tooltip-bg": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "tooltip-border": {
+    "default": {
+      "$value": "{mono.white}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "input-fill": {
+    "default": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "object-white": {
+    "active": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "disabled": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "passive": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    },
+    "pressed": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "reflect": {
+    "default": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "tooltip-text": {
+    "default": {
+      "$value": "{mono.black}",
+      "$type": "color",
+      "$description": ""
+    }
+  },
+  "shadow": {
+    "low": {
+      "$value": "transparent",
+      "$type": "color",
+      "$description": ""
+    },
+    "middle": {
+      "$value": "transparent",
+      "$type": "color",
+      "$description": ""
+    },
+    "high": {
+      "$value": "transparent",
+      "$type": "color",
+      "$description": ""
+    }
+  }
+}
