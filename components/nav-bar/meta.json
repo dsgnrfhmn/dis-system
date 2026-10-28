@@ -26,6 +26,24 @@
       "required": false,
       "default": [],
       "description": "Extra actions before the theme toggle: {label, href} is a link; {label, form_action, hidden} is a POST form around a submit button (hidden: name -> value, e.g. a CSRF token)."
+    },
+    {
+      "name": "brand",
+      "type": "string",
+      "required": false,
+      "description": "Draft (2026-10-28): the product name on the left in the display face; the workspace dropdown then moves to the right slot, before right_actions."
+    },
+    {
+      "name": "brand_href",
+      "type": "string",
+      "required": false,
+      "description": "Draft: the brand is a link (usually home)."
+    },
+    {
+      "name": "brand_html",
+      "type": "string",
+      "required": false,
+      "description": "Draft: a logo instead of the brand text, set with {% set brand_html %}...{% endset %} (markup-safe), e.g. an inline SVG in currentColor; brand stays its accessible name."
     }
   ],
   "source": "penpot:7cfc6f3b-95fe-808f-8008-8d3a693d14e4",

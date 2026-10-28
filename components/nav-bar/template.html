@@ -6,7 +6,15 @@
 ]) %}
 <nav class="ds-nav-bar" aria-label="Primary">
   <div class="ds-nav-bar__left">
+    {# brand (2026-10-28, draft): the product name on the left, in the display face; the workspace dropdown then
+       moves to the right slot, before the actions. #}
+    {% if brand %}
+    {# brand_html: a logo instead of the text (a {% set %} block, markup-safe, e.g. an inline SVG drawn in
+       currentColor); brand stays its accessible name. #}
+    {% if brand_href %}<a class="ds-nav-bar__brand" href="{{ brand_href | safe_url }}"{% if brand_html %} aria-label="{{ brand }}"{% endif %}>{{ brand_html or brand }}</a>{% else %}<span class="ds-nav-bar__brand"{% if brand_html %} role="img" aria-label="{{ brand }}"{% endif %}>{{ brand_html or brand }}</span>{% endif %}
+    {% else %}
     {% with size='small', value=workspace_label | default('Workspace') %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+    {% endif %}
   </div>
 
   <div class="ds-nav-bar__center">
@@ -29,6 +37,10 @@
        {label, href} is a link; {label, form_action, hidden} is a POST form
        around a submit button, hidden a mapping of hidden field name -> value
        (a CSRF token). #}
+    {# With a brand, workspace_label '' (or none) leaves the dropdown out. #}
+    {% if brand and (workspace_label is not defined or workspace_label) %}
+    {% with size='small', value=workspace_label | default('Workspace') %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+    {% endif %}
     {% for action in right_actions | default([]) %}
     {% if action.form_action %}
     <form method="post" action="{{ action.form_action | safe_url }}">

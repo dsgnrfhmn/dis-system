@@ -5,6 +5,6 @@
 ]) %}
 <div class="ds-radio-group" role="radiogroup" aria-label="{{ label | default('Description amount') }}">
   {% for option in _options %}
-  <button type="button" class="ds-text-button ds-radio" role="radio" aria-checked="{{ 'true' if option.checked else 'false' }}" tabindex="{{ '0' if option.checked else '-1' }}" data-value="{{ option.value }}" data-priority="secondary" data-status="active" data-underline="dotted"><span class="ds-radio__icon" aria-hidden="true"></span><span class="ds-text-button__text">{{ option.label }}</span></button>
+  <button type="button" class="ds-text-button ds-radio" role="radio" aria-checked="{{ 'true' if option.checked else 'false' }}" tabindex="{{ '0' if option.checked else '-1' }}" data-value="{{ option.value }}" data-priority="secondary" data-status="{{ 'disabled' if option.disabled else 'active' }}" data-underline="dotted"{% if option.disabled %} disabled aria-disabled="true"{% endif %}><span class="ds-radio__icon" aria-hidden="true"></span><span class="ds-text-button__text">{{ option.label }}</span></button>
   {% endfor %}
 </div>

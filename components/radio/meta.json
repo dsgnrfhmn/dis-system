@@ -9,7 +9,7 @@
       "name": "options",
       "type": "array",
       "required": false,
-      "description": "Each option: { value, label, checked }."
+      "description": "Each option: { value, label, checked, disabled }. A disabled option renders as a disabled text-button (data-status=\"disabled\", disabled, aria-disabled) and is skipped by the arrow keys."
     },
     {
       "name": "label",

@@ -138,6 +138,24 @@
   width: 160px;
 }
 
+/* brand (draft, 2026-10-28): the product name in the display face (bold italic), at the heading-3 size so it fits
+   the bar's height; no underline, it is the way home. */
+.ds-nav-bar__brand {
+  font-family: var(--ds-font-display-title-strong-family);
+  font-style: var(--ds-font-display-title-strong-style);
+  font-weight: var(--ds-font-display-title-strong-weight);
+  font-size: var(--ds-font-heading-3-size);
+  line-height: var(--ds-font-heading-3-line-height);
+  color: var(--ds-color-text-active);
+  text-decoration: none;
+}
+/* A logo (brand_html) is drawn in currentColor, one line of the heading-3 size high. */
+.ds-nav-bar__brand { display: inline-flex; align-items: center; }
+.ds-nav-bar__brand svg { height: var(--ds-font-heading-3-size); width: auto; }
+.ds-nav-bar__right .ds-input-dropdown {
+  width: 160px;
+}
+
 /* ---- center: page links. Penpot's own layout is columnGap:0 here too
    -- not an omission, adjacent .ds-text-button instances already carry
    their own spacing.3 padding on all sides (see text-button/style.css),

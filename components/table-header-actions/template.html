@@ -1,7 +1,8 @@
-{# Each action may carry submit: true (a form submit button) and extra_attrs (raw attributes). #}
+{# Each action may carry submit: true (a form submit button), extra_attrs (raw attributes) and outlined: true (the
+   outlined text-button, draft 2026-10-28). #}
 {% set _actions = actions | default([{'label': 'Add item', 'priority': 'primary'}]) %}
 <div class="ds-table-header-actions">
   {% for action in _actions %}
-  {% with priority=action.priority, status=action.status | default('active'), underline='dotted', label=action.label, extra_attrs=action.extra_attrs | default(none), submit=action.submit | default(false) %}{% include "components/text-button/template.html" %}{% endwith %}
+  {% with priority=action.priority, status=action.status | default('active'), underline='dotted', label=action.label, extra_attrs=action.extra_attrs | default(none), submit=action.submit | default(false), outlined=action.outlined | default(false) %}{% include "components/text-button/template.html" %}{% endwith %}
   {% endfor %}
 </div>

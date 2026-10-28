@@ -3,10 +3,11 @@
 
   Roving tabindex and arrow keys inside a .ds-radio-group: only the checked
   option is in the tab order, arrows move the choice, and a click checks an
-  option. Dispatches ds-radio-change (bubbles, detail: { value }).
+  option. A disabled option is skipped by the arrows and cannot be checked.
+  Dispatches ds-radio-change (bubbles, detail: { value }).
 */
 document.querySelectorAll('.ds-radio-group').forEach((group) => {
-  const options = () => Array.from(group.querySelectorAll('[role="radio"]'));
+  const options = () => Array.from(group.querySelectorAll('[role="radio"]:not([disabled])'));
   const check = (target) => {
     options().forEach((option) => {
       const on = option === target;
@@ -17,7 +18,7 @@ document.querySelectorAll('.ds-radio-group').forEach((group) => {
   };
   group.addEventListener('click', (event) => {
     const option = event.target.closest('[role="radio"]');
-    if (option) check(option);
+    if (option && !option.disabled) check(option);
   });
   group.addEventListener('keydown', (event) => {
     const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];

@@ -39,6 +39,12 @@
       "type": "array",
       "required": false,
       "description": "Optional list of strings, each rendered as its own paragraph in the body; replaces `content`."
+    },
+    {
+      "name": "body_html",
+      "type": "string",
+      "required": false,
+      "description": "Block body set with {% set body_html %}...{% endset %} before the include (markup-safe; its own {{ }} autoescape), e.g. a list of messages. Replaces items and content. A plain string is escaped like content."
     }
   ],
   "source": "none",
