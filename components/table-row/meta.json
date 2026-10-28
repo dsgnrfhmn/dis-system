@@ -46,7 +46,7 @@
       "type": "array",
       "required": false,
       "default": null,
-      "description": "Cell dicts passed to table-cell. Keys passed through: type, content, icons, secondary_label, input_value, href, single_icon, single_icon_label, priority, checkbox_role, options, dropdown_label, view_label, tag_type, tag_subtype, article, plain, mark, mark_label, highlight, submit, extra_attrs, secondary_extra_attrs, tertiary_label, tertiary_extra_attrs."
+      "description": "Cell dicts passed to table-cell. Keys passed through: type, content, icons, secondary_label, input_value, href, single_icon, single_icon_label, priority, checkbox_role, options, dropdown_label, view_label, tag_type, tag_subtype, article, plain, mark, mark_label, highlight, wrap, submit, extra_attrs, secondary_extra_attrs, tertiary_label, tertiary_extra_attrs."
     },
     {
       "name": "action-row",

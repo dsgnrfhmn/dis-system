@@ -997,3 +997,20 @@
 .ds-table-cell[data-type="1-action"] .ds-text-button {
   white-space: nowrap;
 }
+
+/* wrap (2026-10-27, a feedback table's comment column): a text cell that shows its whole text, wrapped over as many
+   lines as it needs, instead of one clipped line. The cell drops the fixed row height (the row-height floor
+   stays a min-height) and so do its siblings in the same row, so the row grows with the text and every cell
+   keeps the shared hairline at the bottom. */
+.ds-table-cell[data-wrap],
+.ds-table-row:has(> .ds-table-cell[data-wrap]) > .ds-table-cell {
+  height: auto;
+  min-height: calc(var(--ds-spacing-row) + var(--ds-border-width-thin));
+}
+.ds-table-cell[data-wrap] > .ds-table-cell__text {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+  line-height: var(--ds-font-body-text-line-height);
+}

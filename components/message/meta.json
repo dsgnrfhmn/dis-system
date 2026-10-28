@@ -1,11 +1,12 @@
 {
   "name": "message",
-  "description": "One turn of a task and answer exchange: a filled prompt panel or an outlined, right-aligned answer, with an optional label and optional inline corrections.",
+  "description": "One turn of a task and answer exchange: a filled prompt panel or an outlined, right-aligned answer, with an optional label, an optional note line and optional inline corrections.",
   "status": "draft",
   "category": "cards-layouts",
   "variants": [
     "prompt",
-    "answer"
+    "answer",
+    "task"
   ],
   "props": [
     {
@@ -13,7 +14,7 @@
       "type": "string",
       "required": true,
       "default": "prompt",
-      "description": "prompt (filled bg-surface-pressed panel) or answer (outlined, right-aligned). Other values fall back to prompt."
+      "description": "prompt (filled bg-surface-pressed panel), answer (outlined, right-aligned) or task (inverted: text-active fill, bg-surface text, the text in title type (body size, bold)). Other values fall back to prompt."
     },
     {
       "name": "label",
@@ -32,11 +33,30 @@
       "name": "segments",
       "type": "array",
       "required": false,
-      "description": "Optional list of {text, kind?, tooltip?} replacing `text`. A segment with kind remove or add renders as an inline-mark (with its tooltip); others are plain text."
+      "description": "Optional list of {text, kind?, tooltip?, href?, current?} replacing `text`. A segment with kind remove or add renders as an inline-mark (with its tooltip); others are plain text."
+    },
+    {
+      "name": "note",
+      "type": "string",
+      "required": false,
+      "description": "Optional plain text under the text, in text-subactive (e.g. the instruction that goes with a question)."
+    },
+    {
+      "name": "note_tooltip",
+      "type": "string",
+      "required": false,
+      "description": "Optional tooltip text (newlines start new lines) shown by a \"(more)\" trigger at the end of the note: dotted underline, focusable. The note's own text stays plain."
+    },
+    {
+      "name": "note_more",
+      "type": "string",
+      "required": false,
+      "default": "more",
+      "description": "Label of the note's tooltip trigger (in brackets after the note)."
     }
   ],
   "source": "none",
-  "rationale": "A task and the learner's reply are two voices, so they differ by shape, not only by color: the prompt is a filled panel (bg-surface-pressed), the answer is outlined with the hairline token and aligned to the right. Padding is spacing-5 for both; the text uses the body type, the label the data role in uppercase and text-subactive, so the label reads as a caption. Segments let the same box show a corrected sentence by composing inline-mark; the plain-text path covers every other case. Arrangement of messages in a column (gaps, a pinned input) is the host's layout, not part of this component. No Figma node: taken from the application's design canvas of 2026-10-21.",
+  "rationale": "A task and the learner's reply are two voices, so they differ by shape, not only by color: the prompt is a filled panel (bg-surface-pressed), the answer is outlined with the hairline token and aligned to the right. Padding is spacing-5 for both; the text uses the body type, the label the data role in uppercase and text-subactive, so the label reads as a caption. Segments let the same box show a corrected sentence by composing inline-mark; the plain-text path covers every other case. Arrangement of messages in a column (gaps, a pinned input) is the host's layout, not part of this component. No Figma node: taken from the application's design canvas of 2026-10-21. The optional note is a second line under the text in the body type and text-subactive: a question and the instruction that goes with it are one turn, and the color alone ranks them without a new type style. The task variant opens a turn: inversion and the title type (the body size, bold) make the question the first thing read, ahead of the answer and the feedback under it, without a new color.",
   "themes_supported": [
     "light",
     "dark"

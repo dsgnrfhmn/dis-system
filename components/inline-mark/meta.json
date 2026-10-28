@@ -28,6 +28,19 @@
       "type": "string",
       "required": false,
       "description": "Optional explanation; set as data-tooltip, so the tooltip component shows it on hover and focus. Makes the mark focusable (tabindex 0)."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "Optional link target: the mark renders as <a> (keeps its kind's look, pointer, thin outline on hover), e.g. to the explanation of this correction."
+    },
+    {
+      "name": "current",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "The mark whose explanation is open: outlined in its own color (data-current, aria-current on a link)."
     }
   ],
   "source": "none",

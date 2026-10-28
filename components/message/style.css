@@ -43,3 +43,40 @@
   font-weight: var(--ds-font-body-text-weight);
   line-height: var(--ds-font-body-text-line-height);
 }
+
+/* The note: a second line under the text in the same body type and the
+   caption color, so it reads as subordinate without a new type style. */
+.ds-message__note {
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  color: var(--ds-color-text-subactive);
+}
+
+/* The note's "(more)" trigger: the dotted underline is the system's "something here, stays on this view" cue
+   (CLAUDE.md, Interaction conventions), drawn like text-button's dotted line. Only the trigger carries the tooltip,
+   so the note's own words stay plain text. */
+.ds-message__more {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: var(--ds-border-width-default);
+  cursor: help;
+}
+/* task: the turn's opening question, set apart from everything after it by inversion (the page's text color as
+   the fill, the surface color as the text: black on white in Light, white on black in Dark) and the text in the
+   title type (the body size, bold). Label and note keep their roles in the inverted color. */
+.ds-message[data-variant="task"] {
+  background-color: var(--ds-color-text-active);
+  color: var(--ds-color-bg-surface);
+}
+.ds-message[data-variant="task"] .ds-message__label,
+.ds-message[data-variant="task"] .ds-message__note {
+  color: var(--ds-color-bg-surface);
+}
+.ds-message[data-variant="task"] .ds-message__text {
+  font-family: var(--ds-font-title-family);
+  font-size: var(--ds-font-title-size);
+  font-weight: var(--ds-font-title-weight);
+  line-height: var(--ds-font-title-line-height);
+}

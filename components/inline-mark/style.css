@@ -44,3 +44,24 @@
   outline: var(--ds-border-width-default) solid var(--ds-color-accent-1);
   outline-offset: var(--ds-border-width-default);
 }
+
+/* A mark that links (href, 2026-10-28): the correction opens its explanation. It keeps its kind's look (an
+   anchor's own color and underline are reset to the kind's), shows the pointer, and on hover takes the outline
+   of the open mark in a thin line, so the click target is visible before the click. */
+a.ds-inline-mark {
+  cursor: pointer;
+}
+a.ds-inline-mark[data-kind="add"] {
+  color: var(--ds-color-signal-success-strong);
+}
+a.ds-inline-mark[data-kind="remove"] {
+  color: var(--ds-color-system-error-strong);
+}
+a.ds-inline-mark:hover {
+  outline: var(--ds-border-width-thin) solid currentColor;
+}
+
+/* current: the mark whose explanation is open beside the text, outlined in its own color. */
+.ds-inline-mark[data-current="true"] {
+  outline: var(--ds-border-width-default) solid currentColor;
+}

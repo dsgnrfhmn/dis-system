@@ -95,3 +95,9 @@
   min-height: 160px;
   resize: vertical;
 }
+
+/* A textarea with an explicit `rows` (2026-10-28): that many lines decide its height, not the 160px floor, e.g. a
+   two-line answer field pinned under a chat. It can still be dragged taller. */
+.ds-input[data-type="textarea"][data-rows] {
+  min-height: 0;
+}

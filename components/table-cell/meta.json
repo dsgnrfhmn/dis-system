@@ -146,6 +146,13 @@
       "required": false,
       "default": null,
       "description": "'success' fills the cell with row-status-approved-bg and its text with row-status-approved-text (the answer in a rule table)."
+    },
+    {
+      "name": "wrap",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Text-bearing types: show the whole text wrapped over as many lines as it needs instead of one clipped line; the cell and its row siblings drop the fixed row height (the row-height floor stays as a min-height). Sets data-wrap."
     }
   ],
   "source": "penpot:28cec651-3f14-8022-8008-8c9a0bca088c",

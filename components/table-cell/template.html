@@ -8,7 +8,7 @@
 #}
 {% set _type = type | default('text-active-cell') %}
 {% set _icon_labels = icon_labels | default({'save': 'Saved', 'drag': 'Reorder', 'checkbox': 'Select row'}) %}
-<div class="ds-table-cell"{% if _type %} data-type="{{ _type }}"{% endif %}{% if checkbox_role %} data-checkbox-role="{{ checkbox_role }}"{% endif %}{% if editable %} data-editable{% endif %}{% if highlight == 'success' %} data-highlight="success"{% endif %}>
+<div class="ds-table-cell"{% if _type %} data-type="{{ _type }}"{% endif %}{% if checkbox_role %} data-checkbox-role="{{ checkbox_role }}"{% endif %}{% if editable %} data-editable{% endif %}{% if highlight == 'success' %} data-highlight="success"{% endif %}{% if wrap %} data-wrap{% endif %}>
 {% if _type == 'checkbox-cell' %}
   {% if single_icon %}
   <span class="ds-table-cell__icon" data-icon="{{ single_icon }}" aria-hidden="true" role="img" aria-label="{{ single_icon_label | default(_icon_labels.get(single_icon, single_icon | capitalize), true) }}"></span>

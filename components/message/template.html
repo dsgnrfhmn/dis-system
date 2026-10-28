@@ -1,21 +1,27 @@
 {#
   message: one turn in a task / answer exchange.
-  variant: prompt (filled, left; the task) | answer (outlined, right-aligned)
+  variant: prompt (filled, left; the task) | answer (outlined, right-aligned) |
+  task (inverted fill, the text in the title type: a question that opens a turn)
   label: optional small uppercase caption above the text (e.g. "Task").
-  text: plain text. segments: optional list of {text, kind?, tooltip?}; when
+  text: plain text. segments: optional list of {text, kind?, tooltip?, href?, current?}; when
   given it replaces `text`, and a segment with kind remove | add renders as
   an inline-mark.
+  note: optional plain text under the text, in the caption color (e.g. the
+  instruction that goes with a question). note_tooltip: optional; a "(more)"
+  trigger at the end of the note shows it as a tooltip (tooltip component); the
+  note's own text stays plain. note_more: that trigger's label (default "more").
 #}
-{% set _variant = variant if variant in ['prompt', 'answer'] else 'prompt' %}
+{% set _variant = variant if variant in ['prompt', 'answer', 'task'] else 'prompt' %}
 <div class="ds-message" data-variant="{{ _variant }}">
   {% if label %}<div class="ds-message__label">{{ label }}</div>{% endif %}
   <div class="ds-message__text">
   {%- if segments -%}
     {%- for seg in segments -%}
       {%- if seg.kind in ['remove', 'add'] -%}
-        {%- with kind=seg.kind, text=seg.text, tooltip=seg.tooltip -%}{%- include "components/inline-mark/template.html" -%}{%- endwith -%}
+        {%- with kind=seg.kind, text=seg.text, tooltip=seg.tooltip, href=seg.href, current=seg.current -%}{%- include "components/inline-mark/template.html" -%}{%- endwith -%}
       {%- else -%}{{ seg.text }}{%- endif -%}
     {%- endfor -%}
   {%- else -%}{{ text | default('Message', true) }}{%- endif -%}
   </div>
+  {% if note %}<div class="ds-message__note">{{ note }}{% if note_tooltip %} (<span class="ds-message__more" data-tooltip="{{ note_tooltip }}" tabindex="0">{{ note_more | default('more', true) }}</span>){% endif %}</div>{% endif %}
 </div>

@@ -40,7 +40,7 @@
       "type": "number",
       "required": false,
       "default": 8,
-      "description": "Only meaningful when type=\"textarea\". Sets the native rows attribute."
+      "description": "Only meaningful when type=\"textarea\". Sets the native rows attribute. When given, it sets data-rows and the lines decide the height (no 160px minimum)."
     },
     {
       "name": "name",
