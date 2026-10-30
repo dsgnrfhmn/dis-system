@@ -234,6 +234,21 @@ sibling already solved.
   people, no real Figma file keys (use the `*FILEKEY` placeholders), no names of
   consuming applications. Commit authorship uses your GitHub noreply address.
 
+### Exception: `dsgnrfhmn/uiux-dev` (long-lived)
+The maintainer develops an alternative UX/UI here (the Mono style, new
+components and props). It is the one branch that is not "one piece of work":
+- It is not merged into `main` until the maintainer calls the redesign finished,
+  so consumers on `main` see none of it. A consumer that pins a commit of this
+  branch does so on purpose; the rest stay on `main`.
+- Consumers pin commits on it, so its history is never rewritten: no
+  force-push, no rebase, no deletion. `main` is merged into it (not the other
+  way round) to keep it close; it is not squashed.
+- When it goes into `main`, it is a pull request with a merge commit, not a
+  squash (a squash would orphan the pinned commits). The usual checks apply:
+  `python -m pytest tests` passes and the "Hard rules" hold. Consumers move to
+  `main` after that merge, not before.
+- The other rules above still hold, including "nothing private".
+
 ## If something is ambiguous
 Stop and ask rather than guessing a default. Note the ambiguity in the
 commit or PR description so it is visible, not silently resolved.
