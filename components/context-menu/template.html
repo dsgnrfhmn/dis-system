@@ -8,6 +8,9 @@
   {% for item in _items %}
   {% if item.divider %}
   {% include "components/divider/template.html" %}
+  {# note (draft, 2026-10-30): a row of plain text, not an action (e.g. the translation of the selected text). id: so a host can set its text. #}
+  {% elif item.note is defined %}
+  <div class="ds-context-menu__note" role="note"{% if item.id %} id="{{ item.id }}"{% endif %}>{{ item.note }}</div>
   {% else %}
   <button type="button" class="ds-dropdown-menu__item" role="menuitem" data-value="{{ item.value }}"{% if item.disabled %} disabled{% endif %}>{{ item.label }}</button>
   {% endif %}

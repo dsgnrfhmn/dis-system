@@ -80,3 +80,91 @@
   font-weight: var(--ds-font-title-weight);
   line-height: var(--ds-font-title-line-height);
 }
+
+/*
+  tail (draft, explicit request 2026-10-29): a chat-message triangle at the bottom corner, pointing outward
+  (start: bottom left, end: bottom right), spacing-4 square, in the message's own fill. The box keeps that much
+  room on the tail's side, so the triangle never leaves its container. The outlined answer draws it twice: the
+  outline color first, then the fill over it, inset by the hairline, which also opens the box's border where the
+  tail joins it. Square corners like everything in this style; no new color or shape token.
+*/
+.ds-message[data-tail] {
+  position: relative;
+}
+
+.ds-message[data-tail="end"] {
+  margin-inline-end: var(--ds-spacing-4);
+}
+
+.ds-message[data-tail="start"] {
+  margin-inline-start: var(--ds-spacing-4);
+}
+
+.ds-message[data-tail]::after,
+.ds-message[data-tail][data-variant="answer"]::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: var(--ds-spacing-4);
+  height: var(--ds-spacing-4);
+  background-color: inherit;
+}
+
+.ds-message[data-tail="end"]::after,
+.ds-message[data-tail="end"][data-variant="answer"]::before {
+  left: 100%;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.ds-message[data-tail="start"]::after,
+.ds-message[data-tail="start"][data-variant="answer"]::before {
+  right: 100%;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+/* The outlined answer: the outline triangle, one hairline larger and reaching over the box's bottom border. */
+.ds-message[data-tail][data-variant="answer"]::before {
+  bottom: calc(-1 * var(--ds-border-width-thin));
+  width: calc(var(--ds-spacing-4) + var(--ds-border-width-thin) * 2);
+  height: calc(var(--ds-spacing-4) + var(--ds-border-width-thin) * 2);
+  background-color: var(--ds-color-object-dark-passive);
+}
+
+/* note_tone="success" (draft, explicit request 2026-10-29): the note is the right version of the text above it (the
+   corrected sentence under the marked answer), in the success green, so it reads with the green insertions. */
+.ds-message__note[data-tone="success"] {
+  /* The themed success text (tag's): signal-success-strong is the same in both themes and drops to about 2.3:1 on
+     the dark pressed surface; this one is 5.9:1 there and the same green as the insertions in Light (3.9:1 on the
+     light pressed surface, as the insertions). */
+  color: var(--ds-color-tag-success-text);
+  /* Set apart from the text above (the attempt) by a hairline, like the system's other dividers (2026-10-29). */
+  margin-top: var(--ds-spacing-2);
+  padding-top: var(--ds-spacing-3);
+  border-top: var(--ds-border-width-thin) solid var(--ds-color-object-dark-passive);
+}
+
+/*
+  inverted (draft, explicit request 2026-10-29): the task's inverted fill for a prompt or an answer (body type kept),
+  so the learner's replies are as dark as the task. No border to see (it takes the fill's color, so the box keeps its
+  size), the tail in the fill. Inside, inline-mark keeps its own colors (the added run brings its light fill; the
+  removed run's error red is 5.4:1 on black, 3.6:1 on the Dark theme's light fill), and a success note uses the
+  untinted success green, readable on both fills (4.8:1 on black, 3.9:1 on the light one), instead of the themed one.
+*/
+.ds-message[data-inverted="true"] {
+  background-color: var(--ds-color-text-active);
+  color: var(--ds-color-bg-surface);
+  border-color: var(--ds-color-text-active);
+}
+
+.ds-message[data-inverted="true"] .ds-message__label,
+.ds-message[data-inverted="true"] .ds-message__note {
+  color: var(--ds-color-bg-surface);
+}
+
+.ds-message[data-inverted="true"][data-tail][data-variant="answer"]::before {
+  background-color: var(--ds-color-text-active);
+}
+
+.ds-message[data-inverted="true"] .ds-message__note[data-tone="success"] {
+  color: var(--ds-color-signal-success-strong);
+}

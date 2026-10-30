@@ -51,6 +51,20 @@
       "required": false,
       "default": false,
       "description": "Adds a close icon (an X, 24px) at the right edge of the title row. It carries data-popup-dismiss, so it closes the popup like any dismiss button."
+    },
+    {
+      "name": "body_html",
+      "type": "string (markup)",
+      "required": false,
+      "default": null,
+      "description": "Draft (2026-10-30): block markup for the body, set with a {% set body_html %} block before the include (as pane's body_html); replaces the type's body, so a popup can hold a form (a photo upload). data-type stays on .ds-popup__body."
+    },
+    {
+      "name": "bottom_actions[].href / .form",
+      "type": "string",
+      "required": false,
+      "default": null,
+      "description": "Draft (2026-10-30): href makes the action a link; form (a form id) makes it a submit button of that form. Both leave out data-popup-dismiss, so the browser navigates or submits instead of the popup closing."
     }
   ],
   "source": "penpot:28cec651-3f14-8022-8008-8c9a0be0c665",

@@ -28,3 +28,23 @@
 [data-context-open="true"] {
   background-color: var(--ds-color-bg-row-hover);
 }
+
+/* A note row (draft, 2026-10-30): static text in the panel, e.g. the translation of the text the menu belongs to. It
+   wraps and keeps its line breaks, and a panel that has one is at most 400px wide (spacing.9 x 10), so a long
+   translation does not make a panel as wide as the window. Same padding and type as an item; no hover, no focus. */
+.ds-context-menu:has(.ds-context-menu__note) {
+  max-width: calc(var(--ds-spacing-9) * 10);
+}
+
+.ds-context-menu__note {
+  box-sizing: border-box;
+  padding: calc(var(--ds-spacing-3) + var(--ds-spacing-1));
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  font-family: var(--ds-font-body-text-family);
+  font-size: var(--ds-font-body-text-size);
+  font-weight: var(--ds-font-body-text-weight);
+  line-height: var(--ds-font-body-text-line-height);
+  letter-spacing: var(--ds-font-body-text-letter-spacing);
+  color: var(--ds-color-text-active);
+}

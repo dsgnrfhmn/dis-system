@@ -39,7 +39,16 @@
        (a CSRF token). #}
     {# With a brand, workspace_label '' (or none) leaves the dropdown out. #}
     {% if brand and (workspace_label is not defined or workspace_label) %}
+    {% if workspace_items %}
+    {# workspace_items (draft, 2026-10-29): a real switcher: the trigger opens a dropdown-menu of {value, label}
+       and the menu's ds-dropdown-select tells the host which was picked. Without it the trigger stays unwired. #}
+    <div class="ds-dropdown ds-nav-bar__switcher" role="group" aria-label="{{ workspace_name | default('Workspace') }}">
+      {% with size='small', value=workspace_label, trigger=true %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+      {% with items=workspace_items %}{% include "components/dropdown-menu/template.html" %}{% endwith %}
+    </div>
+    {% else %}
     {% with size='small', value=workspace_label | default('Workspace') %}{% include "components/input-dropdown/template.html" %}{% endwith %}
+    {% endif %}
     {% endif %}
     {% for action in right_actions | default([]) %}
     {% if action.form_action %}

@@ -29,7 +29,7 @@
       "name": "items",
       "type": "array",
       "required": false,
-      "description": "Set rows: { name, saved, active, href?, save? } -- href/save pass through to sidebar-item type=\"set\" (see its meta.json): href makes the row a link, save=false drops its save button."
+      "description": "Set rows: { name, saved, active, href?, save? } -- href/save pass through to sidebar-item type=\"set\" (see its meta.json): href makes the row a link, save=false drops its save button. Draft (2026-10-29): an item may also carry caption (sidebar-item's second grey line) and muted (not reachable yet)."
     }
   ],
   "source": "figma:APPFILEKEY#150:16217,150:16475,150:16503",

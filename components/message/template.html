@@ -10,9 +10,14 @@
   instruction that goes with a question). note_tooltip: optional; a "(more)"
   trigger at the end of the note shows it as a tooltip (tooltip component); the
   note's own text stays plain. note_more: that trigger's label (default "more").
+tail (draft, 2026-10-29): start | end -- a small triangle at the bottom corner on that side, pointing outward,
+  so the box reads as a chat message. note_tone (draft, 2026-10-29): success -- the note in the success color (the
+  corrected sentence under the learner's marked answer).
+inverted (draft, 2026-10-29): the inverted fill of the task variant (text-active as the fill, the surface color as
+  the text) for a prompt or an answer, keeping their body type -- e.g. the learner's answers as dark as the task.
 #}
 {% set _variant = variant if variant in ['prompt', 'answer', 'task'] else 'prompt' %}
-<div class="ds-message" data-variant="{{ _variant }}">
+<div class="ds-message" data-variant="{{ _variant }}"{% if inverted %} data-inverted="true"{% endif %}{% if tail in ['start', 'end'] %} data-tail="{{ tail }}"{% endif %}>
   {% if label %}<div class="ds-message__label">{{ label }}</div>{% endif %}
   <div class="ds-message__text">
   {%- if segments -%}
@@ -23,5 +28,5 @@
     {%- endfor -%}
   {%- else -%}{{ text | default('Message', true) }}{%- endif -%}
   </div>
-  {% if note %}<div class="ds-message__note">{{ note }}{% if note_tooltip %} (<span class="ds-message__more" data-tooltip="{{ note_tooltip }}" tabindex="0">{{ note_more | default('more', true) }}</span>){% endif %}</div>{% endif %}
+  {% if note %}<div class="ds-message__note"{% if note_tone == 'success' %} data-tone="success"{% endif %}>{{ note }}{% if note_tooltip %} (<span class="ds-message__more" data-tooltip="{{ note_tooltip }}" tabindex="0">{{ note_more | default('more', true) }}</span>){% endif %}</div>{% endif %}
 </div>

@@ -266,6 +266,12 @@
         "type": "array",
         "required": false,
         "description": "Optional list of strings, each rendered as its own paragraph in the body; replaces `content`."
+      },
+      {
+        "name": "body_html",
+        "type": "string",
+        "required": false,
+        "description": "Block body set with {% set body_html %}...{% endset %} before the include (markup-safe; its own {{ }} autoescape), e.g. a list of messages. Replaces items and content. A plain string is escaped like content."
       }
     ],
     "source": "none",
@@ -1094,10 +1100,29 @@
         "required": false,
         "default": "more",
         "description": "Label of the note's tooltip trigger (in brackets after the note)."
+      },
+      {
+        "name": "tail",
+        "type": "string",
+        "required": false,
+        "description": "Draft (2026-10-29). start | end: a small triangle at the bottom corner on that side, in the message's fill (outlined for the answer variant), so the box reads as a chat message. The box keeps spacing-4 of room on that side."
+      },
+      {
+        "name": "note_tone",
+        "type": "string",
+        "required": false,
+        "description": "Draft (2026-10-29). success: the note in the success color (inline-mark's add color), set apart from the text above by a hairline divider, for the corrected version of that text."
+      },
+      {
+        "name": "inverted",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Draft (2026-10-29). The task's inverted fill (text-active fill, surface-colored text) for a prompt or an answer, keeping the body type; a success note switches to the untinted success green, readable on both themes' inverted fill."
       }
     ],
     "source": "none",
-    "rationale": "A task and the learner's reply are two voices, so they differ by shape, not only by color: the prompt is a filled panel (bg-surface-pressed), the answer is outlined with the hairline token and aligned to the right. Padding is spacing-5 for both; the text uses the body type, the label the data role in uppercase and text-subactive, so the label reads as a caption. Segments let the same box show a corrected sentence by composing inline-mark; the plain-text path covers every other case. Arrangement of messages in a column (gaps, a pinned input) is the host's layout, not part of this component. No Figma node: taken from the application's design canvas of 2026-10-21. The optional note is a second line under the text in the body type and text-subactive: a question and the instruction that goes with it are one turn, and the color alone ranks them without a new type style. The task variant opens a turn: inversion and the title type (the body size, bold) make the question the first thing read, ahead of the answer and the feedback under it, without a new color.",
+    "rationale": "A task and the learner's reply are two voices, so they differ by shape, not only by color: the prompt is a filled panel (bg-surface-pressed), the answer is outlined with the hairline token and aligned to the right. Padding is spacing-5 for both; the text uses the body type, the label the data role in uppercase and text-subactive, so the label reads as a caption. Segments let the same box show a corrected sentence by composing inline-mark; the plain-text path covers every other case. Arrangement of messages in a column (gaps, a pinned input) is the host's layout, not part of this component. No Figma node: taken from the application's design canvas of 2026-10-21. The optional note is a second line under the text in the body type and text-subactive: a question and the instruction that goes with it are one turn, and the color alone ranks them without a new type style. The task variant opens a turn: inversion and the title type (the body size, bold) make the question the first thing read, ahead of the answer and the feedback under it, without a new color. 2026-10-29 (draft, explicit request): tail adds the chat-message triangle at a bottom corner (start for the other voice, end for the user's), drawn with clip-path in the message's own fill; the outlined answer draws the outline triangle under the fill one so its border continues into the tail.",
     "themes_supported": [
       "light",
       "dark"
@@ -1130,21 +1155,53 @@
         "description": "Value of the left dropdown."
       },
       {
+        "name": "workspace_items",
+        "type": "array",
+        "required": false,
+        "description": "Draft (2026-10-29). With a brand: list of {value, label} for the right-hand switcher. The trigger (showing workspace_label) then opens a dropdown-menu of these; picking one dispatches the menu's ds-dropdown-select for the host to act on. Unset: the trigger stays unwired, as before."
+      },
+      {
+        "name": "workspace_name",
+        "type": "string",
+        "required": false,
+        "default": "Workspace",
+        "description": "Draft (2026-10-29). Accessible name of the switcher group (e.g. \"Language\")."
+      },
+      {
         "name": "right_actions",
         "type": "array",
         "required": false,
         "default": [],
         "description": "Extra actions before the theme toggle: {label, href} is a link; {label, form_action, hidden} is a POST form around a submit button (hidden: name -> value, e.g. a CSRF token)."
+      },
+      {
+        "name": "brand",
+        "type": "string",
+        "required": false,
+        "description": "Draft (2026-10-28): the product name on the left in the display face; the workspace dropdown then moves to the right slot, before right_actions."
+      },
+      {
+        "name": "brand_href",
+        "type": "string",
+        "required": false,
+        "description": "Draft: the brand is a link (usually home)."
+      },
+      {
+        "name": "brand_html",
+        "type": "string",
+        "required": false,
+        "description": "Draft: a logo instead of the brand text, set with {% set brand_html %}...{% endset %} (markup-safe), e.g. an inline SVG in currentColor; brand stays its accessible name."
       }
     ],
     "source": "penpot:7cfc6f3b-95fe-808f-8008-8d3a693d14e4",
-    "rationale": "Layout from Penpot's Nav-bar instance: a flex row, centered, justify-content: space-between; both side slots are flex rows too, so buttons of different heights line up. Box values follow the Figma nav instance: 10px (spacing-cell) padding on all four sides and a 0.5px bottom hairline in object-dark-passive -- raw 0.5px because Figma draws it and --ds-border-width-thin (1px) stays correct for tables. Penpot's column gap of 101px is not reproduced: it is an artifact of a fixed 1240px demo board, and with space-between any explicit gap would be right at exactly one width. Sticky, not fixed: the bar is always the page's first full-width element, so both look the same once scrolled, but sticky keeps it in document flow and content below needs no hand-maintained offset. bg.surface and the hairline keep it legible over content scrolling beneath it.\n\nLeft: a composed input-dropdown at 160px (the width table-cell's dropdown cell uses for the same Penpot source). Center: text-buttons with no gap (Penpot's gap is 0; the buttons' own padding separates them). Which link is primary (current page) is markup the host supplies; Penpot's \"Property 1\" axis only changes which link carries it, so it isn't a style variant. Right: the theme toggle is a real text-button (secondary, active, dotted -- toggling stays on the page) with an icon and a visible label (\"Dark\" / \"Light\"); both name the target theme, the same convention the site's own toggle uses. The label is not sourced from Penpot, whose theme icon is a bare glyph. The theme icons draw a 16-unit circle in a 24-unit viewBox, so a spacing-7 (24px) box reproduces Penpot's 16px glyph. .ds-nav-bar__theme-* classes are kept only as stable selectors for the toggle script and carry no CSS.\n\nNotification dot: .ds-nav-bar__dot inside a nav link is a 12px accent-2 circle at the link's right edge, toggled with hidden -- an unread-updates marker. It is the only round shape in the system; Figma draws it round. Keeping it in sync across pages is the host's concern. Not sourced from the design: the link click-swap and the theme toggle's behavior, without which the current link would never change and the toggle wouldn't toggle. Rendering verified in light and dark themes. Additions 2026-10-23: right_actions for actions such as signing out (a POST form whose box is display: contents so it does not change the row); the bar wraps its groups onto more rows on a narrow window instead of widening the page, and has z-index 3 (pane's sticky head's value) so positioned content scrolling under the sticky bar does not paint over it. 2026-10-23: the left and right groups take equal shares of the remaining width (flex 1 1 0, never below their content), so the center links sit at the bar's true middle, aligned with a page's centered content, instead of midway between two groups of different widths.",
+    "rationale": "Layout from Penpot's Nav-bar instance: a flex row, centered, justify-content: space-between; both side slots are flex rows too, so buttons of different heights line up. Box values follow the Figma nav instance: 10px (spacing-cell) padding on all four sides and a 0.5px bottom hairline in object-dark-passive -- raw 0.5px because Figma draws it and --ds-border-width-thin (1px) stays correct for tables. Penpot's column gap of 101px is not reproduced: it is an artifact of a fixed 1240px demo board, and with space-between any explicit gap would be right at exactly one width. Sticky, not fixed: the bar is always the page's first full-width element, so both look the same once scrolled, but sticky keeps it in document flow and content below needs no hand-maintained offset. bg.surface and the hairline keep it legible over content scrolling beneath it.\n\nLeft: a composed input-dropdown at 160px (the width table-cell's dropdown cell uses for the same Penpot source). Center: text-buttons with no gap (Penpot's gap is 0; the buttons' own padding separates them). Which link is primary (current page) is markup the host supplies; Penpot's \"Property 1\" axis only changes which link carries it, so it isn't a style variant. Right: the theme toggle is a real text-button (secondary, active, dotted -- toggling stays on the page) with an icon and a visible label (\"Dark\" / \"Light\"); both name the target theme, the same convention the site's own toggle uses. The label is not sourced from Penpot, whose theme icon is a bare glyph. The theme icons draw a 16-unit circle in a 24-unit viewBox, so a spacing-7 (24px) box reproduces Penpot's 16px glyph. .ds-nav-bar__theme-* classes are kept only as stable selectors for the toggle script and carry no CSS.\n\nNotification dot: .ds-nav-bar__dot inside a nav link is a 12px accent-2 circle at the link's right edge, toggled with hidden -- an unread-updates marker. It is the only round shape in the system; Figma draws it round. Keeping it in sync across pages is the host's concern. Not sourced from the design: the link click-swap and the theme toggle's behavior, without which the current link would never change and the toggle wouldn't toggle. Rendering verified in light and dark themes. Additions 2026-10-23: right_actions for actions such as signing out (a POST form whose box is display: contents so it does not change the row); the bar wraps its groups onto more rows on a narrow window instead of widening the page, and has z-index 3 (pane's sticky head's value) so positioned content scrolling under the sticky bar does not paint over it. 2026-10-23: the left and right groups take equal shares of the remaining width (flex 1 1 0, never below their content), so the center links sit at the bar's true middle, aligned with a page's centered content, instead of midway between two groups of different widths. 2026-10-29 (draft, explicit request): workspace_items wires the right-hand switcher to a real dropdown-menu (e.g. an interface-language switch); the trigger keeps input-dropdown's small size and shows the current choice, the menu and its keyboard handling are dropdown-menu's own.",
     "themes_supported": [
       "light",
       "dark"
     ],
     "a11y_notes": "A real <nav aria-label=\"Primary\"> landmark (not in Penpot; a design tool has no landmarks). Center links are <button> elements with aria-current=\"page\" on the current one, updated on click by component.js; in a real site they should be <a href>. The theme toggle's accessible name is its visible label (\"Dark\" / \"Light\"), with the icon aria-hidden and no separate aria-label, so visible and accessible names can't diverge (WCAG 2.5.3); both update on every click to name what activating it does. The workspace switcher is input-dropdown as-is; see its notes.",
     "uses": [
+      "dropdown-menu",
       "input-dropdown",
       "text-button"
     ]
@@ -1273,6 +1330,19 @@
         "description": "Render the rename field (.ds-page-head__title-input) in place of the title. Same type tokens, no padding or border, so the bar does not change size."
       },
       {
+        "name": "title_href",
+        "type": "string",
+        "required": false,
+        "description": "Draft (2026-10-29). Render the title as a link to this URL instead of an h1, for a row of page-heads that switch between sections. Same type and color; dotted underline on hover and keyboard focus. Ignored while editing."
+      },
+      {
+        "name": "current",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Draft (2026-10-29). With title_href: this section is on show (aria-current=\"page\"); its title keeps the plain look on hover."
+      },
+      {
         "name": "actions_left",
         "type": "array",
         "required": false,
@@ -1292,7 +1362,7 @@
       }
     ],
     "source": "figma:APPFILEKEY#150:16217,150:16233,150:16362",
-    "rationale": "Height is spacing.9 + spacing.6 (60px), side padding spacing.6 (20px), bg.surface with one hairline (object-dark.passive) under it. The title is the heading-3 role (Inter 24px; one step above the heading-4 the Figma frames use, 2026-10-18, explicit request: the set name read too small) with line-height normal, so the bar's height, not the type scale, sets the rhythm. The gap between title and main action is spacing.cell (10px); the right group has no gap because text buttons hug their labels (see text-button). Both groups are flex rows with min-width 0, so a long title ellipsizes instead of pushing the actions out. Rendering verified in light and dark themes. Rename in place (2026-10-11): the title is the heading-4 role; the rename field reuses the same four type tokens with zero padding, border and fill, so swapping title for field changes nothing about the box: no jump, no reflow of the actions. It is marked by an accent line drawn as an inset shadow (not a border, which would add height) and sized to its text with field-sizing: content, capped at the bar. The editable title carries the system's dotted-underline clickable affordance on hover and focus only, so a read-only title looks as before. Not from Figma (the Figma bar draws no editing state); built from existing tokens only. 2026-10-23: min-height instead of height and flex-wrap, so on a narrow window the groups wrap onto a second row instead of widening the page; at full width it is still 60px.",
+    "rationale": "Height is spacing.9 + spacing.6 (60px), side padding spacing.6 (20px), bg.surface with one hairline (object-dark.passive) under it. The title is the heading-3 role (Inter 24px; one step above the heading-4 the Figma frames use, 2026-10-18, explicit request: the set name read too small) with line-height normal, so the bar's height, not the type scale, sets the rhythm. The gap between title and main action is spacing.cell (10px); the right group has no gap because text buttons hug their labels (see text-button). Both groups are flex rows with min-width 0, so a long title ellipsizes instead of pushing the actions out. Rendering verified in light and dark themes. Rename in place (2026-10-11): the title is the heading-4 role; the rename field reuses the same four type tokens with zero padding, border and fill, so swapping title for field changes nothing about the box: no jump, no reflow of the actions. It is marked by an accent line drawn as an inset shadow (not a border, which would add height) and sized to its text with field-sizing: content, capped at the bar. The editable title carries the system's dotted-underline clickable affordance on hover and focus only, so a read-only title looks as before. Not from Figma (the Figma bar draws no editing state); built from existing tokens only. 2026-10-23: min-height instead of height and flex-wrap, so on a narrow window the groups wrap onto a second row instead of widening the page; at full width it is still 60px. 2026-10-29 (draft, explicit request): title_href makes the title a link so that several page-heads side by side act as section switches, matching a design where the section names sit in equal 60px bars under the nav bar; the link keeps the title's type and color and uses the dotted-underline clickable convention on hover and focus only.",
     "themes_supported": [
       "light",
       "dark"
@@ -1300,7 +1370,7 @@
     "uses": [
       "text-button"
     ],
-    "a11y_notes": "The title is an h1. The buttons are real text-buttons; keyboard focus uses their own ring. An editable title is focusable (tabindex 0) and the host opens the field on Enter or F2 as well as click; the field has aria-label 'Set name'. Escape cancels and Enter or leaving the field commits, both owned by the host."
+    "a11y_notes": "The title is an h1. The buttons are real text-buttons; keyboard focus uses their own ring. An editable title is focusable (tabindex 0) and the host opens the field on Enter or F2 as well as click; the field has aria-label 'Set name'. Escape cancels and Enter or leaving the field commits, both owned by the host. With title_href the title is a link (not a heading) and the section on show carries aria-current=\"page\"; the host then provides the page's own h1 elsewhere."
   },
   {
     "name": "pane",
@@ -1599,7 +1669,7 @@
         "name": "options",
         "type": "array",
         "required": false,
-        "description": "Each option: { value, label, checked }."
+        "description": "Each option: { value, label, checked, disabled }. A disabled option renders as a disabled text-button (data-status=\"disabled\", disabled, aria-disabled) and is skipped by the arrow keys."
       },
       {
         "name": "label",
@@ -1726,7 +1796,7 @@
         "name": "items",
         "type": "array",
         "required": false,
-        "description": "Set rows: { name, saved, active, href?, save? } -- href/save pass through to sidebar-item type=\"set\" (see its meta.json): href makes the row a link, save=false drops its save button."
+        "description": "Set rows: { name, saved, active, href?, save? } -- href/save pass through to sidebar-item type=\"set\" (see its meta.json): href makes the row a link, save=false drops its save button. Draft (2026-10-29): an item may also carry caption (sidebar-item's second grey line) and muted (not reachable yet)."
       }
     ],
     "source": "figma:APPFILEKEY#150:16217,150:16475,150:16503",

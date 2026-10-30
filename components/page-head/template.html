@@ -2,6 +2,8 @@
   <div class="ds-page-head__left">
     {% if editing %}
     <input class="ds-page-head__title-input" type="text" value="{{ title | default('Set name') }}" aria-label="Set name" autocomplete="off">
+    {% elif title_href %}
+    <a class="ds-page-head__title" href="{{ title_href | safe_url }}"{% if current %} aria-current="page"{% endif %}>{{ title | default('Set name') }}</a>
     {% else %}
     <h1 class="ds-page-head__title"{% if editable %} data-editable tabindex="0"{% endif %}>{{ title | default('Set name') }}</h1>
     {% endif %}

@@ -5,6 +5,11 @@
   "error" is the red destructive action ("Archive selected"). confirm marks the
   action Ctrl+Enter / Cmd+Enter presses (component.js falls back to a
   priority="primary" button when none is marked).
+  Drafts (2026-10-30, for a popup that holds a form, e.g. a photo upload): body_html replaces
+  the type's body with block markup ({% set body_html %}...{% endset %} before the include, as
+  pane does). An action with href is a link (no data-popup-dismiss: it leaves the page); an
+  action with form (a form id) is a submit button of that form (type="submit" form="..."), also
+  without data-popup-dismiss, so the browser submits instead of the popup closing.
 #}
 {% set _type = type | default('text') %}
 {% set _popup_id = popup_id | default('popup-overlay-1') %}
@@ -14,7 +19,9 @@
     <div class="ds-popup__title" id="{{ _title_id }}">{{ title | default('Title') }}</div>
     {% if closable %}<button type="button" class="ds-popup__close" aria-label="Close" data-popup-dismiss></button>{% endif %}
     <div class="ds-popup__body" data-type="{{ _type }}">
-    {% if _type == 'input' %}
+    {% if body_html %}
+      {{ body_html }}
+    {% elif _type == 'input' %}
       {% with type='textarea', fill='filled', placeholder=placeholder | default('Paste the description here') %}{% include "components/input/template.html" %}{% endwith %}
     {% elif _type == 'gallery' %}
       <div style="display: flex; justify-content: flex-end; margin-bottom: var(--ds-spacing-3);">
@@ -37,7 +44,13 @@
     </div>
     <div class="ds-popup__bottom">
       {% for action in bottom_actions | default([{'label': 'Close', 'priority': 'secondary'}]) %}
+      {% if action.href %}
+      {% with priority=action.priority | default('secondary'), status=action.status | default('active'), underline='dotted', label=action.label, href=action.href %}{% include "components/text-button/template.html" %}{% endwith %}
+      {% elif action.form %}
+      {% with priority=action.priority | default('secondary'), status=action.status | default('active'), underline='dotted', label=action.label, submit=true, extra_attrs='form="' ~ action.form ~ '"' ~ (' data-popup-confirm' if action.confirm else '') %}{% include "components/text-button/template.html" %}{% endwith %}
+      {% else %}
       {% with priority=action.priority | default('secondary'), status=action.status | default('active'), underline='dotted', label=action.label, extra_attrs='data-popup-dismiss' ~ (' data-popup-confirm' if action.confirm else '') %}{% include "components/text-button/template.html" %}{% endwith %}
+      {% endif %}
       {% endfor %}
     </div>
   </div>

@@ -71,6 +71,24 @@
   outline: none;
 }
 
+/*
+  title_href (draft, explicit request 2026-10-29): the title is a link, for a row of
+  page-heads that switch between sections of one area. Same type and color as the
+  h1 title, no underline at rest; hover and keyboard focus draw the dotted
+  underline of the "this is clickable" convention, like the editable title. The
+  section on show is aria-current and keeps the plain look on hover.
+*/
+a.ds-page-head__title {
+  text-decoration: none;
+}
+
+a.ds-page-head__title:not([aria-current]):hover,
+a.ds-page-head__title:not([aria-current]):focus-visible {
+  text-decoration: underline dotted;
+  text-decoration-thickness: var(--ds-border-width-default);
+  text-underline-offset: var(--ds-spacing-1);
+}
+
 .ds-page-head__title-input {
   box-sizing: content-box;
   min-width: var(--ds-spacing-9);

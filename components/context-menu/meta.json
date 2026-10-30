@@ -20,7 +20,7 @@
       "name": "items",
       "type": "array",
       "required": false,
-      "description": "A list of { value, label, disabled } or { divider: true }. value comes back in ds-context-menu-select; a disabled item stays listed and takes no click."
+      "description": "A list of { value, label, disabled } or { divider: true }. value comes back in ds-context-menu-select; a disabled item stays listed and takes no click. Draft (2026-10-30): { note, id } is a row of plain text, not an action (it wraps and keeps line breaks; the panel is then at most 400px wide); id lets the host set its text."
     },
     {
       "name": "label",

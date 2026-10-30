@@ -15,7 +15,8 @@
     </div>
     {% endif %}
     {% for item in _items %}
-    {% with type='set', name=item.name, saved=item.saved, active=item.active, href=item.href, save=item.save if item.save is defined else true %}{% include "components/sidebar-item/template.html" %}{% endwith %}
+    {# caption / muted (draft, 2026-10-29): passed on to sidebar-item (a second grey line; an item not reachable yet). #}
+    {% with type='set', name=item.name, saved=item.saved, active=item.active, href=item.href, save=item.save if item.save is defined else true, caption=item.caption, muted=item.muted %}{% include "components/sidebar-item/template.html" %}{% endwith %}
     {% endfor %}
   </div>
 </aside>

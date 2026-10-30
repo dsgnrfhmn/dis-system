@@ -36,6 +36,19 @@
       "description": "Render the rename field (.ds-page-head__title-input) in place of the title. Same type tokens, no padding or border, so the bar does not change size."
     },
     {
+      "name": "title_href",
+      "type": "string",
+      "required": false,
+      "description": "Draft (2026-10-29). Render the title as a link to this URL instead of an h1, for a row of page-heads that switch between sections. Same type and color; dotted underline on hover and keyboard focus. Ignored while editing."
+    },
+    {
+      "name": "current",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Draft (2026-10-29). With title_href: this section is on show (aria-current=\"page\"); its title keeps the plain look on hover."
+    },
+    {
       "name": "actions_left",
       "type": "array",
       "required": false,
@@ -55,7 +68,7 @@
     }
   ],
   "source": "figma:APPFILEKEY#150:16217,150:16233,150:16362",
-  "rationale": "Height is spacing.9 + spacing.6 (60px), side padding spacing.6 (20px), bg.surface with one hairline (object-dark.passive) under it. The title is the heading-3 role (Inter 24px; one step above the heading-4 the Figma frames use, 2026-10-18, explicit request: the set name read too small) with line-height normal, so the bar's height, not the type scale, sets the rhythm. The gap between title and main action is spacing.cell (10px); the right group has no gap because text buttons hug their labels (see text-button). Both groups are flex rows with min-width 0, so a long title ellipsizes instead of pushing the actions out. Rendering verified in light and dark themes. Rename in place (2026-10-11): the title is the heading-4 role; the rename field reuses the same four type tokens with zero padding, border and fill, so swapping title for field changes nothing about the box: no jump, no reflow of the actions. It is marked by an accent line drawn as an inset shadow (not a border, which would add height) and sized to its text with field-sizing: content, capped at the bar. The editable title carries the system's dotted-underline clickable affordance on hover and focus only, so a read-only title looks as before. Not from Figma (the Figma bar draws no editing state); built from existing tokens only. 2026-10-23: min-height instead of height and flex-wrap, so on a narrow window the groups wrap onto a second row instead of widening the page; at full width it is still 60px.",
+  "rationale": "Height is spacing.9 + spacing.6 (60px), side padding spacing.6 (20px), bg.surface with one hairline (object-dark.passive) under it. The title is the heading-3 role (Inter 24px; one step above the heading-4 the Figma frames use, 2026-10-18, explicit request: the set name read too small) with line-height normal, so the bar's height, not the type scale, sets the rhythm. The gap between title and main action is spacing.cell (10px); the right group has no gap because text buttons hug their labels (see text-button). Both groups are flex rows with min-width 0, so a long title ellipsizes instead of pushing the actions out. Rendering verified in light and dark themes. Rename in place (2026-10-11): the title is the heading-4 role; the rename field reuses the same four type tokens with zero padding, border and fill, so swapping title for field changes nothing about the box: no jump, no reflow of the actions. It is marked by an accent line drawn as an inset shadow (not a border, which would add height) and sized to its text with field-sizing: content, capped at the bar. The editable title carries the system's dotted-underline clickable affordance on hover and focus only, so a read-only title looks as before. Not from Figma (the Figma bar draws no editing state); built from existing tokens only. 2026-10-23: min-height instead of height and flex-wrap, so on a narrow window the groups wrap onto a second row instead of widening the page; at full width it is still 60px. 2026-10-29 (draft, explicit request): title_href makes the title a link so that several page-heads side by side act as section switches, matching a design where the section names sit in equal 60px bars under the nav bar; the link keeps the title's type and color and uses the dotted-underline clickable convention on hover and focus only.",
   "themes_supported": [
     "light",
     "dark"
@@ -63,5 +76,5 @@
   "uses": [
     "text-button"
   ],
-  "a11y_notes": "The title is an h1. The buttons are real text-buttons; keyboard focus uses their own ring. An editable title is focusable (tabindex 0) and the host opens the field on Enter or F2 as well as click; the field has aria-label 'Set name'. Escape cancels and Enter or leaving the field commits, both owned by the host."
+  "a11y_notes": "The title is an h1. The buttons are real text-buttons; keyboard focus uses their own ring. An editable title is focusable (tabindex 0) and the host opens the field on Enter or F2 as well as click; the field has aria-label 'Set name'. Escape cancels and Enter or leaving the field commits, both owned by the host. With title_href the title is a link (not a heading) and the section on show carries aria-current=\"page\"; the host then provides the page's own h1 elsewhere."
 }
