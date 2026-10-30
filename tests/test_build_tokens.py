@@ -162,7 +162,7 @@ def test_mono_has_a_block_per_mode():
 
 
 def test_mono_paints_only_black_and_white():
-    """Mono is black and white, no greys (garv, 2026-10-27). Its overrides are
+    """Mono is black and white, no greys (the maintainer, 2026-10-27). Its overrides are
     black, white, transparent (shadow colors) or none (shadows); every other
     color in Mono is a Base slot it deliberately leaves alone."""
     allowed = {"#000000", "#FFFFFF", "transparent", "none"}

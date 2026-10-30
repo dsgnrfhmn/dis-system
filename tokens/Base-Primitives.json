@@ -801,7 +801,7 @@
     }
   },
   "mono": {
-    "$description": "The Mono style's whole palette (garv, 2026-10-27): black and white only, no greys. Aliases of the existing base extremes, no new values.",
+    "$description": "The Mono style's whole palette (the maintainer, 2026-10-27): black and white only, no greys. Aliases of the existing base extremes, no new values.",
     "black": {
       "$value": "{base.1000}",
       "$type": "color",

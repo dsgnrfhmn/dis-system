@@ -214,7 +214,7 @@ def split_light_only(light_resolved, dark_resolved):
 
 
 # Styles layered over Base, in output order. Mono: black and white only
-# (garv, 2026-10-27); its source is this repo, not Figma -- see CLAUDE.md.
+# (the maintainer, 2026-10-27); its source is this repo, not Figma -- see CLAUDE.md.
 STYLES = ("Mono",)
 
 

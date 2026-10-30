@@ -170,7 +170,7 @@ shadow composites), `Color-<S>-Light.json` and `Color-<S>-Dark.json`. A style
 file holds only the slots it changes; every slot it names must already exist
 in Base for that mode (the build fails otherwise), and a slot it leaves out
 keeps Base's value.
-- **Mono** (garv, 2026-10-27): black and white only (`mono.black` /
+- **Mono** (the maintainer, 2026-10-27): black and white only (`mono.black` /
   `mono.white`, aliases of `base.1000` / `base.0`), no greys, no shadows.
   Colors that carry a defined meaning keep Base's value: `system.*`,
   `row-status.*`, `tag.*`, `signal.*`, `bg.text-highlight`. `accent-*` is

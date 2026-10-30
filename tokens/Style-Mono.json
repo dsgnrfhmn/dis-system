@@ -101,12 +101,12 @@
     "tief-1": {
       "$value": "none",
       "$type": "shadow",
-      "$description": "Mono draws no shadows (garv, 2026-10-27)."
+      "$description": "Mono draws no shadows (the maintainer, 2026-10-27)."
     },
     "tief-2": {
       "$value": "none",
       "$type": "shadow",
-      "$description": "Mono draws no shadows (garv, 2026-10-27)."
+      "$description": "Mono draws no shadows (the maintainer, 2026-10-27)."
     }
   }
 }
